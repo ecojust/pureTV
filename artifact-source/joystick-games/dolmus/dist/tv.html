@@ -1,0 +1,2684 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="arena-game" content="dolmus">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#141518">
+<meta name="description" content="Sarı dolmuşu low-poly İstanbul sokaklarında sür: el sallayan yolcuları al, duraklarında indir, ücret ve bahşiş kazan. 8 vardiya, tarayıcıda ücretsiz. / Drive a yellow dolmuş minibus through a low-poly Istanbul, free in your browser.">
+<link rel="canonical" href="https://furkiozknn.github.io/dolmus/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dolmuş · 3D İstanbul Minibüs Sürüş Oyunu">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:description" content="Sarı dolmuşu low-poly İstanbul sokaklarında sür: yolcuları al, duraklarında indir, ücret ve bahşiş kazan. 8 vardiya, tarayıcıda ücretsiz.">
+<meta property="og:image:alt" content="Dolmuş: sarı minibüs, İstanbul sokağı, yolcular">
+<meta property="og:url" content="https://furkiozknn.github.io/dolmus/">
+<meta property="og:image" content="https://furkiozknn.github.io/dolmus/docs/card.jpg">
+<meta property="og:image:width" content="960">
+<meta property="og:image:height" content="540">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dolmuş · 3D İstanbul Minibüs Sürüş Oyunu">
+<meta name="twitter:description" content="Sarı dolmuşu sür, yolcuları indir, bahşişi topla. Tarayıcıda ücretsiz.">
+<meta name="twitter:image" content="https://furkiozknn.github.io/dolmus/docs/card.jpg">
+<title>Dolmuş</title>
+
+
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23141518%27/%3E%3Crect x=%273%27 y=%2711%27 width=%2726%27 height=%2713%27 rx=%274%27 fill=%27%23E59500%27/%3E%3Ccircle cx=%2710%27 cy=%2725%27 r=%273%27 fill=%27%23fff%27/%3E%3Ccircle cx=%2722%27 cy=%2725%27 r=%273%27 fill=%27%23fff%27/%3E%3C/svg%3E">
+<style>
+/* ==========================================================================
+   DOLMUŞ - RADICAL UI/UX REBIRTH DESIGN SYSTEM
+   Visual Identity: Esnaf Grit, Arabesk Nostalgia, Dolmuş Kitsch, Bosphorus Dusk
+   Colors: Dolmuş Krom Sarısı (#E59500), Gece Asfaltı (#17181C), Çay Dem Kırmızısı (#B8261C),
+           Nazar Boncuğu (#0098D8), Çakıl & Karton (#EDE6D6), Boğaz Nanesi (#2A9D6A), Sodyum Buharı (#FFC83B)
+   Typography: Bebas Neue (Transit Plates & Titles) + Space Grotesk (HUD & Data)
+   ========================================================================== */
+
+:root {
+  /* Brand Core Palette */
+  --c-yellow: #E59500;
+  --c-yellow-glow: #FFA71A;
+  --c-yellow-dark: #B37100;
+  --c-asphalt-950: #0E0F12;
+  --c-asphalt-900: #141518;
+  --c-asphalt-850: #1A1C22;
+  --c-asphalt-800: #22252D;
+  --c-asphalt-700: #2C3039;
+  --c-asphalt-600: #3E4350;
+  --c-asphalt-border: rgba(255, 255, 255, 0.14);
+
+  --c-cay-red: #B8261C;
+  --c-cay-red-light: #D32F2F;
+  --c-cay-glow: rgba(184, 38, 28, 0.45);
+
+  --c-nazar-cyan: #0098D8;
+  --c-nazar-cyan-glow: rgba(0, 152, 216, 0.45);
+  --c-nazar-deep: #0D3B66;
+
+  --c-parchment: #EDE6D6;
+  --c-parchment-light: #F7F3EB;
+  --c-parchment-border: #D3C7B2;
+  --c-parchment-ink: #221D17;
+  --c-parchment-dim: #645C4F;
+
+  --c-bogaz-green: #2A9D6A;
+  --c-bogaz-green-light: #34B37A;
+  --c-bogaz-glow: rgba(42, 157, 106, 0.4);
+
+  --c-sodium-amber: #FFC83B;
+  --c-sodium-glow: rgba(255, 200, 59, 0.4);
+
+  --c-text-primary: #FFF8E7;
+  --c-text-dim: #A8B0BE;
+  --c-text-muted: #737A87;
+
+  /* Typography */
+  --font-display: 'Bebas Neue', 'Bahnschrift', 'DIN Alternate', 'Arial Narrow', sans-serif;
+  --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Space Grotesk', 'Cascadia Mono', 'Consolas', monospace;
+
+  /* Semantic & Compatibility Tokens */
+  --accent: var(--c-yellow);
+  --accent-d: var(--c-yellow-dark);
+  --ink: var(--c-text-primary);
+  --dim: var(--c-text-dim);
+  --good: var(--c-bogaz-green);
+  --bad: var(--c-cay-red);
+  --neon: var(--c-nazar-cyan);
+  --r: 12px;
+  --fs: 14px;
+  --barh: 56px;
+
+  /* Procedural Textures & Patterns */
+  --surface-panel: linear-gradient(180deg, #2A2D36 0%, #1D1F26 55%, #141519 100%);
+  --surface-quilt:
+    linear-gradient(135deg, rgba(255,255,255,0.025) 25%, transparent 25%) -12px 0/ 24px 24px,
+    linear-gradient(225deg, rgba(255,255,255,0.025) 25%, transparent 25%) -12px 0/ 24px 24px,
+    linear-gradient(315deg, rgba(0,0,0,0.3) 25%, transparent 25%) 0 0/ 24px 24px,
+    linear-gradient(45deg, rgba(0,0,0,0.3) 25%, transparent 25%) 0 0/ 24px 24px,
+    linear-gradient(180deg, #4A3628 0%, #2E2119 100%);
+  --checker-trim: repeating-conic-gradient(#141518 0 25%, #E59500 0 50%) 0 0/14px 14px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+::selection { background: var(--c-yellow); color: #141518; }
+::-moz-selection { background: var(--c-yellow); color: #141518; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #141518;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs);
+  line-height: 1.35;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+canvas#gl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hidden { display: none !important; }
+
+/* SVG Icons */
+svg.ic {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+svg.ic.fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* Tactile Physical Dashboard Buttons */
+button { font: inherit; color: inherit; cursor: pointer; }
+*:focus-visible { outline: 3px solid var(--c-nazar-cyan); outline-offset: 2px; }
+a.btn { text-decoration: none; }
+
+.btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 2px solid #505664;
+  background: linear-gradient(180deg, #3C414B 0%, #262930 100%);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 #0E0F12, inset 0 1px 0 rgba(255,255,255,0.22);
+  transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.08s ease;
+}
+.btn:hover {
+  background: linear-gradient(180deg, #4A505C 0%, #30343D 100%);
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0E0F12;
+}
+
+/* Primary ignition starter button */
+.btn.primary {
+  background: linear-gradient(180deg, #FFAE1A 0%, #E59500 50%, #C47900 100%);
+  color: #121316;
+  border-color: #FFE699;
+  box-shadow: 0 4px 0 #7A4B00, inset 0 1px 0 rgba(255,255,255,0.6);
+  font-weight: 900;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn.primary:hover {
+  background: linear-gradient(180deg, #FFBA3B 0%, #F5A30D 50%, #D48400 100%);
+}
+.btn.primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #7A4B00;
+}
+.btn[disabled] {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+.btn.icon {
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+/* Hanging Windshield Nazar Amulet */
+.windshield-nazar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 6;
+  transform-origin: top center;
+  animation: nazarSway 5s ease-in-out infinite alternate;
+}
+.nazar-cord {
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(180deg, #D4AF37, #8B6914);
+}
+.nazar-disc {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+}
+.nazar-tassel {
+  width: 6px;
+  height: 12px;
+  background: #0D3B66;
+  border-radius: 0 0 3px 3px;
+  margin-top: 1px;
+}
+@keyframes nazarSway {
+  0% { transform: translateX(-50%) rotate(-5deg); }
+  50% { transform: translateX(-50%) rotate(5deg); }
+  100% { transform: translateX(-50%) rotate(-5deg); }
+}
+
+/* HUD Topbar: Cockpit Windshield Header */
+#hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+#hud > * { pointer-events: none; }
+#hud > #minimap { pointer-events: auto; cursor: pointer; }
+
+#topbar {
+  position: absolute;
+  left: max(8px, env(safe-area-inset-left));
+  right: max(8px, env(safe-area-inset-right));
+  top: max(8px, env(safe-area-inset-top));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  pointer-events: auto;
+  background: var(--surface-quilt);
+  border: 2px solid var(--c-asphalt-border);
+  border-bottom: 3px solid var(--c-yellow);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -2px 0 rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.5);
+}
+
+#topbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-right: 4px;
+}
+#topbar .brand svg {
+  width: 38px;
+  height: 28px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+#topbar .brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+#topbar .brand-name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: 2px;
+  color: var(--c-yellow);
+  text-shadow: 0 1px 2px #000;
+}
+#topbar .brand-sub {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 52px;
+  line-height: 1.1;
+  padding-left: 10px;
+  border-left: 1px dashed rgba(255,255,255,0.16);
+}
+.stat small {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.stat small svg.ic {
+  width: 12px;
+  height: 12px;
+  color: var(--c-yellow);
+}
+.stat b {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+#stLevel {
+  background: var(--c-yellow);
+  color: #141518;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
+}
+
+#stClock {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--c-sodium-amber);
+  background: #0E0F12;
+  padding: 2px 8px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,200,59,0.25);
+  text-shadow: 0 0 6px var(--c-sodium-glow);
+}
+
+/* Taksimetre Fare Display */
+.stat.fare {
+  flex: 1 1 150px;
+  min-width: 140px;
+  max-width: 320px;
+}
+#stFare {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  font-family: var(--font-mono);
+  background: #0E0F12;
+  border-radius: 6px;
+  padding: 2px 10px;
+  border: 1px solid rgba(255,200,59,0.3);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+  color: var(--c-sodium-amber);
+  text-shadow: 0 0 8px var(--c-sodium-glow);
+  margin-top: 2px;
+}
+#stFare .lcd {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+#stFare .of {
+  font-size: 12px;
+  color: #B38600;
+  text-shadow: none;
+  margin-left: auto;
+}
+
+.bar {
+  height: 7px;
+  border-radius: 4px;
+  background: #0E0F12;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-top: 4px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.7);
+}
+.bar i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #C47900, var(--c-yellow));
+  width: 0;
+  transition: width 0.2s ease;
+}
+.bar.dent i {
+  background: linear-gradient(90deg, var(--c-bogaz-green), var(--c-sodium-amber) 60%, var(--c-cay-red));
+}
+.bar u {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.7);
+  z-index: 1;
+}
+
+#topbar .btns {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+.btn.icon.rocker {
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(180deg, #383D47, #24272F);
+  border: 2px solid #505664;
+}
+.btn.icon.rocker:hover {
+  background: linear-gradient(180deg, #444955, #2C3039);
+}
+.btn.icon.rocker:active {
+  transform: translateY(2px);
+}
+
+/* Toasts: Warning / Info Placards */
+#toasts {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(var(--barh, 56px) + max(8px, env(safe-area-inset-top)) + 12px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: min(92vw, 480px);
+  pointer-events: none;
+}
+.toast {
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: var(--c-asphalt-850);
+  border: 1px solid var(--c-asphalt-border);
+  border-left: 6px solid var(--c-yellow);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13.5px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  animation: tin 0.25s ease-out;
+}
+.toast.good {
+  border-left-color: var(--c-bogaz-green);
+  color: #E8FFF2;
+}
+.toast.bad {
+  border-left-color: var(--c-cay-red);
+  color: #FFE8E5;
+}
+.toast.info {
+  border-left-color: var(--c-yellow);
+  color: var(--ink);
+}
+.toast.out {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: all 0.35s ease;
+}
+@keyframes tin {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Minimap */
+#minimap {
+  position: absolute;
+  left: max(10px, env(safe-area-inset-left));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  width: 200px;
+  height: 150px;
+  border-radius: 10px;
+  border: 3px solid #484E5C;
+  box-shadow: inset 0 0 0 2px #0E0F12, 0 8px 24px rgba(0,0,0,0.5);
+  background: #181A1E;
+}
+
+/* Speedometer Dial */
+#speedo {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  width: 136px;
+  height: 136px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #2A2E37 0%, #17181D 65%, #0F1014 100%);
+  border: 4px solid #4F5563;
+  box-shadow: inset 0 0 0 2px #0B0C0E, inset 0 -8px 18px rgba(0,0,0,0.7), 0 10px 24px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#speedo svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(135deg);
+}
+#speedo circle {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+#spArc {
+  stroke: var(--c-yellow);
+  filter: drop-shadow(0 0 4px var(--c-yellow-glow));
+}
+#speedo svg.dial {
+  transform: none;
+  z-index: 1;
+}
+#speedo div {
+  text-align: center;
+  line-height: 1;
+  transform: translateY(24%);
+  z-index: 2;
+}
+#speedo b {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--c-text-primary);
+  text-shadow: 0 0 8px var(--c-yellow-glow);
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+#speedo small {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--c-text-dim);
+}
+
+/* Passenger Seating Strip (Ahşap Boncuk Minder) */
+#seatsStrip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  gap: 5px;
+  padding: 7px 10px;
+  background: var(--surface-quilt);
+  border: 2px solid var(--c-asphalt-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+.seat {
+  width: 28px;
+  height: 36px;
+  border-radius: 8px 8px 4px 4px;
+  background: #2B2E37;
+  border: 2px solid #484E5C;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 900;
+  color: #FFF;
+  text-shadow: 0 1px 2px #000;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.3);
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.seat::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 20%;
+  right: 20%;
+  height: 6px;
+  border-radius: 4px 4px 0 0;
+  background: inherit;
+  border: 2px solid inherit;
+  border-bottom: 0;
+}
+.seat.on {
+  border-color: #FFF8E7;
+}
+.seat.on::before {
+  border-color: #FFF8E7;
+}
+.seat i {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: 2px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--c-bogaz-green);
+}
+.seat.drv {
+  background: rgba(229, 149, 0, 0.18);
+  border-color: var(--c-yellow);
+  color: var(--c-yellow);
+}
+.seat.drv svg.ic {
+  width: 18px;
+  height: 18px;
+}
+
+/* Fare Chain Coin */
+.coin {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFE680, #D4AF37 55%, #8B6914);
+  border: 1.5px solid #664400;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+  pointer-events: none;
+  z-index: 10;
+  display: none;
+}
+
+/* Direction Guidance: Roadside Transit Sign */
+#guide {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(max(8px, env(safe-area-inset-top)) + 64px);
+  display: none;
+}
+#guideBox {
+  position: absolute;
+  left: 50%;
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 68px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #0D4373;
+  border: 2.5px solid #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px #07294A, 0 8px 24px rgba(0,0,0,0.5);
+  color: #FFF;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#guideArrow {
+  width: 32px;
+  height: 32px;
+  color: var(--c-yellow);
+  transition: transform 0.08s linear;
+  flex: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+#guideArrow svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+  stroke: none;
+}
+#guideTxt {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+#guideTxt small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: #D5E7FA;
+  letter-spacing: 0;
+}
+#guideBox.coach {
+  background: #B8261C;
+  border-color: #FFF;
+  box-shadow: 0 0 0 2px #7A140D, 0 8px 24px rgba(0,0,0,0.5);
+  white-space: normal;
+  max-width: min(90vw, 440px);
+}
+#guideBox.coach #guideArrow svg {
+  animation: cpulse 0.6s infinite alternate;
+}
+@keyframes cpulse { to { transform: scale(1.3); } }
+
+#hint {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 152px);
+  padding: 7px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-dim);
+  text-align: right;
+  background: var(--c-asphalt-850);
+  border: 1px solid var(--c-asphalt-border);
+  border-radius: 8px;
+}
+#hint b {
+  font-family: var(--font-mono);
+  background: #0E0F12;
+  border: 1px solid #484E5C;
+  border-bottom-width: 3px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--c-yellow);
+}
+
+/* Floaters & Bubbles */
+#floaters, #bubbles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.floater {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 1px;
+  color: var(--c-yellow);
+  -webkit-text-stroke: 4px #0E0F12;
+  paint-order: stroke fill;
+  animation: fup 1.4s ease-out forwards;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+.floater.neg { color: var(--c-cay-red); }
+@keyframes fup {
+  0% { opacity: 0; margin-top: 0; transform: translate(-50%, -50%) scale(0.8); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 0; margin-top: -70px; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+.bubble {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: #FFF8E7;
+  color: #221D17;
+  padding: 7px 14px;
+  border-radius: 12px 12px 12px 2px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid #221D17;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  animation: tin 0.2s ease-out;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  width: max-content;
+  max-width: min(60vw, 260px);
+  text-align: center;
+}
+.bubble.out { opacity: 0; transition: opacity 0.4s; }
+
+/* Mobile Touch Controls */
+#touch { position: absolute; inset: 0; display: none; }
+body.touch #touch { display: block; }
+
+#steer {
+  position: absolute;
+  left: max(14px, env(safe-area-inset-left));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  width: min(calc(100vw - 232px), 300px);
+  min-width: 150px;
+  height: 64px;
+  border-radius: 32px;
+  pointer-events: auto;
+  touch-action: none;
+  background: linear-gradient(180deg, #272A32, #18191E);
+  border: 2px solid #505664;
+  box-shadow: inset 0 3px 8px #000, 0 6px 16px rgba(0,0,0,0.4);
+}
+#steer i {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  margin-left: -26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFE680, #E59500 60%, #B37100);
+  border: 2.5px solid #141518;
+  box-shadow: 0 4px 0 #664400;
+}
+#steer::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.22);
+}
+
+.pedal {
+  position: absolute;
+  pointer-events: auto;
+  touch-action: none;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  letter-spacing: 1px;
+  color: var(--ink);
+  background: repeating-linear-gradient(0deg, #22252D 0 6px, #2F333E 6px 10px);
+  border: 2px solid #505664;
+  box-shadow: 0 4px 0 #0E0F12;
+  transition: transform 0.05s ease, background 0.1s ease;
+}
+.pedal span { font-size: 12px; font-weight: 700; }
+.pedal.on {
+  background: repeating-linear-gradient(0deg, #8A5A00 0 6px, #B37400 6px 10px);
+  border-color: var(--c-yellow);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0E0F12;
+}
+
+#pGas {
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  width: 84px;
+  height: 116px;
+}
+#pBrake {
+  right: calc(max(14px, env(safe-area-inset-right)) + 94px);
+  bottom: max(14px, env(safe-area-inset-bottom));
+  width: 74px;
+  height: 92px;
+}
+#tDoor {
+  right: max(14px, env(safe-area-inset-right));
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 126px);
+  width: 84px;
+  height: 52px;
+}
+#tHorn {
+  right: calc(max(14px, env(safe-area-inset-right)) + 94px);
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 102px);
+  width: 74px;
+  height: 48px;
+}
+
+/* Unified pedal (settings.mobileUnifiedPedal): one vertical slider on the right edge, centre = neutral,
+   up = gas, down = brake. The door and horn buttons move to its left so nothing overlaps; steering stays on the left. */
+#pUni { display: none; }
+body.touch.uped #pGas, body.touch.uped #pBrake { display: none; }
+body.touch.uped #pUni {
+  display: block;
+  position: absolute;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  width: 76px;
+  height: 190px;
+  height: clamp(120px, calc(100vh - 210px), 200px);
+  border-radius: 38px;
+  pointer-events: auto;
+  touch-action: none;
+  background:
+    linear-gradient(180deg, rgba(229,149,0,0.20) 0 50%, rgba(184,38,28,0.26) 50% 100%),
+    linear-gradient(180deg, #272A32, #18191E);
+  border: 2px solid #505664;
+  box-shadow: inset 0 3px 8px #000, 0 6px 16px rgba(0,0,0,0.4);
+}
+#pUni::before {   /* neutral groove across the middle */
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.28);
+}
+#pUni .pl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+#pUni .pl.up { top: 10px; color: var(--c-sodium-amber); }
+#pUni .pl.dn { bottom: 10px; color: #FF8A80; }
+#pUni i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFE680, #E59500 60%, #B37100);
+  border: 2.5px solid #141518;
+  box-shadow: 0 4px 0 #664400;
+  will-change: transform;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);   /* springs back to neutral on release */
+}
+#pUni.drag i { transition: none; }
+#pUni.brake i { background: radial-gradient(circle at 35% 30%, #FF9C94, #D32F2F 60%, #8E1A12); box-shadow: 0 4px 0 #4A0F0A; }
+body.touch.uped #tDoor {
+  right: calc(max(14px, env(safe-area-inset-right)) + 88px);
+  bottom: max(14px, env(safe-area-inset-bottom));
+  width: 84px;
+  height: 64px;
+}
+body.touch.uped #tHorn {
+  right: calc(max(14px, env(safe-area-inset-right)) + 88px);
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 74px);
+  width: 84px;
+  height: 48px;
+}
+/* settings rows that only make sense with touch controls */
+.t-only { display: none; }
+body.touch label.t-only { display: block; }
+body.touch .seg.t-only { display: flex; }
+
+/* Touch mode overrides */
+body.touch #minimap {
+  bottom: auto;
+  top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top)) + 8px);
+  width: 132px;
+  height: 100px;
+}
+body.touch #speedo {
+  bottom: auto;
+  right: max(8px, env(safe-area-inset-right));
+  top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top)) + 8px);
+  width: 72px;
+  height: 72px;
+}
+body.touch #speedo b { font-size: 20px; }
+body.touch #speedo small { font-size: 8px; }
+body.touch #speedo svg.dial text, body.touch #speedo svg.dial .tk { display: none; }
+body.touch #speedo div { transform: none; }
+body.touch #seatsStrip {
+  left: max(14px, env(safe-area-inset-left));
+  transform: none;
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 74px);
+  padding: 4px 6px;
+  gap: 3px;
+}
+body.touch .seat {
+  width: 18px;
+  height: 22px;
+  font-size: 10px;
+  border-radius: 6px 6px 4px 4px;
+  border-width: 1.5px;
+}
+body.touch .seat::before { top: -4px; height: 5px; border-width: 1.5px; }
+body.touch .seat i { left: 2px; bottom: 1px; height: 2px; }
+body.touch .seat.drv svg.ic { width: 12px; height: 12px; }
+body.touch #hint { display: none; }
+body.touch #guideBox {
+  left: max(14px, env(safe-area-inset-left));
+  transform: none;
+  bottom: calc(max(14px, env(safe-area-inset-bottom)) + 110px);
+  padding: 4px 10px;
+}
+body.touch #toasts {
+  top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top)) + 12px);
+}
+
+/* Yazı denetimi (2026-11): dokunmatikte rehber kutusu sağdaki pedala binmesin; metin kaydırılır */
+body.touch #guideBox {
+  max-width: calc(100vw - max(14px, env(safe-area-inset-left)) - max(14px, env(safe-area-inset-right)) - 92px);
+  white-space: normal;
+}
+/* Dar ekranda nazar boncuğu saat/vardiya yazısının üstüne düşmesin: üst panelin altından sarksın */
+@media (max-width: 700px) {
+  .windshield-nazar { top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top))); }
+}
+/* Yatay telefonda başlık kartı ekrana sığsın: tabela ve büyük logo gizlenir, OYNA görünür kalır */
+@media (max-height: 440px) {
+  #sTitle .route-levha, #sTitle #logoBig { display: none; }
+  #sTitle .card h1 { font-size: 28px; margin: 0 0 4px; }
+  #sTitle .card .how { font-size: 12px; margin: 4px 0 8px; }
+}
+
+@media (orientation: portrait) {
+  body.touch #toasts { top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top)) + 116px); }
+  body.touch #seatsStrip { flex-wrap: wrap; width: 136px; }
+  body.touch #guideBox { bottom: calc(max(14px, env(safe-area-inset-bottom)) + 154px); }
+}
+
+/* Screens & Modal Windows */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  padding: 14px;
+  overflow: auto;
+  touch-action: pan-y;
+}
+.screen.show { display: flex; }
+.screen.dim {
+  background: rgba(10, 11, 14, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.card {
+  width: min(92vw, 490px);
+  padding: 24px 26px;
+  text-align: center;
+  max-height: 94vh;
+  overflow: auto;
+  background: var(--surface-quilt);
+  border: 2px solid var(--c-asphalt-border);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.5), 0 12px 32px rgba(0,0,0,0.6);
+  position: relative;
+}
+.card::before {
+  content: "";
+  display: block;
+  height: 12px;
+  margin: -24px -26px 18px;
+  background: var(--checker-trim);
+  border-radius: 12px 12px 0 0;
+  border-bottom: 2px solid #0E0F12;
+}
+
+/* Destination Route Placard (Levha) */
+.route-levha {
+  background: var(--c-parchment);
+  color: var(--c-parchment-ink);
+  border: 2.5px solid #141518;
+  border-radius: 6px;
+  padding: 8px 14px 6px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 0 #141518, 0 6px 14px rgba(0,0,0,0.3);
+  position: relative;
+}
+.route-levha .rivet {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #A89E8D;
+  border: 1px solid #4A4438;
+}
+.route-levha .rivet.tl { top: 4px; left: 4px; }
+.route-levha .rivet.tr { top: 4px; right: 4px; }
+.route-levha .rivet.bl { bottom: 4px; left: 4px; }
+.route-levha .rivet.br { bottom: 4px; right: 4px; }
+.levha-sub {
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--c-parchment-dim);
+}
+.levha-main {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 2.5px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #141518;
+}
+.levha-slogan {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  letter-spacing: 1px;
+  color: var(--c-cay-red);
+  margin-top: 1px;
+}
+
+.levha-mini {
+  display: inline-block;
+  background: var(--c-parchment);
+  color: var(--c-parchment-ink);
+  border: 2px solid #141518;
+  border-radius: 4px;
+  padding: 2px 10px;
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  box-shadow: 0 2px 0 #141518;
+}
+
+.card h1 {
+  font-family: var(--font-display);
+  font-size: 54px;
+  letter-spacing: 6px;
+  color: var(--c-yellow);
+  margin: 6px 0 2px;
+  text-shadow: 0 4px 0 #0E0F12, 0 0 24px var(--c-yellow-glow);
+}
+.card h2 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  letter-spacing: 3px;
+  color: var(--c-yellow);
+  margin: 4px 0 12px;
+  text-shadow: 0 2px 0 #0E0F12;
+  text-transform: uppercase;
+}
+.card p { margin: 6px 0; color: #E8EBF2; font-weight: 500; }
+.card .sub { font-size: 15px; font-weight: 600; color: var(--ink); }
+.card .how { font-size: 13px; color: var(--dim); }
+
+.col { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; align-items: stretch; }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+#logoBig {
+  width: 170px;
+  height: 105px;
+  margin: 0 auto 6px;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
+}
+
+.best {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-yellow);
+  background: #0E0F12;
+  border: 1.5px solid #3C414C;
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-top: 14px;
+  display: inline-block;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+}
+.foot {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--dim);
+}
+.foot a {
+  color: var(--c-yellow);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--c-yellow);
+}
+
+
+/* v2.1: Yenilikler / rekorlar / rozetler penceresi */
+#sNews .card { max-width: min(560px, 100%); }
+#sNews h3 { margin: 14px 0 6px; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--c-yellow); }
+#sNews .vtag { color: var(--dim); font-size: 13px; margin: 0 0 4px; }
+#sNews ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.45; text-align: left; }
+#sNews .board, #sNews .badges { list-style: none; padding: 0; display: grid; gap: 6px; }
+#sNews .board li, #sNews .badges li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--c-asphalt-border); border-radius: 8px; background: rgba(255,255,255,.04); text-align: left; }
+#sNews .board li b { color: var(--c-yellow); font-variant-numeric: tabular-nums; white-space: nowrap; }
+#sNews .badges li.off { opacity: .6; }
+#sNews .badges li small { display: block; color: var(--dim); font-size: 12px; }
+#sNews .none { color: var(--dim); font-size: 13px; margin: 0; }
+.foot .vtag, .foot a { white-space: nowrap; }
+#sTitle .row { flex-wrap: nowrap; }
+#sTitle .row .btn { flex: 1 1 0; min-width: 0; padding-left: 8px; padding-right: 8px; gap: 6px; }
+#sTitle .row .btn .ic { flex: none; }
+
+/* Settings Form Controls */
+.set {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px 12px;
+  align-items: center;
+  text-align: left;
+  margin-top: 10px;
+}
+.set label {
+  font-family: var(--font-display);
+  letter-spacing: 1px;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+.set output {
+  width: 44px;
+  text-align: right;
+  color: var(--c-yellow);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+input[type=range] {
+  width: 100%;
+  height: 44px;
+  accent-color: var(--c-yellow);
+  background: transparent;
+  cursor: pointer;
+}
+.seg {
+  display: flex;
+  gap: 6px;
+  grid-column: 2 / 4;
+}
+.seg .btn {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 16px;
+}
+.seg .btn.sel {
+  background: linear-gradient(180deg, #FFAE1A, #E59500);
+  color: #121316;
+  border-color: #141518;
+  font-weight: 900;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 3px 0 #7A4B00;
+}
+
+/* Stars */
+.stars {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 8px 0;
+}
+.stars svg {
+  width: 46px;
+  height: 46px;
+  fill: rgba(255,255,255,0.14);
+  stroke: rgba(255,255,255,0.28);
+  stroke-width: 1.5;
+}
+.stars svg.on {
+  fill: var(--c-yellow);
+  stroke: #7A4B00;
+  filter: drop-shadow(0 3px 0 rgba(0,0,0,0.35));
+  animation: starPop 0.5s ease-out both;
+}
+@keyframes starPop {
+  0% { transform: scale(0.3) rotate(-30deg); opacity: 0; }
+  70% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5px 14px;
+  text-align: left;
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.3);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+}
+.kv span:nth-child(odd) { color: var(--dim); }
+.kv span:nth-child(even) { text-align: right; font-variant-numeric: tabular-nums; }
+.kv .neg { color: var(--c-cay-red); font-weight: 700; }
+.kv .pos { color: var(--c-bogaz-green); font-weight: 700; }
+.rec {
+  color: var(--c-cay-red);
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 2px;
+  font-weight: 900;
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse { to { transform: scale(1.06); } }
+
+ul.feat {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  text-align: left;
+}
+ul.feat li {
+  padding: 6px 12px;
+  margin: 4px 0;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.25);
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+}
+ul.feat li::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c-yellow);
+  margin-right: 10px;
+  flex: none;
+}
+
+/* Route Master picker (#sRoute) */
+#sRoute .card.hat { width: min(92vw, 540px); }
+#sRoute h3 { font-family: var(--font-display); letter-spacing: 1px; font-size: 16px; color: var(--c-yellow); margin: 12px 0 6px; text-transform: uppercase; }
+.hat-stops, .hat-ch { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.hat-stops .btn, .hat-ch .btn { padding: 7px 10px; font-size: 14px; min-height: 40px; }
+.hat-stops .btn b { font-family: var(--font-mono); margin-right: 4px; opacity: 0.8; }
+.hat-stops .btn.sel, .hat-ch .btn.sel {
+  background: linear-gradient(180deg, #FFAE1A, #E59500); color: #121316; border-color: #141518; font-weight: 900;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 3px 0 #7A4B00;
+}
+.hat-chd { min-height: 2.6em; font-size: 13px; }
+#sRoute .best:empty { display: none; }
+.seat b.mood { position: absolute; top: -10px; right: -8px; font-size: 13px; line-height: 17px; width: 17px; height: 17px; border-radius: 50%; background: #12161f; border: 1.5px solid #FFF8E7; font-family: sans-serif; font-weight: 700; text-shadow: none; display: none; }
+.seat b.mood.like { display: block; color: #5ee08a; font-size: 16px; }
+.seat b.mood.dislike { display: block; color: #ff5a4a; }
+
+/* Level Dispatch Card (#lvCard) */
+#lvCard {
+  position: absolute;
+  left: max(8px, env(safe-area-inset-left));
+  top: calc(var(--barh, 56px) + max(8px, env(safe-area-inset-top)) + 16px);
+  width: min(86vw, 320px);
+  padding: 12px 14px;
+  pointer-events: auto;
+  text-align: left;
+  display: none;
+  background: var(--c-asphalt-850);
+  border: 2px solid var(--c-asphalt-border);
+  border-top: 4px solid var(--c-yellow);
+  border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.55);
+}
+#lvCard.show {
+  display: block;
+  animation: tin 0.25s ease-out;
+}
+#lvCard h3 {
+  margin: 0 44px 4px 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: 1.5px;
+  color: var(--c-yellow);
+  text-transform: uppercase;
+}
+#lvCard p {
+  margin: 2px 0 6px;
+  font-size: 12.5px;
+  color: #E8EBF2;
+  font-weight: 500;
+}
+#lvCard ul.feat { margin: 4px 0 0; }
+#lvCard ul.feat li { font-size: 12px; padding: 3px 8px; margin: 3px 0; }
+#lvCard .x {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+#lvCard .tgt {
+  display: flex;
+  gap: 6px 12px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--c-yellow);
+  margin-top: 6px;
+  align-items: center;
+}
+body.touch #lvCard {
+  top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top)) + 118px);
+  width: min(58vw, 300px);
+}
+@media (orientation: portrait) {
+  body.touch #lvCard {
+    top: calc(var(--barh, 66px) + max(8px, env(safe-area-inset-top)) + 196px);
+    width: min(76vw, 320px);
+  }
+}
+
+/* 3-2-1 Countdown */
+#countdown {
+  position: fixed;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+  pointer-events: none;
+  text-align: center;
+  display: none;
+}
+#countdown.show { display: block; }
+#countdown b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: min(34vw, 170px);
+  line-height: 1;
+  color: var(--c-yellow);
+  -webkit-text-stroke: 8px #0E0F12;
+  paint-order: stroke fill;
+  text-shadow: 0 8px 0 rgba(0,0,0,0.4), 0 0 40px var(--c-yellow-glow);
+  animation: cdpop 0.9s ease-out both;
+}
+#countdown span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--ink);
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+}
+@keyframes cdpop {
+  0% { transform: scale(1.7); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.85; }
+}
+
+/* Result Screen: Shift Receipt (Hesap Pusulası) */
+#sEnd .card.receipt {
+  background: var(--c-parchment);
+  color: var(--c-parchment-ink);
+  border: 0;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.7);
+  border-radius: 4px;
+  padding: 24px 22px 34px;
+  clip-path: polygon(
+    0 0, 100% 0, 100% calc(100% - 10px),
+    95% 100%, 90% calc(100% - 10px), 85% 100%, 80% calc(100% - 10px),
+    75% 100%, 70% calc(100% - 10px), 65% 100%, 60% calc(100% - 10px),
+    55% 100%, 50% calc(100% - 10px), 45% 100%, 40% calc(100% - 10px),
+    35% 100%, 30% calc(100% - 10px), 25% 100%, 20% calc(100% - 10px),
+    15% 100%, 10% calc(100% - 10px), 5% 100%, 0 calc(100% - 10px)
+  );
+}
+#sEnd .card.receipt::before { display: none; }
+.receipt-header {
+  border-bottom: 2px dashed #B8AB96;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.receipt-seal {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  letter-spacing: 1.5px;
+  color: var(--c-parchment-dim);
+}
+.receipt-sub {
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--c-parchment-dim);
+  text-transform: uppercase;
+}
+#sEnd #enTitle {
+  font-family: var(--font-display);
+  font-size: 36px;
+  letter-spacing: 2px;
+  color: #141518;
+  margin: 6px 0 2px;
+  text-shadow: none;
+}
+#sEnd #enSub {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--c-parchment-dim);
+  margin: 2px 0 8px;
+}
+#sEnd .stars svg {
+  fill: rgba(0,0,0,0.12);
+  stroke: rgba(0,0,0,0.25);
+}
+#sEnd .stars svg.on {
+  fill: var(--c-yellow);
+  stroke: #7A4B00;
+  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.2));
+}
+#sEnd .kv {
+  background: transparent;
+  border-top: 2px dashed #B8AB96;
+  border-bottom: 2px dashed #B8AB96;
+  border-radius: 0;
+  color: var(--c-parchment-ink);
+  padding: 10px 0;
+}
+#sEnd .kv span:nth-child(odd) { color: var(--c-parchment-dim); }
+#sEnd .kv .pos { color: #176B38; font-weight: 700; }
+#sEnd .kv .neg { color: var(--c-cay-red); font-weight: 700; }
+#sEnd ul.feat.tips { margin: 8px 0; }
+#sEnd ul.feat.tips li {
+  background: rgba(34, 29, 23, 0.06);
+  color: #221D17;
+  font-size: 13px;
+  border-left: 3px solid var(--c-cay-red);
+  border-radius: 4px 8px 8px 4px;
+}
+#sEnd ul.feat.tips li.ok {
+  border-left-color: #176B38;
+}
+#sEnd ul.feat.tips li::before { display: none; }
+#sEnd .rec {
+  color: var(--c-cay-red);
+  margin: 8px 0;
+}
+#sEnd .btn:not(.primary) {
+  background: #FFF;
+  color: #141518;
+  border-color: #2E333D;
+  box-shadow: 0 4px 0 #2E333D;
+}
+#sEnd .mascot {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #E0D4BE;
+  border: 3px solid #FFF;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+#sEnd .mascot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hurt & Vignette */
+#vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(10,12,18,0.45));
+}
+#hurt {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  background: radial-gradient(ellipse at center, rgba(184, 38, 28, 0.28) 0%, rgba(184, 38, 28, 0.65) 100%);
+  box-shadow: inset 0 0 90px 20px rgba(184, 38, 28, 0.85);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+#dbg {
+  position: fixed;
+  left: 8px;
+  top: 92px;
+  z-index: 50;
+  font: 12px/1.35 var(--font-mono);
+  color: #9FFFA8;
+  background: rgba(0,0,0,0.75);
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: pre;
+  pointer-events: none;
+  display: none;
+  max-width: 60vw;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 760px) {
+  :root { --fs: 13px; }
+  #topbar { gap: 6px; padding: 5px 8px; flex-wrap: wrap; }
+  #topbar .brand-text { display: none; }
+  .stat b { font-size: 14px; }
+  .stat small { font-size: 10px; }
+  .stat.fare { flex: 1 1 100px; min-width: 96px; }
+  .stat.sm { min-width: 48px; }
+  #stFare .lcd { font-size: 16px; letter-spacing: 0.5px; }
+  #stFare .of { font-size: 10px; }
+  #minimap { width: 150px; height: 113px; bottom: calc(max(8px, env(safe-area-inset-bottom)) + 52px); }
+  .seat { width: 20px; height: 26px; font-size: 11px; }
+  #seatsStrip { gap: 4px; padding: 5px 7px; }
+  #guideBox { bottom: calc(max(10px, env(safe-area-inset-bottom)) + 56px); }
+  .card { padding: 18px 16px; }
+  .card h1 { font-size: 38px; letter-spacing: 4px; }
+  .card h2 { font-size: 24px; }
+  #speedo { width: 92px; height: 92px; }
+  #speedo b { font-size: 24px; }
+}
+
+@media (max-height: 520px) {
+  .card { padding: 12px 16px; }
+  .card h1 { font-size: 32px; }
+  #logoBig { width: 120px; height: 68px; }
+  #minimap { width: 150px; height: 113px; bottom: calc(max(8px, env(safe-area-inset-bottom)) + 52px); }
+  .seat { width: 20px; height: 26px; font-size: 11px; }
+  #seatsStrip { gap: 4px; padding: 5px 7px; }
+  #guideBox { bottom: calc(max(10px, env(safe-area-inset-bottom)) + 54px); }
+}
+
+
+/* ---- stil-3d (23.11): the song video's warm clay world. Cocoa panels, soft deep shadows, round buttons, chibi faces. */
+:root { --c-asphalt-border: rgba(255, 214, 160, 0.22); }
+.card { border-radius: 22px; box-shadow: inset 0 2px 0 rgba(255,236,200,0.22), inset 0 -4px 0 rgba(40,20,5,0.45), 0 18px 44px rgba(60,28,0,0.5); }
+.card::before { border-radius: 20px 20px 0 0; }
+.screen.dim { background: rgba(48, 26, 10, 0.55); }
+.btn { border-radius: 16px; border-color: #7A6049; background: linear-gradient(180deg, #6A5140 0%, #46342A 100%); box-shadow: 0 4px 0 #2A1B11, 0 8px 14px rgba(40,18,0,0.28), inset 0 2px 0 rgba(255,232,200,0.25); }
+.btn:hover { background: linear-gradient(180deg, #7A5E4A 0%, #533E31 100%); }
+.btn.primary { background: linear-gradient(180deg, #FFAE1A 0%, #E59500 50%, #C47900 100%); border-color: #FFE699; box-shadow: 0 4px 0 #7A4B00, 0 8px 16px rgba(120,70,0,0.35), inset 0 2px 0 rgba(255,255,255,0.6); }
+.btn.primary:hover { background: linear-gradient(180deg, #FFBA3B 0%, #F5A30D 50%, #D48400 100%); }
+.btn.icon { border-radius: 14px; }
+#topbar, #seatsStrip { border-radius: 18px; box-shadow: inset 0 2px 0 rgba(255,236,200,0.18), 0 10px 26px rgba(50,24,0,0.45); }
+.seat { border-radius: 10px 10px 6px 6px; }
+img.f3d { pointer-events: none; user-select: none; -webkit-user-drag: none; }
+#topbar .brand img.brand3d { height: 34px; width: auto; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); }
+#logo3d { display: block; height: 116px; width: auto; margin: -4px auto 0; filter: drop-shadow(0 10px 12px rgba(40,18,0,0.45)); }
+.h1row, .h2row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.h1row h1, .h2row h2 { min-width: 0; }
+.h1row .face { height: 66px; width: auto; flex: none; filter: drop-shadow(0 5px 6px rgba(40,18,0,0.45)); }
+.h2row .face { height: 50px; width: auto; flex: none; margin: -4px 0 6px; filter: drop-shadow(0 4px 5px rgba(40,18,0,0.45)); }
+#sEnd .driver3d { position: absolute; left: 12px; top: 12px; width: 76px; height: 76px; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #FFE6B0, #E9C27A); border: 3px solid #FFF; box-shadow: 0 4px 10px rgba(0,0,0,0.2); overflow: hidden; }
+#sEnd .driver3d img { width: 100%; height: auto; margin-top: 6px; }
+#sEnd .driver3d:has(img[hidden]) { display: none; }
+body.a3d #sEnd .receipt-header { padding-left: 84px; padding-right: 84px; min-height: 70px; }
+@media (max-width: 600px) {
+  #sEnd .driver3d, #sEnd .mascot { width: 56px; height: 56px; top: 10px; }
+  #sEnd .driver3d { left: 10px; } #sEnd .mascot { right: 10px; }
+  body.a3d #sEnd .receipt-header { padding-left: 58px; padding-right: 58px; min-height: 58px; }
+  /* phone: retry + menu side by side, so the faces' header room does not push share / other games off screen */
+  #sEnd .col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  #sEnd .col .btn.primary { grid-column: 1 / -1; }
+  #sEnd .col .row { display: contents; }
+  #sEnd .col .btn { padding-left: 8px; padding-right: 8px; }
+}
+/* seat chips: the rider's chibi face, the stop number in a badge */
+.seat em.pf { position: absolute; inset: 1px 1px 6px; border-radius: 7px 7px 3px 3px; background: center 12% / 92% auto no-repeat; display: none; }
+.seat.on em.pf.has { display: block; }
+.seat span { position: relative; z-index: 1; }
+.seat.on:has(em.pf.has) span { align-self: flex-end; margin-bottom: 4px; font-size: 0.8em; line-height: 1; padding: 1px 3px; border-radius: 5px; background: rgba(20,12,6,0.72); }
+.seat.drv.face3d { background: radial-gradient(circle at 50% 30%, #FFE6B0, #E9B65A); overflow: hidden; }
+.seat.drv.face3d svg.ic { display: none; }
+.seat.drv.face3d img { width: 112%; height: auto; margin-top: 6px; }
+/* short desktop / landscape: smaller pictures so every button of a card stays on screen */
+@media (max-height: 800px) {
+  #logo3d { height: 80px; }
+  .h1row .face { height: 54px; }
+  .h2row .face { height: 42px; }
+}
+@media (max-height: 640px) {
+  #logo3d { height: 60px; }
+  .h1row .face { height: 44px; }
+}
+@media (max-height: 440px) {
+  #sTitle #logo3d { display: none; }
+  .h1row .face { height: 36px; }
+  .h2row .face { height: 32px; margin: 0; }
+}
+@media (max-width: 760px) {
+  .h1row .face { height: 50px; }
+  .h1row { gap: 6px; }
+}
+@media (max-width: 420px) {
+  #sTitle .row .btn { font-size: 15px; letter-spacing: 0.4px; gap: 4px; }
+}
+/* shift report on short desktops: stats in two columns, buttons in a 2-column grid, so every button fits at 720 px */
+@media (max-height: 800px) and (min-width: 600px) {
+  #sEnd .card.receipt { padding: 16px 22px 26px; width: min(92vw, 560px); }
+  #sEnd .driver3d, #sEnd .mascot { width: 62px; height: 62px; top: 8px; }
+  body.a3d #sEnd .receipt-header { min-height: 54px; padding-left: 76px; padding-right: 76px; }
+  #sEnd #enTitle { font-size: 30px; margin: 2px 0 0; }
+  #sEnd #enSub { margin: 0 0 2px; }
+  #sEnd .stars { margin: 2px 0; }
+  #sEnd .stars svg { width: 34px; height: 34px; }
+  #sEnd .kv { grid-template-columns: 1fr auto 1fr auto; gap: 3px 14px; padding: 6px 0; margin: 6px 0; font-size: 13px; }
+  #sEnd ul.feat.tips { margin: 4px 0; }
+  #sEnd ul.feat.tips li { padding: 3px 10px; margin: 3px 0; font-size: 12.5px; }
+  #sEnd .rec { margin: 2px 0; font-size: 18px; }
+  #sEnd .col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  #sEnd .col .btn.primary { grid-column: 1 / -1; }
+  #sEnd .col .row { display: contents; }
+  #sEnd .col .btn { min-height: 40px; padding-top: 7px; padding-bottom: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01s !important;
+  }
+}
+</style>
+<script>/*ARENA-KIT:BEGIN v1.3.2 sha256:ce77e23fab7c*/
+/* ARENA-KIT v1 — shared layer for the 21 Claude Game Arena games.
+ *
+ * Injected inline into each game's index.html (between begin/end marker comments) by
+ * arena-kit/inject.py, so every game stays a single file. Plain script, no imports; the kit itself opens no
+ * connection (v1.1 play events are handed to the page's existing GoatCounter counter, if it is there).
+ * Everything is optional: a game that never calls Arena.* behaves exactly as before.
+ *
+ *   Arena.perf.attach(renderer)        dynamic pixel ratio for weak GPUs (Intel UHD)
+ *   Arena.hint(id, text)               one-time hint toast (first 30 s guidance)
+ *   Arena.endCard({...})               end-of-session card: reason, score, "again", another game
+ *   Arena.daily(game, {dayKey})        UTC-day seed (or the game's own day key) + mulberry32 rng + streak
+ *   Arena.quiet                        true on ?auto / ?nosave / ?demo: nothing is written to localStorage
+ *   Arena.share({...})                 Web Share / clipboard text + optional PNG card
+ *   Arena.profile(), Arena.award(id)   cross-game passport (shared origin localStorage)
+ *   Arena.settings / openSettings()    accessibility panel (text size, contrast, motion, vibration, auto-pause)
+ *   Arena.complete({mount, feedback})  v1.1: "completed" event + one-tap 👍/👎 (once a day per game), inline in `mount`
+ *   Arena.track(name)                  v1.1: one GoatCounter event "<game>/<name>" per page load; automatic:
+ *                                      "start" (first real input) and "return" (played this game on an earlier day)
+ *                                      Nothing is sent or shown on quiet runs; no cookies, no ids, no new service.
+ *                                      v1.2: also "play1m", "play5m", "play10m" (visible play time after the first input)
+ *   Daily streak freeze (v1.2)         every 7 streak days earn a freeze (max 2); one missed day spends it instead of
+ *                                      resetting the streak. daily().freeze, complete() -> {saved:true} + toast
+ *
+ *   Arena.portal (v1.3)               portal SDK adapter (CrazyGames v3, Poki, Playgama Bridge). On the game's own site
+ *                                      (no SDK on the page, no ?portal=) every call is a no-op and nothing changes.
+ *                                      The kit still loads no script: a portal build adds the SDK <script> itself.
+ *                                      portal.gameplay(true|false), portal.loading(true|false),
+ *                                      portal.midgame() -> Promise<shown>  (between rounds only; paced, first after 60 s,
+ *                                      then at most one per 3 min), portal.rewarded() -> Promise<granted> (opt-in;
+ *                                      portal.canReward tells whether to show the button). During an ad every
+ *                                      AudioContext of the page is suspended and 'adstart' / 'adend' are emitted
+ *                                      (v1.3.2; not 'pause', which games use to auto-pause until the player resumes).
+ *                                      gameplay(true) is sent automatically on the first real input.
+ *                                      v1.3.1: on a portal the end card has no "another game" link (cross-promotion).
+ *
+ * Storage: every key starts with "arena." and is versioned; every access is wrapped in try/catch
+ * (private mode, quota, portals). Pure logic lives in Arena._core so it can be tested in Node.
+ */
+(function (root) {
+  'use strict';
+  if (root.Arena && root.Arena.version) return; // injected twice (e.g. iframe) -> keep the first
+  var VERSION = '1.3.2';
+  var hasDOM = typeof document !== 'undefined';
+
+  /* ---------- core (pure, Node-testable) ---------- */
+  var core = {};
+
+  core.dayKey = function (date) { // UTC YYYYMMDD
+    var d = date || new Date();
+    return d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate();
+  };
+  core.localDayKey = function (date) { // local-time YYYYMMDD (for games whose own daily turns at local midnight)
+    var d = date || new Date();
+    return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  };
+  // Bot / demo / no-save runs must not touch the player's storage: ?auto, ?nosave, ?demo (any value).
+  core.isQuiet = function (search) { return /[?&](auto|nosave|demo)(=|&|$)/.test(search || ''); };
+  core.prevDayKey = function (key) {
+    var y = Math.floor(key / 10000), m = Math.floor(key / 100) % 100, d = key % 100;
+    return core.dayKey(new Date(Date.UTC(y, m - 1, d) - 86400000));
+  };
+  // v1.1: a player is "returning" if this game was last played on an earlier day (old profiles: any earlier play)
+  core.isReturn = function (lastDay, plays, lastAnyAt, today) {
+    if (lastDay) return lastDay < today;
+    return !!(plays > 0 && lastAnyAt && core.dayKey(new Date(lastAnyAt)) < today);
+  };
+  core.eventName = function (name) { return String(name || '').replace(/[^a-z0-9-]/gi, '').slice(0, 24).toLowerCase(); };
+  core.hash = function (str) { // FNV-1a 32-bit
+    var h = 0x811c9dc5;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  };
+  core.mulberry32 = function (seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  // Streak after finishing the daily run on `today`: same day keeps it, yesterday +1, gap resets to 1.
+  // v1.2 freeze: a gap of exactly one missed day spends a freeze and the streak continues (+1).
+  // A freeze is earned each time the streak reaches a multiple of 7 (kept at most FREEZE_MAX).
+  core.FREEZE_MAX = 2;
+  core.nextStreak = function (rec, today) {
+    rec = rec || { last: 0, streak: 0, best: 0 };
+    var freeze = rec.freeze || 0;
+    var out = { last: today, streak: 1, best: rec.best || 0, freeze: freeze };
+    var yesterday = core.prevDayKey(today);
+    if (rec.last === today) out.streak = rec.streak || 1;
+    else if (rec.last && rec.last === yesterday) out.streak = (rec.streak || 0) + 1;
+    else if (rec.last && freeze > 0 && rec.streak > 0 && rec.last === core.prevDayKey(yesterday)) {
+      out.streak = rec.streak + 1; out.freeze = freeze - 1; out.saved = true;
+    }
+    if (rec.last !== today && out.streak % 7 === 0) out.freeze = Math.min(core.FREEZE_MAX, out.freeze + 1);
+    out.best = Math.max(out.best, out.streak);
+    return out;
+  };
+  // Streak to show before today's run: alive if played today or yesterday, or the day before with a freeze left.
+  core.liveStreak = function (rec, today) {
+    if (!rec || !rec.last) return 0;
+    var y = core.prevDayKey(today);
+    if (rec.last === today || rec.last === y) return rec.streak || 0;
+    if ((rec.freeze || 0) > 0 && rec.last === core.prevDayKey(y)) return rec.streak || 0;
+    return 0;
+  };
+  // Dynamic-resolution controller. Feed frame times (ms); returns the pixel ratio to use.
+  core.perfController = function (opts) {
+    opts = opts || {};
+    var s = {
+      min: opts.min || 0.6, max: opts.max || 2, ratio: opts.start || opts.max || 2,
+      slow: opts.slowMs || 22, fast: opts.fastMs || 14, avg: 16.7, n: 0, cool: 0,
+    };
+    s.feed = function (dt, now) {
+      if (!(dt > 0) || dt > 250) return s.ratio; // tab switch / breakpoint: ignore
+      s.avg += (dt - s.avg) * (1 / 30); s.n++;
+      if (s.n < 60 || now < s.cool) return s.ratio;
+      if (s.avg > s.slow && s.ratio > s.min) { s.ratio = Math.max(s.min, +(s.ratio * 0.85).toFixed(3)); s.cool = now + 2000; }
+      else if (s.avg < s.fast && s.ratio < s.max) { s.ratio = Math.min(s.max, +(s.ratio * 1.1).toFixed(3)); s.cool = now + 4000; }
+      return s.ratio;
+    };
+    return s;
+  };
+  // v1.3 portal: ?portal= wins, then the host name, then which SDK object the portal build put on the page.
+  core.PORTALS = ['crazygames', 'poki', 'playgama'];
+  core.portalName = function (search, host, sdk) {
+    var m = /[?&]portal=([a-z]+)/i.exec(search || '');
+    if (m) { var q = m[1].toLowerCase(); return core.PORTALS.indexOf(q) >= 0 ? q : 'none'; }
+    host = String(host || '').toLowerCase();
+    for (var i = 0; i < core.PORTALS.length; i++) if (host.indexOf(core.PORTALS[i]) >= 0) return core.PORTALS[i];
+    sdk = sdk || {};
+    if (sdk.crazygames) return 'crazygames';
+    if (sdk.poki) return 'poki';
+    if (sdk.playgama) return 'playgama';
+    return 'none';
+  };
+  // Interstitial pacing: never in the first `first` ms of play, then at least `gap` ms apart (CrazyGames: 3 min).
+  core.adPacer = function (opts) {
+    opts = opts || {};
+    var p = { first: opts.first == null ? 60000 : opts.first, gap: opts.gap == null ? 180000 : opts.gap, start: null, last: null };
+    p.begin = function (now) { if (p.start == null) p.start = now; };
+    p.can = function (now) {
+      if (p.start == null || now - p.start < p.first) return false;
+      return p.last == null || now - p.last >= p.gap;
+    };
+    p.mark = function (now) { p.last = now; };
+    return p;
+  };
+  core.shareText = function (o) {
+    var lines = [o.title || o.game || 'Claude Game Arena'];
+    (o.lines || []).forEach(function (l) { lines.push(String(l)); });
+    if (o.url) lines.push(o.url);
+    return lines.join('\n');
+  };
+
+  /* ---------- storage ---------- */
+  var mem = {};
+  var quiet = false;
+  try { quiet = hasDOM && core.isQuiet(location.search); } catch (e) {}
+  function store() { if (quiet) return null; try { return root.localStorage; } catch (e) { return null; } }
+  function get(key, fallback) {
+    var s = store(), raw = null;
+    try { raw = s ? s.getItem('arena.' + key) : (key in mem ? mem[key] : null); } catch (e) { raw = null; }
+    if (raw == null) return fallback;
+    try { var v = JSON.parse(raw); return v == null ? fallback : v; } catch (e) { return fallback; }
+  }
+  function set(key, val) {
+    var raw = JSON.stringify(val), s = store();
+    try { if (s) s.setItem('arena.' + key, raw); else mem[key] = raw; } catch (e) { mem[key] = raw; }
+  }
+
+  /* ---------- language ---------- */
+  var STR = {
+    zh: { again: '再玩一次', another: '试玩其他游戏', close: '关闭', settings: '辅助功能',
+      textSize: '文字大小', contrast: '高对比度', motion: '减少动态效果', vibration: '振动',
+      autoPause: '切至后台时暂停', copied: '已复制到剪贴板', streak: '连续挑战', days: '天', share: '分享',
+      fbAsk: '玩得开心吗？', like: '喜欢', dislike: '不喜欢', thanks: '谢谢反馈！',
+      freezeUsed: '❄️ 已使用补签保留连续挑战纪录', freezeEarned: '❄️ 获得一次补签机会，错过一天也可保留纪录' },
+    tr: { again: 'Bir daha', another: 'Başka bir oyun dene', close: 'Kapat', settings: 'Erişilebilirlik',
+      textSize: 'Yazı boyutu', contrast: 'Yüksek karşıtlık', motion: 'Hareketi azalt', vibration: 'Titreşim',
+      autoPause: 'Sekme değişince duraklat', copied: 'Panoya kopyalandı', streak: 'Seri', days: 'gün', share: 'Paylaş',
+      fbAsk: 'Beğendin mi?', like: 'Beğendim', dislike: 'Beğenmedim', thanks: 'Teşekkürler!',
+      freezeUsed: '❄️ Seri dondurucu kaçırdığın günü kurtardı', freezeEarned: '❄️ Seri dondurucu kazandın: bir günü kaçırsan da serin sürer' },
+    en: { again: 'Play again', another: 'Try another game', close: 'Close', settings: 'Accessibility',
+      textSize: 'Text size', contrast: 'High contrast', motion: 'Reduce motion', vibration: 'Vibration',
+      autoPause: 'Pause when the tab is hidden', copied: 'Copied to clipboard', streak: 'Streak', days: 'days', share: 'Share',
+      fbAsk: 'Did you enjoy it?', like: 'I liked it', dislike: 'I did not like it', thanks: 'Thanks!',
+      freezeUsed: '❄️ A streak freeze saved the day you missed', freezeEarned: '❄️ Streak freeze earned: miss a day and your streak survives' },
+  };
+  var lang = 'zh';
+
+  function t(k) { return (STR[lang] && STR[lang][k]) || STR.en[k] || k; }
+
+  /* ---------- game id + passport ---------- */
+  var GAMES = ['bogaz-vapuru', 'carsi-kacisi', 'cay-ocagi', 'cini-ustasi', 'dolmus', 'ebru', 'fay-hatti', 'hamsi',
+    'kale-savunmasi', 'kapadokya-balonu', 'karagoz', 'kervan', 'kirkpinar', 'lale-bahcesi', 'marti', 'mehter',
+    'mimar-sinan', 'pamukkale', 'peri-golf', 'simit-firini', 'topkapi-gecesi'];
+  var gameId = 'unknown';
+  try {
+    var seg = (hasDOM && location.pathname.split('/').filter(Boolean)[0]) || '';
+    var meta = hasDOM && document.querySelector('meta[name="arena-game"]');
+    gameId = (meta && meta.content) || (GAMES.indexOf(seg) >= 0 ? seg : 'unknown');
+  } catch (e) {}
+  function profile() { return get('profile.v1', { plays: {}, badges: {}, last: null, first: null }); }
+  var returning = false;
+  function touchProfile() {
+    var p = profile(), now = Date.now(), today = core.dayKey();
+    p.lastDay = p.lastDay || {};
+    returning = core.isReturn(p.lastDay[gameId], p.plays[gameId] || 0, p.last && p.last.at, today);
+    p.plays[gameId] = (p.plays[gameId] || 0) + 1; p.last = { game: gameId, at: now }; p.first = p.first || now;
+    p.lastDay[gameId] = today;
+    set('profile.v1', p); return p;
+  }
+  function award(id, label) {
+    var p = profile(); if (p.badges[id]) return false;
+    p.badges[id] = { at: Date.now(), game: gameId, label: label || id }; set('profile.v1', p); return true;
+  }
+
+  /* ---------- settings ---------- */
+  var DEFAULTS = { textScale: 1, highContrast: false, reducedMotion: null, vibration: true, autoPause: true };
+  var settings = Object.assign({}, DEFAULTS, get('settings.v1', {}));
+  if (settings.reducedMotion === null) {
+    try { settings.reducedMotion = !!(root.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { settings.reducedMotion = false; }
+  }
+  var listeners = { pause: [], resume: [], settings: [], adstart: [], adend: [] };
+  function emit(name, arg) { (listeners[name] || []).forEach(function (f) { try { f(arg); } catch (e) {} }); }
+  function applySettings() {
+    if (!hasDOM) return;
+    var h = document.documentElement;
+    h.style.setProperty('--arena-text-scale', String(settings.textScale));
+    h.toggleAttribute('data-arena-contrast', !!settings.highContrast);
+    h.toggleAttribute('data-arena-reduced-motion', !!settings.reducedMotion);
+    emit('settings', settings);
+  }
+  // Vibration toggle without touching game code: wrap navigator.vibrate once.
+  try {
+    if (root.navigator && typeof navigator.vibrate === 'function' && !navigator.__arenaWrapped) {
+      var vib = navigator.vibrate.bind(navigator);
+      navigator.vibrate = function (p) { return settings.vibration ? vib(p) : false; };
+      navigator.__arenaWrapped = true;
+    }
+  } catch (e) {}
+
+  /* ---------- DOM helpers (kit UI) ---------- */
+  var CSS = '' +
+    '.arena-toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;' +
+    'max-width:min(92vw,520px);padding:10px 14px;border-radius:10px;background:rgba(14,13,11,.88);color:#f6f1e6;' +
+    'font:500 calc(14px*var(--arena-text-scale,1))/1.35 system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.35);pointer-events:none;' +
+    'opacity:0;transition:opacity .25s}' +
+    '.arena-toast.on{opacity:1}' +
+    '.arena-modal{position:fixed;inset:0;z-index:2147483001;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45)}' +
+    '.arena-card{width:min(92vw,420px);padding:20px;border-radius:14px;background:#f6f1e6;color:#1a1712;' +
+    'font:500 calc(15px*var(--arena-text-scale,1))/1.45 system-ui,sans-serif;box-shadow:0 18px 50px rgba(0,0,0,.4)}' +
+    '.arena-card h2{margin:0 0 6px;font-size:1.3em}.arena-card p{margin:4px 0}' +
+    '.arena-card button,.arena-card a.arena-btn{display:block;width:100%;margin-top:10px;padding:11px;border:0;border-radius:10px;' +
+    'font:inherit;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;box-sizing:border-box}' +
+    '.arena-primary{background:#e2552f;color:#fff}.arena-secondary{background:#e7dfd0;color:#1a1712}' +
+    '.arena-card label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0}' +
+    '.arena-card button:focus-visible,.arena-card a:focus-visible,.arena-card input:focus-visible{outline:3px solid #3fd4dc;outline-offset:2px}' +
+    '.arena-gear{position:fixed;right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));z-index:2147482999;' +
+    'width:40px;height:40px;border-radius:50%;border:0;background:rgba(14,13,11,.7);color:#f6f1e6;font:20px/40px system-ui;cursor:pointer;opacity:.7}' +
+    '.arena-gear:hover,.arena-gear:focus-visible{opacity:1}' +
+    'html[data-arena-contrast] body{filter:contrast(1.25) saturate(1.1)}' +
+    '.arena-fb{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;white-space:nowrap;' +
+    'display:flex;align-items:center;gap:8px;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(14,13,11,.9);color:#f6f1e6;' +
+    'font:600 calc(15px*var(--arena-text-scale,1))/1.2 system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.35)}' +
+    '.arena-fb button{min-width:44px;min-height:44px;border:0;border-radius:50%;background:#2b2722;color:#f6f1e6;font:22px/1 system-ui;cursor:pointer}' +
+    '.arena-fb button.arena-fb-x{font-size:16px;background:transparent}' +
+    '.arena-fb.arena-fb-inline{position:static;transform:none;margin:12px auto 0;width:max-content;max-width:100%;box-shadow:none}' +
+    '.arena-fb button:focus-visible{outline:3px solid #3fd4dc;outline-offset:2px}' +
+    'html[data-arena-reduced-motion] *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}';
+  var styled = false;
+  function style() {
+    if (styled || !hasDOM) return; styled = true;
+    var s = document.createElement('style'); s.id = 'arena-kit-style'; s.textContent = CSS; document.head.appendChild(s);
+  }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { e.appendChild(c); });
+    return e;
+  }
+  var live = null;
+  function announce(text) { // screen readers
+    if (!hasDOM) return;
+    if (!live) { live = el('div', { 'aria-live': 'polite', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }); document.body.appendChild(live); }
+    live.textContent = ''; setTimeout(function () { live.textContent = text; }, 30);
+  }
+  var toastTimer = null, toastEl = null;
+  function toast(text, ms) {
+    if (!hasDOM || !document.body) return;
+    style();
+    if (!toastEl) { toastEl = el('div', { class: 'arena-toast', role: 'status' }); document.body.appendChild(toastEl); }
+    toastEl.textContent = text; toastEl.classList.add('on'); announce(text);
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, ms || 4000);
+  }
+  function modal(card) {
+    style();
+    var m = el('div', { class: 'arena-modal', role: 'dialog', 'aria-modal': 'true' }, [card]);
+    function close() { if (m.parentNode) m.parentNode.removeChild(m); document.removeEventListener('keydown', onKey, true); }
+    function onKey(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
+    m.addEventListener('click', function (e) { if (e.target === m) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(m);
+    var f = card.querySelector('button,a,input'); if (f) f.focus();
+    return close;
+  }
+
+  /* ---------- features ---------- */
+  function hint(id, text, opts) {
+    var seen = get('hints.v1', {});
+    if (seen[gameId + ':' + id]) return false;
+    seen[gameId + ':' + id] = Date.now(); set('hints.v1', seen);
+    setTimeout(function () { toast(text, (opts && opts.ms) || 5000); }, (opts && opts.delay) || 0);
+    return true;
+  }
+
+  function endCard(o) {
+    if (!hasDOM) return function () {};
+    o = o || {};
+    var others = GAMES.filter(function (g) { return g !== gameId; });
+    var pick = others[core.hash(String(Date.now() / 60000 | 0) + gameId) % others.length];
+    var kids = [el('h2', { text: o.title || '' })];
+    if (o.reason) kids.push(el('p', { text: o.reason }));
+    (o.lines || []).forEach(function (l) { kids.push(el('p', { text: l })); });
+    var again = el('button', { class: 'arena-primary', type: 'button', text: o.againLabel || t('again') });
+    kids.push(again);
+    if (o.share) {
+      var sh = el('button', { class: 'arena-secondary', type: 'button', text: t('share') });
+      sh.addEventListener('click', function () { share(o.share); });
+      kids.push(sh);
+    }
+    if (o.another !== false && portal.name === 'none') { // portals forbid cross-promotion of other games
+      kids.push(el('a', { class: 'arena-btn arena-secondary', href: 'https://furkiozknn.github.io/' + pick + '/', target: '_blank', rel: 'noopener', text: t('another') }));
+    }
+    var close = modal(el('div', { class: 'arena-card' }, kids));
+    again.addEventListener('click', function () { close(); if (o.onAgain) o.onAgain(); });
+    return close;
+  }
+
+  /* ---------- play events (v1.1) ---------- */
+  // Handed to the page's own GoatCounter (`window.goatcounter.count`, already on 20 of 21 pages). The kit opens no
+  // connection itself; without the counter (or on ?auto / ?nosave / ?demo) the events are simply dropped.
+  var sent = {}, pending = [];
+  function gcSend(path, title) {
+    var gc = root.goatcounter;
+    if (!gc || typeof gc.count !== 'function') return false;
+    try { gc.count({ path: path, title: title || path, event: true }); } catch (e) {}
+    return true;
+  }
+  function flush(tries) {
+    pending = pending.filter(function (e) { return !gcSend(e[0], e[1]); });
+    if (pending.length && tries < 20) setTimeout(function () { flush(tries + 1); }, 500); // count.js loads async
+  }
+  function track(name, title) {
+    name = core.eventName(name);
+    if (quiet || !hasDOM || !name || sent[name]) return false;
+    sent[name] = 1;
+    var path = gameId + '/' + name;
+    if (!gcSend(path, title)) { pending.push([path, title]); if (pending.length === 1) flush(0); }
+    return true;
+  }
+  var fbEl = null;
+  function complete(o) {
+    o = o || {};
+    track('complete');
+    if (quiet || !hasDOM || !document.body || o.feedback === false || fbEl) return;
+    var asked = get('feedback.v1', {}), today = core.dayKey();
+    if (asked[gameId] === today) return;
+    style();
+    var up = el('button', { type: 'button', 'aria-label': t('like'), title: t('like'), text: '👍' });
+    var down = el('button', { type: 'button', 'aria-label': t('dislike'), title: t('dislike'), text: '👎' });
+    var x = el('button', { type: 'button', class: 'arena-fb-x', 'aria-label': t('close'), title: t('close'), text: '✕' });
+    var label = el('span', { text: t('fbAsk') });
+    var mount = o.mount && o.mount.appendChild ? o.mount : null;   // inline in the game's own end screen if given
+    fbEl = el('div', { class: mount ? 'arena-fb arena-fb-inline' : 'arena-fb', role: 'group', 'aria-label': t('fbAsk') }, [label, up, down, x]);
+    function done() { if (fbEl && fbEl.parentNode) fbEl.parentNode.removeChild(fbEl); fbEl = null; }
+    function vote(v) {
+      track(v); var a = get('feedback.v1', {}); a[gameId] = today; set('feedback.v1', a);
+      [up, down, x].forEach(function (b) { b.remove(); }); label.textContent = t('thanks'); announce(t('thanks'));
+      setTimeout(done, 1500);
+    }
+    up.addEventListener('click', function () { vote('like'); });
+    down.addEventListener('click', function () { vote('dislike'); });
+    x.addEventListener('click', done);
+    (mount || document.body).appendChild(fbEl);
+    if (!mount) setTimeout(done, o.ms || 20000);   // floating panel fades out; an inline one stays with the end screen
+  }
+
+  function daily(game, opts) {
+    game = game || gameId;
+    var own = opts && /^\d{8}$/.test(String(opts.dayKey || '')) ? +opts.dayKey : 0;
+    var q = null;
+    try { q = hasDOM && new URLSearchParams(location.search).get('d'); } catch (e) {}
+    var day = /^\d{8}$/.test(q || '') ? +q : (own || core.dayKey());
+    var seed = core.hash(game + ':' + day);
+    var recs = get('daily.v1', {});
+    var rec = recs[game] || { last: 0, streak: 0, best: 0 };
+    return {
+      day: day, seed: seed, rng: core.mulberry32(seed), streak: core.liveStreak(rec, day),
+      done: rec.last === day, best: rec.best || 0, freeze: rec.freeze || 0,
+      complete: function (score) {
+        var all = get('daily.v1', {});
+        var next = core.nextStreak(all[game], day);
+        next.score = Math.max(score || 0, (all[game] && all[game].last === day && all[game].score) || 0);
+        var had = (all[game] && all[game].freeze) || 0;
+        all[game] = next; set('daily.v1', all);
+        if (!quiet && next.saved) toast(t('freezeUsed'), 4000);
+        else if (!quiet && next.freeze > had) toast(t('freezeEarned'), 4000);
+        if (next.streak >= 3) award('streak3-' + game, game + ' 3');
+        if (next.streak >= 7) award('streak7', '7');
+        return next;
+      },
+    };
+  }
+
+  function share(o) {
+    o = o || {};
+    var text = core.shareText(o);
+    var nav = root.navigator || {};
+    if (nav.share) return nav.share({ title: o.title, text: text, url: o.url }).catch(function () {});
+    if (nav.clipboard && nav.clipboard.writeText) return nav.clipboard.writeText(text).then(function () { toast(t('copied'), 2500); }, function () {});
+    return Promise.resolve();
+  }
+  function shareCard(o) { // 1080x1350 PNG blob; returns Promise<Blob|null>
+    if (!hasDOM) return Promise.resolve(null);
+    var c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+    var g = c.getContext('2d'); if (!g) return Promise.resolve(null);
+    g.fillStyle = o.bg || '#1a1712'; g.fillRect(0, 0, 1080, 1350);
+    g.fillStyle = o.accent || '#e2552f'; g.fillRect(0, 0, 1080, 18);
+    g.fillStyle = '#f6f1e6'; g.font = '700 84px system-ui,sans-serif'; g.fillText(o.title || gameId, 72, 220);
+    g.font = '500 52px system-ui,sans-serif';
+    (o.lines || []).forEach(function (l, i) { g.fillText(String(l), 72, 340 + i * 78); });
+    g.font = '500 36px system-ui,sans-serif'; g.fillStyle = '#c9bda4'; g.fillText(o.url || ('furkiozknn.github.io/' + gameId), 72, 1270);
+    return new Promise(function (res) { c.toBlob ? c.toBlob(function (b) { res(b); }, 'image/png') : res(null); });
+  }
+
+  function openSettings() {
+    if (!hasDOM) return;
+    function row(label, input) { return el('label', {}, [el('span', { text: label }), input]); }
+    function check(key) {
+      var i = el('input', { type: 'checkbox' }); i.checked = !!settings[key];
+      i.addEventListener('change', function () { settings[key] = i.checked; set('settings.v1', settings); applySettings(); });
+      return i;
+    }
+    var size = el('input', { type: 'range', min: '0.85', max: '1.6', step: '0.05', 'aria-label': t('textSize') });
+    size.value = String(settings.textScale);
+    size.addEventListener('input', function () { settings.textScale = +size.value; set('settings.v1', settings); applySettings(); });
+    var closeBtn = el('button', { class: 'arena-secondary', type: 'button', text: t('close') });
+    var close = modal(el('div', { class: 'arena-card' }, [
+      el('h2', { text: t('settings') }), row(t('textSize'), size), row(t('contrast'), check('highContrast')),
+      row(t('motion'), check('reducedMotion')), row(t('vibration'), check('vibration')), row(t('autoPause'), check('autoPause')), closeBtn]));
+    closeBtn.addEventListener('click', close);
+  }
+  function mountSettingsButton() {
+    if (!hasDOM || document.querySelector('.arena-gear')) return;
+    style();
+    var b = el('button', { class: 'arena-gear', type: 'button', 'aria-label': t('settings'), title: t('settings'), text: '♿' });
+    b.addEventListener('click', openSettings);
+    document.body.appendChild(b);
+  }
+
+  var perf = {
+    attach: function (renderer, opts) {
+      if (!renderer || typeof renderer.setPixelRatio !== 'function' || !root.requestAnimationFrame) return null;
+      var dpr = Math.min((root.devicePixelRatio || 1), (opts && opts.max) || 2);
+      var ctl = core.perfController(Object.assign({ max: dpr, start: dpr }, opts || {}));
+      var last = 0, applied = dpr, stopped = false;
+      function loop(now) {
+        if (stopped) return;
+        if (last) {
+          var r = ctl.feed(now - last, now);
+          if (Math.abs(r - applied) > 0.01 && settingsQuality() === 'auto') { applied = r; try { renderer.setPixelRatio(r); } catch (e) {} }
+        }
+        last = now; root.requestAnimationFrame(loop);
+      }
+      root.requestAnimationFrame(loop);
+      perf.state = ctl;
+      return { stop: function () { stopped = true; }, state: ctl };
+    },
+  };
+  function settingsQuality() { return settings.quality || 'auto'; }
+
+  if (hasDOM) {
+    document.addEventListener('visibilitychange', function () {
+      if (!settings.autoPause) return;
+      emit(document.hidden ? 'pause' : 'resume');
+    });
+    var boot = function () {
+      applySettings(); touchProfile();
+      if (quiet) return;
+      var first = function (e) {
+        if (e && e.isTrusted === false) return;
+        ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { document.removeEventListener(n, first, true); });
+        track('start'); if (returning) track('return');
+        portal.gameplay(true);
+        // v1.2 funnel: visible play time since the first input (a hidden tab does not count)
+        var played = 0, marks = [[60, 'play1m'], [300, 'play5m'], [600, 'play10m']];
+        var tick = setInterval(function () {
+          if (document.hidden) return;
+          played += 5;
+          while (marks.length && played >= marks[0][0]) track(marks.shift()[1]);
+          if (!marks.length) clearInterval(tick);
+        }, 5000);
+      };
+      ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { document.addEventListener(n, first, true); });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+  }
+
+  /* ---------- portal (v1.3) ---------- */
+  var portal = (function () {
+    var sdk = {};
+    try { sdk = { crazygames: !!(root.CrazyGames && root.CrazyGames.SDK), poki: !!root.PokiSDK, playgama: !!root.bridge }; } catch (e) {}
+    var name = 'none';
+    try { name = quiet ? 'none' : core.portalName(hasDOM ? location.search : '', hasDOM ? location.hostname : '', sdk); } catch (e) {}
+    var api = { name: name, canReward: false, ready: Promise.resolve(false), _pacer: core.adPacer() };
+    var now = function () { return Date.now(); };
+    var CG = function () { return root.CrazyGames && root.CrazyGames.SDK; };
+    // During an ad: suspend every AudioContext the page made (wrapped below, portal builds only) and pause the game.
+    var contexts = [], adOn = false;
+    if (name !== 'none') {
+      ['AudioContext', 'webkitAudioContext'].forEach(function (k) {
+        var C = root[k]; if (typeof C !== 'function') return;
+        var W = function (a, b) { var c = new C(a, b); contexts.push(c); return c; };
+        W.prototype = C.prototype; try { Object.setPrototypeOf(W, C); } catch (e) {}
+        root[k] = W;
+      });
+    }
+    // v1.3.2: 'adstart' / 'adend', not 'pause' / 'resume': 17 games auto-pause on 'pause' (hidden tab) and wait for the
+    // player to resume, so after a between-rounds ad they sat on a pause screen. Ads run where the game already waits.
+    function adStart() { if (adOn) return; adOn = true; contexts.forEach(function (c) { try { c.suspend(); } catch (e) {} }); emit('adstart'); }
+    function adEnd() { if (!adOn) return; adOn = false; contexts.forEach(function (c) { try { c.resume(); } catch (e) {} }); emit('adend'); }
+    var playing = false;
+    api.gameplay = function (on) {
+      on = !!on; if (on === playing || name === 'none') { playing = on; return; }
+      playing = on;
+      if (on) api._pacer.begin(now());
+      try {
+        if (name === 'crazygames' && CG()) CG().game[on ? 'gameplayStart' : 'gameplayStop']();
+        else if (name === 'poki' && root.PokiSDK) root.PokiSDK[on ? 'gameplayStart' : 'gameplayStop']();
+        else if (name === 'playgama' && root.bridge && root.bridge.platform) root.bridge.platform.sendMessage(on ? 'gameplay_started' : 'gameplay_stopped');
+      } catch (e) {}
+    };
+    api.loading = function (on) {
+      if (name === 'none') return;
+      try {
+        if (name === 'crazygames' && CG()) CG().game[on ? 'loadingStart' : 'loadingStop']();
+        else if (name === 'poki' && root.PokiSDK && !on) root.PokiSDK.gameLoadingFinished();
+        else if (name === 'playgama' && root.bridge && root.bridge.platform && !on) root.bridge.platform.sendMessage('game_ready');
+      } catch (e) {}
+    };
+    // One ad call at a time; resolves when the ad is over (or failed / not available).
+    var busy = false;
+    function show(kind) {
+      return new Promise(function (done) {
+        var finished = false;
+        var end = function (ok) { if (finished) return; finished = true; busy = false; adEnd(); done(!!ok); };
+        try {
+          if (name === 'crazygames' && CG()) {
+            CG().ad.requestAd(kind === 'rewarded' ? 'rewarded' : 'midgame', {
+              adStarted: adStart, adFinished: function () { end(true); }, adError: function () { end(false); },
+            });
+          } else if (name === 'poki' && root.PokiSDK) {
+            var call = kind === 'rewarded' ? root.PokiSDK.rewardedBreak(adStart) : root.PokiSDK.commercialBreak(adStart);
+            Promise.resolve(call).then(function (r) { end(kind === 'rewarded' ? !!r : true); }, function () { end(false); });
+          } else if (name === 'playgama' && root.bridge && root.bridge.advertisement) {
+            var ad = root.bridge.advertisement, EV = root.bridge.EVENT_NAME || {};
+            var ev = kind === 'rewarded' ? (EV.REWARDED_STATE_CHANGED || 'rewarded_state_changed') : (EV.INTERSTITIAL_STATE_CHANGED || 'interstitial_state_changed');
+            var granted = false;
+            var on = function (st) {
+              if (st === 'opened') adStart();
+              else if (st === 'rewarded') granted = true;
+              else if (st === 'closed' || st === 'failed') { try { ad.off(ev, on); } catch (e) {} end(kind === 'rewarded' ? granted : st === 'closed'); }
+            };
+            ad.on(ev, on);
+            if (kind === 'rewarded') ad.showRewarded(); else ad.showInterstitial();
+          } else { end(false); return; }
+        } catch (e) { end(false); return; }
+        setTimeout(function () { end(false); }, 90000); // an SDK that never calls back must not freeze the game
+      });
+    }
+    api.midgame = function () {
+      if (name === 'none' || busy || !api._pacer.can(now())) return Promise.resolve(false);
+      busy = true; api._pacer.mark(now());
+      return show('midgame');
+    };
+    api.rewarded = function () {
+      if (name === 'none' || busy || !api.canReward) return Promise.resolve(false);
+      busy = true;
+      return show('rewarded');
+    };
+    if (name !== 'none') {
+      api.canReward = true;
+      api.ready = new Promise(function (ok) {
+        var t = setTimeout(function () { ok(false); }, 4000);
+        var fin = function (v) { clearTimeout(t); ok(v); };
+        try {
+          if (name === 'crazygames' && CG()) Promise.resolve(CG().init()).then(function () { fin(true); }, function () { fin(false); });
+          else if (name === 'poki' && root.PokiSDK) Promise.resolve(root.PokiSDK.init()).then(function () { fin(true); }, function () { fin(false); });
+          else if (name === 'playgama' && root.bridge) Promise.resolve(root.bridge.initialize()).then(function () { fin(true); }, function () { fin(false); });
+          else fin(false);
+        } catch (e) { fin(false); }
+      });
+    }
+    return api;
+  })();
+
+  root.Arena = {
+    version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (l) lang = Object.prototype.hasOwnProperty.call(STR, l) ? l : 'zh'; return lang; },
+    perf: perf, hint: hint, toast: toast, endCard: endCard, daily: daily, share: share, shareCard: shareCard,
+    profile: profile, award: award, settings: settings, openSettings: openSettings, mountSettingsButton: mountSettingsButton,
+    track: track, complete: complete, portal: portal,
+    on: function (name, fn) { (listeners[name] = listeners[name] || []).push(fn); },
+    _core: core, _store: { get: get, set: set },
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+/*ARENA-KIT:END*/</script>
+<script>
+/* saglamlik: shown when WebGL cannot start or the three.js module never loads (CDN blocked / offline). Classic script, runs before the module. */
+(function () {
+  var C = {"play":"#bPlay","key":"arena.dolmus.settings","wrap":"screen dim show","card":"card glass","btn":"btn primary","btn2":"btn","cardStyle":"text-align:center"};
+  var S = {
+    zh: { gt: '无法启动 WebGL', gb: '此游戏需要 WebGL。请在浏览器中开启硬件加速，或换用支持 WebGL 的浏览器。', lt: '无法加载 3D 引擎', lb: '请重新加载游戏，检查安装文件是否完整。', rt: '重试', sw: 'English' },
+    tr: { gt: 'WebGL kullanılamıyor', gb: 'Bu oyun WebGL ister ama tarayıcın başlatamadı. Tarayıcı ayarlarından donanım hızlandırmayı aç ya da başka bir tarayıcı dene (Chrome, Edge, Firefox).',
+          lt: '3D motoru yüklenemedi', lb: 'three.js internetten (jsDelivr) indirilemedi. Bağlantını kontrol edip sayfayı yenile; bir reklam veya içerik engelleyici cdn.jsdelivr.net adresini engelliyor olabilir.', rt: 'Yeniden dene', sw: '简体中文' },
+    en: { gt: 'WebGL is not available', gb: 'This game needs WebGL, but your browser could not start it. Turn on hardware acceleration in the browser settings or try another browser (Chrome, Edge, Firefox).',
+          lt: 'The 3D engine could not load', lb: 'three.js could not be downloaded (jsDelivr). Check your connection and reload; an ad or content blocker may be blocking cdn.jsdelivr.net.', rt: 'Try again', sw: 'Türkçe' }
+  };
+  var G = window.__glGuard = { up: false, kind: null, lang: null, box: null };
+  function pick() {
+    try { var q = new URLSearchParams(location.search).get('lang'); if (q === 'tr' || q === 'en' || q === 'zh') return q; } catch (e) {}
+    try { var s = JSON.parse(localStorage.getItem(C.key)); if (s && (s.lang === 'tr' || s.lang === 'en' || s.lang === 'zh')) return s.lang; } catch (e) {}
+    return 'zh';
+  }
+  function paint() {
+    var T = S[G.lang], b = G.box; if (!b) return;
+    b.querySelector('h2').textContent = T[G.kind === 'gl' ? 'gt' : 'lt'];
+    b.querySelector('p').textContent = T[G.kind === 'gl' ? 'gb' : 'lb'];
+    b.querySelector('.gg-r').textContent = T.rt; b.querySelector('.gg-s').textContent = T.sw;
+    document.documentElement.setAttribute('data-glguard', G.kind);
+    try { if (C.play && G.pd === undefined) { var pb = document.querySelector(C.play); if (pb) { G.pd = pb.disabled; pb.disabled = true; } } } catch (e) {}
+  }
+  function show(kind, lang) {
+    if (G.kind === 'gl' && kind !== 'gl') return;
+    G.kind = kind; G.lang = G.lang || lang || pick();
+    if (!G.box) {
+      var w = document.createElement('div'); w.id = 'glGuard'; w.className = C.wrap; w.setAttribute('role', 'alert');
+      w.style.cssText = 'display:flex;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483000;align-items:center;justify-content:center;padding:14px;overflow:auto;' + (C.bg || '');
+      w.innerHTML = '<div class="' + C.card + '" style="' + (C.cardStyle || '') + '"><h2 style="' + (C.h2 || '') + '"></h2><p style="margin:10px 0 16px;line-height:1.45;' + (C.p || '') + '"></p>' +
+        '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button type="button" class="' + C.btn + ' gg-r"></button><button type="button" class="' + C.btn2 + ' gg-s"></button></div></div>';
+      w.querySelector('.gg-r').onclick = function () { location.reload(); };
+      w.querySelector('.gg-s').onclick = function () { G.lang = { zh: 'en', en: 'tr', tr: 'zh' }[G.lang]; paint(); };
+      (document.body || document.documentElement).appendChild(w); G.box = w;
+    }
+    paint();
+  }
+  G.fail = function (kind, lang) { show(kind, lang); };
+  G.started = function () { G.up = true; if (G.box && G.kind === 'load') { G.box.remove(); G.box = null; G.kind = null; document.documentElement.removeAttribute('data-glguard'); try { var pb = C.play && document.querySelector(C.play); if (pb && G.pd !== undefined) pb.disabled = G.pd; } catch (e) {} G.pd = undefined; } };
+  /* a Proxy that swallows every call/property so top-level code can finish without a real renderer; boot() then stops at glFail */
+  G.stub = function (canvas) {
+    var f = function () {}, p = new Proxy(f, {
+      get: function (t, k) { if (k === 'domElement') return canvas; if (k === Symbol.toPrimitive) return function () { return 0; }; if (k === 'then') return undefined; return p; },
+      set: function () { return true; }, apply: function () { return p; }, construct: function () { return p; }
+    });
+    return p;
+  };
+  window.addEventListener('error', function (e) { var t = e.target; if (!G.up && t && t.tagName === 'SCRIPT' && t.type === 'module') show('load'); }, true);
+  setTimeout(function () { if (!G.up) show('load'); }, 20000);
+})();
+</script>
+<script defer src="game.js"></script>
+
+
+
+<style>
+/* Keep controller focus visible on scrollable TV menus. */
+button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !important; outline-offset: 2px; }
+#bShare, #bOther, #titleHub, #bAd, a[href^="http"], .arena-gear, .arena-end-card { display: none !important; }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-sfx" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></symbol>
+    <symbol id="i-sfx-off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 9l5 6M21 9l-5 6"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2.5" fill="currentColor"/><circle cx="17" cy="16" r="2.5" fill="currentColor"/></symbol>
+    <symbol id="i-music-off" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2.5" fill="currentColor"/><circle cx="17" cy="16" r="2.5" fill="currentColor"/><path d="M3 3l18 18"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></symbol>
+    <symbol id="i-full" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 11L12 4l8.5 7M6 9.5V20h12V9.5M10 20v-6h4v6"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-horn" viewBox="0 0 24 24"><path d="M3 10v4h4l6 4V6L7 10H3z" fill="currentColor"/><path d="M17 7a6 6 0 0 1 0 10M20 5a9 9 0 0 1 0 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7z" fill="currentColor"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="#D4AF37" stroke="#8A6B08" stroke-width="1"/><circle cx="12" cy="12" r="6.2" fill="#EAD99B" stroke="#8A6B08" stroke-width="0.75"/><text x="12" y="15" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8" font-weight="900" fill="#664400">₺</text></symbol>
+    <symbol id="i-dent" viewBox="0 0 24 24"><path d="M12 3L2 20h20L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 8v6M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l2.9 6.2 6.8.8-5 4.8 1.4 6.7L12 17.2l-6.1 3.3 1.4-6.7-5-4.8 6.8-.8z" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 2l8 18-8-4.5-8 4.5z" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.8" fill="currentColor"/><path d="M12 14.8V21M9.6 10.6L4.2 8.6M14.4 10.6l5.4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-nazar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0D3B66"/><circle cx="12" cy="12" r="7.5" fill="#EDE6D6"/><circle cx="12" cy="12" r="5" fill="#0098D8"/><circle cx="12" cy="12" r="2.4" fill="#141518"/><circle cx="13.2" cy="10.8" r="0.9" fill="#FFFFFF"/></symbol>
+  </defs>
+</svg>
+
+<canvas id="gl" aria-label="Dolmuş"></canvas>
+<div id="vignette"></div><div id="hurt"></div>
+
+<div id="hud" class="hidden">
+  <div class="windshield-nazar" aria-hidden="true">
+    <div class="nazar-cord"></div>
+    <svg class="nazar-disc" viewBox="0 0 24 24"><use href="#i-nazar"/></svg>
+    <div class="nazar-tassel"></div>
+  </div>
+
+  <div id="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 68 52"><use href="#logo"/></svg><img class="f3d brand3d" data-src="assets/3d/sofor-yuz.webp" data-swap="prev" alt="" hidden>
+      <div class="brand-text">
+        <span class="brand-name" data-i="gameName">伊斯坦布尔小巴</span>
+        <span class="brand-sub">İSTANBUL</span>
+      </div>
+    </div>
+    <div class="stat"><small data-i="level"></small><b id="stLevel">1</b></div>
+    <div class="stat"><small><svg class="ic"><use href="#i-clock"/></svg><span data-i="shift"></span></small><b id="stClock">4:00</b></div>
+    <div class="stat fare"><small><svg class="ic"><use href="#i-coin"/></svg><span data-i="fares"></span></small><b id="stFare">0 / 100</b><div class="bar" id="fareBar"><i></i><u style="left:50%"></u><u style="left:75%"></u></div></div>
+    <div class="stat"><small><svg class="ic"><use href="#i-person"/></svg><span data-i="seats"></span></small><b id="stSeats">0/12</b></div>
+    <div class="stat" style="min-width:84px"><small><svg class="ic"><use href="#i-dent"/></svg><span data-i="dents"></span></small><div class="bar dent" id="dentBar"><i></i></div></div>
+    <div class="btns">
+      <button class="btn icon rocker" id="bPause" data-t="pause" aria-label="Pause"><svg class="ic"><use href="#i-pause"/></svg></button>
+      <button class="btn icon rocker" id="bSound" data-t="sound" aria-label="Sound"><svg class="ic"><use href="#i-sfx"/></svg></button>
+      <button class="btn icon rocker" id="bLang" data-t="language" aria-label="Language"><svg class="ic"><use href="#i-globe"/></svg></button>
+    </div>
+  </div>
+  <div id="toasts" role="status" aria-live="polite"></div>
+  <div id="lvCard"><button class="x" id="bCardX" data-t="close" aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button><h3 id="cdTitle"></h3><p id="cdDesc"></p><ul class="feat" id="cdList"></ul><div class="tgt" id="cdTarget"></div></div>
+  <canvas id="minimap" width="420" height="316"></canvas>
+  <div id="guideBox"><div id="guideArrow"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div><div id="guideTxt"></div></div>
+  <div id="hint"></div>
+  <div id="seatsStrip"></div>
+  <div id="speedo">
+    <svg viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,.14)" stroke-dasharray="198 264"/>
+      <circle id="spArc" cx="50" cy="50" r="42" stroke-dasharray="0 264"/>
+    </svg>
+    <svg class="dial" viewBox="0 0 100 100" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%">
+      <line class="tk" x1="28.8" y1="71.2" x2="23.5" y2="76.5" stroke="#EDE6D6" stroke-width="2" stroke-linecap="round"/>
+      <line class="tk" x1="18.6" y1="60.2" x2="15.8" y2="61.1" stroke="#FFC83B" stroke-width="1.2" stroke-linecap="round"/>
+      <line class="tk" x1="20.4" y1="45.3" x2="13.4" y2="44.4" stroke="#EDE6D6" stroke-width="2" stroke-linecap="round"/>
+      <line class="tk" x1="23.3" y1="30.6" x2="20.9" y2="28.8" stroke="#FFC83B" stroke-width="1.2" stroke-linecap="round"/>
+      <line class="tk" x1="36.4" y1="23.3" x2="32.7" y2="16.9" stroke="#EDE6D6" stroke-width="2" stroke-linecap="round"/>
+      <line class="tk" x1="50.0" y1="17.0" x2="50.0" y2="13.0" stroke="#FFC83B" stroke-width="1.2" stroke-linecap="round"/>
+      <line class="tk" x1="63.6" y1="23.3" x2="67.3" y2="16.9" stroke="#EDE6D6" stroke-width="2" stroke-linecap="round"/>
+      <line class="tk" x1="76.7" y1="30.6" x2="79.1" y2="28.8" stroke="#FFC83B" stroke-width="1.2" stroke-linecap="round"/>
+      <line class="tk" x1="79.6" y1="45.3" x2="86.6" y2="44.4" stroke="#EDE6D6" stroke-width="2" stroke-linecap="round"/>
+      <line class="tk" x1="81.4" y1="60.2" x2="84.2" y2="61.1" stroke="#FFC83B" stroke-width="1.2" stroke-linecap="round"/>
+      <line class="tk" x1="71.2" y1="71.2" x2="76.5" y2="76.5" stroke="#EDE6D6" stroke-width="2" stroke-linecap="round"/>
+      <text x="33.0" y="65.0" text-anchor="middle" dominant-baseline="middle" fill="#FFC83B" font-size="7.5" font-family="'Space Grotesk',sans-serif" font-weight="700">0</text>
+      <text x="27.5" y="38.3" text-anchor="middle" dominant-baseline="middle" fill="#FFC83B" font-size="7.5" font-family="'Space Grotesk',sans-serif" font-weight="700">20</text>
+      <text x="53.3" y="25.2" text-anchor="middle" dominant-baseline="middle" fill="#FFC83B" font-size="7.5" font-family="'Space Grotesk',sans-serif" font-weight="700">40</text>
+      <text x="74.6" y="44.5" text-anchor="middle" dominant-baseline="middle" fill="#FFC83B" font-size="7.5" font-family="'Space Grotesk',sans-serif" font-weight="700">60</text>
+      <polygon id="spNeedle" points="50,11 46.5,21.5 53.5,21.5" fill="#B8261C" stroke="#FFC83B" stroke-width=".8" transform="rotate(-135 50 50)"/>
+    </svg>
+    <div><b id="spVal">0</b><small>KM/S</small></div>
+  </div>
+  <div id="floaters"></div><div id="bubbles"></div>
+  <div id="touch">
+    <div id="steer" role="slider" aria-label="Steering" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+    <div id="pUni" role="slider" aria-orientation="vertical" aria-label="Gas / Brake" data-t="aPedal" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"><span class="pl up" data-i="pGas">GAZ</span><span class="pl dn" data-i="pBrake">FREN</span><i></i></div>
+    <div id="pBrake" class="pedal" aria-label="Brake" data-t="aBrake"><svg class="ic" style="width:30px;height:30px"><use href="#i-pause"/></svg><span data-i="pBrake">FREN</span></div>
+    <div id="pGas" class="pedal" aria-label="Gas" data-t="aGas"><svg class="ic" style="width:34px;height:34px;transform:rotate(-90deg)"><use href="#i-play"/></svg><span data-i="pGas">GAZ</span></div>
+    <div id="tDoor" class="pedal" aria-label="Door" data-t="aDoor"><svg class="ic" style="width:26px;height:26px"><use href="#i-door"/></svg><span data-i="pDoor">KAPI</span></div>
+    <div id="tHorn" class="pedal" aria-label="Horn" data-t="aHorn"><svg class="ic" style="width:26px;height:26px"><use href="#i-horn"/></svg><span data-i="pHorn">KORNA</span></div>
+  </div>
+</div>
+
+<div id="countdown" aria-live="assertive"><b id="cdNum"></b><span id="cdSub"></span></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="logo" viewBox="0 0 68 52">
+    <!-- Undersill shadow -->
+    <rect x="5" y="44" width="58" height="6" rx="3" fill="#000000" opacity="0.4"/>
+    <!-- Minibus Chassis Base -->
+    <path d="M4 38h60v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-5z" fill="#B37100"/>
+    <!-- Main Body: Dolmus Chrome Ochre -->
+    <path d="M4 17c0-3 2-5 5-5h43c5 0 9 3 11 8l2 11c.5 3-1.5 5-4.5 5H7a3 3 0 0 1-3-3V17z" fill="#E59500"/>
+    <!-- Body Highlight -->
+    <path d="M9 13h41c4 0 7 2 9 6l1 6H8l1-12z" fill="#FFA71A" opacity="0.6"/>
+    <!-- White Roof Top Cap -->
+    <path d="M9 13c1-5 5-8 12-8h24c7 0 11 3 13 8H9z" fill="#FFF8E7"/>
+    <!-- Roof Route Placard Box (Tabela) -->
+    <rect x="23" y="1" width="22" height="7" rx="2" fill="#141518" stroke="#D1D5DB" stroke-width="0.8"/>
+    <rect x="25" y="2.5" width="18" height="4" rx="1" fill="#FFC83B"/>
+    <text x="34" y="5.8" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="4" font-weight="900" fill="#141518" letter-spacing="0.5">DOLMUŞ</text>
+    <!-- Windscreen & Side Windows -->
+    <rect x="7" y="15" width="10" height="11" rx="2" fill="#1D2636"/>
+    <circle cx="12" cy="19" r="2" fill="#5F738E" opacity="0.6"/>
+    <rect x="19" y="15" width="12" height="11" rx="2" fill="#1D2636"/>
+    <circle cx="25" cy="19" r="2" fill="#5F738E" opacity="0.6"/>
+    <rect x="33" y="15" width="12" height="11" rx="2" fill="#1D2636"/>
+    <circle cx="39" cy="19" r="2" fill="#5F738E" opacity="0.6"/>
+    <!-- Front Curved Windscreen -->
+    <path d="M47 15h9c3 0 5 2 6 5l1.5 6H47v-11z" fill="#1D2636"/>
+    <path d="M50 16l12 9h-3l-10-9h1z" fill="#FFFFFF" opacity="0.25"/>
+    <!-- Windscreen Mini Nazar Bead -->
+    <circle cx="53" cy="18" r="1.5" fill="#0D3B66"/>
+    <circle cx="53" cy="18" r="0.9" fill="#0098D8"/>
+    <circle cx="53" cy="18" r="0.4" fill="#FFFFFF"/>
+    <!-- Side Coachline Strip -->
+    <rect x="4" y="28" width="60" height="3.5" fill="#17181C"/>
+    <rect x="4" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="10" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="16" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="22" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="28" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="34" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="40" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="46" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="52" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <rect x="58" y="29" width="3" height="1.5" fill="#FFC83B"/>
+    <!-- Front Headlight & Amber Turn Signal -->
+    <circle cx="62" cy="34" r="3.2" fill="#FFC83B" stroke="#FFFFFF" stroke-width="0.8"/>
+    <circle cx="62" cy="34" r="1.8" fill="#FFFDF0"/>
+    <rect x="62.5" y="38" width="2" height="1.5" rx="0.5" fill="#FF7700"/>
+    <!-- Wheels & Chrome Hubcaps -->
+    <circle cx="17" cy="42" r="7.5" fill="#141518"/>
+    <circle cx="17" cy="42" r="4.2" fill="#8C939E"/>
+    <circle cx="17" cy="42" r="2" fill="#DDE1E8"/>
+    <circle cx="49" cy="42" r="7.5" fill="#141518"/>
+    <circle cx="49" cy="42" r="4.2" fill="#8C939E"/>
+    <circle cx="49" cy="42" r="2" fill="#DDE1E8"/>
+    <!-- Chrome Wheel Arches -->
+    <path d="M9 42a8 8 0 0 1 16 0" fill="none" stroke="#D1D5DB" stroke-width="1.2"/>
+    <path d="M41 42a8 8 0 0 1 16 0" fill="none" stroke="#D1D5DB" stroke-width="1.2"/>
+    <!-- Chrome Front Bumper -->
+    <rect x="59" y="39" width="6" height="3" rx="1.5" fill="#E4E7EC" stroke="#9AA0AA" stroke-width="0.6"/>
+  </symbol>
+</defs></svg>
+
+<main id="screens">
+  <section class="screen show" id="sTitle">
+    <div class="card">
+      <div class="route-levha">
+        <span class="rivet tl"></span><span class="rivet tr"></span>
+        <div class="levha-sub" data-i="routeSign">伊斯坦布尔市内小巴线路</div>
+        <div class="levha-main" data-i="routeDest">卡德柯伊 — 博斯坦哲</div>
+        <div class="levha-slogan" data-i="routeMotto">★ 一路顺风，车速直追航班 ★</div>
+        <span class="rivet bl"></span><span class="rivet br"></span>
+      </div>
+
+      <svg id="logoBig" viewBox="0 0 68 52" role="img" aria-label="Dolmuş"><use href="#logo"/></svg><img id="logo3d" class="f3d" data-src="assets/3d/dolmus-sofor.webp" data-swap="prev" alt="Dolmuş" hidden>
+      <div class="h1row"><img class="f3d face" data-src="assets/3d/sofor-yuz.webp" alt="" hidden><h1 data-i="gameName">伊斯坦布尔小巴</h1><img class="f3d face" data-src="assets/3d/turist-yuz.webp" alt="" hidden></div>
+      <p class="sub" data-i="subtitle"></p>
+      <p class="how" data-i="howto"></p>
+      <div class="col">
+        <button class="btn primary" id="bPlay" disabled><svg class="ic fill"><use href="#i-play"/></svg><span id="playTxt" data-i="loading"></span></button>
+        <button class="btn" id="bCont"><svg class="ic"><use href="#i-restart"/></svg><span data-i="continue"></span></button>
+        <button class="btn" id="bEndless"><svg class="ic"><use href="#i-clock"/></svg><span data-i="endless"></span></button>
+        <button class="btn" id="bDaily"><svg class="ic"><use href="#i-star"/></svg><span data-i="daily"></span></button>
+        <div class="row">
+          <button class="btn" id="bSettingsT"><svg class="ic"><use href="#i-gear"/></svg><span data-i="settings"></span></button>
+          <button class="btn" id="bLangT"><svg class="ic"><use href="#i-globe"/></svg><span id="langTxt">简体中文</span></button>
+          <button class="btn" id="bNews"><svg class="ic"><use href="#i-star"/></svg><span data-i="news"></span></button>
+        </div>
+      </div>
+      <div class="best" id="bestLine"></div>
+      <div class="best" id="dailyLine"></div>
+      <div class="foot"><a href="https://github.com/Furkiozknn" target="_blank" rel="noopener">Claude Game Arena</a> · <span data-i="madeBy">由 Claude Sonnet 5.5 制作</span> · <span class="vtag" id="verTag" data-i="verTag"></span> · <a href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i="others"></a></div>
+    </div>
+  </section>
+
+  <section class="screen dim" id="sPause" role="dialog" aria-modal="true">
+    <div class="card">
+      <div class="levha-mini"><span>VARDİYA MOLA</span></div>
+      <div class="h2row"><img class="f3d face" data-src="assets/3d/sofor-yuz.webp" alt="" hidden><h2 data-i="paused"></h2></div>
+      <div class="col">
+        <button class="btn primary" id="bResume"><svg class="ic fill"><use href="#i-play"/></svg><span data-i="resume"></span></button>
+        <button class="btn" id="bRestart"><svg class="ic"><use href="#i-restart"/></svg><span data-i="restart"></span></button>
+        <button class="btn" id="bSettingsP"><svg class="ic"><use href="#i-gear"/></svg><span data-i="settings"></span></button>
+        <button class="btn" id="bMenuP"><svg class="ic"><use href="#i-home"/></svg><span data-i="menu"></span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen dim" id="sSettings" role="dialog" aria-modal="true">
+    <div class="card">
+      <div class="levha-mini"><span>KOKPİT & SİGORTA PANELİ</span></div>
+      <div class="h2row"><img class="f3d face" data-src="assets/3d/turist-yuz.webp" alt="" hidden><h2 data-i="settings"></h2></div>
+      <div class="set">
+        <label for="rMaster" data-i="master"></label><input type="range" id="rMaster" min="0" max="100"><output id="oMaster"></output>
+        <label for="rMusic" data-i="music"></label><input type="range" id="rMusic" min="0" max="100"><output id="oMusic"></output>
+        <label for="rSfx" data-i="effects"></label><input type="range" id="rSfx" min="0" max="100"><output id="oSfx"></output>
+        <label data-i="language"></label><div class="seg"><button class="btn" id="bZH">简体中文</button><button class="btn" id="bTR">Türkçe</button><button class="btn" id="bEN">English</button></div>
+        <label data-i="quality"></label><div class="seg"><button class="btn" id="bQLow" data-i="low"></button><button class="btn" id="bQHigh" data-i="high"></button></div>
+        <label data-i="mapMode"></label><div class="seg"><button class="btn" id="bMapH" data-i="mapHead"></button><button class="btn" id="bMapN" data-i="mapNorth"></button></div>
+        <label class="t-only" data-i="pedalMode"></label><div class="seg t-only"><button class="btn" id="bPedU" data-i="pedSlider"></button><button class="btn" id="bPedS" data-i="pedSep"></button></div>
+        <label data-i="fullscreen"></label><div class="seg"><button class="btn" id="bFull"><svg class="ic"><use href="#i-full"/></svg><span data-i="toggle"></span></button></div>
+        <label data-i="a11y"></label><div class="seg"><button class="btn" id="bA11y"><span data-i="a11yOpen"></span></button></div>
+      </div>
+      <div class="col"><button class="btn primary" id="bSetBack"><span data-i="back"></span></button></div>
+      <p class="how" data-i="keysHelp" style="margin-top:12px"></p>
+    </div>
+  </section>
+
+  <section class="screen dim" id="sNews" role="dialog" aria-modal="true" aria-labelledby="newsTitle">
+    <div class="card">
+      <div class="levha-mini"><span>GÜNCELLEME NOTLARI</span></div>
+      <div class="h2row"><img class="f3d face" data-src="assets/3d/ogrenci-yuz.webp" alt="" hidden><h2 id="newsTitle" data-i="news"></h2></div>
+      <p class="vtag" data-i="verTag"></p>
+      <h3 data-i="newsH"></h3>
+      <ul id="newsList"></ul>
+      <h3 data-i="boardH"></h3>
+      <ol class="board" id="boardList"></ol>
+      <h3 data-i="badgesH"></h3>
+      <ul class="badges" id="badgeList"></ul>
+      <div class="col" style="margin-top:14px"><button class="btn primary" id="bNewsBack"><span data-i="back"></span></button></div>
+    </div>
+  </section>
+
+  <section class="screen dim" id="sEnd" role="dialog" aria-modal="true">
+    <div class="card receipt" style="position:relative">
+      <div class="receipt-header">
+        <div class="receipt-seal" data-i="receiptSeal">★ 伊斯坦布尔小巴司机公会 ★</div>
+        <div class="receipt-sub" data-i="receiptReport">每日结算 · 班次报告</div>
+      </div>
+      <div class="driver3d"><img class="f3d" data-src="assets/3d/sofor-yuz.webp" alt="" hidden></div>
+      <div class="mascot hidden" id="mascot"><img id="mascotImg" alt="Kadıköy Kedisi" width="84" height="84"></div>
+      <h2 id="enTitle"></h2>
+      <p id="enSub"></p>
+      <div class="stars" id="enStars"></div>
+      <div class="kv" id="enStats"></div>
+      <ul class="feat tips" id="enTips"></ul>
+      <div class="rec hidden" id="enRec"></div>
+      <div class="col">
+        <button class="btn primary" id="bNext"><span id="nextTxt"></span></button>
+        <button class="btn" id="bRetry"><svg class="ic"><use href="#i-restart"/></svg><span data-i="retry"></span></button>
+        <button class="btn" id="bMenuE"><svg class="ic"><use href="#i-home"/></svg><span data-i="menu"></span></button>
+        <div class="row">
+          <button class="btn" id="bShare"><span data-i="share"></span></button>
+          <a class="btn" id="aOther" href="https://furkiozknn.github.io/" target="_blank" rel="noopener"><span data-i="another"></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen dim" id="sRoute" role="dialog" aria-modal="true" aria-labelledby="hatTitle">
+    <div class="card hat">
+      <div class="levha-mini"><span>HAT USTASI · GÜZERGÂH LEVHASI</span></div>
+      <div class="h2row"><img class="f3d face" data-src="assets/3d/esnaf-yuz.webp" alt="" hidden><h2 id="hatTitle" data-i="hatTitle"></h2><img class="f3d face" data-src="assets/3d/nine-yuz.webp" alt="" hidden></div>
+      <p class="how" id="hatLv"></p>
+      <p class="sub" data-i="hatSub"></p>
+      <h3 id="hatStopsH"></h3>
+      <div class="hat-stops" id="hatStops"></div>
+      <p class="how" data-i="hatStopsHelp"></p>
+      <h3 data-i="hatRadio"></h3>
+      <div class="hat-ch" id="hatCh"></div>
+      <p class="hat-chd" id="hatChd"></p>
+      <div class="best" id="hatBestLine"></div>
+      <div class="col"><button class="btn primary" id="bHatGo"><svg class="ic fill"><use href="#i-play"/></svg><span id="hatGoTxt"></span></button><button class="btn" id="bMenuR"><svg class="ic"><use href="#i-home"/></svg><span data-i="menu"></span></button></div>
+    </div>
+  </section>
+</main>
+<div id="dbg"></div>
+
+</body></html>

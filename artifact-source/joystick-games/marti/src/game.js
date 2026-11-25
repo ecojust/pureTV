@@ -1,0 +1,3268 @@
+import './arena-core.js';
+import { createController } from '../../shared/web/standard-gamepad.js';
+import { navigateMenu, navigateAccessibility } from './menu.js';
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+window.martiBoot = true; // tells the CDN watchdog (classic script above) that the module started
+
+/* ============================================================
+   Martı: an endless 3D seagull run over the Istanbul strait.
+   Single file. Three.js r170 (CDN). Sections: setup, i18n, storage,
+   geometry, world, gull, entities, spawning, game rules, input, bot,
+   audio, UI, loop, test hooks (?auto ?debug ?low ?sim=seconds).
+   ============================================================ */
+
+// ---------- setup and flags ----------
+const Q = new URLSearchParams(location.search);
+const FLAG = { auto: Q.has('auto'), debug: Q.has('debug'), low: Q.has('low'), run: Q.has('run') };
+const SIM_SECONDS = parseFloat(Q.get('sim') || '0') || 0;
+const $ = (s) => document.querySelector(s);
+// stil-3d sprite atlases and their meshes (filled by loadAssets / applySprites; see "stil-3d" further down)
+const SPR_FILES = ['marti', 'nesne', 'ufuk'];
+const SPR = { tint: new THREE.Color(1, 1, 1), mats: [] };
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, t) => a + (b - a) * t;
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = (a) => a[(Math.random() * a.length) | 0];
+/** arena-kit "reduce motion": no camera shake, no blinking gull, rings and halos stop pulsing. Read live (visual layer only, the sim never reads it). */
+const calm = () => !!(window.Arena && Arena.settings && Arena.settings.reducedMotion);
+/** a short buzz on a hit; arena-kit v1.0.1 wraps navigator.vibrate, so its Vibration switch is respected */
+const haptic = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
+// Spawn dice: what is placed ahead of the gull (shore bands, patterns, bridges, nests). A daily-challenge run swaps in
+// the arena-kit day generator so everyone flies the same route; effects, sound and the bot keep Math.random.
+let SRND = Math.random;
+const srnd = (a, b) => a + SRND() * (b - a);
+const spick = (a) => a[(SRND() * a.length) | 0];
+// Guard a === b to avoid division by zero / NaN
+const smooth = (a, b, x) => { const t = a === b ? 0 : clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const TAU = Math.PI * 2;
+
+const LS = {
+  get(k, f) { try { const v = localStorage.getItem(k); return v == null ? f : JSON.parse(v); } catch (e) { return f; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage blocked: ignore */ } },
+};
+
+function showErr(e) {
+  const msg = (e && (e.stack || e.message)) || String(e);
+  if (FLAG.debug) {
+    $('#dbg').classList.remove('hidden');
+    const line = document.createElement('div');
+    line.className = 'err';
+    line.textContent = 'ERR: ' + msg.split('\n').slice(0, 3).join(' | ');
+    $('#dbgE').appendChild(line);
+  }
+  console.error(e);
+}
+window.addEventListener('error', (e) => showErr(e.error || e.message));
+window.addEventListener('unhandledrejection', (e) => showErr(e.reason));
+
+// ---------- world constants ----------
+const CORR = 20;        // gull centre may fly this far left/right (wings stay inside the water)
+const YMIN = 2.4, YMAX = 33;
+const LOOK = 340;       // spawn this far ahead
+const BACK = 90;        // remove things this far behind
+const WATER_X = 170;
+
+// ---------- i18n ----------
+const I18N = {
+  zh: {
+    tagline: '飞越博斯普鲁斯海峡，寻找热腾腾的芝麻面包圈',
+    how: ['<b>转向：</b>使用方向键或左摇杆', '<b>俯冲：</b>按住 A 下降，松开爬升', '<b>叼面包圈：</b>补充体力，累积连击，乘上顺风', '<b>避开：</b>桥梁、船桅和风筝。对手的鸟群会抢你的面包圈'],
+    start: '开始', retry: '再玩一次', cont: '观看广告后继续', resume: '继续', menu: '主菜单', restart: '重新开始',
+    paused: '已暂停', over: '飞行结束', loading: '正在加载… {n}/{m}', bestLine: '最高分：{n}',
+    score: '得分', best: '最高分', dist: '距离', simit: '芝麻圈', combo: '连击', stamina: '体力', missions: '每日任务', highs: '高分榜',
+    hint: 'START 暂停 · A 俯冲 · X 音乐 · Y 静音', footer: 'Claude Game Arena · Claude Haiku 5.5 制作 · 素材重制',
+    newBest: '新纪录！', steal: '对手抢走了芝麻圈！', shield: '护盾羽毛！可以抵挡一次撞击', shieldUsed: '护盾挡住了撞击！',
+    hit: '撞到了！', tail: '顺风！速度和得分 ×1.5', gold: '黄金芝麻圈！得分翻倍', missionDone: '任务完成', crash: '撞击三次', energy: '体力耗尽',
+    tipBadge: '提示', cable: '撞上了桥索', bridge: '撞上了桥身', ship: '撞上了船桅', kite: '被风筝线缠住了', post: '撞上了码头木桩', water: '落入海峡',
+    fly: '一路顺风！', m: '米', km: '公里', settings: '设置', master: '主音量', music: '音乐', sfx: '音效', language: '语言', quality: '画质',
+    low: '低', high: '高', fullscreen: '全屏', toggleFs: '开 / 关', back: '返回', aPause: '暂停（P）', aMusic: '音乐（M）', aSound: '音效（X）', aLang: '切换语言（L）', aSet: '设置',
+    diveAction: '俯冲', aDive: '俯冲（按住或轻点）', tailChip: '顺风', goldChip: '黄金芝麻圈 ×2', shieldChip: '护盾就绪',
+    hSteer: '用方向键或左摇杆转向', hDive: '按住 A 俯冲抓鱼', hStamina: '体力在下降，吃芝麻圈能恢复体力', nestNeed: '雏鸟饿了，先带一个芝麻圈回来',
+    fed: '雏鸟吃饱了！羽毛 +1', mateHit: '小海鸥用翅膀挡下了撞击！', pier: '鱼箱！体力 +35',
+    gust: '阵风来袭', gustChip: '阵风', didYou: '你知道吗？', chickLine: '雏鸟：{s} · 已喂食 {n} 次', stages: ['鸟蛋', '初生雏鸟', '绒羽雏鸟', '幼鸥'],
+    aMute: '静音（N）', comboUp: '连击 ×{m}！', flockJoin: '一只海鸥加入了鸟群！（{n} 只）', flockBig: '鸟群壮大了，可以扯断风筝线、赶走对手',
+    flockKite: '鸟群扯断了风筝线！', flockScare: '鸟群赶走了对手！', flockLost: '{n} 只海鸥飞散了', flockChip: '鸟群 {n} 只 · ×{m}',
+    daily: '每日挑战', share: '分享', anotherGame: '其他游戏', dailyLine: '所有人路线相同 · 连续 {s} 天 · 最高分 {b}', dailyDone: '今日已完成',
+    dailyOver: '每日挑战 · 连续 {s} 天 · 最高分 {b}', shareLine: '{n} 分 · {d} · {k} 个芝麻圈', aw1km: '海鸥：首次飞满 1 公里', awChick: '海鸥：雏鸟长大了',
+    news: '更新', newsTitle: '更新内容', achTitle: '成就', otherGames: '更多游戏', newAch: '新成就', beatBest: '刷新了最高分！'
+  },
+  tr: {
+    tagline: 'Boğaz’ın üstünde, simit peşinde bir martı koşusu',
+    how: [
+      '<b>Yön:</b> yön tuşları veya sol analog çubuk',
+      '<b>Dalış:</b> A düğmesini basılı tut; yükselmek için bırak',
+      '<b>Simit kap:</b> enerjin dolsun, kombo kur, rüzgârı yakala',
+      '<b>Kaçın:</b> köprü, gemi direkleri ve uçurtmalar. Rakip sürü simit çalar',
+    ],
+    start: 'Başla', retry: 'Tekrar oyna', cont: 'Reklam izle, devam et', resume: 'Devam et', menu: 'Ana menü', restart: 'Yeniden başla',
+    paused: 'Duraklatıldı', over: 'Koşu bitti', loading: 'Yükleniyor… {n}/{m}', bestLine: 'En iyi skor: {n}',
+    score: 'Skor', best: 'En iyi', dist: 'Mesafe', simit: 'Simit', combo: 'Kombo', stamina: 'Enerji',
+    missions: 'Günlük görevler', highs: 'Yüksek skorlar',
+    hint: 'START duraklat · A dalış · X müzik · Y sessiz',
+    footer: 'Claude Game Arena · Claude Haiku 5.5 yaptı · varlıklar yenilendi',
+    newBest: 'Yeni rekor!', steal: 'Sürü simitini çaldı!', shield: 'Kalkan tüyü! Bir çarpmayı emer',
+    shieldUsed: 'Kalkan çarpmayı emdi!', hit: 'Çarpıştın!', tail: 'Kuyruk rüzgârı! Hız ve skor x1.5',
+    gold: 'Altın simit! Skor x2', missionDone: 'Görev tamam', crash: 'Üç kez çarptın', energy: 'Enerjin bitti',
+    tipBadge: 'İpucu', cable: 'Köprü kablosuna çarptın', bridge: 'Köprü kulesine çarptın',
+    ship: 'Gemi direğine çarptın', kite: 'Uçurtma ipine takıldın', post: 'İskele kazığına çarptın',
+    water: 'Boğaz sularına daldın',
+    fly: 'İyi uçuşlar!', m: 'm', km: 'km',
+    settings: 'Ayarlar', master: 'Genel ses', music: 'Müzik', sfx: 'Efektler', language: 'Dil', quality: 'Kalite',
+    low: 'Düşük', high: 'Yüksek', fullscreen: 'Tam ekran', toggleFs: 'Aç / kapat', back: 'Geri',
+    aPause: 'Duraklat (P)', aMusic: 'Müzik (M)', aSound: 'Ses efektleri (X)', aLang: 'Dili değiştir (L)', aSet: 'Ayarlar',
+    diveAction: 'Dalış', aDive: 'Dalış (Basılı tut ya da dokun)',
+    tailChip: 'Kuyruk rüzgârı', goldChip: 'Altın simit x2', shieldChip: 'Kalkan hazır',
+    hSteer: 'Yön: yön tuşları veya sol analog çubuk', hDive: 'Balık için A düğmesini basılı tut',
+    hStamina: 'Enerji azalıyor: simit ye, enerjin dolsun', nestNeed: 'Yavruya simit lazım: önce bir simit taşı',
+    fed: 'Yavru beslendi! +1 tüy', mateHit: 'Yavru martı kanadıyla çarpmayı emdi!', pier: 'Balık sandığı! Enerji +35',
+    gust: 'Rüzgâr geliyor', gustChip: 'Rüzgâr', didYou: 'Biliyor muydun?', chickLine: 'Yavru: {s} · {n} besleme',
+    stages: ['Yumurta', 'Civciv', 'Tüylü yavru', 'Genç martı'], aMute: 'Sessiz (N)', comboUp: 'Kombo x{m}!',
+    flockJoin: 'Sürüne bir martı katıldı! ({n})', flockBig: 'Sürü büyüdü: uçurtma iplerini koparır, rakipleri kovar',
+    flockKite: 'Sürü uçurtma ipini kopardı!', flockScare: 'Sürün rakip martıları kovaladı!', flockLost: 'Sürüden {n} martı dağıldı',
+    flockChip: 'Sürü {n} · x{m}',
+    daily: 'Günün Meydan Okuması', share: 'Paylaş', anotherGame: 'Başka oyun', dailyLine: 'Herkese aynı rota · seri {s} gün · en iyi {b}',
+    dailyDone: 'bugün tamam', dailyOver: 'Günün Meydan Okuması · seri {s} gün · en iyi {b}', shareLine: '{n} puan · {d} · {k} simit',
+    aw1km: 'Martı: ilk 1 km', awChick: 'Martı: yavru büyüdü',
+  },
+  en: {
+    tagline: 'A seagull run over the Bosphorus, hunting simit',
+    how: [
+      '<b>Steer:</b> use the D-pad or left stick',
+      '<b>Dive:</b> hold A to dive and release to climb',
+      '<b>Snatch simit:</b> refill your stamina, build a combo, catch a tailwind',
+      '<b>Avoid:</b> bridge, ship masts and kites. The rival flock steals your simit',
+    ],
+    start: 'Start', retry: 'Play again', cont: 'Watch an ad to continue', resume: 'Resume', menu: 'Main menu', restart: 'Restart',
+    paused: 'Paused', over: 'Run over', loading: 'Loading… {n}/{m}', bestLine: 'Best score: {n}',
+    score: 'Score', best: 'Best', dist: 'Distance', simit: 'Simit', combo: 'Combo', stamina: 'Stamina',
+    missions: 'Daily missions', highs: 'High scores',
+    hint: 'START pause · A dive · X music · Y mute',
+    footer: 'Claude Game Arena · built by Claude Haiku 5.5 · assets remastered',
+    newBest: 'New record!', steal: 'The flock stole your simit!', shield: 'Shield feather! Blocks one hit',
+    shieldUsed: 'The shield absorbed a hit!', hit: 'Hit!', tail: 'Tailwind! Speed and score x1.5',
+    gold: 'Golden simit! Score x2', missionDone: 'Mission complete', crash: 'Three hits', energy: 'Out of stamina',
+    tipBadge: 'Tip', cable: 'Hit a bridge cable', bridge: 'Hit the bridge structure',
+    ship: 'Hit a ship mast', kite: 'Tangled in a kite line', post: 'Hit a pier post',
+    water: 'Fell into the Bosphorus',
+    fly: 'Have a good flight!', m: 'm', km: 'km',
+    settings: 'Settings', master: 'Master volume', music: 'Music', sfx: 'Effects', language: 'Language', quality: 'Quality',
+    low: 'Low', high: 'High', fullscreen: 'Fullscreen', toggleFs: 'On / off', back: 'Back',
+    aPause: 'Pause (P)', aMusic: 'Music (M)', aSound: 'Sound effects (X)', aLang: 'Change language (L)', aSet: 'Settings',
+    diveAction: 'Dive', aDive: 'Dive (Hold or tap)',
+    tailChip: 'Tailwind', goldChip: 'Golden x2', shieldChip: 'Shield ready',
+    hSteer: 'Steer with the D-pad or left stick', hDive: 'Hold A to dive for fish',
+    hStamina: 'Stamina is dropping: eat simit to refill it', nestNeed: 'The chick needs simit: carry one first',
+    fed: 'Chick fed! +1 feather', mateHit: 'The young gull took the hit on its wing!', pier: 'Fish crate! Stamina +35',
+    gust: 'Gust coming', gustChip: 'Gust', didYou: 'Did you know?', chickLine: 'Chick: {s} · {n} fed',
+    stages: ['Egg', 'Hatchling', 'Fluffy chick', 'Young gull'], aMute: 'Mute (N)', comboUp: 'Combo x{m}!',
+    flockJoin: 'A gull joined your flock! ({n})', flockBig: 'Big flock: it snaps kite lines and chases rivals off',
+    flockKite: 'Your flock snapped a kite line!', flockScare: 'Your flock chased the rivals off!', flockLost: '{n} gulls scattered from your flock',
+    flockChip: 'Flock {n} · x{m}',
+    daily: 'Daily challenge', share: 'Share', anotherGame: 'Another game', dailyLine: 'The same route for everyone · streak {s} · best {b}',
+    dailyDone: 'done today', dailyOver: 'Daily challenge · streak {s} · best {b}', shareLine: '{n} points · {d} · {k} simit',
+    aw1km: 'Martı: first 1 km', awChick: 'Martı: the chick grew up',
+  },
+};
+// Facts for the game-over card and the title line, shown in turn. Sources are in the comments (research pool, 2026-10-28).
+const FACTS = [
+  // https://doaj.org/article/5a69f0727604460889f1a554982883d6
+  { tr: 'İstanbul kıyılarında en yaygın tür sarıbacaklı martıdır (Larus michahellis).', en: 'The most common gull on Istanbul’s coasts is the yellow-legged gull (Larus michahellis).', zh: '伊斯坦布尔海岸最常见的海鸥是黄脚银鸥（Larus michahellis）。' },
+  // https://www.gzt.com/hayat/istanbulda-artan-marti-sesleri-uzmanlar-yavru-beslenme-donemine-dikkat-cekiyor-guncel-haberler-4239807
+  { tr: 'Martılar normalde ada ve kayalıklarda ürer; artık bina çatılarını da yuva alanı yapıyor.', en: 'Gulls normally breed on islands and rocks, but they now also nest on building roofs.', zh: '海鸥通常在岛屿和岩石上繁殖，如今也会在楼顶筑巢。' },
+  // https://www.gzt.com/hayat/istanbulda-artan-marti-sesleri-uzmanlar-yavru-beslenme-donemine-dikkat-cekiyor-guncel-haberler-4239807
+  { tr: 'Yumurtlama nisan-mayıs aylarındadır; kuluçka yaklaşık 28-30 gün sürer, yavru 40-50 günde uçar.', en: 'Eggs are laid in April and May; incubation lasts about 28-30 days and the chick flies after 40-50 days.', zh: '海鸥四五月产卵，孵化约需 28 至 30 天。雏鸟出生 40 至 50 天后便可飞行。' },
+  // https://www.gzt.com/hayat/istanbulda-artan-marti-sesleri-uzmanlar-yavru-beslenme-donemine-dikkat-cekiyor-guncel-haberler-4239807
+  { tr: 'Martıların beslenmesi balıktan çöpe ve sokağa bırakılan kedi-köpek mamasına kaymış; kolay yiyecek üreme başarısını artırıyor.', en: 'Gulls’ diet has shifted from fish to rubbish and street cat and dog food; easy food raises breeding success.', zh: '海鸥除了吃鱼，也会捡食垃圾和街边的猫狗粮。容易获得的食物有助于提高繁殖成功率。' },
+  // https://en.wikipedia.org/wiki/Simit
+  { tr: '1593’te Üsküdar’da simidin ağırlığı ve fiyatı standartlaştırıldı.', en: 'In 1593 the weight and price of simit were standardised in Üsküdar.', zh: '1593 年，乌斯屈达尔规定了芝麻圈的重量和售价。' },
+  // https://en.wikipedia.org/wiki/Simit
+  { tr: 'Evliya Çelebi 1630’larda İstanbul’da 70 simit fırını saydı.', en: 'In the 1630s Evliya Çelebi counted 70 simit bakeries in Istanbul.', zh: '17 世纪 30 年代，旅行家埃夫利亚·切莱比在伊斯坦布尔数出了 70 家芝麻圈烘焙坊。' },
+];
+const factText = (i) => FACTS[((i % FACTS.length) + FACTS.length) % FACTS.length][LANG];
+
+// Contextual survival tips matching each death cause, displayed on the game-over card.
+const SURVIVAL_TIPS = [
+  {
+    cause: 'cable',
+    tips: [
+      { tr: 'Köprü altından geçerken alçaktan uç veya kulelerin etrafından geniş kavisle dön.', en: 'Fly low under the bridge or take a wide arc around the suspension towers.', zh: '低飞穿过桥底，或者大幅转弯绕开桥塔。' },
+      { tr: 'Köprü kabloları merkeze doğru sarkar; kule diplerinde daha fazla boşluk bulabilirsin.', en: 'Suspension cables sag lowest near the center; find more clearance near the towers.', zh: '悬索在桥中央最低，靠近桥塔的地方空间更大。' },
+    ],
+  },
+  {
+    cause: 'bridge',
+    tips: [
+      { tr: 'Köprüyü uzaktan görünce yüksekliğini ayarla; kuleler geniştir ama altından geçiş rahattır.', en: 'Adjust altitude early when the bridge appears; the clearance below is wide and safe.', zh: '看见桥就提前调整高度，桥底空间宽敞。' },
+      { tr: 'Köprü tabliyesinin hem altından hem üstünden güvenle geçebilirsin.', en: 'You can fly safely either under or well above the bridge road deck.', zh: '你可以从桥面下方通过，也可以高高飞过桥面。' },
+    ],
+  },
+  {
+    cause: 'ship',
+    tips: [
+      { tr: 'Vapur ve yelkenlilerin direkleri yüksektir; yanlarından geç veya arkalarındaki simitleri kap.', en: 'Ship masts reach high; steer around their sides or catch simit trailing behind ferries.', zh: '船桅很高，沿船侧绕过，或去渡轮后方叼芝麻圈。' },
+      { tr: 'Büyük tankerlerin üzerinden aşmak yerine yan koridorları kullanmak daha güvenlidir.', en: 'It is safer to bank around the sides of large tankers than trying to clear their bridges.', zh: '大型油轮的驾驶台很高，从两侧绕行更稳妥。' },
+    ],
+  },
+  {
+    cause: 'kite',
+    tips: [
+      { tr: 'Uçurtmalar rüzgârla salınır; sürünü 6 martıya çıkarırsan sürün ipleri koparır!', en: 'Kites drift with the wind; grow your flock to 6 gulls to snap through kite lines!', zh: '风筝会随风飘动。把鸟群扩大到六只，就能扯断风筝线！' },
+      { tr: 'Uçurtma iplerini fark ettiğinde ani alçalışla altlarından rahatça sıyrılabilirsin.', en: 'When you spot kite lines, dive down quickly to slip safely beneath them.', zh: '看见风筝线时立刻俯冲，从下面钻过去。' },
+    ],
+  },
+  {
+    cause: 'post',
+    tips: [
+      { tr: 'İskelelerdeki balık sandıkları +35 enerji verir, ama kıyı kazıklarına çok yaklaşma.', en: 'Fish crates at piers give +35 stamina, but keep clear of the wooden jetty posts.', zh: '码头的鱼箱可以恢复 35 点体力，但要避开栈桥木桩。' },
+      { tr: 'Kıyıya yakın uçarken su seviyesinden biraz yukarıda kalarak kazıklardan kaçın.', en: 'When skimming near shores, stay slightly above water level to clear jetty posts.', zh: '靠近岸边时，比水面稍微飞高一点，避开木桩。' },
+    ],
+  },
+  {
+    cause: 'stamina',
+    tips: [
+      { tr: 'Enerjini yüksek tutmak için simit topla ve zıplayan balıklara dal.', en: 'Snatch simit and dive for leaping fish to keep your stamina meter filled.', zh: '叼芝麻圈或俯冲抓跃出水面的鱼都能恢复体力。' },
+      { tr: 'Sürekli dalış yapmak enerjiyi hızla tüketir; dalış butonunu yalnızca gerektiğinde kullan.', en: 'Continuous diving drains stamina quickly; hold the dive button only when aiming for fish.', zh: '连续俯冲会迅速消耗体力，瞄准鱼之后再按住俯冲键。' },
+    ],
+  },
+  {
+    cause: 'water',
+    tips: [
+      { tr: 'Balık yakaladıktan hemen sonra yüksel; dalgaların hemen üstünde uzun süre kalma.', en: 'Pull up right after catching fish; do not linger too close to the cresting waves.', zh: '抓到鱼后立即爬升，别长时间贴着浪尖飞。' },
+      { tr: 'Dalıştan çıkarken hızla irtifa kazanarak suya temas etmekten kaçın.', en: 'Pull up quickly after a dive to avoid skimming too low over the water.', zh: '俯冲后及时拉起，避免飞得太低而落水。' },
+    ],
+  },
+  {
+    cause: 'crash',
+    tips: [
+      { tr: 'Kalkan tüyü bularak veya yavru martıyı büyüterek çarpmalara karşı koruma kazan.', en: 'Pick up shield feathers or raise your chick to gain extra protection against hits.', zh: '拾取护盾羽毛或养大雏鸟都能为你抵挡撞击。' },
+      { tr: 'Yakın geçişler (near-miss) ekstra puan ve hız verir; mesafeni dikkatle ayarla.', en: 'Near-misses reward bonus score and speed; gauge your distance carefully.', zh: '擦身而过可以加分提速，但要把握好距离。' },
+    ],
+  },
+];
+const deathCauseText = (cause) => {
+  if (!cause) return tx('crash');
+  if (cause === 'stamina' || cause === 'energy') return tx('energy');
+  return tx(cause) || tx('crash');
+};
+const getSurvivalTip = (cause, idx = 0) => {
+  if (cause === 'energy') cause = 'stamina';
+  const entry = SURVIVAL_TIPS.find((t) => t.cause === cause) || SURVIVAL_TIPS.find((t) => t.cause === 'crash');
+  if (!entry || !entry.tips.length) return '';
+  const item = entry.tips[((idx % entry.tips.length) + entry.tips.length) % entry.tips.length];
+  return item[LANG] || item.en || '';
+};
+
+// ---------- v2.1: version, news, achievements ----------
+const VERSION = { v: '2.1', tr: 'Kasım 2026', en: 'November 2026', zh: '2026 年 11 月' };
+Object.assign(I18N.tr, { news: 'Yenilikler', newsTitle: 'Neler yeni?', achTitle: 'Başarımlar', otherGames: 'Diğer oyunlar', newAch: 'Yeni başarım', beatBest: 'Rekoru geçtin!' });
+Object.assign(I18N.en, { news: 'What’s new', newsTitle: 'What’s new', achTitle: 'Achievements', otherGames: 'More games', newAch: 'New achievement', beatBest: 'New high score!' });
+const NEWS = {
+  zh: ['新增 11 枚成就徽章，可以在这里或飞行结束时查看。', '刷新最高分时会播放提示音、震动和庆祝特效。', '主菜单新增版本号、更新说明和更多游戏入口。', '触控区域最小为 44 像素，手机上更容易点中。', '新增分享卡片和未找到页面。'],
+  tr: [
+    'Başarımlar: 11 yeni rozet. Kazandıkların bu pencerede ve koşu bitişinde görünür.',
+    'Kendi rekorunu geçtiğin an ses, titreşim ve kutlama efektiyle haber veriliyor.',
+    'Ana menüye sürüm etiketi, bu Yenilikler penceresi ve “Diğer oyunlar” bağlantısı eklendi.',
+    'Dokunmatik hedefler en az 44 px oldu; alt bağlantılar telefonda rahat basılıyor.',
+    'Paylaşım kartı (Twitter görseli, tema rengi) ve 404 sayfası eklendi.',
+  ],
+  en: [
+    'Achievements: 11 new badges. What you earn shows here and on the run-over card.',
+    'Beating your own high score now gets a chime, a buzz and a small celebration.',
+    'The title screen has a version tag, this What’s new window and a “More games” link.',
+    'Touch targets are at least 44 px; the bottom links are easy to tap on a phone.',
+    'A share card (Twitter image, theme colour) and a 404 page were added.',
+  ],
+};
+// Achievements are checked once per finished run (never for the ?auto bot) and kept in the save record (META.ach: id -> day).
+const ACH_DEFS = [
+  { id: 'first', tr: 'İlk uçuş', en: 'First flight', dtr: 'Bir koşuyu bitir', den: 'Finish a run', zh: '初次飞行', dzh: '完成一次飞行', ok: () => true },
+  { id: 'km1', tr: 'Bir kilometre', en: 'One kilometre', dtr: 'Tek koşuda 1 km uç', den: 'Fly 1 km in one run', zh: '一公里', dzh: '单次飞行 1 公里', ok: (r) => r.dist >= 1000 },
+  { id: 'km3', tr: 'Boğaz’ı geçtin', en: 'Across the strait', dtr: 'Tek koşuda 3 km uç', den: 'Fly 3 km in one run', zh: '横跨海峡', dzh: '单次飞行 3 公里', ok: (r) => r.dist >= 3000 },
+  { id: 'simit25', tr: 'Simit sofrası', en: 'Simit feast', dtr: 'Tek koşuda 25 simit kap', den: 'Snatch 25 simit in one run', zh: '芝麻圈盛宴', dzh: '单次叼到 25 个芝麻圈', ok: (r) => r.simit >= 25 },
+  { id: 'fish8', tr: 'Balıkçı martı', en: 'Fisher gull', dtr: 'Tek koşuda 8 balık yakala', den: 'Catch 8 fish in one run', zh: '捕鱼能手', dzh: '单次抓到 8 条鱼', ok: (r) => r.fish >= 8 },
+  { id: 'combo12', tr: 'Kombo ustası', en: 'Combo master', dtr: '12 kombo yap', den: 'Reach a 12 combo', zh: '连击大师', dzh: '达成 12 连击', ok: (r) => r.combo >= 12 },
+  { id: 'near6', tr: 'Kıl payı', en: 'Close shave', dtr: 'Tek koşuda 6 yakın geçiş yap', den: 'Make 6 near-misses in one run', zh: '有惊无险', dzh: '单次完成 6 次擦身闪避', ok: () => S.nearMiss >= 6 },
+  { id: 'night', tr: 'Gece martısı', en: 'Night gull', dtr: 'Koşuyu geceye kadar sürdür', den: 'Keep a run going into the night', zh: '夜行海鸥', dzh: '持续飞行直到夜幕降临', ok: (r) => r.t >= 150 },
+  { id: 'chick', tr: 'Yavru büyüdü', en: 'All grown up', dtr: 'Yavruyu genç martı yap', den: 'Raise the chick to a young gull', zh: '羽翼渐丰', dzh: '把雏鸟养成幼鸥', ok: () => chickStage() === 4 },
+  { id: 'daily3', tr: 'Günün üç görevi', en: 'Daily hat-trick', dtr: 'Bir günde 3 görevi tamamla', den: 'Complete all 3 daily missions in a day', zh: '日进三功', dzh: '一天内完成全部 3 项每日任务', ok: () => !!MS && dailyIds().every((id) => MS.done[id]) },
+  { id: 'score3000', tr: 'Üç bin', en: 'Three thousand', dtr: 'Tek koşuda 3000 puan yap', den: 'Score 3000 in one run', zh: '三千分', dzh: '单次获得 3000 分', ok: (r) => r.score >= 3000 },
+];
+
+// ---------- settings and saves (arena.marti.*; old marti.* keys are read once and kept) ----------
+const KEY = { settings: 'arena.marti.settings', best: 'arena.marti.best', save: 'arena.marti.save' };
+const languageNames = { zh: '简体中文', en: 'English', tr: 'Türkçe' };
+const nextLang = () => ({ zh: 'en', en: 'tr', tr: 'zh' })[LANG];
+const coarse = window.matchMedia && matchMedia('(pointer:coarse)').matches;
+const SET = Object.assign({ master: 0.8, music: 0.6, sfx: 0.8, lang: 'zh', quality: coarse ? 'low' : 'high', musicOn: true, sfxOn: true },
+  LS.get(KEY.settings, null) || (() => {
+    // migration from the round-1 keys
+    const old = {};
+    const l = LS.get('marti.lang', null); if (l === 'tr' || l === 'en') old.lang = l;
+    if (LS.get('marti.music', true) === false) old.musicOn = false;
+    if (LS.get('marti.sfx', true) === false) old.sfxOn = false;
+    return old;
+  })());
+if (LS.get(KEY.best, null) === null && LS.get('marti.highs', null)) LS.set(KEY.best, LS.get('marti.highs', []));
+if (LS.get(KEY.save, null) === null && LS.get('marti.missions', null)) LS.set(KEY.save, LS.get('marti.missions', null));
+// One save record: the daily missions (date, p, done) and what lasts across runs (chick feeds, hints seen, fact index).
+const META = Object.assign({ chick: 0, hints: {}, factIdx: 0, ach: {} }, LS.get(KEY.save, null) || {});
+if (!META.ach || typeof META.ach !== 'object') META.ach = {};
+if (!Object.prototype.hasOwnProperty.call(languageNames, SET.lang)) SET.lang = 'zh'; // a stored unknown language would break I18N[LANG]
+const saveSettings = () => LS.set(KEY.settings, SET);
+saveSettings();
+let LANG = Object.prototype.hasOwnProperty.call(languageNames, Q.get('lang')) ? Q.get('lang') : SET.lang;
+const tx = (k, v) => { let s = I18N[LANG][k] !== undefined ? I18N[LANG][k] : I18N.en[k]; if (v) for (const n in v) s = s.replace('{' + n + '}', v[n]); return s; };
+
+const MISSION_DEFS = {
+  simit: { goal: 60, tr: (n) => `${n} simit kap`, en: (n) => `Snatch ${n} simit`, zh: (n) => `叼到 ${n} 个芝麻圈` },
+  fish: { goal: 16, tr: (n) => `${n} balık yakala`, en: (n) => `Catch ${n} fish`, zh: (n) => `抓到 ${n} 条鱼` },
+  dist: { goal: 3000, tr: (n) => `${n} m uç`, en: (n) => `Fly ${n} m`, zh: (n) => `飞行 ${n} 米` },
+  power: { goal: 6, tr: (n) => `${n} güçlendirme topla`, en: (n) => `Collect ${n} power-ups`, zh: (n) => `收集 ${n} 个增益道具` },
+  combo: { goal: 10, tr: (n) => `${n} kombo yap (tek koşuda)`, en: (n) => `Reach a ${n} combo in one run`, zh: (n) => `单次达成 ${n} 连击` },
+};
+const missionName = (id) => MISSION_DEFS[id][LANG](MISSION_DEFS[id].goal);
+
+// ---------- renderer and scene ----------
+const canvas = document.getElementById('c');
+let renderer = null;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+} catch (e) {
+  $('#fatal').style.display = 'flex';
+  $('#fatal').textContent = LANG === 'zh' ? '当前浏览器不支持 WebGL。' : LANG === 'tr' ? 'Tarayıcında WebGL yok.' : 'WebGL is not available in this browser.';
+  throw e;
+}
+// Software WebGL on low-end TV boxes still renders the full game at a smaller internal resolution.
+const gl = renderer.getContext?.();
+const gpuInfo = gl?.getExtension?.('WEBGL_debug_renderer_info');
+const gpuName = gpuInfo ? gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL) : '';
+const softwareGpu = /swiftshader|llvmpipe|software rasterizer|microsoft basic render/i.test(gpuName);
+const pixelRatio = low => Math.min(window.devicePixelRatio || 1, softwareGpu ? Math.min(1, 560 / window.innerWidth) : low ? 1 : 1.5);
+const isLow = () => softwareGpu || FLAG.low || SET.quality === 'low';
+renderer.setPixelRatio(pixelRatio(isLow()));
+// arena-kit: dynamic pixel ratio on weak GPUs, capped by the quality tier (re-attached when the tier changes)
+let arenaPerf = null;
+function arenaPerfAttach() {
+  if (!window.Arena) return;
+  if (arenaPerf) arenaPerf.stop();
+  arenaPerf = Arena.perf.attach({ setPixelRatio: r => { renderer.setPixelRatio(r); if (CFX) CFX.setSize(window.innerWidth, window.innerHeight); } }, { max: pixelRatio(isLow()) });
+}
+arenaPerfAttach();
+renderer.setSize(window.innerWidth, window.innerHeight, false);
+renderer.shadowMap.enabled = !isLow();
+renderer.shadowMap.type = THREE.PCFShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf8d68f);
+scene.fog = new THREE.Fog(0xf8d68f, 110, 320);
+const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.5, 950);
+camera.position.set(0, 8, -15);
+
+const hemi = new THREE.HemisphereLight(0xfff1d0, 0x3a6a4a, 0.9);
+const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+sun.castShadow = true; // renderer.shadowMap.enabled decides (quality setting)
+sun.shadow.mapSize.set(1024, 1024);
+Object.assign(sun.shadow.camera, { left: -55, right: 55, top: 55, bottom: -55, near: 10, far: 260 });
+sun.shadow.camera.updateProjectionMatrix();
+sun.shadow.bias = -0.0008;
+sun.shadow.normalBias = 0.25;
+scene.add(hemi, sun, sun.target);
+// arena-core v2 render preset: neutral tone mapping, CSS vignette + grain, grade. The import map has no three/addons/ entry,
+// so no composer and no room light (both load addons); direct rendering is also the cheaper path on Intel UHD.
+const CFX = window.ArenaCore ? ArenaCore.render.setup(renderer, scene, camera, { tonlama: 'neutral', pozlama: 1.1, ortam: 0, bloom: false, vinyet: 0.24, grain: 0.03, renk: { doygunluk: 1.1, kontrast: 1.06 } }) : null;
+
+// ---------- materials ----------
+// Soft round sprite for Points. Without a map, PointsMaterial draws hard white squares.
+const DOT = (() => {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d');
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)');
+  gr.addColorStop(0.45, 'rgba(255,255,255,0.9)');
+  gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr;
+  g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+})();
+
+const M = {
+  vc: new THREE.MeshLambertMaterial({ vertexColors: true }),
+  // stil-3d: glossy facets catch the sun as sparkles, like the sea in the song video
+  water: new THREE.MeshPhongMaterial({ vertexColors: true, shininess: 90, specular: 0x9adcff }),
+  land: new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true, side: THREE.DoubleSide }),
+  white: new THREE.MeshLambertMaterial({ color: 0xffffff }),
+  house: new THREE.MeshLambertMaterial({ color: 0xffffff }),
+  win: new THREE.MeshLambertMaterial({ color: 0x1e293b, emissive: 0x000000 }), // house windows, glow at night
+  sun: new THREE.MeshLambertMaterial({ color: 0xffe08a, emissive: 0xffd060, fog: false }),
+  moon: new THREE.MeshLambertMaterial({ color: 0xe5e7eb, emissive: 0xcbd5e1, fog: false }),
+  stars: new THREE.PointsMaterial({ color: 0xffffff, size: 2.4, sizeAttenuation: false, map: DOT, alphaTest: 0.05, transparent: true, opacity: 0, fog: false, depthWrite: false }),
+  // fog:false so fireworks 140-240 units ahead are not fogged into the sky (fog starts at 110)
+  fx: new THREE.PointsMaterial({ size: 0.8, vertexColors: true, sizeAttenuation: true, map: DOT, alphaTest: 0.05, transparent: true, depthWrite: false, fog: false }),
+  fw: new THREE.PointsMaterial({ size: 4, vertexColors: true, sizeAttenuation: true, map: DOT, alphaTest: 0.05, transparent: true, depthWrite: false, fog: false }),
+  // soft white disc behind pickups (a billboard facing the camera, which looks along +z)
+  glow: new THREE.MeshBasicMaterial({ color: 0xffffff, map: DOT, transparent: true, opacity: 0.6, depthWrite: false, side: THREE.DoubleSide, fog: false }),
+  silh: new THREE.MeshBasicMaterial({ vertexColors: true, fog: false }),
+  telegraph: new THREE.MeshBasicMaterial({ color: 0xffbe3b, transparent: true, opacity: 0.62, side: THREE.DoubleSide, depthWrite: false, fog: false }),
+};
+
+// ---------- geometry helpers ----------
+const _m4 = new THREE.Matrix4(), _qe = new THREE.Quaternion(), _ve = new THREE.Vector3(), _sc = new THREE.Vector3(), _eu = new THREE.Euler();
+// Returns a non-indexed, vertex-coloured copy of geo, moved by p/r/s (for mergeGeometries).
+function part(geo, hex, p = [0, 0, 0], r = [0, 0, 0], s = [1, 1, 1]) {
+  _eu.set(r[0], r[1], r[2]);
+  _qe.setFromEuler(_eu);
+  _m4.compose(_ve.set(p[0], p[1], p[2]), _qe, _sc.set(s[0], s[1], s[2]));
+  const g = geo.index ? geo.toNonIndexed() : geo;
+  g.applyMatrix4(_m4);
+  if (g.attributes.uv) g.deleteAttribute('uv');
+  const n = g.attributes.position.count, col = new Float32Array(n * 3), c = new THREE.Color(hex);
+  for (let i = 0; i < n; i++) { col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b; }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  return g;
+}
+const merge = (list) => mergeGeometries(list, false);
+
+// Gull (faces +z, the direction of flight): white body and head, grey mantle on the back, yellow beak with a red
+// spot, white fan tail, tucked orange legs. Wings are tapered two-layer panels: grey on top, white underneath,
+// black tips with a white spot, so the gull reads from behind (grey back and wing tops) and from below (white).
+const GULL_GREY = '#9AA6B2', GULL_WHITE = '#F8FAFC', GULL_BLACK = '#111827';
+// Flat panel from an outline in the x/z plane (points [x, z]; side mirrors x), `thick` tall, bottom at y.
+function panel(pts, side, hex, y, thick) {
+  const sh = new THREE.Shape(pts.map(([x, z]) => new THREE.Vector2(side * x, -z)));
+  const g = new THREE.ExtrudeGeometry(sh, { depth: thick, bevelEnabled: false }).rotateX(-Math.PI / 2);
+  return part(g, hex, [0, y, 0]);
+}
+const panel2 = (pts, side, top, bottom) => [panel(pts, side, bottom, -0.05, 0.05), panel(pts, side, top, 0, 0.05)];
+const gullBodyGeo = merge([
+  part(new THREE.SphereGeometry(0.62, 14, 10), GULL_WHITE, [0, 0, 0], [0, 0, 0], [0.9, 0.78, 1.55]),
+  part(new THREE.SphereGeometry(0.6, 12, 8), GULL_GREY, [0, 0.2, -0.15], [0, 0, 0], [0.82, 0.45, 1.2]),
+  part(new THREE.SphereGeometry(0.42, 12, 8), GULL_WHITE, [0, 0.34, 1.0]),
+  part(new THREE.ConeGeometry(0.11, 0.55, 6), '#FACC15', [0, 0.28, 1.6], [Math.PI / 2, 0, 0]),
+  part(new THREE.SphereGeometry(0.05, 5, 4), '#DC2626', [0, 0.21, 1.62]),
+  part(new THREE.SphereGeometry(0.065, 6, 4), GULL_BLACK, [0.22, 0.44, 1.18]),
+  part(new THREE.SphereGeometry(0.065, 6, 4), GULL_BLACK, [-0.22, 0.44, 1.18]),
+  ...panel2([[-0.28, -0.75], [0.28, -0.75], [0.48, -1.75], [0, -1.62], [-0.48, -1.75]], 1, GULL_WHITE, '#E2E8F0').map((g) => g.translate(0, 0.08, 0)),
+  part(new THREE.BoxGeometry(0.07, 0.07, 0.35), '#F97316', [0.2, -0.45, -0.55]),
+  part(new THREE.BoxGeometry(0.07, 0.07, 0.35), '#F97316', [-0.2, -0.45, -0.55]),
+]);
+// Outlines relative to the joint (shoulder for the inner wing, wrist for the outer one), +x outwards, +z forward.
+const WING_INNER = [[0, 0.52], [1.5, 0.44], [1.5, -0.42], [0.8, -0.62], [0, -0.78]];
+const WING_OUTER = [[0, 0.44], [1.0, 0.2], [1.0, -0.38], [0, -0.42]];
+const WING_TIP = [[1.0, 0.2], [1.62, -0.12], [1.45, -0.3], [1.0, -0.38]];
+// Wing segments (side = +1 right, -1 left), positioned at the joint origin.
+function wingInnerGeo(side, ox = 0, oy = 0, oz = 0) {
+  return merge(panel2(WING_INNER, side, GULL_GREY, GULL_WHITE).map((g) => g.translate(ox, oy, oz)));
+}
+function wingOuterGeo(side, ox = 0, oy = 0, oz = 0) {
+  return merge([
+    ...panel2(WING_OUTER, side, GULL_GREY, GULL_WHITE),
+    ...panel2(WING_TIP, side, GULL_BLACK, GULL_BLACK),
+    part(new THREE.BoxGeometry(0.14, 0.02, 0.12), GULL_WHITE, [side * 1.32, 0.055, -0.12]),
+  ].map((g) => g.translate(ox, oy, oz)));
+}
+// Rival flock: the same gull with the wings spread flat (instanced; the shader flaps them).
+const rivalGeo = merge([gullBodyGeo,
+  wingInnerGeo(1, 0.45, 0.15, 0.25), wingInnerGeo(-1, -0.45, 0.15, 0.25),
+  wingOuterGeo(1, 1.95, 0.15, 0.25), wingOuterGeo(-1, -1.95, 0.15, 0.25)]);
+// Your own flock (Sürü): a low-poly gull with the same spread-wing outline (few segments per sphere, no tail or
+// legs), drawn small and instanced, so a dozen of them stay one cheap draw call.
+const wingmanGeo = merge([
+  part(new THREE.SphereGeometry(0.62, 6, 4), GULL_WHITE, [0, 0, 0], [0, 0, 0], [0.9, 0.78, 1.55]),
+  part(new THREE.SphereGeometry(0.6, 6, 4), GULL_GREY, [0, 0.2, -0.15], [0, 0, 0], [0.82, 0.45, 1.2]),
+  part(new THREE.SphereGeometry(0.42, 5, 3), GULL_WHITE, [0, 0.34, 1.0]),
+  part(new THREE.ConeGeometry(0.11, 0.55, 4), '#FACC15', [0, 0.28, 1.6], [Math.PI / 2, 0, 0]),
+  wingInnerGeo(1, 0.45, 0.15, 0.25), wingInnerGeo(-1, -0.45, 0.15, 0.25),
+  wingOuterGeo(1, 1.95, 0.15, 0.25), wingOuterGeo(-1, -1.95, 0.15, 0.25)]);
+
+const simitGeo = part(new THREE.TorusGeometry(0.85, 0.32, 8, 16), '#C98A3E');
+const fishGeo = merge([
+  part(new THREE.SphereGeometry(0.9, 8, 6), '#9ED8EA', [0, 0, 0], [0, 0, 0], [0.55, 0.5, 1.35]),
+  part(new THREE.SphereGeometry(0.5, 6, 4), '#1E3A8A', [0, 0.25, 0.2], [0, 0, 0], [0.4, 0.2, 0.9]),
+  part(new THREE.ConeGeometry(0.5, 0.9, 4), '#60A5FA', [0, 0, -1.6], [-Math.PI / 2, 0, 0]),
+]);
+const PWR_GEO = {
+  tail: merge([part(new THREE.TorusGeometry(1.2, 0.16, 8, 24), '#34D399'), part(new THREE.SphereGeometry(0.4, 8, 6), '#D1FAE5')]),
+  gold: merge([part(new THREE.TorusGeometry(1.1, 0.32, 8, 24), '#F59E0B'), part(new THREE.SphereGeometry(0.55, 8, 6), '#FDE68A')]),
+  shield: merge([part(new THREE.ConeGeometry(0.45, 2.2, 6), '#E0F2FE', [0, 0, 0], [0, 0, 0]), part(new THREE.SphereGeometry(0.4, 8, 6), '#60A5FA', [0, -1.1, 0])]),
+  // Fish crate of the pier snack: a wooden box, a lid strip and two fish on top.
+  crate: merge([part(new THREE.BoxGeometry(1.5, 1.1, 1.5), '#92400E'), part(new THREE.BoxGeometry(1.6, 0.16, 1.6), '#FDE68A', [0, 0.6, 0]),
+    part(new THREE.SphereGeometry(0.3, 6, 4), '#9ED8EA', [-0.3, 0.9, 0], [0, 0, 0], [1, 0.6, 1.8]), part(new THREE.SphereGeometry(0.3, 6, 4), '#9ED8EA', [0.35, 0.9, 0.1], [0, 0, 0], [1, 0.6, 1.8])]),
+};
+// Power-up meshes (replaced by the generated models when they load).
+const PWR = { tail: { geo: PWR_GEO.tail, mat: M.vc }, gold: { geo: PWR_GEO.gold, mat: M.vc }, shield: { geo: PWR_GEO.shield, mat: M.vc }, crate: { geo: PWR_GEO.crate, mat: M.vc } };
+const kiteGeo = new THREE.OctahedronGeometry(1, 0).scale(1.5, 1.5, 0.15);
+const stringGeo = new THREE.BoxGeometry(0.12, 1, 0.12).translate(0, 0.5, 0);
+// Hot-air balloon: envelope, four ropes and a basket (the instance colour tints all of it).
+const balloonGeo = merge([
+  part(new THREE.SphereGeometry(1.3, 10, 8), '#FFFFFF', [0, 0, 0], [0, 0, 0], [1, 1.1, 1]),
+  ...[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sz]) => part(new THREE.BoxGeometry(0.04, 1.2, 0.04), '#E5E7EB', [sx * 0.42, -1.55, sz * 0.42])),
+  part(new THREE.BoxGeometry(0.6, 0.5, 0.6), '#8B5A2B', [0, -2.1, 0]),
+]);
+const houseGeo = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0);
+// Night windows: 2x2 dark quads on each side of the unit house box, drawn with the house matrices (one draw call).
+const winGeo = (() => {
+  const P = [];
+  for (let f = 0; f < 4; f++) {
+    for (const wy of [0.32, 0.68]) for (const wx of [-0.2, 0.2]) {
+      P.push(new THREE.PlaneGeometry(0.18, 0.2).translate(wx, wy, 0.505).rotateY((f * Math.PI) / 2));
+    }
+  }
+  return mergeGeometries(P, false);
+})();
+// A 4-sided cone has its corners on the axes; turn it 45 degrees so the roof lines up with the box.
+const roofGeo = new THREE.ConeGeometry(0.72, 0.8, 4).rotateY(Math.PI / 4).translate(0, 0.4, 0);
+// stil-3d: round chibi trees (a soft ball crown) instead of cones; same base point and height
+const treeGeo = new THREE.SphereGeometry(1.15, 12, 9).scale(1, 1.25, 1).translate(0, 1.75, 0);
+const domeGeo = new THREE.SphereGeometry(1, 14, 8, 0, TAU, 0, Math.PI / 2);
+const minaretGeo = merge([
+  part(new THREE.CylinderGeometry(0.25, 0.35, 8, 8), '#F8FAFC', [0, 4, 0]),
+  part(new THREE.CylinderGeometry(0.42, 0.42, 0.4, 8), '#E9C46A', [0, 7.6, 0]),
+  part(new THREE.ConeGeometry(0.4, 1.4, 8), '#2563EB', [0, 8.7, 0]),
+]);
+// Rooftop nest with a chick (on a waterfront house), jetty post, and the soft disc behind pickups.
+const nestGeo = merge([
+  part(new THREE.TorusGeometry(0.55, 0.17, 6, 12), '#8B5A2B', [0, 0.12, 0], [Math.PI / 2, 0, 0]),
+  part(new THREE.SphereGeometry(0.27, 8, 6), '#F8FAFC', [0, 0.42, 0], [0, 0, 0], [1, 0.8, 1]),
+  part(new THREE.ConeGeometry(0.09, 0.26, 5), '#FACC15', [0, 0.44, 0.27], [Math.PI / 2, 0, 0]),
+]);
+const haloGeo = new THREE.PlaneGeometry(3.4, 3.4);
+const ringGeo = new THREE.RingGeometry(2.4, 2.9, 32);
+const teleRingGeo = new THREE.RingGeometry(1.5, 1.85, 32);
+// Soft cloud sprite: overlapping radial puffs on a canvas, drawn as a billboard (see M.cloud).
+const CLOUD_TEX = (() => {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 128;
+  const g = c.getContext('2d');
+  for (const [x, y, r] of [[80, 74, 44], [128, 56, 58], [176, 72, 46], [116, 84, 40], [150, 88, 36]]) {
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, 'rgba(255,255,255,0.95)');
+    gr.addColorStop(0.55, 'rgba(255,255,255,0.7)');
+    gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr;
+    g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+})();
+const cloudGeo = new THREE.PlaneGeometry(26, 13);
+// Far Bosphorus bridge silhouette on the horizon: two tall towers, a deck and catenary cables. It rides along with the
+// run at a fixed distance (see updateVisuals), so it stays a backdrop and never comes closer.
+const SIL_GEO = (() => {
+  const P = [];
+  for (const sx of [-1, 1]) P.push(part(new THREE.BoxGeometry(5, 80, 9), '#FFFFFF', [sx * 110, 40, 0]));
+  P.push(part(new THREE.BoxGeometry(260, 2.6, 4), '#FFFFFF', [0, 26, 0]));
+  const N = 22, step = 220 / N;
+  for (let i = 0; i < N; i++) {
+    const xa = -110 + i * step, xb = xa + step;
+    const ya = 26 + 54 * (xa / 110) ** 2, yb = 26 + 54 * (xb / 110) ** 2;
+    const ang = Math.atan2(yb - ya, step);
+    P.push(part(new THREE.BoxGeometry(step * 1.04 / Math.cos(ang), 0.9, 1.4), '#FFFFFF', [(xa + xb) / 2, (ya + yb) / 2, 0], [0, 0, ang]));
+  }
+  return merge(P);
+})();
+M.cloud = new THREE.MeshBasicMaterial({ map: CLOUD_TEX, transparent: true, opacity: 0.94, depthWrite: false, side: THREE.DoubleSide, fog: false });
+const stormGeo = merge([
+  part(new THREE.SphereGeometry(5, 10, 8), '#94A3B8', [0, 0, 0], [0, 0, 0], [1.6, 0.8, 1.2]),
+  part(new THREE.SphereGeometry(4, 10, 8), '#64748B', [-6, -1, 1], [0, 0, 0], [1.2, 0.7, 1]),
+  part(new THREE.SphereGeometry(4.5, 10, 8), '#64748B', [6, -0.8, -1], [0, 0, 0], [1.2, 0.7, 1]),
+  part(new THREE.SphereGeometry(3.5, 10, 8), '#475569', [0, -2, 0], [0, 0, 0], [1.9, 0.5, 1]),
+]);
+
+// Boats: hull, deck and superstructure, with the collision boxes listed separately below.
+function boatGeo(type) {
+  const P = [];
+  if (type === 'ferry') {
+    // Livery: white hull and cabin, red waterline band and roof, dark blue window band, red funnel with a white ring.
+    P.push(part(new THREE.BoxGeometry(6, 2.2, 15), '#F8FAFC', [0, 1.1, 0]));
+    P.push(part(new THREE.BoxGeometry(6.2, 0.35, 15.2), '#DC2626', [0, 0.6, 0]));
+    P.push(part(new THREE.BoxGeometry(5, 2.2, 8), '#F8FAFC', [0, 3.4, -1.5]));
+    P.push(part(new THREE.BoxGeometry(5.06, 0.6, 7.6), '#1E3A8A', [0, 3.7, -1.5]));
+    P.push(part(new THREE.BoxGeometry(5.3, 0.3, 8.3), '#DC2626', [0, 4.6, -1.5]));
+    P.push(part(new THREE.BoxGeometry(1.3, 2.2, 1.3), '#DC2626', [0, 5.9, -1.5]));
+    P.push(part(new THREE.BoxGeometry(1.36, 0.4, 1.36), '#F8FAFC', [0, 6.2, -1.5]));
+    for (let i = 0; i < 4; i++) {
+      const x = -1.8 + i * 1.2, z = 5.6;
+      P.push(part(new THREE.BoxGeometry(0.5, 1.0, 0.5), pick(['#F97316', '#2563EB', '#16A34A', '#A855F7']), [x, 2.9, z]));
+      P.push(part(new THREE.SphereGeometry(0.28, 6, 4), '#FBBF86', [x, 3.6, z]));
+      P.push(part(new THREE.TorusGeometry(0.22, 0.08, 6, 10), '#C98A3E', [x + 0.25, 4.2, z], [Math.PI / 2, 0, 0]));
+    }
+  } else if (type === 'fishing') {
+    P.push(part(new THREE.BoxGeometry(3, 1.4, 6), '#92400E', [0, 0.7, 0]));
+    P.push(part(new THREE.BoxGeometry(2, 1.6, 2), '#FDE68A', [0, 2.2, -1.5]));
+    P.push(part(new THREE.BoxGeometry(0.15, 5.3, 0.15), '#3F3F46', [0, 2.85, 0.3]));
+  } else if (type === 'tanker') {
+    P.push(part(new THREE.BoxGeometry(9, 3.2, 36), '#1F2937', [0, 1.6, 0]));
+    P.push(part(new THREE.BoxGeometry(8.6, 0.3, 34), '#E5E7EB', [0, 3.35, 0]));
+    P.push(part(new THREE.BoxGeometry(4, 5, 5), '#F3F4F6', [0, 6, -13]));
+    P.push(part(new THREE.BoxGeometry(2, 7, 2.2), '#DC2626', [0, 6.5, -13.5]));
+  } else {
+    P.push(part(new THREE.BoxGeometry(2.6, 0.9, 7), '#F8FAFC', [0, 0.45, 0]));
+    P.push(part(new THREE.BoxGeometry(0.2, 22, 0.2), '#CBD5E1', [0, 11, 0.5]));
+    P.push(part(new THREE.BoxGeometry(0.1, 12, 4), '#FFFFFF', [0.05, 10, -0.8]));
+  }
+  return merge(P);
+}
+// Boat meshes (ferry, fishing and sail are replaced by the generated models when they load; the tanker stays procedural).
+const BOAT = {};
+for (const t of ['ferry', 'fishing', 'tanker', 'sail']) BOAT[t] = { geo: boatGeo(t), mat: M.vc };
+const BOAT_BOXES = {
+  // The ferry cabin top stays at 4.5: the deck simit at y 5.3 (minus the gull's half height 0.55) must stay reachable.
+  ferry: [{ ox: 0, oz: 0, y0: 0, y1: 2.6, hw: 3, hd: 7.5 }, { ox: 0, oz: -1.5, y0: 2.6, y1: 4.5, hw: 2.65, hd: 4.15 }],
+  // Fishing: the model's wheelhouse spans z -2.5..-0.5 (top 3.2) and its mast stands at z -0.2..0.8 (top 5.8).
+  fishing: [{ ox: 0, oz: 0, y0: 0, y1: 1.8, hw: 1.6, hd: 3 }, { ox: 0, oz: 0.3, y0: 0, y1: 5.5, hw: 0.35, hd: 0.5 }, { ox: 0, oz: -1.5, y0: 1.4, y1: 3.0, hw: 1.0, hd: 1.0 }],
+  tanker: [{ ox: 0, oz: 0, y0: 0, y1: 3.4, hw: 4.5, hd: 18 }, { ox: 0, oz: -13.5, y0: 3.4, y1: 10.5, hw: 1.1, hd: 1.2 }, { ox: 0, oz: -13, y0: 3.4, y1: 8.5, hw: 2, hd: 2.5 }],
+  sail: [{ ox: 0, oz: 0, y0: 0, y1: 1.6, hw: 1.5, hd: 3.6 }, { ox: 0, oz: 0.5, y0: 0, y1: 23, hw: 0.4, hd: 0.4 }, { ox: 0.05, oz: -0.8, y0: 4, y1: 16, hw: 0.15, hd: 2 }],
+};
+
+// Bridge (red towers, suspension cables, hangers, fishing lines).
+const BR = { towerX: 25.5, deckY0: 19.6, deckY1: 22.8, cableMid: 27, cableEnd: 44 };
+const cableY = (x) => BR.cableMid + (BR.cableEnd - BR.cableMid) * (x / BR.towerX) * (x / BR.towerX);
+const BRIDGE_BOXES = [
+  { x: -BR.towerX, y0: 0, y1: 44, hw: 1.8, hd: 3.1 },
+  { x: BR.towerX, y0: 0, y1: 44, hw: 1.8, hd: 3.1 },
+  { x: 0, y0: BR.deckY0, y1: BR.deckY1, hw: 70, hd: 4 },
+];
+const BRIDGE_GEO = (() => {
+  const P = [];
+  for (const sx of [-1, 1]) P.push(part(new THREE.BoxGeometry(3.6, 44, 6.2), '#DC2626', [sx * BR.towerX, 22, 0]));
+  P.push(part(new THREE.BoxGeometry(140, BR.deckY1 - BR.deckY0, 8), '#B91C1C', [0, (BR.deckY0 + BR.deckY1) / 2, 0]));
+  const N = 26, x0 = -BR.towerX, x1 = BR.towerX, step = (x1 - x0) / N;
+  for (let i = 0; i < N; i++) {
+    const xa = x0 + i * step, xb = xa + step, ya = cableY(xa), yb = cableY(xb);
+    const ang = Math.atan2(yb - ya, step);
+    P.push(part(new THREE.BoxGeometry(step * 1.04 / Math.cos(ang), 0.55, 0.55), '#E5E7EB', [(xa + xb) / 2, (ya + yb) / 2, 0], [0, 0, ang]));
+  }
+  for (let x = -24; x <= 24.1; x += 3) {
+    const yc = cableY(x), len = yc - BR.deckY1;
+    P.push(part(new THREE.BoxGeometry(0.18, len, 0.18), '#E5E7EB', [x, BR.deckY1 + len / 2, 0]));
+  }
+  for (const x of [-34, -41, 37, 45]) P.push(part(new THREE.BoxGeometry(0.07, 16.8, 0.07), '#111827', [x, 11.2, 0]));
+  return merge(P);
+})();
+
+// Specials: a mansion row, a stone tower and a lighthouse (built once, placed from a pool of meshes).
+const MANSION_GEO = (() => {
+  const P = [part(new THREE.BoxGeometry(10, 6, 4), '#F5E6C8', [0, 3, 0]), part(new THREE.BoxGeometry(10.4, 0.6, 4.4), '#7C2D12', [0, 6.3, 0])];
+  for (const sx of [-7, 7]) {
+    P.push(part(new THREE.BoxGeometry(4, 4, 3.4), '#EADBB8', [sx, 2, 0]));
+    P.push(part(new THREE.BoxGeometry(4.4, 0.5, 3.8), '#7C2D12', [sx, 4.2, 0]));
+  }
+  for (let i = 0; i < 6; i++) {
+    for (const row of [1.5, 3.8]) P.push(part(new THREE.BoxGeometry(0.9, 1.1, 0.1), '#334155', [-4 + i * 1.6, row, 2.05]));
+  }
+  return merge(P);
+})();
+const TOWER_GEO = merge([
+  part(new THREE.CylinderGeometry(3.2, 3.8, 22, 12), '#D6C7A1', [0, 11, 0]),
+  part(new THREE.ConeGeometry(3.8, 4, 12), '#7C2D12', [0, 24, 0]),
+  part(new THREE.CylinderGeometry(3.4, 3.4, 0.6, 12), '#A8A29E', [0, 22.2, 0]),
+]);
+const LIGHTHOUSE_GEO = merge([
+  part(new THREE.CylinderGeometry(1.6, 2.2, 14, 10), '#FFFFFF', [0, 7, 0]),
+  part(new THREE.CylinderGeometry(1.9, 1.9, 2.5, 10), '#DC2626', [0, 9, 0]),
+  part(new THREE.CylinderGeometry(1.4, 1.2, 2, 8), '#FDE68A', [0, 14.5, 0]),
+  part(new THREE.ConeGeometry(1.8, 1.4, 8), '#7C2D12', [0, 16.2, 0]),
+]);
+
+// ---------- instanced meshes ----------
+const _im = new THREE.Matrix4(), _ip = new THREE.Vector3(), _iq = new THREE.Quaternion(), _is = new THREE.Vector3(), _ic = new THREE.Color();
+const AXY = new THREE.Vector3(0, 1, 0), _ieu = new THREE.Euler(0, 0, 0, 'YXZ');
+function makeInst(geo, mat, cap) {
+  const m = new THREE.InstancedMesh(geo, mat, cap);
+  m.count = 0;
+  m.frustumCulled = false;
+  m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(m);
+  return m;
+}
+// Writes matrices (and colours when an item has .c, unless noColor) for the first n items of arr.
+// .r turns about y, .rx pitches about x (after the turn).
+function setInst(mesh, arr, n = arr.length, noColor = false) {
+  n = Math.min(n, mesh.instanceMatrix.count);
+  mesh.count = n;
+  for (let i = 0; i < n; i++) {
+    const o = arr[i];
+    _ip.set(o.x, o.y, o.z);
+    if (o.rx) _iq.setFromEuler(_ieu.set(o.rx, o.r || 0, 0));
+    else _iq.setFromAxisAngle(AXY, o.r || 0);
+    _is.set(o.sx === undefined ? 1 : o.sx, o.sy === undefined ? 1 : o.sy, o.sz === undefined ? 1 : o.sz);
+    _im.compose(_ip, _iq, _is);
+    mesh.setMatrixAt(i, _im);
+    if (o.c !== undefined && !noColor) mesh.setColorAt(i, _ic.set(o.c));
+  }
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor && !noColor) mesh.instanceColor.needsUpdate = true;
+}
+
+// Reused per-frame instance lists (no new arrays or objects per frame).
+const TMP = { kite: [], str: [], flock: [], simit: [], fish: [], halo: [], mate: [], wing: [], telegraph: [] };
+const slot = (arr, i) => arr[i] || (arr[i] = { x: 0, y: 0, z: 0, r: 0 });
+
+const HOUSE_COLS = ['#F4A261', '#E76F51', '#2A9D8F', '#E9C46A', '#F5F5DC', '#E63946', '#8ECAE6', '#F1FAEE', '#FFB4A2', '#B5E48C'];
+const KITE_COLS = ['#EF4444', '#F59E0B', '#22C55E', '#3B82F6', '#EC4899', '#A855F7'];
+const BAL_COLS = ['#F87171', '#FBBF24', '#60A5FA', '#34D399', '#F472B6'];
+
+// Rival flock material: the wings flap in the vertex shader (per-instance phase), still one draw call.
+const flockUniforms = { uTime: { value: 0 } };
+M.flock = M.vc.clone();
+M.flock.onBeforeCompile = (sh) => {
+  sh.uniforms.uTime = flockUniforms.uTime;
+  sh.vertexShader = sh.vertexShader
+    .replace('#include <common>', '#include <common>\nuniform float uTime;\nattribute float instPhase;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nfloat wingOut = max(abs(position.x) - 0.6, 0.0);\ntransformed.y += wingOut * 0.35 * sin(uTime * 9.0 + instPhase);');
+};
+const IM = {
+  house: makeInst(houseGeo, M.house, 700),
+  win: makeInst(winGeo, M.win, 700),
+  mbody: makeInst(houseGeo, M.house, 40),
+  roof: makeInst(roofGeo, M.white, 300),
+  tree: makeInst(treeGeo, M.white, 260),
+  dome: makeInst(domeGeo, M.white, 40),
+  minaret: makeInst(minaretGeo, M.vc, 60),
+  balloon: makeInst(balloonGeo, M.vc, 20),
+  sky: makeInst(cloudGeo, M.cloud, 24),
+  kite: makeInst(kiteGeo, M.white, 16),
+  kiteStr: makeInst(stringGeo, M.white, 16),
+  flock: makeInst(rivalGeo, M.flock, 80),
+  simit: makeInst(simitGeo, M.vc, 160),
+  fish: makeInst(fishGeo, M.vc, 40),
+  halo: makeInst(haloGeo, M.glow, 200),
+  nest: makeInst(nestGeo, M.vc, 16),
+  post: makeInst(houseGeo, M.white, 80),
+  // the young gull that flies beside you from chick stage 4 (the rival flock shader, so it flaps)
+  mate: makeInst(rivalGeo, M.flock, 1),
+  // your flock (Sürü): members in formation plus the ones scattering after a hit (see updateWingmen)
+  wing: makeInst(wingmanGeo, M.flock, 24),
+  telegraph: makeInst(teleRingGeo, M.telegraph, 32),
+};
+const wingPhase = new THREE.InstancedBufferAttribute(new Float32Array(24), 1).setUsage(THREE.DynamicDrawUsage);
+IM.wing.geometry.setAttribute('instPhase', wingPhase);
+// Tutorial ring around the first simit pattern of a player's first run.
+const tutMesh = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false, fog: false }));
+tutMesh.visible = false;
+scene.add(tutMesh);
+let tutRing = null;
+const flockPhase = new THREE.InstancedBufferAttribute(new Float32Array(80), 1).setUsage(THREE.DynamicDrawUsage);
+IM.flock.geometry.setAttribute('instPhase', flockPhase);
+
+// ---------- sky, sun, moon, stars ----------
+const sunMesh = new THREE.Mesh(new THREE.SphereGeometry(15, 16, 12), M.sun);
+const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(8, 14, 10), M.moon);
+const starGeo = (() => {
+  const p = new Float32Array(600 * 3);
+  for (let i = 0; i < 600; i++) {
+    const th = rnd(0, TAU), ph = rnd(0.05, 1.25), R = 420;
+    p[i * 3] = Math.sin(ph) * Math.cos(th) * R; p[i * 3 + 1] = Math.cos(ph) * R; p[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * R;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+  return g;
+})();
+const starsPts = new THREE.Points(starGeo, M.stars);
+starsPts.frustumCulled = false;
+scene.add(sunMesh, moonMesh, starsPts);
+
+// Colour keyframes: day phase (0..1) -> zenith (top) and horizon colours. The sky is a dome with a gradient from
+// the zenith to the horizon, so it reads as a sky from day through sunset to night; the horizon colour is also the fog.
+const SKY_TOP = [[0, '#7DB8F5'], [0.42, '#6AAEF0'], [0.56, '#5865C8'], [0.68, '#2B2A7A'], [0.8, '#131C4A'], [1, '#070C24']];
+const SKY_HOR = [[0, '#D4ECFF'], [0.42, '#FFD6A5'], [0.56, '#FF9E6B'], [0.68, '#B4508C'], [0.8, '#2A2C6B'], [1, '#101A40']];
+const _cA = new THREE.Color(), _cB = new THREE.Color(), _skT = new THREE.Color(), _skH = new THREE.Color(), _skC = new THREE.Color();
+const HEMI_DAY = new THREE.Color(0xfff1d0), HEMI_NIGHT = new THREE.Color(0xb8c8ff), SUN_DAY = new THREE.Color(0xffffff), SUN_NIGHT = new THREE.Color(0xbfd0ff);
+function rampColor(stops, p, out) {
+  for (let i = 1; i < stops.length; i++) {
+    if (p <= stops[i][0]) {
+      const a = stops[i - 1], b = stops[i], k = (p - a[0]) / (b[0] - a[0]);
+      return out.copy(_cA.set(a[1])).lerp(_cB.set(b[1]), k);
+    }
+  }
+  return out.set(stops[stops.length - 1][1]);
+}
+// Sky dome: a big inverted sphere, vertex-coloured from the zenith (top) to the horizon. It follows the camera and is
+// drawn first (renderOrder -1), so the stars, sun and moon sit in front of it.
+const SKY_R = 700;
+const skyGeo = new THREE.SphereGeometry(SKY_R, 24, 12);
+const skyCol = new Float32Array(skyGeo.attributes.position.count * 3);
+skyGeo.setAttribute('color', new THREE.BufferAttribute(skyCol, 3));
+const skyUp = new Float32Array(skyGeo.attributes.position.count); // 0 at the horizon, 1 at the zenith
+for (let i = 0; i < skyUp.length; i++) skyUp[i] = smooth(0, 0.5, skyGeo.attributes.position.getY(i) / SKY_R);
+const skyMesh = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, depthWrite: false, fog: false }));
+skyMesh.renderOrder = -1;
+skyMesh.frustumCulled = false;
+scene.add(skyMesh);
+// The bridge silhouette (placed in updateVisuals); its colour is a darker tone of the sky, set in updateSky.
+const silMesh = new THREE.Mesh(SIL_GEO, M.silh);
+silMesh.frustumCulled = false;
+scene.add(silMesh);
+let skyKey = -1;
+// Recolours the dome (and the fog) for the day phase p; skipped while p barely changes.
+function updateSky(p) {
+  const k = Math.round(p * 400);
+  if (k === skyKey) return;
+  skyKey = k;
+  rampColor(SKY_TOP, p, _skT);
+  rampColor(SKY_HOR, p, _skH);
+  for (let i = 0; i < skyUp.length; i++) {
+    _skC.copy(_skH).lerp(_skT, skyUp[i]);
+    skyCol[i * 3] = _skC.r; skyCol[i * 3 + 1] = _skC.g; skyCol[i * 3 + 2] = _skC.b;
+  }
+  skyGeo.attributes.color.needsUpdate = true;
+  scene.fog.color.copy(_skH);
+  scene.background.copy(_skH);
+  M.silh.color.copy(_skH).lerp(_skT, 0.5).multiplyScalar(0.3);
+}
+
+// ---------- terrain and water ----------
+const DEEP = new THREE.Color('#1979B4'), CREST = new THREE.Color('#5FD0EE'), FOAM = new THREE.Color('#F4FBFF');
+const SAND = new THREE.Color('#E9D7A3'), GRASS = new THREE.Color('#8DBF6A'), HILL = new THREE.Color('#4F8F4E');
+function waveH(x, z, t) {
+  return 0.45 * Math.sin(x * 0.21 + t * 1.1) + 0.35 * Math.sin(z * 0.17 - t * 1.6 + x * 0.05) + 0.18 * Math.sin(x * 0.6 + z * 0.45 + t * 2.4);
+}
+function terrH(x, z) {
+  const ax = Math.abs(x), edge = Math.max(0, ax - 30);
+  const base = Math.min(edge * 0.22, 16);
+  const bumps = 4.2 * Math.sin(z * 0.021 + ax * 0.045) ** 2 + 2.2 * Math.sin(z * 0.067 - ax * 0.13 + 1.3);
+  return Math.max(0, base + Math.max(0, bumps) * Math.min(1, edge / 10));
+}
+
+const WCOLS = Math.round((2 * WATER_X) / 7) + 1, WROWS = 64, WSTEP = 7, WZ = 7;
+const wPos = new Float32Array(WCOLS * WROWS * 3), wCol = new Float32Array(WCOLS * WROWS * 3);
+const waterGeo = new THREE.BufferGeometry();
+{
+  const idx = [];
+  for (let r = 0; r < WROWS - 1; r++) {
+    for (let c = 0; c < WCOLS - 1; c++) {
+      const a = r * WCOLS + c, b = a + 1, d = a + WCOLS, e = d + 1;
+      idx.push(a, d, b, b, d, e);
+    }
+  }
+  waterGeo.setIndex(idx);
+}
+waterGeo.setAttribute('position', new THREE.BufferAttribute(wPos, 3).setUsage(THREE.DynamicDrawUsage));
+waterGeo.setAttribute('color', new THREE.BufferAttribute(wCol, 3).setUsage(THREE.DynamicDrawUsage));
+const water = new THREE.Mesh(waterGeo, M.water);
+water.frustumCulled = false;
+water.receiveShadow = true;
+scene.add(water);
+
+const LCOLS = 24, LROWS = 44, LZ = 10;
+const lPos = new Float32Array(2 * LCOLS * LROWS * 3), lCol = new Float32Array(2 * LCOLS * LROWS * 3);
+const landGeo = new THREE.BufferGeometry();
+{
+  const idx = [];
+  for (let side = 0; side < 2; side++) {
+    const base = side * LROWS * LCOLS;
+    for (let r = 0; r < LROWS - 1; r++) {
+      for (let c = 0; c < LCOLS - 1; c++) {
+        const a = base + r * LCOLS + c, b = a + 1, d = a + LCOLS, e = d + 1;
+        idx.push(a, d, b, b, d, e);
+      }
+    }
+  }
+  landGeo.setIndex(idx);
+}
+landGeo.setAttribute('position', new THREE.BufferAttribute(lPos, 3).setUsage(THREE.DynamicDrawUsage));
+landGeo.setAttribute('color', new THREE.BufferAttribute(lCol, 3).setUsage(THREE.DynamicDrawUsage));
+const land = new THREE.Mesh(landGeo, M.land);
+land.frustumCulled = false;
+land.receiveShadow = true;
+scene.add(land);
+const _cc = new THREE.Color(), _cw = new THREE.Color();
+
+let lastLandZ0 = NaN;
+function updateTerrain() {
+  const z0 = Math.floor((S.d - 60) / LZ) * LZ;
+  if (z0 === lastLandZ0) return; // the land is static in world space: rebuild only when the window moves
+  lastLandZ0 = z0;
+  for (let side = 0; side < 2; side++) {
+    const sx = side ? 1 : -1;
+    for (let r = 0; r < LROWS; r++) {
+      const z = z0 + r * LZ;
+      for (let c = 0; c < LCOLS; c++) {
+        const x = sx * (30 + c * 6), h = terrH(x, z);
+        const i = (side * LROWS * LCOLS + r * LCOLS + c) * 3;
+        lPos[i] = x; lPos[i + 1] = h - 0.4; lPos[i + 2] = z;
+        _cc.lerpColors(SAND, GRASS, clamp(h / 1.2, 0, 1)).lerp(HILL, clamp((h - 5) / 10, 0, 1));
+        lCol[i] = _cc.r; lCol[i + 1] = _cc.g; lCol[i + 2] = _cc.b;
+      }
+    }
+  }
+  landGeo.attributes.position.needsUpdate = true;
+  landGeo.attributes.color.needsUpdate = true;
+}
+function updateWater() {
+  const z0 = Math.floor((S.d - 60) / WZ) * WZ;
+  for (let r = 0; r < WROWS; r++) {
+    const z = z0 + r * WZ;
+    for (let c = 0; c < WCOLS; c++) {
+      const x = -WATER_X + c * WSTEP, h = waveH(x, z, WT);
+      const i = (r * WCOLS + c) * 3;
+      wPos[i] = x; wPos[i + 1] = h; wPos[i + 2] = z;
+      // Foam: the highest crests, broken up by a second wave term so the white is not in neat rows.
+      const foam = smooth(0.55, 0.92, h + 0.1 * Math.sin(x * 0.9 + z * 1.3 + WT * 3));
+      _cw.lerpColors(DEEP, CREST, clamp((h + 1) / 2.2, 0, 1)).lerp(FOAM, foam);
+      wCol[i] = _cw.r; wCol[i + 1] = _cw.g; wCol[i + 2] = _cw.b;
+    }
+  }
+  waterGeo.attributes.position.needsUpdate = true;
+  waterGeo.attributes.color.needsUpdate = true;
+  waterGeo.computeVertexNormals(); // smooth rolling waves (stil-3d), the facets were too hard for the clay look
+}
+
+// ---------- gull ----------
+const gull = new THREE.Group();
+gull.scale.setScalar(1.1);
+const gBody = new THREE.Group();
+gull.add(gBody);
+// Pose for the chase camera, which sits behind and only a little above: the body is tipped nose-up a touch and the
+// wings are pitched leading-edge-up (WING_PITCH), so the camera sees the grey back and wing tops instead of thin
+// edges. GULL_DIHEDRAL lifts the wings into a slight V; GULL_AMP is the flap amplitude at the shoulder (radians).
+// ?gp= ?wp= ?gd= ?ga= override them for screenshot tests.
+const qn = (k, d) => (Q.has(k) ? +Q.get(k) : d);
+const GULL_PITCH = qn('gp', -0.15), WING_PITCH = qn('wp', -0.6), GULL_DIHEDRAL = qn('gd', 0.12), GULL_AMP = qn('ga', 0.55);
+// own material: a faint glow keeps the white gull readable when it is backlit and at night
+M.gull = new THREE.MeshLambertMaterial({ vertexColors: true, emissive: 0x2b2f36 });
+const bodyMesh = new THREE.Mesh(gullBodyGeo, M.gull);
+gBody.add(bodyMesh);
+// Shoulder (wingL / wingR) -> wrist (wristL / wristR) -> outer segment.
+// Both joints rotate around z; the wrist bends so the outer wing folds and stretches.
+const wingL = new THREE.Group(), wingR = new THREE.Group();
+const wristL = new THREE.Group(), wristR = new THREE.Group();
+wingL.position.set(-0.45, 0.15, 0.25);
+wingL.rotation.x = wingR.rotation.x = WING_PITCH;
+wingR.position.set(0.45, 0.15, 0.25);
+wristL.position.set(-1.5, 0, 0);
+wristR.position.set(1.5, 0, 0);
+const wingMesh = {
+  innerL: new THREE.Mesh(wingInnerGeo(-1), M.gull), innerR: new THREE.Mesh(wingInnerGeo(1), M.gull),
+  outerL: new THREE.Mesh(wingOuterGeo(-1), M.gull), outerR: new THREE.Mesh(wingOuterGeo(1), M.gull),
+};
+wingL.add(wingMesh.innerL, wristL);
+wingR.add(wingMesh.innerR, wristR);
+wristL.add(wingMesh.outerL);
+wristR.add(wingMesh.outerR);
+gBody.add(wingL, wingR);
+gull.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+scene.add(gull);
+// Gull water shadow: dark circular sprite mesh on water plane directly below gull
+const gullShadowGeo = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+const gullShadowMat = new THREE.MeshBasicMaterial({ color: 0x061426, map: DOT, transparent: true, opacity: 0.5, depthWrite: false });
+const gullShadow = new THREE.Mesh(gullShadowGeo, gullShadowMat);
+gullShadow.renderOrder = 2;
+scene.add(gullShadow);
+
+// ---------- generated models (GLB) with procedural fallback ----------
+// Models in assets/models replace the procedural meshes once they have loaded. Every procedural builder stays as the
+// fallback: from file:// (Chrome blocks fetch there), with ?noassets, or when a file fails, the original look stays.
+// All files are already normalised (tools/assets/fit.mjs): +Y up, +Z forward, metres, base or centre pivot.
+// The ferry is procedural: its red and white livery is part of the look (the generated ferry model has a plain texture).
+const MODEL_FILES = ['simit', 'fish', 'feather', 'fishing', 'sail', 'mosque', 'galata', 'maiden', 'yali'];
+const ASSET = {};
+let assetsReady = false, assetsLoaded = 0;
+function loadAssets() {
+  if (Q.has('noassets') || location.protocol === 'file:') return Promise.resolve();
+  const loader = new GLTFLoader();
+  const one = (name) => loader.loadAsync(`assets/models/${name}.glb`).then((gltf) => {
+    const parts = [];
+    let map = null;
+    gltf.scene.updateMatrixWorld(true);
+    gltf.scene.traverse((o) => {
+      if (!o.isMesh) return;
+      const g = new THREE.BufferGeometry(), src = o.geometry;
+      const plain = (a) => { const out = new Float32Array(a.count * a.itemSize); for (let i = 0; i < a.count; i++) for (let k = 0; k < a.itemSize; k++) out[i * a.itemSize + k] = a.getComponent(i, k); return new THREE.BufferAttribute(out, a.itemSize); };
+      g.setAttribute('position', plain(src.attributes.position));
+      if (src.attributes.uv) g.setAttribute('uv', plain(src.attributes.uv));
+      if (src.index) g.setIndex(src.index.clone());
+      g.applyMatrix4(o.matrixWorld);
+      parts.push(g.index ? g.toNonIndexed() : g);
+      map = map || o.material.map;
+    });
+    const geo = parts.length > 1 ? mergeGeometries(parts) : parts[0];
+    geo.computeVertexNormals();
+    if (map) map.colorSpace = THREE.SRGBColorSpace;
+    ASSET[name] = { geo, map, mat: new THREE.MeshLambertMaterial({ map, flatShading: true }) };
+  }).catch((err) => console.warn('[marti] model not loaded, using the procedural one:', name, (err && err.message) || err))
+    .finally(() => { assetsLoaded++; renderStartButton(); });
+  // stil-3d sprite atlases (the song video's 3D chibi look); a missing one keeps the procedural mesh
+  const tl = new THREE.TextureLoader();
+  const tex = (name) => tl.loadAsync(`assets/3d/${name}.webp`).then((t) => {
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 4;
+    SPR[name] = t;
+  }).catch((err) => console.warn('[marti] sprite not loaded, using the procedural look:', name, (err && err.message) || err));
+  return Promise.all([...MODEL_FILES.map(one), ...SPR_FILES.map(tex)]);
+}
+// Swaps in the models that loaded (only those).
+function applyAssets() {
+  const A = ASSET;
+  if (A.simit) {
+    IM.simit.geometry = A.simit.geo; IM.simit.material = A.simit.mat;
+    PWR.gold = { geo: A.simit.geo.clone().scale(1.3, 1.3, 1.3), mat: new THREE.MeshLambertMaterial({ map: A.simit.map, color: 0xffc94d, emissive: 0x7a4a00, flatShading: true }) };
+  }
+  if (A.fish) { IM.fish.geometry = A.fish.geo; IM.fish.material = A.fish.mat; }
+  if (A.feather) PWR.shield = A.feather;
+  for (const t of ['fishing', 'sail']) if (A[t]) BOAT[t] = A[t];
+  if (A.mosque) {
+    IM.mosque = makeInst(A.mosque.geo, A.mosque.mat, 40);
+    IM.mosque.castShadow = false;
+    for (const k of ['mbody', 'dome', 'minaret']) IM[k].count = 0;
+  }
+  applySprites();
+  PR.dirty = true;
+  S.assets = Object.keys(A);
+}
+
+// ---------- stil-3d: 3D chibi sprites from the song video ----------
+// Atlases in assets/3d (cut from item sheets, see CREDITS.md) replace the procedural gull, the flocks, simit, fish,
+// kites, nests, power-ups and the horizon once they load. Drawing only: every position, size used by collisions and
+// timing still comes from the same simulation data; the procedural meshes are just hidden (count 0 / visible false).
+// With ?noassets, from file:// or when a file fails, the procedural look stays.
+// marti.webp 2x2: 0 back, wings up / 1 back, glide / 2 front / 3 chick in the nest
+// nesne.webp 3x3: 0 simit / 1 fish / 2 golden simit / 3-5 kites red, yellow, blue / 6 feather / 7 tailwind / 8 fish crate
+const KITE_CELL = { '#EF4444': 3, '#F59E0B': 4, '#22C55E': 4, '#3B82F6': 5, '#EC4899': 3, '#A855F7': 5 };
+const PWR_CELL = { gold: 2, shield: 6, tail: 7, crate: 8 };
+const PWR_SIZE = { gold: 3.4, shield: 3.2, tail: 3.6, crate: 3.4 };
+// plane (w x h, moved up by oy) whose uv covers one cell of an N x N atlas
+function cellGeo(w, h, N, cell, oy = 0) {
+  const g = new THREE.PlaneGeometry(w, h).translate(0, oy, 0);
+  const uv = g.attributes.uv, cc = cell % N, rr = Math.floor(cell / N);
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, (uv.getX(i) + cc) / N, (uv.getY(i) + N - 1 - rr) / N);
+  return g;
+}
+// Instanced camera-facing quads: the instance matrix gives the centre and the size (rotation is ignored), the
+// per-instance attribute instCell picks the atlas cell. One draw call per atlas user, like the meshes they replace.
+function bbMat(tex, N) {
+  const m = new THREE.MeshBasicMaterial({ map: tex, alphaTest: 0.4, side: THREE.DoubleSide });
+  m.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute float instCell;')
+      .replace('#include <uv_vertex>', `#include <uv_vertex>
+  { float cc = mod(instCell, ${N}.0), rr = floor(instCell / ${N}.0 + 0.001);
+    vMapUv = vec2((uv.x + cc) / ${N}.0, (uv.y + ${N}.0 - 1.0 - rr) / ${N}.0); }`)
+      .replace('#include <project_vertex>', `vec4 mvPosition = modelViewMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+  mvPosition.xy += position.xy * vec2(length(instanceMatrix[0].xyz), length(instanceMatrix[1].xyz));
+  gl_Position = projectionMatrix * mvPosition;`);
+  };
+  m.customProgramCacheKey = () => 'bb' + N;
+  SPR.mats.push(m);
+  return m;
+}
+function makeBB(tex, N, w, h, cap, oy = 0, tinted = false) {
+  const g = new THREE.PlaneGeometry(w, h).translate(0, oy, 0);
+  g.setAttribute('instCell', new THREE.InstancedBufferAttribute(new Float32Array(cap), 1).setUsage(THREE.DynamicDrawUsage));
+  const m = makeInst(g, bbMat(tex, N), cap);
+  if (tinted) { for (let i = 0; i < cap; i++) m.setColorAt(i, _ic.set('#FFFFFF')); }
+  return m;
+}
+// n billboards from the same per-frame list the procedural mesh used; cellOf picks the cell, colOf (optional) a tint
+function setBB(mesh, arr, n, cellOf, colOf) {
+  n = Math.min(n, mesh.instanceMatrix.count);
+  const cellA = mesh.geometry.attributes.instCell;
+  for (let i = 0; i < n; i++) {
+    const o = arr[i];
+    _im.makeScale(o.sx === undefined ? 1 : o.sx, o.sy === undefined ? 1 : o.sy, 1).setPosition(o.x, o.y, o.z);
+    mesh.setMatrixAt(i, _im);
+    cellA.array[i] = cellOf(o, i);
+    if (colOf) mesh.setColorAt(i, _ic.set(colOf(o, i)));
+  }
+  mesh.count = n;
+  mesh.instanceMatrix.needsUpdate = true;
+  cellA.needsUpdate = true;
+  if (colOf && mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+}
+const flapCell = (ph) => (Math.sin(WT * 9 + ph) > 0.2 ? 0 : 1);
+function applySprites() {
+  if (SPR.marti) {
+    // the player's gull: one quad in the body group (so it banks and pitches with it), seen from behind
+    const GW = 7.8;
+    SPR.gullGeo = [cellGeo(GW, GW, 2, 0, 0.6), cellGeo(GW, GW, 2, 1, 0.6)];
+    SPR.gullMat = new THREE.MeshBasicMaterial({ map: SPR.marti, transparent: true, alphaTest: 0.05, depthWrite: false, side: THREE.DoubleSide });
+    SPR.gull = new THREE.Mesh(SPR.gullGeo[1], SPR.gullMat);
+    SPR.gull.rotation.y = Math.PI; // the quad's front looks back at the chase camera
+    SPR.gull.renderOrder = 3;
+    gBody.add(SPR.gull);
+    bodyMesh.visible = wingL.visible = wingR.visible = false;
+    // rival and friendly flocks, your flock, the young gull, the chick in the rooftop nests
+    SPR.flock = makeBB(SPR.marti, 2, 7.4, 7.4, 80, 0, true);
+    SPR.wing = makeBB(SPR.marti, 2, 7.4, 7.4, 24);
+    SPR.mate = makeBB(SPR.marti, 2, 5.2, 5.2, 1);
+    SPR.nest = makeBB(SPR.marti, 2, 2.8, 2.8, 16, 1.1);
+  }
+  if (SPR.nesne) {
+    SPR.simit = makeBB(SPR.nesne, 3, 2.9, 2.9, 160);
+    SPR.fish = makeBB(SPR.nesne, 3, 3.2, 3.2, 40);
+    SPR.kite = makeBB(SPR.nesne, 3, 5.6, 5.6, 16, -1.2);
+    SPR.pwr = {};
+    for (const k in PWR_CELL) {
+      const t = SPR.nesne.clone();
+      t.repeat.set(1 / 3, 1 / 3);
+      t.offset.set((PWR_CELL[k] % 3) / 3, (2 - Math.floor(PWR_CELL[k] / 3)) / 3);
+      t.needsUpdate = true;
+      SPR.pwr[k] = new THREE.SpriteMaterial({ map: t, alphaTest: 0.4 });
+    }
+  }
+  if (SPR.ufuk) {
+    // Istanbul skyline strip on the horizon (replaces the flat bridge silhouette); tinted by the light, hazed to the sky
+    const img = SPR.ufuk.image, W = 980, H = (W * img.height) / img.width;
+    SPR.skyMat = new THREE.ShaderMaterial({
+      uniforms: { map: { value: SPR.ufuk }, tint: { value: new THREE.Color(1, 1, 1) }, haze: { value: new THREE.Color() }, hazeK: { value: 0.3 } },
+      vertexShader: 'varying vec2 vUv;\nvoid main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: 'uniform sampler2D map; uniform vec3 tint, haze; uniform float hazeK; varying vec2 vUv;\nvoid main() {\n  vec4 c = texture2D(map, vUv);\n  if (c.a < 0.02) discard;\n  gl_FragColor = vec4(mix(c.rgb * tint, haze, hazeK), c.a);\n  #include <tonemapping_fragment>\n  #include <colorspace_fragment>\n}',
+      transparent: true, depthWrite: false, fog: false,
+    });
+    SPR.sky = new THREE.Mesh(new THREE.PlaneGeometry(W, H).translate(0, H / 2 - 6, 0), SPR.skyMat);
+    SPR.sky.rotation.y = Math.PI;
+    SPR.sky.renderOrder = -0.5;
+    SPR.sky.frustumCulled = false;
+    scene.add(SPR.sky);
+    silMesh.visible = false;
+  }
+  if (SPR.marti) renderTitle();
+}
+const _white = new THREE.Color(1, 1, 1);
+// per frame, after the procedural instance lists are written: hide those meshes and draw the sprites instead
+function updateSprites(nSimit, nFish, nKite, nFlock) {
+  if (!SPR.gull && !SPR.simit && !SPR.sky) return;
+  // sprites are unlit pictures: give them the scene's light (warm day, blue night)
+  SPR.tint.copy(hemi.color).multiplyScalar(clamp(0.3 + hemi.intensity * 0.8, 0, 1)).lerp(_white, 0.3);
+  for (const m of SPR.mats) m.color.copy(SPR.tint);
+  if (SPR.gull) {
+    SPR.gullMat.color.copy(SPR.tint);
+    IM.flock.count = 0;
+    setBB(SPR.flock, TMP.flock, nFlock, (o, i) => (o.r ? 2 : flapCell(flockPhase.array[i] || 0)), (o) => (o.c === '#FFFFFF' ? '#FFFFFF' : '#707A8C'));
+    const nw = IM.wing.count;
+    IM.wing.count = 0;
+    setBB(SPR.wing, TMP.wing, nw, (o, i) => flapCell(wingPhase.array[i] || 0));
+    const nm = IM.mate.count;
+    IM.mate.count = 0;
+    setBB(SPR.mate, TMP.mate, nm, () => flapCell(1.7));
+  }
+  if (SPR.simit) {
+    IM.simit.count = 0;
+    setBB(SPR.simit, TMP.simit, nSimit, () => 0);
+    IM.fish.count = 0;
+    setBB(SPR.fish, TMP.fish, nFish, () => 1);
+    IM.kite.count = 0;
+    setBB(SPR.kite, TMP.kite, nKite, (o) => KITE_CELL[o.c] || 3);
+    for (const k in SPR.pwr) SPR.pwr[k].color.copy(SPR.tint);
+  }
+  if (SPR.sky) {
+    SPR.sky.position.set(G.x * 0.3, 0, S.d + 440);
+    SPR.skyMat.uniforms.tint.value.copy(SPR.tint);
+    SPR.skyMat.uniforms.haze.value.copy(scene.fog.color);
+  }
+}
+
+// ---------- particles (Points ring buffers: one for bursts near the gull, one for the fireworks) ----------
+const _fc = new THREE.Color();
+function makeFx(n, mat) {
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+  const vel = new Float32Array(n * 3), life = new Float32Array(n), grav = new Float32Array(n);
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3).setUsage(THREE.DynamicDrawUsage));
+  const pts = new THREE.Points(geo, mat);
+  pts.frustumCulled = false;
+  scene.add(pts);
+  let cursor = 0;
+  function spawn(x, y, z, vx, vy, vz, hex, lf = 0.8, g = 9.8) {
+    const i = cursor; cursor = (cursor + 1) % n;
+    pos[i * 3] = x; pos[i * 3 + 1] = y; pos[i * 3 + 2] = z;
+    vel[i * 3] = vx; vel[i * 3 + 1] = vy; vel[i * 3 + 2] = vz;
+    _fc.set(hex);
+    col[i * 3] = _fc.r; col[i * 3 + 1] = _fc.g; col[i * 3 + 2] = _fc.b;
+    life[i] = lf; grav[i] = g;
+  }
+  function burst(x, y, z, hex, k, spd, lf, g) {
+    for (let i = 0; i < k; i++) {
+      const a = rnd(0, TAU), s = rnd(0.3, 1) * spd;
+      spawn(x, y, z, Math.cos(a) * s, rnd(0.2, 1) * spd, Math.sin(a) * s * 0.5, hex, lf * rnd(0.6, 1), g);
+    }
+  }
+  function update(dt) {
+    for (let i = 0; i < n; i++) {
+      if (life[i] <= 0) { pos[i * 3 + 1] = -999; continue; }
+      life[i] -= dt;
+      vel[i * 3 + 1] -= grav[i] * dt;
+      pos[i * 3] += vel[i * 3] * dt;
+      pos[i * 3 + 1] += vel[i * 3 + 1] * dt;
+      pos[i * 3 + 2] += vel[i * 3 + 2] * dt;
+      if (pos[i * 3 + 1] < 0.2 && vel[i * 3 + 1] < 0) { pos[i * 3 + 1] = 0.2; vel[i * 3 + 1] = 0; vel[i * 3] *= 0.6; vel[i * 3 + 2] *= 0.6; }
+    }
+    geo.attributes.position.needsUpdate = true;
+    geo.attributes.color.needsUpdate = true;
+  }
+  return { spawn, burst, update };
+}
+const FX = makeFx(FLAG.low ? 260 : 520, M.fx);
+// Fireworks burst 140-240 units ahead: at the near-effect sprite size (0.8) a spark would be about 1 px.
+const FW = makeFx(FLAG.low ? 120 : 240, M.fw);
+const fxSpawn = FX.spawn, fxBurst = FX.burst;
+function fxUpdate(dt) { FX.update(dt); FW.update(dt); }
+
+// Speed lines: short streaks beside the gull that rush past the camera as the run speeds up. They are static in the
+// world and recycled once the camera has passed them; they stay off the gull's column so the bird is never hidden.
+const STREAKS = 36;
+const streakPos = new Float32Array(STREAKS * 6);
+const streakGeo = new THREE.BufferGeometry();
+streakGeo.setAttribute('position', new THREE.BufferAttribute(streakPos, 3).setUsage(THREE.DynamicDrawUsage));
+const streakMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, fog: false });
+const streaks = new THREE.LineSegments(streakGeo, streakMat);
+streaks.frustumCulled = false;
+scene.add(streaks);
+const STREAK = Array.from({ length: STREAKS }, () => ({ x: 0, y: 0, z: -999, len: 0 }));
+function respawnStreak(s) {
+  s.x = G.x + (Math.random() < 0.5 ? -1 : 1) * rnd(7, 30);
+  s.y = G.y + rnd(-14, 14);
+  s.z = S.d + rnd(25, 140);
+  s.len = rnd(3, 7);
+}
+
+// ---------- game state (also exposed as window.marti) ----------
+const G = { x: 0, y: 12, bank: 0, flap: 0, vx: 0, vy: 0 };
+const S = {
+  state: 'title', attract: true, t: 0, d: 0, speed: 27, dist: 0,
+  score: 0, lives: 3, stamina: 100, combo: 0, comboT: 0, runCombo: 0, mult: 1,
+  tailT: 0, goldT: 0, shieldOn: false, inv: 0, simit: 0, fish: 0, powers: 0, steals: 0,
+  deathCause: null,
+  tx: 0, tyBase: 12, diveHold: false, diveOff: 0, dives: 0, wasDiving: false, diveTimer: 0, gustX: 0, gustY: 0, shake: 0,
+  overT: 0, cullT: 0, newBest: false, runs: [], draws: 0, fps: 0, assets: [],
+  carried: 0, feeds: 0, nearMiss: 0, nearCd: 0, piers: 0, mate: false, mateUsed: false,
+  gustAt: 0, gustWarned: false, gustDir: 1,
+  flock: 0, flockFeed: 0, flockMax: 0, flockLost: 0, flockBigTold: false, kitesCut: 0, rivalsScared: 0,
+  newAch: [], bestAtStart: 0, beatShown: false,
+};
+window.marti = S;
+S.G = G;
+let WT = 0;             // ambient clock for waves and animation (runs in every state)
+let simming = false;
+
+// ---------- entities ----------
+let obsBoats = [], obsKites = [], obsBridges = [], obsStorms = [], flocks = [];
+let simits = [], fishes = [], powers = [];
+const PR_KEYS = ['house', 'roof', 'tree', 'dome', 'minaret', 'mbody', 'mosque', 'balloon', 'sky', 'nest', 'post'];
+const PR = { dirty: true };
+for (const k of PR_KEYS) PR[k] = [];
+let specials = [];
+let nextBandZ = 0, nextPatZ = 90, nextBridgeZ = 900, nextNestZ = 700;
+
+function baseSpeed(t) { return 27 + 31 * (1 - Math.exp(-t / 70)); }
+function diffK() { return clamp((S.t - 30) / 150, 0, 1); }
+// Late-run ramp: 0 until 180 s, 1 at 420 s (storm clouds, kite pairs, faster hostile flocks, gust warnings).
+function lateK() { return clamp((S.t - 180) / 240, 0, 1); }
+function scoreMult() { return (S.tailT > 0 ? 1.5 : 1) * (S.goldT > 0 ? 2 : 1) * flockMult(); }
+
+// ---------- your flock (Sürü) ----------
+// Every PER simit a gull joins (up to CAP). Each member adds 2.5% to the score multiplier (x1.30 at 12). From BREAK
+// members the flock snaps kite lines the gull flies into and chases hostile rival flocks off before they steal.
+// A real hit (not one the shield or the young gull takes) scatters 40% of the flock (at least one gull).
+// WM is a fixed pool (no allocation per frame): st 0 free, 1 in formation, 2 scattering. x and y are world
+// coordinates, z is relative to the gull (S.d), since the whole flock flies at the run speed.
+const FLOCK = { PER: 5, CAP: 12, BREAK: 6, STEP: 0.025 };
+const WM = Array.from({ length: 24 }, () => ({ st: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, ph: 0, t: 0 }));
+function flockMult() { return 1 + FLOCK.STEP * S.flock; }
+function flockReset() { for (const b of WM) b.st = 0; S.flock = 0; S.flockFeed = 0; S.flockMax = 0; S.flockLost = 0; S.flockBigTold = false; S.kitesCut = 0; S.rivalsScared = 0; }
+function flockJoin() {
+  if (S.flock >= FLOCK.CAP) return;
+  // a free slot, else the scattering gull that is furthest gone
+  let b = null;
+  for (const w of WM) if (w.st === 0) { b = w; break; }
+  if (!b) for (const w of WM) if (w.st === 2 && (!b || w.t < b.t)) b = w;
+  const side = S.flock % 2 ? 1 : -1;
+  b.st = 1; b.x = G.x + side * 12; b.y = G.y + 6; b.z = 10; b.vx = -side * 6; b.vy = -2; b.vz = 0; b.ph = rnd(0, TAU); b.t = 0;
+  S.flock++; S.flockMax = Math.max(S.flockMax, S.flock);
+  toast(tx('flockJoin', { n: S.flock }), 'good');
+  if (S.flock >= FLOCK.BREAK && !S.flockBigTold) { S.flockBigTold = true; toast(tx('flockBig'), 'good'); }
+}
+function flockScatter() {
+  if (S.flock <= 0) return 0;
+  const lose = Math.max(1, Math.ceil(S.flock * 0.4));
+  let n = 0;
+  for (let i = WM.length - 1; i >= 0 && n < lose; i--) {
+    const b = WM[i];
+    if (b.st !== 1) continue;
+    const side = b.x >= G.x ? 1 : -1;
+    b.st = 2; b.t = 1.4; b.vx = side * rnd(8, 16); b.vy = rnd(3, 10); b.vz = rnd(-16, -6);
+    fxBurst(b.x, b.y, S.d + b.z, '#FFFFFF', 5, 4, 0.9, 3);
+    n++;
+  }
+  S.flock -= n; S.flockLost += n;
+  toast(tx('flockLost', { n }), 'bad');
+  return n;
+}
+function cutKite(k) {
+  k.cut = true; k.fall = 0; S.kitesCut++;
+  const pts = Math.round(40 * scoreMult());
+  S.score += pts;
+  fxBurst(k.cx, k.y, k.z, k.c, 14, 7, 0.8, 6);
+  floatText(k.cx, k.y + 1.5, k.z, '+' + pts);
+  toast(tx('flockKite'), 'good');
+  sfxWhoosh();
+}
+function scareRivals(f) {
+  f.hostile = false; f.scared = true; f.flee = f.x >= G.x ? 1 : -1; S.rivalsScared++;
+  const pts = Math.round(15 * f.members.length * scoreMult());
+  S.score += pts;
+  fxBurst(f.x, f.y, f.z, '#E5E7EB', 12, 6, 0.7, 4);
+  floatText(f.x, f.y + 2, f.z, '+' + pts);
+  toast(tx('flockScare'), 'good');
+  sfxChirp();
+}
+// Boids, relative to the gull: steer to a V slot behind it, plus cohesion, alignment and separation. Visual only
+// (the rules above use the count), so martiSim skips it.
+function updateWingmen(dt) {
+  let cx = 0, cy = 0, cz = 0, ax = 0, ay = 0, az = 0, n = 0;
+  for (const b of WM) if (b.st === 1) { cx += b.x; cy += b.y; cz += b.z; ax += b.vx; ay += b.vy; az += b.vz; n++; }
+  if (n) { cx /= n; cy /= n; cz /= n; ax /= n; ay /= n; az /= n; }
+  let rank = 0, m = 0;
+  const k = Math.min(1, dt);
+  for (const b of WM) {
+    if (b.st === 0) continue;
+    if (b.st === 2) {
+      b.t -= dt;
+      if (b.t <= 0) { b.st = 0; continue; }
+      b.vy -= 4 * dt;
+      b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+    } else {
+      // V slots beside and a little behind the gull, alternating rows a little higher, so the 19-unit chase camera
+      // sees the flock around the gull rather than through it
+      const side = rank % 2 ? 1 : -1, row = rank >> 1;
+      rank++;
+      const tx0 = G.x + side * (2.6 + 1.3 * row), ty0 = G.y + 0.8 + (row % 2) * 1.3 + 0.2 * row, tz0 = -0.6 - 0.8 * row;
+      let fx = (tx0 - b.x) * 16 + (cx - b.x) * 0.6 + (ax - b.vx) * 0.8 - b.vx * 5;
+      let fy = (ty0 - b.y) * 16 + (cy - b.y) * 0.6 + (ay - b.vy) * 0.8 - b.vy * 5;
+      let fz = (tz0 - b.z) * 16 + (cz - b.z) * 0.6 + (az - b.vz) * 0.8 - b.vz * 5;
+      for (const o of WM) {
+        if (o === b || o.st !== 1) continue;
+        const dx = b.x - o.x, dy = b.y - o.y, dz = b.z - o.z, d2 = dx * dx + dy * dy + dz * dz;
+        if (d2 < 2.25 && d2 > 1e-4) { fx += (dx / d2) * 30; fy += (dy / d2) * 30; fz += (dz / d2) * 30; }
+      }
+      b.vx += fx * k; b.vy += fy * k; b.vz += fz * k;
+      const sp = Math.hypot(b.vx, b.vy, b.vz);
+      if (sp > 45) { const s = 45 / sp; b.vx *= s; b.vy *= s; b.vz *= s; }
+      b.x = clamp(b.x + b.vx * dt, -CORR - 8, CORR + 8); b.y = clamp(b.y + b.vy * dt, YMIN - 1, YMAX + 3); b.z += b.vz * dt;
+    }
+    const o = slot(TMP.wing, m);
+    const sc = b.st === 2 ? 0.45 * clamp(b.t / 1.4, 0.15, 1) : 0.45;
+    o.x = b.x; o.y = b.y; o.z = S.d + b.z; o.r = clamp(b.vx * 0.03, -0.5, 0.5); o.sx = o.sy = o.sz = sc;
+    wingPhase.array[m] = b.ph;
+    m++;
+  }
+  setInst(IM.wing, TMP.wing, S.state === 'playing' || S.state === 'paused' ? m : 0, true);
+  wingPhase.needsUpdate = true;
+}
+function comboMult() { return 1 + Math.min(4, Math.floor(S.combo / 4)); }
+
+// Shore band: houses, trees, mosques, balloons and specials on both shores, for a 40-unit stretch.
+function spawnShoreBand(z0) {
+  for (const side of [-1, 1]) {
+    const n = 4 + ((SRND() * 5) | 0);
+    for (let i = 0; i < n; i++) {
+      const x = side * srnd(34, 74), z = z0 + srnd(0, 40), y = terrH(x, z);
+      const w = srnd(2.4, 3.6), h = srnd(2.5, 6), d = srnd(2.6, 3.4);
+      PR.house.push({ x, y, z, sx: w, sy: h, sz: d, c: spick(HOUSE_COLS) });
+      if (SRND() < 0.6) PR.roof.push({ x, y: y + h, z, sx: w * 1.2, sy: srnd(0.9, 1.5), sz: d * 1.2, c: spick(['#7C2D12', '#991B1B', '#9A3412']) });
+    }
+    for (let i = 0; i < 3; i++) {
+      const x = side * srnd(34, 62), z = z0 + srnd(0, 40), y = terrH(x, z);
+      PR.tree.push({ x, y, z, sx: 1.2, sy: srnd(1.0, 1.7), sz: 1.2, c: spick(['#4E9A4A', '#62AE52', '#3F8A45']) });
+    }
+    if (SRND() < 0.22) {
+      const x = side * srnd(46, 54), z = z0 + srnd(5, 35), y = terrH(x, z);
+      // The mosque model faces the water (its +z turned towards x = 0).
+      PR.mosque.push({ x, y: y - 0.3, z, r: side < 0 ? Math.PI / 2 : -Math.PI / 2 });
+      // Procedural fallback: a cream body, a dome on top and two minarets on their own ground height.
+      const gold = SRND() < 0.5 ? '#E9C46A' : '#F8FAFC';
+      PR.mbody.push({ x, y: y - 0.3, z, sx: 6.4, sy: 2.5, sz: 6.4, c: '#EFE6D2' });
+      PR.dome.push({ x, y: y + 2.2, z, sx: 3.2, sy: 2.6, sz: 3.2, c: gold });
+      const mx1 = x + side * 4.5, mz1 = z - 2.5, mx2 = x - side * 0.5, mz2 = z + 3.5;
+      PR.minaret.push({ x: mx1, y: terrH(mx1, mz1) - 0.2, z: mz1, sx: 0.9, sy: 2.1, sz: 0.9 });
+      PR.minaret.push({ x: mx2, y: terrH(mx2, mz2) - 0.2, z: mz2, sx: 0.8, sy: 2.4, sz: 0.8 });
+    }
+    if (SRND() < 0.12) {
+      const x = side * srnd(40, 70), z = z0 + srnd(0, 30);
+      PR.balloon.push({ x, y0: srnd(26, 40), y: 30, z, ph: srnd(0, TAU), sx: 1, sy: 1.2, sz: 1, c: spick(BAL_COLS) });
+    }
+    if (SRND() < 0.5) {
+      PR.sky.push({ x: srnd(-150, 150), y: srnd(44, 66), z: z0 + srnd(0, 40), sx: srnd(1.2, 2.2), sy: srnd(0.8, 1.2), sz: 1, r: srnd(-0.15, 0.15) });
+    }
+    if (SRND() < 0.06) addSpecial('mansion', side * srnd(40, 46), z0 + srnd(5, 30), side);
+    else if (SRND() < 0.035) addSpecial('tower', side * srnd(60, 74), z0 + srnd(5, 30), side);
+    else if (SRND() < 0.02) addSpecial('light', side * srnd(64, 80), z0 + srnd(5, 30), side);
+  }
+  PR.dirty = true;
+}
+// Specials use the generated model when it loaded (ASSET[name]), else the procedural one.
+const SPECIAL_GEO = { mansion: MANSION_GEO, tower: TOWER_GEO, light: LIGHTHOUSE_GEO };
+const SPECIAL_ASSET = { mansion: 'yali', tower: 'galata', light: 'maiden' };
+function addSpecial(kind, x, z, side) {
+  const A = ASSET[SPECIAL_ASSET[kind]];
+  const m = A ? new THREE.Mesh(A.geo, A.mat) : new THREE.Mesh(SPECIAL_GEO[kind], M.vc);
+  m.castShadow = false;
+  m.receiveShadow = true;
+  // Maiden's tower stands on its islet in the water, 31 units out (corridor 20 + wings 3.7, with clearance).
+  if (A && kind === 'light') x = side * 31;
+  m.position.set(x, A && kind === 'light' ? -0.3 : terrH(x, z) - (A ? 0.3 : 0), z);
+  // Fronts (+z) face the water.
+  m.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2;
+  scene.add(m);
+  specials.push({ kind, z, mesh: m });
+}
+
+// Patterns of obstacles and pickups, spawned every spacing units ahead of the gull.
+function patSpacing() { return lerp(52, 24, diffK()) * srnd(0.8, 1.25); }
+function spawnPattern(z) {
+  const early = S.t < 30;
+  const r = SRND();
+  if (!early && SRND() < 0.1) return pierPattern(z);
+  if (lateK() > 0 && SRND() < 0.15 * lateK()) return stormPattern(z);
+  if (r < 0.26) return simitPattern(z);
+  if (r < 0.34) return fishPattern(z);
+  if (r < 0.60) return shipPattern(z);
+  if (r < 0.72 && !early) return kitePattern(z);
+  if (r < 0.80 && !early) return flockPattern(z);
+  if (r < 0.86 && !early) return stormPattern(z);
+  return powerPattern(z);
+}
+function simitPattern(z) {
+  const x = srnd(-17, 17);
+  if (SRND() < 0.5) {
+    const y0 = srnd(6, 16);
+    for (let i = 0; i < 4; i++) simits.push({ x: x + Math.sin(i * 0.9) * 2.5, y: y0 + Math.sin(i * 0.8) * 2, z: z + i * 4.2, ph: srnd(0, TAU) });
+  } else {
+    for (let i = 0; i < 5; i++) simits.push({ x, y: srnd(4.5, 6), z: z + i * 3.6, ph: srnd(0, TAU) });
+  }
+  // The first simit pattern of a player's first run gets a pulsing ring (see updateVisuals).
+  if (!tutRing && !META.hints.ring && S.state === 'playing' && !S.attract && !FLAG.auto && !simming) {
+    META.hints.ring = 1; msDirty = true;
+    tutRing = { x, y: simits[simits.length - 1].y, z: z + 8 };
+  }
+}
+// Pier snacks: a row of simit and a fish crate over the water beside a jetty post. Hugging the edge low into a post costs
+// a feather; the crate refills stamina by 35 in total.
+function pierPattern(z) {
+  const side = SRND() < 0.5 ? -1 : 1, x = side * 19;
+  for (let i = 0; i < 4; i++) simits.push({ x, y: 8.5, z: z + i * 3.4, ph: srnd(0, TAU) });
+  powers.push({ type: 'crate', x, y: 9.6, z: z + 15.5, ph: srnd(0, TAU), mesh: null, dead: false });
+  for (const dz of [-1, 13]) PR.post.push({ x: side * 20.8, y: 0, z: z + dz, sx: 0.9, sy: 4.2, sz: 0.9, c: '#7C2D12' });
+  S.piers++; PR.dirty = true;
+}
+// Rooftop nest on a waterfront house at the corridor edge (the gull reaches it from the air, see checkNests).
+function spawnNest(z) {
+  const side = SRND() < 0.5 ? -1 : 1, x = side * srnd(31, 33), y = terrH(x, z);
+  PR.house.push({ x, y, z, sx: 3, sy: 3.2, sz: 3, c: spick(HOUSE_COLS) });
+  PR.nest.push({ x, y: y + 3.2, z, sx: 1, sy: 1, sz: 1, c: '#FFFFFF', fed: false, told: false });
+  PR.dirty = true;
+}
+function fishPattern(z) {
+  const n = 2 + ((SRND() * 2) | 0);
+  for (let i = 0; i < n; i++) {
+    const D = srnd(40, 58), zf = z + i * 14 + srnd(0, 8);
+    fishes.push({ x: srnd(-16, 16), zf, D, zs: zf - D, peak: srnd(4.5, 10) });
+  }
+}
+function makeBoat(type, x, z) {
+  const vz = type === 'ferry' ? 11 : type === 'tanker' ? 8 : type === 'fishing' ? 5 : 9;
+  const mesh = new THREE.Mesh(BOAT[type].geo, BOAT[type].mat);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  return { type, x, z, vz, mesh, horned: false, ph: srnd(0, TAU) };
+}
+function shipPattern(z) {
+  const r = SRND();
+  const type = r < 0.33 ? 'ferry' : r < 0.55 ? 'fishing' : r < 0.72 ? (S.t > 40 ? 'tanker' : 'ferry') : 'sail';
+  const x = srnd(-16, 16);
+  const o = makeBoat(type, x, z);
+  obsBoats.push(o);
+  if (type === 'ferry') {
+    for (let j = 0; j < 3; j++) simits.push({ x, y: 5.3, z: z - 4 + j * 5, ph: srnd(0, TAU), follow: o, off: -4 + j * 5 });
+  }
+}
+function kitePattern(z) {
+  const side = SRND() < 0.5 ? -1 : 1;
+  const n = lateK() > 0 ? 2 : 1 + ((SRND() * 2) | 0); // late run: kites in pairs
+  for (let i = 0; i < n; i++) {
+    obsKites.push({ x: side * srnd(14, 21), cx: 0, y: srnd(14, 28), z: z + i * srnd(12, 30), ph: srnd(0, TAU), c: spick(KITE_COLS) });
+  }
+}
+function flockPattern(z) {
+  const hostile = SRND() < 0.6;
+  const back = hostile ? 1 : -1; // followers trail behind the leader, against the flight direction
+  flocks.push({
+    x: srnd(-12, 12), y: srnd(6, 22), z: hostile ? z + 40 : z - 20, vz: hostile ? -9 * (1 + 0.2 * lateK()) : 9, hostile, ph: srnd(0, TAU),
+    members: [{ ox: 0, oy: 0, oz: 0 }, { ox: -2.2, oy: 1, oz: 2.5 * back }, { ox: 2.2, oy: 1, oz: 2.5 * back }, { ox: -4.4, oy: 2, oz: 5 * back }],
+  });
+}
+function stormPattern(z) {
+  obsStorms.push({ x: srnd(-12, 12), y: srnd(20, 27), z: z + 30, cx: 0, ph: srnd(0, TAU), dir: SRND() < 0.5 ? -1 : 1, mesh: null });
+}
+function powerPattern(z) {
+  const r = SRND();
+  powers.push({ type: r < 0.4 ? 'tail' : r < 0.7 ? 'gold' : 'shield', x: srnd(-15, 15), y: srnd(7, 18), z: z + 10, ph: srnd(0, TAU), mesh: null, dead: false });
+}
+function spawnBridge(z) {
+  const mesh = new THREE.Mesh(BRIDGE_GEO, M.vc);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.position.set(0, 0, z);
+  scene.add(mesh);
+  obsBridges.push({ z, mesh });
+}
+
+// Removes entries behind the gull (and their meshes).
+function cull() {
+  const lim = S.d - BACK;
+  for (const k of PR_KEYS) { const n = PR[k].length; PR[k] = PR[k].filter((o) => o.z > lim); if (PR[k].length !== n) PR.dirty = true; }
+  specials = specials.filter((s) => { if (s.z > lim) return true; scene.remove(s.mesh); return false; });
+  obsBoats = obsBoats.filter((o) => { if (o.z > lim) return true; scene.remove(o.mesh); return false; });
+  obsBridges = obsBridges.filter((o) => { if (o.z > lim) return true; scene.remove(o.mesh); return false; });
+  obsStorms = obsStorms.filter((o) => { if (o.z > lim) return true; if (o.mesh) scene.remove(o.mesh); return false; });
+  powers = powers.filter((o) => { if (o.z > lim && !o.dead) return true; if (o.mesh) scene.remove(o.mesh); return false; });
+  obsKites = obsKites.filter((o) => o.z > lim && o.y > -3);
+  flocks = flocks.filter((o) => o.z > lim - 60 && o.members.length > 0);
+  simits = simits.filter((o) => o.z > lim && !o.dead);
+  fishes = fishes.filter((o) => o.zf > lim && !o.dead);
+}
+function clearWorld() {
+  for (const arr of [obsBoats, obsBridges, obsStorms, powers, specials]) for (const o of arr) if (o.mesh) scene.remove(o.mesh);
+  obsBoats = []; obsKites = []; obsBridges = []; obsStorms = []; flocks = []; simits = []; fishes = []; powers = []; specials = [];
+  for (const k of PR_KEYS) PR[k] = [];
+  PR.dirty = true;
+  nextBandZ = 0; nextPatZ = 90; nextBridgeZ = 900; nextNestZ = 700;
+  tutRing = null;
+}
+
+// ---------- collisions ----------
+const GX = 1.0, GY = 0.55, GZ = 1.3;
+function hitBox(bx, y0, y1, bz, hw, hd) {
+  return Math.abs(G.x - bx) < hw + GX && G.y + GY > y0 && G.y - GY < y1 && Math.abs(S.d - bz) < hd + GZ;
+}
+function checkHits() {
+  const d = S.d;
+  for (const b of obsBridges) {
+    if (Math.abs(d - b.z) > 9) continue;
+    for (const bx of BRIDGE_BOXES) if (hitBox(bx.x, bx.y0, bx.y1, b.z, bx.hw, bx.hd)) return hitPlayer('bridge');
+    if (Math.abs(G.x) <= BR.towerX && Math.abs(d - b.z) < 3.1 + GZ && Math.abs(G.y - cableY(G.x)) < 1.5 + GY) return hitPlayer('cable');
+  }
+  for (const o of obsBoats) {
+    if (Math.abs(d - o.z) > 25) continue;
+    for (const b of BOAT_BOXES[o.type]) if (hitBox(o.x + b.ox, b.y0, b.y1, o.z + b.oz, b.hw, b.hd)) return hitPlayer('ship');
+  }
+  for (const p of PR.post) {
+    if (Math.abs(d - p.z) > 4) continue;
+    if (hitBox(p.x, p.y, p.y + p.sy, p.z, 0.45, 0.45)) return hitPlayer('post');
+  }
+  for (const k of obsKites) {
+    if (k.cut || Math.abs(d - k.z) > 4) continue;
+    if (hitBox(k.cx, k.y - 1.6, k.y + 1.6, k.z, 1.6, 1.4)) {
+      if (S.flock >= FLOCK.BREAK) { cutKite(k); continue; } // a big flock snaps the line instead
+      return hitPlayer('kite');
+    }
+  }
+  // Water: only if actually falling below water wave crest (normal low dives stay >= 1.4)
+  if (G.y < waveH(G.x, S.d, WT) - 0.2) return hitPlayer('water');
+  // Rival flock: members steal simit (not a life, but costs stamina and the combo). A big flock of your own
+  // chases a hostile flock off when it comes close (within 14 units ahead), before any member can steal.
+  for (const f of flocks) {
+    if (!f.hostile) continue;
+    if (S.flock >= FLOCK.BREAK && f.z - d < 14 && f.z - d > -3 && Math.abs(f.x - G.x) < 9 && Math.abs(f.y - G.y) < 9) { scareRivals(f); continue; }
+    for (let i = f.members.length - 1; i >= 0; i--) {
+      const m = f.members[i];
+      const mx = f.x + m.ox, my = f.y + m.oy, mz = f.z + m.oz;
+      if (Math.abs(mz - d) < 2.4 && Math.abs(mx - G.x) < 2.4 && Math.abs(my - G.y) < 2.4) {
+        f.members.splice(i, 1);
+        stealFood(mx, my, mz);
+      }
+    }
+  }
+  // Storm: pushes the gull around while inside the cloud.
+  for (const s of obsStorms) {
+    if (Math.abs(d - s.z) < 16 && Math.abs(G.x - s.cx) < 13 && Math.abs(G.y - s.y) < 8) {
+      S.gustX = Math.sin(WT * 2.2 + s.ph) * 9;
+      S.gustY = Math.cos(WT * 1.7 + s.ph) * 4;
+      if (Math.random() < 0.5) fxSpawn(G.x + rnd(-6, 6), G.y + rnd(2, 8), S.d + rnd(-2, 4), 0, -18, 0, '#93C5FD', 0.5, 4);
+    }
+  }
+  nearMissCheck(); // reached only when nothing above hit the gull
+}
+// Near miss: the gull passes a hull, a mast, a kite or a cable within 1.5 units without touching it. Cooldown 1 s.
+function nearBox(bx, y0, y1, bz, hw, hd) {
+  return Math.abs(G.x - bx) < hw + GX + 1.5 && G.y + GY > y0 - 1.5 && G.y - GY < y1 + 1.5 && Math.abs(S.d - bz) < hd + GZ + 1.5;
+}
+function nearMissCheck() {
+  if (S.state !== 'playing' || S.nearCd > 0) return;
+  const d = S.d;
+  let near = false;
+  for (const o of obsBoats) {
+    if (near || Math.abs(d - o.z) > 25) continue;
+    for (const b of BOAT_BOXES[o.type]) if (nearBox(o.x + b.ox, b.y0, b.y1, o.z + b.oz, b.hw, b.hd)) { near = true; break; }
+  }
+  for (const k of obsKites) if (!near && !k.cut && Math.abs(d - k.z) < 4 && nearBox(k.cx, k.y - 1.6, k.y + 1.6, k.z, 1.6, 1.4)) near = true;
+  for (const b of obsBridges) {
+    if (!near && Math.abs(d - b.z) < 3.1 + GZ + 1.5 && Math.abs(G.x) <= BR.towerX && Math.abs(G.y - cableY(G.x)) < 1.5 + GY + 1.5) near = true;
+  }
+  if (!near) return;
+  S.nearMiss++; S.nearCd = 1; S.score += 25; if (!calm()) S.shake = Math.max(S.shake, 0.35);
+  sfxWhoosh();
+  floatText(G.x, G.y + 2, d, '+25');
+}
+function hitPlayer(cause = 'crash') {
+  if (S.attract || S.inv > 0) return;
+  S.deathCause = cause;
+  if (!simming) haptic(35);
+  if (S.mate && !S.mateUsed) { // the young gull takes one hit per run
+    S.mateUsed = true; S.inv = 1.2;
+    toast(tx('mateHit'), 'good');
+    fxBurst(G.x - Math.sign(G.x || 1) * 3, G.y, S.d, '#FFFFFF', 18, 5, 1.4, 3); // feathers falling from its wing
+    sfxHit(0.3);
+    return;
+  }
+  if (S.shieldOn) {
+    S.shieldOn = false; S.inv = 1.2;
+    toast(tx('shieldUsed'), 'good');
+    fxBurst(G.x, G.y, S.d, '#E0F2FE', 16, 7, 0.9, 6);
+    sfxHit(0.4);
+    return;
+  }
+  S.lives -= 1; S.inv = 1.8; S.combo = 0; S.comboT = 0; S.shake = calm() ? 0 : 0.9;
+  S.tx = clamp(S.tx + (G.x > 0 ? -5 : 5), -CORR, CORR);
+  fxBurst(G.x, G.y, S.d, '#FFFFFF', 22, 9, 1.1, 9);
+  toast(tx('hit'), 'bad');
+  flockScatter(); // part of your flock scatters as well
+  sfxHit(1);
+  if (S.lives <= 0) gameOver(cause);
+}
+function stealFood(x, y, z) {
+  // A carried simit goes first; with none in the beak, the flock takes stamina.
+  if (S.carried > 0) S.carried--; else S.stamina -= 18;
+  S.combo = 0; S.comboT = 0; S.steals++;
+  fxBurst(x, y, z, '#F59E0B', 12, 6, 0.7, 6);
+  toast(tx('steal'), 'bad');
+  sfxSteal();
+  if (S.stamina <= 0) { S.stamina = 0; S.deathCause = 'stamina'; gameOver('stamina'); }
+}
+
+function checkPickups() {
+  const d = S.d;
+  for (const s of simits) {
+    if (s.dead) continue;
+    if (Math.abs(s.z - d) < 2.4 && Math.abs(s.x - G.x) < 2.4 && Math.abs(s.y - G.y) < 2.4) {
+      s.dead = true; collectSimit(s.x, s.y, s.z);
+    }
+  }
+  for (const f of fishes) {
+    if (f.dead) continue;
+    const u = (d - f.zs) / f.D;
+    if (u < 0 || u > 1.5) continue;
+    const fy = fishY(f, u);
+    if (Math.abs(f.zf - d) < 3.2 && Math.abs(f.x - G.x) < 2.7 && Math.abs(fy - G.y) < 2.7) {
+      f.dead = true; collectFish(f.x, fy, f.zf);
+    }
+  }
+  for (const p of powers) {
+    if (p.dead) continue;
+    if (Math.abs(p.z - d) < 2.8 && Math.abs(p.x - G.x) < 2.8 && Math.abs(p.y - G.y) < 2.8) {
+      p.dead = true; collectPower(p);
+    }
+  }
+}
+// Feeding: fly low past a rooftop nest with a simit in the beak. Without one, the chick asks for simit once.
+function checkNests() {
+  for (const n of PR.nest) {
+    if (n.fed || Math.abs(n.z - S.d) > 4.5 || Math.abs(G.x - n.x) > 14 || G.y > n.y + 7) continue;
+    if (S.carried === 0) {
+      if (!n.told) { n.told = true; toast(tx('nestNeed'), 'info'); }
+      continue;
+    }
+    n.fed = true; n.c = '#FFF3C4'; PR.dirty = true;
+    S.carried--; S.feeds++; S.score += 150; S.lives = Math.min(3, S.lives + 1);
+    META.chick++; msDirty = true;
+    missionsFlush(); // the chick count is saved at once: the run may end before the next game-over flush
+    sfxChirp();
+    fxBurst(n.x, n.y + 0.6, n.z, '#FDE68A', 14, 6, 0.8, 5);
+    floatText(n.x, n.y + 2, n.z, '+150');
+    toast(tx('fed'), 'good');
+  }
+}
+// Chick stage from the feeds saved over all runs: 1 egg, 2 hatchling (5 feeds), 3 fluffy (15), 4 young gull (30).
+// ?chick=N forces a stage for screenshot tests (?chick=4 brings the young gull along).
+function chickStage() {
+  if (Q.has('chick')) return clamp(+Q.get('chick') || 1, 1, 4);
+  const c = META.chick;
+  return c >= 30 ? 4 : c >= 15 ? 3 : c >= 5 ? 2 : 1;
+}
+function fishY(f, u) {
+  return u <= 1 ? f.peak * Math.sin((u * Math.PI) / 2) : f.peak * Math.cos(((u - 1) * Math.PI) / 2);
+}
+function bumpCombo() {
+  const before = S.mult;
+  S.combo++; S.comboT = 3.2; S.mult = comboMult();
+  if (S.mult > before) popCombo(S.mult);
+  if (S.combo > S.runCombo) S.runCombo = S.combo;
+  missionSet('combo', S.runCombo);
+}
+function collectSimit(x, y, z) {
+  bumpCombo();
+  S.simit++;
+  S.carried = Math.min(2, S.carried + 1); // one simit stays in the beak for a chick
+  if (tutRing && Math.abs(z - tutRing.z) < 14) tutRing = null;
+  const pts = Math.round(10 * comboMult() * scoreMult());
+  S.score += pts;
+  S.stamina = Math.min(100, S.stamina + 6);
+  missionAdd('simit', 1);
+  if (++S.flockFeed >= FLOCK.PER) { S.flockFeed = 0; flockJoin(); }
+  sfxChime(S.combo);
+  fxBurst(x, y, z, '#FDE68A', 10, 6, 0.6, 7);
+  floatText(x, y + 1, z, '+' + pts);
+}
+function collectFish(x, y, z) {
+  bumpCombo();
+  S.fish++;
+  const pts = Math.round(30 * comboMult() * scoreMult());
+  S.score += pts;
+  S.stamina = Math.min(100, S.stamina + 14);
+  missionAdd('fish', 1);
+  sfxChime(S.combo + 3);
+  fxBurst(x, y, z, '#BAE6FD', 14, 8, 0.7, 9);
+  floatText(x, y + 1, z, '+' + pts);
+}
+function collectPower(p) {
+  S.powers++;
+  missionAdd('power', 1);
+  S.stamina = Math.min(100, S.stamina + 10);
+  S.score += 25;
+  if (p.type === 'tail') { S.tailT = 8; toast(tx('tail'), 'good'); }
+  if (p.type === 'gold') { S.goldT = 12; S.score += 50; toast(tx('gold'), 'good'); }
+  if (p.type === 'shield') { S.shieldOn = true; toast(tx('shield'), 'good'); }
+  if (p.type === 'crate') { S.stamina = Math.min(100, S.stamina + 25); toast(tx('pier'), 'good'); } // +10 above, +35 in all
+  fxBurst(p.x, p.y, p.z, p.type === 'shield' ? '#E0F2FE' : p.type === 'gold' ? '#FBBF24' : '#6EE7B7', 26, 10, 0.9, 4);
+  sfxWhoosh();
+  if (p.mesh) scene.remove(p.mesh);
+  floatText(p.x, p.y + 1.5, p.z, '+25');
+}
+
+// ---------- spawning and the simulation step (variable dt, clamped to 0.05 s by the loop) ----------
+function simStep(dt) {
+  dt = Math.max(dt, 1 / 240); // a zero frame time would give 0/0 velocities below
+  const A = S.attract;
+  S.t += dt;
+  if (S.state === 'title') S.t = Math.min(S.t, 60); // the title attract mode stays in the golden afternoon
+  const want = A ? 36 : baseSpeed(S.t) + (S.tailT > 0 ? 14 : 0);
+  S.speed += (want - S.speed) * Math.min(1, dt * 2.2);
+  S.tailT = Math.max(0, S.tailT - dt);
+  S.goldT = Math.max(0, S.goldT - dt);
+  S.inv = Math.max(0, S.inv - dt);
+  S.diveTimer = Math.max(0, S.diveTimer - dt);
+  if (S.combo > 0) { S.comboT -= dt; if (S.comboT <= 0) S.combo = 0; }
+  S.mult = comboMult();
+
+  // Controls: keyboard and pointer when playing, the bot in attract mode and with ?auto.
+  if (A || (FLAG.auto && !FLAG.run)) botThink(dt);
+  else keyControls(dt);
+  S.nearCd = Math.max(0, S.nearCd - dt);
+
+  // Touch hold duration > 150ms: activate dive when holding stationary; clear hold-dive if touch drags beyond threshold
+  if (ptrDown && ptrType === 'touch' && ptrStart && S.state === 'playing') {
+    if (ptrMoved >= 14) {
+      if (S.diveHold) {
+        S.diveHold = false;
+        isDiveZoneActive = false;
+        const b = $('#bDive'); if (b) b.classList.remove('active');
+      }
+    } else if (!isDiveZoneActive && performance.now() - ptrStart.t > 150) {
+      S.diveHold = true;
+      const b = $('#bDive'); if (b) b.classList.add('active');
+    }
+  }
+
+  // Gull steering: target follows the pointer or keys; diving pushes the target down.
+  const diving = S.diveHold || tvFrame.buttons.A || S.diveTimer > 0;
+  if (diving && !S.wasDiving) S.dives++;
+  S.wasDiving = diving;
+  S.diveOff += ((diving ? -9 : 0) - S.diveOff) * Math.min(1, dt * 5);
+  S.tyBase = clamp(S.tyBase, YMIN, YMAX);
+  const ty = clamp(S.tyBase + S.diveOff, YMIN - 1, YMAX);
+  const px = G.x, py = G.y;
+  S.gustX *= Math.exp(-dt * 1.5); S.gustY *= Math.exp(-dt * 1.5);
+  G.x = clamp(G.x + (S.tx - G.x) * Math.min(1, dt * 6.5) + S.gustX * dt, -CORR, CORR);
+  G.y = clamp(G.y + (ty - G.y) * Math.min(1, dt * 6) + S.gustY * dt, YMIN - 1, YMAX);
+  G.vx = (G.x - px) / dt; G.vy = (G.y - py) / dt;
+  G.bank += (clamp(G.vx * 0.05, -0.7, 0.7) - G.bank) * Math.min(1, dt * 8);
+
+  // Forward movement and score.
+  S.d += S.speed * dt;
+  S.dist = S.d;
+  if (!A) {
+    S.score += S.speed * dt * 0.35 * scoreMult();
+    missionAdd('dist', S.speed * dt);
+  }
+
+  // Spawning ahead of the gull.
+  spawnAhead();
+
+  // Ferry simit follow their boat.
+  for (const s of simits) if (s.follow) s.z = s.follow.z + s.off;
+
+  // Moving objects.
+  for (const o of obsBoats) {
+    o.z += o.vz * dt;
+    if (!o.horned && o.type === 'ferry' && Math.abs(o.z - S.d) < 90 && !A) { o.horned = true; sfxHorn(); }
+  }
+  for (const f of flocks) {
+    f.z += f.vz * dt;
+    f.x += Math.sin(WT * 0.6 + f.ph) * dt * 2;
+    if (f.flee) { f.x += f.flee * 18 * dt; f.y += 7 * dt; } // chased off by your flock
+  }
+  for (const s of obsStorms) s.cx = s.x + Math.sin(WT * 0.3 + s.ph) * 5 * s.dir;
+  for (const k of obsKites) {
+    if (k.cut) { k.fall += 22 * dt; k.y -= k.fall * dt; continue; } // a snapped kite tumbles into the water
+    k.cx = k.x + Math.sin(WT * 0.8 + k.ph) * 1.5;
+  }
+
+  if (!A) {
+    checkHits();
+    if (S.state !== 'playing') return; // a hit or a steal ended the run: nothing may change the saved score
+    checkPickups();
+    checkNests();
+    if (lateK() > 0) gustTick();
+    if (S.t >= 1 && !META.hints.steer) hintOnce('steer', tx('hSteer'));
+    if (!META.hints.dive && fishes.some((f) => !f.dead && (S.d - f.zs) / f.D > 0.05 && (S.d - f.zs) / f.D < 1)) hintOnce('dive', tx('hDive'));
+    if (S.stamina > 0) {
+      S.stamina -= (2.2 + S.t * 0.01) * dt * (diving ? 1.3 : 1);
+      if (S.stamina < 45 && !META.hints.stamina) hintOnce('stamina', tx('hStamina'));
+      if (S.stamina <= 0) { S.stamina = 0; S.deathCause = 'stamina'; gameOver('stamina'); }
+    }
+    if (S.state === 'playing' && Math.random() < dt * 0.1) sfxCall();
+    // Splash when diving near the water.
+    if (diving && G.y < 2.6 && Math.random() < 0.5) fxBurst(G.x, 0.4, S.d, '#E0F2FE', 3, 5, 0.6, 9);
+  }
+  S.cullT -= dt;
+  if (S.cullT <= 0) { S.cullT = 0.25; cull(); }
+
+  if (S.shake > 0) S.shake = Math.max(0, S.shake - dt * 2.4);
+  if (!simming) updateVisuals(dt); // martiSim only needs the simulation (collisions use simulation data)
+}
+
+// Called from the main loop (every frame in every state, dt in seconds).
+function frameLogic(dt) {
+  WT += dt;
+  if (S.state === 'playing') simStep(dt);
+  else if (S.state === 'title' || S.state === 'over') {
+    S.attract = true;
+    if (S.state === 'over') S.overT += dt;
+    simStep(dt * (S.state === 'over' ? 0.4 : 1));
+    if (FLAG.auto && S.state === 'over' && S.overT > (simming ? 0.05 : 2.5)) startRun();
+    if (FLAG.auto && S.state === 'title' && !simming && assetsReady) { S.autoT = (S.autoT || 0) + dt; if (S.autoT > 3) startRun(); }
+  }
+}
+
+// ---------- visuals ----------
+const _tmp = new THREE.Vector3();
+function updateVisuals(dt) {
+  const A = S.attract;
+  // Water and land (rebuilt in world coordinates, so the waves never jump).
+  updateWater();
+  updateTerrain();
+
+  // Shore props: static, so their matrices are only rewritten when the set changed (spawn, cull, clear).
+  if (PR.dirty) {
+    PR.dirty = false;
+    setInst(IM.house, PR.house);
+    setInst(IM.win, PR.house, PR.house.length, true);
+    setInst(IM.roof, PR.roof);
+    setInst(IM.tree, PR.tree);
+    if (IM.mosque) setInst(IM.mosque, PR.mosque);
+    else {
+      setInst(IM.mbody, PR.mbody);
+      setInst(IM.dome, PR.dome);
+      setInst(IM.minaret, PR.minaret);
+    }
+    setInst(IM.sky, PR.sky);
+    setInst(IM.nest, PR.nest);
+    if (SPR.nest) { IM.nest.count = 0; setBB(SPR.nest, PR.nest, PR.nest.length, () => 3); }
+    setInst(IM.post, PR.post);
+  }
+  for (const b of PR.balloon) b.y = b.y0 + Math.sin(WT * 0.7 + b.ph) * 0.6;
+  setInst(IM.balloon, PR.balloon);
+  // Night: only the windows glow warm.
+  const p = clamp(S.t / 170, 0, 1), night = smooth(0.6, 0.78, p);
+  M.win.emissive.setRGB(1.0 * night, 0.7 * night, 0.28 * night);
+
+  // Boats: ride the waves.
+  for (const o of obsBoats) {
+    const h = waveH(o.x, o.z, WT);
+    o.mesh.position.set(o.x, h * 0.8 - 0.2, o.z);
+    o.mesh.rotation.set(Math.sin(WT * 1.3 + o.ph) * 0.04, 0, Math.sin(WT * 0.9 + o.ph) * 0.05);
+  }
+  // Kites and strings (kite cx is set in simStep).
+  let n = 0;
+  let ns = 0; // snapped kites have no string and spin as they fall
+  for (const k of obsKites) {
+    if (k.z < S.d - 4) continue;
+    const o = slot(TMP.kite, n++); o.x = k.cx; o.y = k.y; o.z = k.z; o.c = k.c; o.r = k.cut ? WT * 7 : 0;
+    if (!k.cut) { const s = slot(TMP.str, ns++); s.x = k.cx; s.y = 0; s.z = k.z; s.sy = k.y; }
+  }
+  setInst(IM.kite, TMP.kite, n);
+  const nKite = n;
+  setInst(IM.kiteStr, TMP.str, ns);
+
+  // Flocks: white (friendly) and dark (rival) gulls; wings flap in the shader with a phase per bird.
+  n = 0;
+  for (const f of flocks) {
+    for (let i = 0; i < f.members.length; i++) {
+      const m = f.members[i];
+      if (f.z + m.oz < S.d - 4) continue; // passed the gull: would fly through the camera
+      const o = slot(TMP.flock, n);
+      o.x = f.x + m.ox; o.y = f.y + m.oy + Math.sin(WT * 4 + f.ph) * 0.2; o.z = f.z + m.oz;
+      o.c = f.hostile || f.scared ? '#2B2F36' : '#FFFFFF'; o.r = f.vz > 0 ? 0 : Math.PI;
+      if (n < flockPhase.count) flockPhase.array[n] = f.ph + i * 1.3;
+      n++;
+    }
+  }
+  setInst(IM.flock, TMP.flock, n);
+  const nFlock = n;
+  flockPhase.needsUpdate = true;
+  flockUniforms.uTime.value = WT;
+
+  // Simit (with ferry deck simit following the boat) and fish, which pitch along their leap.
+  n = 0;
+  // Pickups the gull has passed (more than 3 units behind it, out of reach) are hidden: they would otherwise fly
+  // past right in front of the chase camera, 19 units back, and fill the screen.
+  const behind = S.d - 3;
+  for (const s of simits) { if (s.dead || s.z < behind) continue; const o = slot(TMP.simit, n++); o.x = s.x; o.y = s.y + Math.sin(WT * 3 + s.ph) * 0.3; o.z = s.z; o.r = WT * 1.6 + s.ph; }
+  setInst(IM.simit, TMP.simit, n);
+  const nSimit = n;
+  n = 0;
+  for (const f of fishes) {
+    const u = (S.d - f.zs) / f.D;
+    if (f.dead || u < -0.02 || u > 1.6 || f.zf < behind) continue;
+    const o = slot(TMP.fish, n++);
+    o.x = f.x; o.y = fishY(f, clamp(u, 0, 2)); o.z = f.zf; o.r = 0;
+    o.rx = -0.9 * Math.cos((clamp(u, 0, 2) * Math.PI) / 2); // nose up while rising, down while falling
+  }
+  setInst(IM.fish, TMP.fish, n);
+  const nFish = n;
+
+  // Powers: create meshes on demand, spin them.
+  const still = calm();
+  let h = 0; // halos: one disc behind each visible simit, fish and power-up, pulsing a little
+  for (let i = 0; i < nSimit; i++) { const s = TMP.simit[i], o = slot(TMP.halo, h++); o.x = s.x; o.y = s.y; o.z = s.z - 0.3; o.sx = o.sy = still ? 1.1 : 1.1 + 0.1 * Math.sin(WT * 4 + i); }
+  for (let i = 0; i < nFish; i++) { const f = TMP.fish[i], o = slot(TMP.halo, h++); o.x = f.x; o.y = f.y; o.z = f.z - 0.3; o.sx = o.sy = 1.2; }
+  for (const p2 of powers) {
+    if (!p2.mesh && !p2.dead) {
+      if (SPR.pwr && SPR.pwr[p2.type]) { p2.mesh = new THREE.Sprite(SPR.pwr[p2.type]); p2.mesh.scale.set(PWR_SIZE[p2.type], PWR_SIZE[p2.type], 1); }
+      else p2.mesh = new THREE.Mesh(PWR[p2.type].geo, PWR[p2.type].mat);
+      p2.mesh.castShadow = false;
+      scene.add(p2.mesh);
+    }
+    if (p2.mesh) {
+      p2.mesh.position.set(p2.x, p2.y + Math.sin(WT * 2.2 + p2.ph) * 0.4, p2.z);
+      p2.mesh.visible = p2.z > behind;
+      p2.mesh.rotation.y = WT * 2 + p2.ph;
+      if (p2.mesh.visible && !p2.dead) { const o = slot(TMP.halo, h++); o.x = p2.x; o.y = p2.y; o.z = p2.z - 0.3; o.sx = o.sy = 1.4; }
+    }
+  }
+  setInst(IM.halo, TMP.halo, h, true);
+
+  // The young gull (chick stage 4) flies beside the gull, flapping like the flock.
+  const mate = TMP.mate[0] || (TMP.mate[0] = { x: 0, y: 0, z: 0, c: '#FFF4D6' });
+  mate.x = G.x - Math.sign(G.x || 1) * 3; mate.y = G.y + 0.8; mate.z = S.d - 1.2;
+  setInst(IM.mate, TMP.mate, S.mate && S.state === 'playing' ? 1 : 0);
+  updateWingmen(dt);
+  updateSprites(nSimit, nFish, nKite, nFlock);
+
+  // The first-run ring pulses around the first simit pattern, until it is passed or a simit is taken.
+  if (tutRing && S.d > tutRing.z + 8) tutRing = null;
+  tutMesh.visible = !!tutRing;
+  if (tutRing) { tutMesh.position.set(tutRing.x, tutRing.y, tutRing.z); tutMesh.scale.setScalar(still ? 1.06 : 1 + 0.12 * Math.sin(WT * 6)); }
+  // Storms: create meshes on demand.
+  for (const s of obsStorms) {
+    if (!s.mesh) { s.mesh = new THREE.Mesh(stormGeo, M.vc); scene.add(s.mesh); }
+    s.mesh.position.set(s.cx, s.y, s.z);
+    s.mesh.scale.setScalar(1.05 + Math.sin(WT + s.ph) * 0.03);
+  }
+
+  // Obstacle telegraph halos: subtle glowing ring outline mesh for obstacles within 35 units ahead
+  let tCount = 0;
+  for (const b of obsBridges) {
+    const bDist = b.z - S.d;
+    if (bDist > 0 && bDist <= 35) {
+      const dFactor = clamp((35 - bDist) / 18, 0.7, 1.0);
+      const pulse = 1.0 + 0.06 * Math.sin(WT * 7 + tCount);
+      const cx = clamp(G.x, -21, 21);
+      const cy = cableY(cx);
+      const o1 = slot(TMP.telegraph, tCount++);
+      o1.x = cx; o1.y = cy; o1.z = b.z;
+      o1.sx = o1.sy = o1.sz = 1.3 * dFactor * pulse;
+      o1.r = 0; o1.rx = 0;
+      if (Math.abs(G.y - 21.2) < 9) {
+        const o2 = slot(TMP.telegraph, tCount++);
+        o2.x = cx; o2.y = 21.2; o2.z = b.z;
+        o2.sx = o2.sy = o2.sz = 1.5 * dFactor * pulse;
+        o2.r = 0; o2.rx = 0;
+      }
+    }
+  }
+  for (const o of obsBoats) {
+    const oDist = o.z - S.d;
+    if (oDist > 0 && oDist <= 35) {
+      const dFactor = clamp((35 - oDist) / 18, 0.7, 1.0);
+      const pulse = 1.0 + 0.06 * Math.sin(WT * 7 + tCount);
+      if (o.type === 'sail') {
+        const mastY = clamp(G.y, 5, 21);
+        const t = slot(TMP.telegraph, tCount++);
+        t.x = o.x; t.y = mastY; t.z = o.z + 0.5;
+        t.sx = t.sy = t.sz = 1.25 * dFactor * pulse;
+        t.r = 0; t.rx = 0;
+      } else if (o.type === 'fishing') {
+        const t = slot(TMP.telegraph, tCount++);
+        t.x = o.x; t.y = 5.2; t.z = o.z + 0.3;
+        t.sx = t.sy = t.sz = 1.05 * dFactor * pulse;
+        t.r = 0; t.rx = 0;
+      } else if (o.type === 'tanker') {
+        const t = slot(TMP.telegraph, tCount++);
+        t.x = o.x; t.y = 9.5; t.z = o.z - 13.5;
+        t.sx = t.sy = t.sz = 1.4 * dFactor * pulse;
+        t.r = 0; t.rx = 0;
+      } else if (o.type === 'ferry') {
+        const t = slot(TMP.telegraph, tCount++);
+        t.x = o.x; t.y = 4.6; t.z = o.z - 1.5;
+        t.sx = t.sy = t.sz = 1.3 * dFactor * pulse;
+        t.r = 0; t.rx = 0;
+      }
+    }
+  }
+  for (const k of obsKites) {
+    if (k.cut) continue;
+    const kDist = k.z - S.d;
+    if (kDist > 0 && kDist <= 35) {
+      const dFactor = clamp((35 - kDist) / 18, 0.7, 1.0);
+      const pulse = 1.0 + 0.06 * Math.sin(WT * 7 + tCount);
+      const t = slot(TMP.telegraph, tCount++);
+      t.x = k.cx; t.y = k.y; t.z = k.z;
+      t.sx = t.sy = t.sz = 1.15 * dFactor * pulse;
+      t.r = 0; t.rx = 0;
+    }
+  }
+  for (const p of PR.post) {
+    const pDist = p.z - S.d;
+    if (pDist > 0 && pDist <= 35 && Math.abs(p.x - G.x) < 8) {
+      const dFactor = clamp((35 - pDist) / 18, 0.7, 1.0);
+      const pulse = 1.0 + 0.06 * Math.sin(WT * 7 + tCount);
+      const t = slot(TMP.telegraph, tCount++);
+      t.x = p.x; t.y = p.y + p.sy * 0.8; t.z = p.z;
+      t.sx = t.sy = t.sz = 0.95 * dFactor * pulse;
+      t.r = 0; t.rx = 0;
+    }
+  }
+  setInst(IM.telegraph, TMP.telegraph, tCount, true);
+
+  // Music layers build with speed (only the bass and drums play at the start).
+  AU.intensity = clamp((S.speed - 28) / 25, 0, 1);
+
+  // Gull: wings flap (less when diving), body banks and pitches.
+  const diving = S.diveHold || tvFrame.buttons.A || S.diveTimer > 0;
+  G.flap += dt * (diving ? 4.5 : 10) * (0.85 + 0.15 * (S.speed / 40));
+  const amp = diving ? 0.15 : GULL_AMP + 0.12 * Math.sin(WT * 0.9);
+  const flapA = amp * Math.sin(G.flap) + GULL_DIHEDRAL; // a slight V at rest
+  wingR.rotation.z = flapA;
+  wingL.rotation.z = -flapA;
+  // Wrist: outer wing folds on the upstroke and stretches on the downstroke.
+  const wrist = 0.45 * flapA - (diving ? 0.35 : 0.12);
+  wristR.rotation.z = wrist;
+  wristL.rotation.z = -wrist;
+  if (SPR.gull) {
+    // sprite gull: wings-up frame on the upstroke, glide frame otherwise (and while diving); a bit bigger on portrait
+    // phones, where the wide vertical field of view makes it small (drawing only, the hit box is unchanged)
+    SPR.gull.geometry = SPR.gullGeo[!diving && Math.sin(G.flap) > 0.25 ? 0 : 1];
+    const k = camera.aspect < 0.9 ? 1.25 : 1;
+    SPR.gull.scale.set(k, k * (1 + 0.04 * Math.sin(G.flap)), 1);
+  }
+  gBody.rotation.z = -G.bank * 0.8;
+  gBody.rotation.x = (diving ? 0.5 : clamp(-G.vy * 0.03, -0.35, 0.35)) + GULL_PITCH;
+  gull.position.set(G.x, G.y, S.d);
+  gull.visible = !(S.inv > 0 && !still && Math.floor(WT * 12) % 2 === 0 && !S.attract);
+  if (!S.attract && Math.floor(G.flap / TAU) !== G._lastCycle) { G._lastCycle = Math.floor(G.flap / TAU); if (!diving) sfxFlap(); }
+
+  // Gull water shadow: raycast XZ from gull position to water plane
+  const sX = G.x, sZ = S.d;
+  const sWaterY = waveH(sX, sZ, WT);
+  const sAlt = Math.max(0.1, G.y - sWaterY);
+  const sRadius = clamp(2.2 + sAlt * 0.08, 1.8, 5.0);
+  gullShadow.position.set(sX, sWaterY + 0.08, sZ);
+  gullShadow.scale.set(sRadius * 1.35, 1, sRadius * 0.9);
+  gullShadowMat.opacity = clamp(0.55 - sAlt * 0.009, 0.16, 0.55);
+  gullShadow.visible = gull.visible;
+
+  // Camera: behind and above the gull, shake on hits, wider when speeding.
+  const shake = still ? 0 : S.shake * S.shake * 1.1; // reduce motion: no shake (the rnd() calls below stay, same random sequence)
+  // Camera stays ~19 units behind and follows the gull's x closely, so the gull stays centred
+  // and its wings never fill more than a modest part of the view, even next to a shore.
+  const tgtX = G.x * 0.85 + rnd(-shake, shake), tgtY = 7.5 + G.y * 0.5 + rnd(-shake, shake) * 0.6, tgtZ = S.d - 19;
+  camera.position.x += (tgtX - camera.position.x) * Math.min(1, dt * 6);
+  camera.position.y += (tgtY - camera.position.y) * Math.min(1, dt * 6);
+  camera.position.z = tgtZ;
+  camera.lookAt(G.x, G.y * 0.8 + 1.2, S.d + 14);
+  // Wider vertical FOV on portrait phones so the gull's wings stay on screen.
+  const portrait = Math.max(0, 0.9 - camera.aspect) * 45;
+  const fovWant = 58 + portrait + Math.max(0, S.speed - 30) * 0.25 + (S.tailT > 0 ? 6 : 0);
+  if (Math.abs(camera.fov - fovWant) > 0.05) { camera.fov += (fovWant - camera.fov) * Math.min(1, dt * 3); camera.updateProjectionMatrix(); }
+
+  // Speed lines: fade in above speed 32 (none on the title screen); each streak is a line stretched towards the camera.
+  const sp = A ? 0 : clamp((S.speed - 32) / 20, 0, 1);
+  streakMat.opacity = 0.3 * sp;
+  streaks.visible = sp > 0.01;
+  if (streaks.visible) {
+    for (let i = 0; i < STREAKS; i++) {
+      const s = STREAK[i];
+      if (s.z < S.d - 14) respawnStreak(s);
+      const L = s.len * (0.6 + sp * 1.4), o = i * 6;
+      streakPos[o] = s.x; streakPos[o + 1] = s.y; streakPos[o + 2] = s.z;
+      streakPos[o + 3] = s.x; streakPos[o + 4] = s.y; streakPos[o + 5] = s.z - L;
+    }
+    streakGeo.attributes.position.needsUpdate = true;
+  }
+
+  // Sun, moon, stars and light.
+  const elev = clamp(1 - p * 1.6, -0.3, 1);
+  sunMesh.position.set(G.x * 0.3 + 40, 20 + 110 * elev, S.d + 420);
+  sunMesh.visible = elev > 0.02;
+  const moonElev = clamp((p - 0.6) * 2.5, 0, 1);
+  moonMesh.position.set(G.x * 0.3 - 60, 20 + 100 * moonElev, S.d + 420);
+  moonMesh.visible = moonElev > 0.02;
+  starsPts.position.set(G.x, 0, S.d);
+  M.stars.opacity = smooth(0.62, 0.8, p);
+  updateSky(p);
+  skyMesh.position.copy(camera.position);
+  silMesh.position.set(0, 0, S.d + 430);
+  hemi.intensity = lerp(0.9, 0.42, smooth(0.45, 0.8, p));
+  const dusk = smooth(0.45, 0.7, p); // light colours blend instead of jumping at p = 0.5
+  hemi.color.lerpColors(HEMI_DAY, HEMI_NIGHT, dusk);
+  sun.intensity = lerp(1.25, 0.32, smooth(0.5, 0.78, p));
+  sun.color.lerpColors(SUN_DAY, SUN_NIGHT, dusk);
+  sun.position.set(G.x + 30, 70, S.d + 45); // same side as the visible sun disc (+x is screen-left)
+  sun.target.position.set(G.x, 0, S.d);
+  sun.target.updateMatrixWorld();
+
+  // Particles.
+  fxUpdate(dt);
+  if (!A && Math.random() < dt * 0.4 && S.state === 'playing') {
+    // Idle feathers drifting past.
+    fxSpawn(G.x + rnd(-12, 12), G.y + rnd(-4, 8), S.d + rnd(20, 60), rnd(-1, 1), rnd(0, 1), 0, '#FFFFFF', 2.5, 0.8);
+  }
+  if (S.state === 'playing' && p > 0.7 && night > 0.2 && Math.random() < dt * 0.9) fireworkBurst();
+}
+
+// Fireworks are over the water, a long way ahead (palette constant hoisted to avoid per-burst allocation).
+const FW_COLS = ['#FDE68A', '#F87171', '#60A5FA', '#34D399', '#F472B6', '#FFFFFF'];
+function fireworkBurst() {
+  const x = rnd(-50, 50), y = rnd(40, 70), z = S.d + rnd(140, 240);
+  const c = pick(FW_COLS);
+  FW.burst(x, y, z, c, isLow() ? 14 : 30, 14, 1.6, 9);
+  sfxBoom();
+}
+
+// ---------- input ----------
+const KEYS = {};
+let ptrDown = false, ptrType = 'mouse', ptrStart = null, ptrMoved = 0;
+let touchHoldTimer = null, isDiveZoneActive = false;
+window.addEventListener('keydown', (e) => {
+  ensureAudio();
+  KEYS[e.code] = true;
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
+  if (e.repeat) return; // a held key must not restart the run or toggle twice
+  const onButton = document.activeElement && document.activeElement.tagName === 'BUTTON';
+  if (newsOpen) { if (e.code === 'Escape' || e.code === 'KeyP') closeNews(); return; }
+  if (settingsOpen) { if (e.code === 'Escape' || e.code === 'KeyP') closeSettings(); return; }
+  if (e.code === 'Space' && !onButton) {
+    if (S.state === 'title' && assetsReady) { startRun(); return; }
+    if (S.state === 'over' && S.overT > 0.6) { retryRun(); return; }
+    if (S.state === 'playing') S.diveHold = true;
+  }
+  if (e.code === 'Enter' && !onButton && ((S.state === 'title' && assetsReady) || S.state === 'over')) { if (S.state === 'over') retryRun(); else startRun(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') togglePause();
+  if (e.code === 'KeyN') toggleMute();
+  if (e.code === 'KeyM') toggleMusic();
+  if (e.code === 'KeyX') toggleSfx();
+  if (e.code === 'KeyL') setLang(nextLang());
+  if (e.code === 'KeyF') toggleFullscreen();
+});
+window.addEventListener('keyup', (e) => {
+  KEYS[e.code] = false;
+  if (e.code === 'Space') S.diveHold = false;
+});
+function keyControls(dt) {
+  const up = tvFrame.buttons.UP || KEYS.ArrowUp || KEYS.KeyW, dn = tvFrame.buttons.DOWN || KEYS.ArrowDown || KEYS.KeyS;
+  const lf = tvFrame.buttons.LEFT || KEYS.ArrowLeft || KEYS.KeyA, rt = tvFrame.buttons.RIGHT || KEYS.ArrowRight || KEYS.KeyD;
+  if (up) S.tyBase += dt * 16;
+  if (dn) S.tyBase -= dt * 16;
+  // The camera looks along +z, so screen-right is world -x: Right/D lowers S.tx.
+  if (lf) S.tx += dt * 18;
+  if (rt) S.tx -= dt * 18;
+  S.tx = clamp(S.tx, -CORR, CORR);
+}
+// Mouse: absolute position (screen-right = world -x).
+function pointerSteer(e) {
+  if (S.state !== 'playing') return;
+  const nx = clamp((e.clientX / window.innerWidth) * 2 - 1, -1, 1);
+  const ny = clamp(e.clientY / window.innerHeight, 0, 1);
+  S.tx = -nx * CORR;
+  S.tyBase = lerp(YMAX, 3, ny);
+}
+// Touch: relative drag from where the finger went down, so steering drag never moves the steering target unintentionally.
+function touchSteer(e) {
+  if (S.state !== 'playing' || !ptrStart) return;
+  const dx = e.clientX - ptrStart.x, dy = e.clientY - ptrStart.y;
+  S.tx = clamp(ptrStart.tx - (dx / window.innerWidth) * 2 * CORR * 1.4, -CORR, CORR);
+  S.tyBase = clamp(ptrStart.ty - (dy / window.innerHeight) * (YMAX - 3) * 1.4, YMIN, YMAX);
+}
+function isUI(t) {
+  if (t && t.closest && t.closest('#bDive')) return false;
+  return t && t.closest && t.closest('button, .card, .ibtn, a, input, .arena-gear, #news');
+}
+function isLowerRightZone(x, y) {
+  // Dedicated lower-right screen zone trigger: right 28% and bottom 30% of viewport
+  return x > window.innerWidth * 0.72 && y > window.innerHeight * 0.70;
+}
+window.addEventListener('pointerdown', (e) => {
+  ensureAudio();
+  if (isUI(e.target)) return;
+  ptrDown = true; ptrType = e.pointerType; ptrMoved = 0;
+  ptrStart = { x: e.clientX, y: e.clientY, t: performance.now(), tx: S.tx, ty: S.tyBase };
+  if (S.state === 'title' && assetsReady) { startRun(); return; }
+  if (S.state === 'over' && S.overT > 0.6) { retryRun(); return; }
+  if (S.state === 'playing') {
+    const isTargetDiveBtn = !!(e.target && e.target.closest && e.target.closest('#bDive'));
+    const inZone = isTargetDiveBtn || (ptrType === 'touch' && isLowerRightZone(e.clientX, e.clientY));
+    if (inZone) {
+      isDiveZoneActive = true;
+      S.diveHold = true;
+      const b = $('#bDive'); if (b) b.classList.add('active');
+    } else if (ptrType === 'touch') {
+      isDiveZoneActive = false;
+      // Require touch hold duration > 150ms without drag to trigger dive
+      clearTimeout(touchHoldTimer);
+      touchHoldTimer = setTimeout(() => {
+        if (ptrDown && ptrType === 'touch' && ptrMoved < 14 && S.state === 'playing') {
+          S.diveHold = true;
+          const b = $('#bDive'); if (b) b.classList.add('active');
+        }
+      }, 155);
+    } else {
+      pointerSteer(e);
+      S.diveHold = true;
+    }
+  }
+});
+window.addEventListener('pointermove', (e) => {
+  if (ptrDown && ptrStart) {
+    ptrMoved = Math.max(ptrMoved, Math.hypot(e.clientX - ptrStart.x, e.clientY - ptrStart.y));
+  }
+  if (e.pointerType === 'touch') {
+    if (ptrMoved >= 14) {
+      // Standard vertical or horizontal drag steering:
+      // Cancel hold dive timer and active dive hold so dragging never stays latched in a dive
+      if (touchHoldTimer) { clearTimeout(touchHoldTimer); touchHoldTimer = null; }
+      isDiveZoneActive = false;
+      S.diveHold = false;
+      const b = $('#bDive'); if (b) b.classList.remove('active');
+    } else if (isDiveZoneActive) {
+      return;
+    }
+    if (ptrDown) touchSteer(e);
+    return;
+  }
+  if (isUI(e.target)) return;
+  pointerSteer(e);
+});
+window.addEventListener('pointerup', (e) => {
+  if (touchHoldTimer) { clearTimeout(touchHoldTimer); touchHoldTimer = null; }
+  const bDive = $('#bDive'); if (bDive) bDive.classList.remove('active');
+  // Prevent touch dive when releasing over UI buttons and clear ptrStart
+  if (isUI(e.target)) {
+    ptrDown = false; S.diveHold = false; ptrStart = null; isDiveZoneActive = false;
+    return;
+  }
+  if (ptrType === 'touch' && ptrStart && S.state === 'playing') {
+    const elapsed = performance.now() - ptrStart.t;
+    if (isDiveZoneActive) {
+      // Dedicated lower-right screen zone trigger: tap or release executes dive correctly
+      if (elapsed < 250) S.diveTimer = 0.7;
+    } else if (ptrMoved < 14 && elapsed > 150) {
+      // Touch hold duration > 150ms without drag: triggers dive correctly
+      if (elapsed < 350) S.diveTimer = 0.5;
+    }
+    // Quick vertical drags (ptrMoved >= 14 or elapsed <= 150ms outside dedicated zone) NEVER trigger dive!
+  }
+  ptrDown = false; S.diveHold = false; ptrStart = null; isDiveZoneActive = false;
+});
+window.addEventListener('pointercancel', () => {
+  if (touchHoldTimer) { clearTimeout(touchHoldTimer); touchHoldTimer = null; }
+  const bDive = $('#bDive'); if (bDive) bDive.classList.remove('active');
+  ptrDown = false; S.diveHold = false; ptrStart = null; isDiveZoneActive = false;
+});
+
+// ---------- bot (used for the title attract mode and ?auto) ----------
+const CAND_X = [-20, -14, -8, -2, 4, 10, 16, 20];
+const CAND_Y = [3.5, 7, 11, 15, 19, 23, 27, 31];
+function botThink(dt) {
+  // Like an average player: re-plans every 0.3 s and only looks about 70 units ahead.
+  S.botT = (S.botT || 0) - dt;
+  if (S.botT > 0) return;
+  S.botT = 0.3;
+  const d = S.d;
+  let best = null, bestC = Infinity;
+  const boxes = [];
+  for (const o of obsBoats) for (const b of BOAT_BOXES[o.type]) boxes.push({ x: o.x + b.ox, y0: b.y0, y1: b.y1, z: o.z + b.oz, hw: b.hw, hd: b.hd });
+  for (const b of obsBridges) for (const bx of BRIDGE_BOXES) boxes.push({ x: bx.x, y0: bx.y0, y1: bx.y1, z: b.z, hw: bx.hw, hd: bx.hd });
+  for (const b of obsBridges) boxes.push({ x: 0, y0: 25.5, y1: 29, z: b.z, hw: BR.towerX, hd: 3.1 });
+  for (const k of obsKites) if (!k.cut) boxes.push({ x: k.cx, y0: k.y - 1.6, y1: k.y + 1.6, z: k.z, hw: 1.6, hd: 1.4 });
+  for (const p of PR.post) boxes.push({ x: p.x, y0: p.y, y1: p.y + p.sy, z: p.z, hw: 0.45, hd: 0.45 });
+  for (const f of flocks) if (f.hostile) for (const m of f.members) boxes.push({ x: f.x + m.ox, y0: f.y + m.oy - 1.5, y1: f.y + m.oy + 1.5, z: f.z + m.oz, hw: 2.2, hd: 2.2 });
+  const picks = [];
+  for (const s of simits) if (!s.dead && s.z - d > -2 && s.z - d < 90) picks.push({ x: s.x, y: s.y, w: -22 });
+  for (const f of fishes) if (!f.dead && f.zf - d > -3 && f.zf - d < 90) picks.push({ x: f.x, y: fishY(f, clamp((d - f.zs) / f.D, 0, 1.2)), w: -55, fish: true });
+  for (const p of powers) if (!p.dead && p.z - d > -2 && p.z - d < 90) picks.push({ x: p.x, y: p.y, w: -35 });
+  const ysExtra = picks.map((p) => clamp(p.y, YMIN, YMAX));
+  const ys = CAND_Y.concat(ysExtra);
+  // Tight lanes: the near-miss band is 0.5-1.5 units outside a hull, and the even CAND_X grid skips it.
+  // A small bonus makes the bot take a tight lane past a nearby hull when it costs about as much as an open one.
+  const lanes = CAND_X.map((x) => ({ x, r: 0 }));
+  for (const b of boxes) {
+    const ahead = b.z - d;
+    if (ahead < -2 || ahead > 25 || b.hw < 1) continue;
+    for (const sx of [-1, 1]) lanes.push({ x: clamp(b.x + sx * (b.hw + GX + 0.75), -CORR, CORR), r: -3 });
+  }
+  for (const { x, r } of lanes) {
+    for (const y of ys) {
+      let cost = r;
+      for (const b of boxes) {
+        const ahead = b.z - d;
+        if (ahead < -4 || ahead > 70) continue;
+        if (Math.abs(x - b.x) < b.hw + GX + 0.5 && y + 1.6 > b.y0 && y - 1.6 < b.y1) cost += 1000 / (1 + Math.max(0, ahead) / 12);
+      }
+      for (const p of picks) {
+        if (Math.abs(x - p.x) < 3 && Math.abs(y - p.y) < 3) cost += p.w;
+      }
+      cost += Math.abs(x - G.x) * 0.5 + Math.abs(y - G.y) * 0.35;
+      if (cost < bestC) { bestC = cost; best = { x, y }; }
+    }
+  }
+  // Human-like slips: now and then the bot picks a random lane.
+  if (Math.random() < 0.1) best = { x: pick(CAND_X), y: pick(CAND_Y) };
+  if (best) { S.tx = best.x; S.tyBase = best.y; }
+  S.diveHold = false;
+}
+
+// ---------- run lifecycle ----------
+function startRun(daily) {
+  if (simming === false) ensureAudio();
+  S.daily = daily ? daily.day : 0; SRND = daily ? daily.rng : Math.random; S.arenaStreak = null;
+  clearWorld();
+  S.t = 0; S.d = 0; S.dist = 0; S.speed = 27;
+  S.score = 0; S.lives = 3; S.stamina = 100; S.combo = 0; S.comboT = 0; S.runCombo = 0; S.mult = 1;
+  S.tailT = 0; S.goldT = 0; S.shieldOn = false; S.inv = 0; S.simit = 0; S.fish = 0; S.powers = 0; S.steals = 0;
+  S.deathCause = null;
+  S.bestAtStart = bestScore(); S.beatShown = false; S.newAch = [];
+  S.tx = 0; S.tyBase = 12; S.dives = 0; S.wasDiving = false; S.diveHold = false; S.diveOff = 0; S.diveTimer = 0; S.gustX = 0; S.gustY = 0; S.shake = 0;
+  isDiveZoneActive = false; if (touchHoldTimer) { clearTimeout(touchHoldTimer); touchHoldTimer = null; }
+  const bDivReset = $('#bDive'); if (bDivReset) bDivReset.classList.remove('active');
+  S.overT = 0; S.cullT = 0; S.newBest = false; S.autoT = 0; S.contUsed = false;
+  S.carried = 0; S.feeds = 0; S.nearMiss = 0; S.nearCd = 0; S.piers = 0; S.mateUsed = false;
+  S.mate = chickStage() === 4; // from chick stage 4 the young gull flies along in every run
+  S.gustAt = 0; S.gustWarned = false;
+  flockReset();
+  for (const s of STREAK) s.z = -999; // recycle the speed lines from the start of the run
+  $('#combo').innerHTML = '';
+  if (Q.has('t0')) S.t = +Q.get('t0') || 0; // test hook: start later in the day (e.g. ?t0=150 for night)
+  G.x = 0; G.y = 12; G.bank = 0;
+  S.state = 'playing';
+  S.attract = false;
+  setScreen('playing');
+  spawnAhead();
+  toast(tx('fly'), 'info');
+  audioPause(false);
+  sfxStart();
+}
+// Spawns shore bands, patterns and bridges up to LOOK units ahead of the gull.
+function spawnAhead() {
+  while (nextBandZ < S.d + LOOK) { spawnShoreBand(nextBandZ); nextBandZ += 40; }
+  while (nextPatZ < S.d + LOOK) { spawnPattern(nextPatZ); nextPatZ += patSpacing(); }
+  while (nextBridgeZ < S.d + LOOK) { spawnBridge(nextBridgeZ); nextBridgeZ += srnd(520, 780); }
+  while (nextNestZ < S.d + LOOK) { spawnNest(nextNestZ); nextNestZ += srnd(700, 900); }
+}
+function gameOver(reason) {
+  if (S.state !== 'playing') return;
+  S.state = 'over';
+  S.attract = true;
+  S.overT = 0;
+  S.combo = 0;
+  if (!reason || reason === 'crash') reason = S.deathCause || 'crash';
+  S.deathCause = reason;
+  const tipIdx = Math.floor(Math.random() * 4);
+  const run = { score: Math.round(S.score), dist: Math.round(S.d), simit: S.simit, fish: S.fish, combo: S.runCombo, flock: S.flockMax, t: +S.t.toFixed(1), reason, deathCause: S.deathCause, tipIdx, fact: META.factIdx % FACTS.length };
+  META.factIdx++; // the next game-over card shows the next fact
+  S.runs.push(run);
+  if (S.runs.length > 50) S.runs.shift();
+  const best = bestScore();
+  const isNew = run.score > best && run.score > 0;
+  S.newBest = isNew;
+  saveHigh(run);
+  achCheck(run);
+  missionsFlush();
+  arenaRunOver(run);
+  if (!simming) sfxOver();
+  setScreen('over', run, isNew);
+  renderOverAch();
+  if (S.newAch.length && !simming) sfxChime(7);
+  if (window.Arena && Arena.complete) Arena.complete({ mount: $('#over .card') });   // arena-kit v1.1: marti/complete + one-tap 👍/👎 (nothing on ?auto)
+  $('#bCont').classList.toggle('hidden', !canContinue());
+}
+// arena-kit after a run: passport badges and the daily streak (only for the day the route was seeded with).
+// The ?auto bot and ?sim never write to the player's passport.
+function arenaRunOver(run) {
+  if (!window.Arena || FLAG.auto || simming) return;
+  if (run.dist >= 1000) Arena.award('marti-1km', tx('aw1km'));
+  if (chickStage() === 4) Arena.award('marti-chick', tx('awChick'));
+  if (S.daily) { const d = Arena.daily(); if (d.day === S.daily) S.arenaStreak = d.complete(run.score); }
+}
+const arenaDailyAgain = () => (S.daily && window.Arena && Arena.daily().day === S.daily ? Arena.daily() : null);
+// Portal ad hooks (G-050 pilot). Ads only at the natural break: after a run, when the player leaves the game-over card.
+// On the game's own site (no portal SDK) afterBreak() runs the action synchronously and the continue offer never shows,
+// so the site plays exactly as before. The ?auto bot restarts directly and is not affected. One tap = one action.
+let breakBusy = false;
+function afterBreak(f) {
+  if (!(window.Arena && Arena.portal && Arena.portal.name !== 'none')) return f();
+  if (breakBusy) return; breakBusy = true;
+  Arena.portal.midgame().catch(() => false).then(() => { breakBusy = false; f(); });
+}
+const retryRun = (daily) => afterBreak(() => startRun(daily));
+// Rewarded "continue": once per run, only where the portal can reward. The run that just ended is taken back out of the
+// run list and the high scores, so the continued run counts once; the gull comes back with 1 life and a short shield.
+function canContinue() {
+  return !!(window.Arena && Arena.portal && Arena.portal.canReward && !S.contUsed && !FLAG.auto && !simming && !S.daily);
+}
+function continueRun() {
+  if (S.state !== 'over' || !canContinue() || breakBusy) return;
+  breakBusy = true;
+  Arena.portal.rewarded().catch(() => false).then((ok) => {
+    breakBusy = false;
+    if (!ok || S.state !== 'over') return;
+    const run = S.runs.pop();
+    if (run) { const i = HIGHS.findIndex((h) => h.s === run.score && h.d === run.dist); if (i >= 0) { HIGHS.splice(i, 1); LS.set(KEY.best, HIGHS); } }
+    S.contUsed = true; S.lives = 1; S.stamina = Math.max(S.stamina, 60); S.inv = 2.5; S.deathCause = null;
+    S.state = 'playing'; S.attract = false;
+    setScreen('playing'); audioPause(false);
+  });
+}
+function togglePause() {
+  if (S.state === 'playing') { S.state = 'paused'; setScreen('paused'); audioPause(true); }
+  else if (S.state === 'paused') { S.state = 'playing'; setScreen('playing'); audioPause(false); }
+}
+
+// ---------- high scores and missions (localStorage, daily) ----------
+let HIGHS = LS.get(KEY.best, []);
+if (!Array.isArray(HIGHS)) HIGHS = [];
+function bestScore() { return HIGHS.length ? HIGHS[0].s : 0; }
+function saveHigh(run) {
+  HIGHS.push({ s: run.score, d: run.dist, n: run.simit, date: new Date().toISOString().slice(0, 10) });
+  HIGHS.sort((a, b) => b.s - a.s);
+  HIGHS = HIGHS.slice(0, 5);
+  LS.set(KEY.best, HIGHS);
+}
+function dayKey() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+let DAILY = null, DAILY_KEY = '';
+function dailyIds() {
+  const key = dayKey();
+  if (DAILY && DAILY_KEY === key) return DAILY;
+  DAILY_KEY = key;
+  let seed = hashStr(key);
+  const rand = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const ids = Object.keys(MISSION_DEFS);
+  for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+  DAILY = ids.slice(0, 3);
+  return DAILY;
+}
+let MS = null;
+function missionsLoad() {
+  if (META.date === dayKey() && META.p) MS = { date: META.date, p: META.p, done: META.done || {} };
+  else MS = { date: dayKey(), p: {}, done: {} };
+}
+let msDirty = false;
+function missionAdd(id, n) {
+  if (MS && MS.date !== dayKey()) missionsLoad(); // the session crossed midnight
+  if (!MS || !dailyIds().includes(id) && id !== 'combo') return;
+  MS.p[id] = (MS.p[id] || 0) + n;
+  missionCheck(id);
+}
+function missionSet(id, v) {
+  if (MS && MS.date !== dayKey()) missionsLoad();
+  if (!MS) return;
+  MS.p[id] = Math.max(MS.p[id] || 0, v);
+  missionCheck(id);
+}
+function missionCheck(id) {
+  const def = MISSION_DEFS[id];
+  if (!def || MS.done[id]) return;
+  if (!dailyIds().includes(id)) return;
+  if ((MS.p[id] || 0) >= def.goal) {
+    MS.done[id] = true;
+    S.score += 150;
+    toast(tx('missionDone') + ': ' + missionName(id), 'good');
+    sfxChime(12);
+  }
+  msDirty = true;
+}
+function missionsFlush() {
+  if (MS) Object.assign(META, { date: MS.date, p: MS.p, done: MS.done });
+  LS.set(KEY.save, META); msDirty = false;
+}
+
+// ---------- audio (Web Audio: synthesized music and sound effects) ----------
+const AU = { ctx: null, bus: null, mus: null, sfx: null, noise: null, step: 0, next: 0, timer: null, intensity: 0 };
+AU.on = { music: SET.musicOn !== false, sfx: SET.sfxOn !== false };
+// Gains from the settings: at the defaults (0.8 / 0.6 / 0.8) they match the round-1 mix (0.9 / 0.42 / 0.85).
+function applyVolumes() {
+  if (!AU.ctx) return;
+  const t = AU.ctx.currentTime;
+  AU.bus.gain.setTargetAtTime(SET.master * 1.125, t, 0.03);
+  AU.mus.gain.setTargetAtTime(AU.on.music ? SET.music * 0.7 * (AU.duck || 1) : 0, t, 0.03);
+  AU.sfx.gain.setTargetAtTime(AU.on.sfx ? SET.sfx * 1.0625 : 0, t, 0.03);
+}
+function ensureAudio() {
+  if (AU.ctx) { if (AU.ctx.state === 'suspended') AU.ctx.resume().catch(() => {}); return; }
+  try {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    const ctx = new C();
+    AU.ctx = ctx;
+    AU.bus = ctx.createGain(); AU.bus.connect(ctx.destination);
+    AU.mus = ctx.createGain(); AU.mus.connect(AU.bus);
+    AU.sfx = ctx.createGain(); AU.sfx.connect(AU.bus);
+    applyVolumes();
+    const len = ctx.sampleRate * 1.5, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    AU.noise = buf;
+    AU.next = ctx.currentTime + 0.1;
+    AU.timer = setInterval(scheduleMusic, 25);
+  } catch (e) { showErr(e); }
+}
+const BPM = 124, STEP = 60 / BPM / 4;
+const CHORDS = [
+  { root: 110, arp: [440, 523.3, 659.3, 880], pad: [220, 261.6, 329.6] },
+  { root: 87.3, arp: [349.2, 440, 523.3, 698.5], pad: [174.6, 220, 261.6] },
+  { root: 130.8, arp: [392, 523.3, 659.3, 784], pad: [196, 261.6, 329.6] },
+  { root: 98, arp: [392, 493.9, 587.3, 784], pad: [196, 246.9, 293.7] },
+];
+function scheduleMusic() {
+  if (!AU.ctx || AU.ctx.state !== 'running') return;
+  // After a throttled or hidden tab, skip the missed steps instead of playing them all at once.
+  if (AU.next < AU.ctx.currentTime) AU.next = AU.ctx.currentTime + 0.05;
+  while (AU.next < AU.ctx.currentTime + 0.15) {
+    playStep(AU.step, AU.next);
+    AU.next += STEP;
+    AU.step++;
+  }
+}
+function playStep(i, t) {
+  const s = i % 16, bar = Math.floor(i / 16) % 4, ch = CHORDS[bar];
+  const I = AU.intensity;
+  if (s % 4 === 0) kick(t);
+  if (s % 2 === 0) hat(t, s % 4 === 2 ? 0.07 : 0.035);
+  if (s === 4 || s === 12) clap(t);
+  if (s % 2 === 0) bassNote(t, s % 4 === 2 ? ch.root * 2 : ch.root, STEP * 1.8);
+  if (I > 0.2) arpNote(t, ch.arp[(s + Math.floor(i / 16)) % 4] * (s % 8 < 4 ? 1 : 1.5), 0.05 + 0.05 * I);
+  if (s === 0 && I > 0.05) padChord(t, ch.pad, STEP * 15, 0.035 * I);
+}
+function musicOut(node) { node.connect(AU.mus); }
+function kick(t) {
+  const o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
+  o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
+  g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+  o.connect(g); musicOut(g); o.start(t); o.stop(t + 0.22);
+}
+function noiseSrc(t, dur, vol, type, f1, f2, dest) {
+  const src = AU.ctx.createBufferSource(), g = AU.ctx.createGain(), fl = AU.ctx.createBiquadFilter();
+  src.buffer = AU.noise; fl.type = type; fl.frequency.setValueAtTime(f1, t);
+  if (f2) fl.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  src.connect(fl); fl.connect(g); g.connect(dest || AU.mus);
+  src.start(t, Math.random()); src.stop(t + dur + 0.02);
+}
+function hat(t, v) { noiseSrc(t, 0.05, v, 'highpass', 7000); }
+function clap(t) { noiseSrc(t, 0.14, 0.22, 'bandpass', 1500); }
+function bassNote(t, f, dur) {
+  const o = AU.ctx.createOscillator(), fl = AU.ctx.createBiquadFilter(), g = AU.ctx.createGain();
+  o.type = 'sawtooth'; o.frequency.value = f;
+  fl.type = 'lowpass'; fl.frequency.value = 380;
+  g.gain.setValueAtTime(0.13, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.connect(fl); fl.connect(g); musicOut(g); o.start(t); o.stop(t + dur + 0.02);
+}
+function arpNote(t, f, v) {
+  const o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
+  o.type = 'triangle'; o.frequency.value = f;
+  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
+  o.connect(g); musicOut(g); o.start(t); o.stop(t + 0.13);
+}
+function padChord(t, notes, dur, v) {
+  for (const f of notes) {
+    const o = AU.ctx.createOscillator(), fl = AU.ctx.createBiquadFilter(), g = AU.ctx.createGain();
+    o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = rnd(-8, 8);
+    fl.type = 'lowpass'; fl.frequency.value = 900;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.25); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(fl); fl.connect(g); musicOut(g); o.start(t); o.stop(t + dur + 0.05);
+  }
+}
+function tone(type, f0, f1, dur, vol, t0) {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = t0 === undefined ? AU.ctx.currentTime : t0;
+  const o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
+  o.type = type; o.frequency.setValueAtTime(f0, t);
+  if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.connect(g); g.connect(AU.sfx); o.start(t); o.stop(t + dur + 0.03);
+}
+function sfxFlap() { if (!AU.ctx || !AU.on.sfx) return; noiseSrc(AU.ctx.currentTime, 0.12, 0.22, 'bandpass', 1400, 900, AU.sfx); }
+function sfxCall() {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = AU.ctx.currentTime;
+  tone('triangle', 900, 1500, 0.12, 0.18, t);
+  tone('triangle', 1500, 1100, 0.2, 0.16, t + 0.13);
+}
+function sfxChirp() {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = AU.ctx.currentTime;
+  tone('triangle', 1800, 2600, 0.08, 0.14, t);
+  tone('triangle', 2400, 1900, 0.1, 0.12, t + 0.1);
+}
+function sfxHorn() {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = AU.ctx.currentTime;
+  for (const f of [233, 246]) {
+    const o = AU.ctx.createOscillator(), fl = AU.ctx.createBiquadFilter(), g = AU.ctx.createGain();
+    o.type = 'sawtooth'; o.frequency.value = f; fl.type = 'lowpass'; fl.frequency.value = 900;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + 0.05); g.gain.setValueAtTime(0.09, t + 0.6); g.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+    o.connect(fl); fl.connect(g); g.connect(AU.sfx); o.start(t); o.stop(t + 0.85);
+  }
+}
+function sfxChime(n) {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = AU.ctx.currentTime, base = 660 * Math.pow(2, (n % 12) / 12);
+  tone('sine', base, base, 0.18, 0.22, t);
+  tone('sine', base * 1.5, base * 1.5, 0.22, 0.16, t + 0.06);
+}
+function sfxHit(v) {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = AU.ctx.currentTime;
+  tone('sine', 160, 40, 0.3, 0.5 * v, t);
+  noiseSrc(t, 0.18, 0.4 * v, 'lowpass', 500, null, AU.sfx);
+}
+function sfxWhoosh() { if (!AU.ctx || !AU.on.sfx) return; noiseSrc(AU.ctx.currentTime, 0.6, 0.3, 'bandpass', 300, 2400, AU.sfx); }
+function sfxSteal() { if (!AU.ctx || !AU.on.sfx) return; tone('sawtooth', 600, 200, 0.25, 0.14); }
+function sfxBoom() {
+  if (!AU.ctx || !AU.on.sfx) return;
+  const t = AU.ctx.currentTime;
+  noiseSrc(t, 0.8, 0.45, 'lowpass', 300, 80, AU.sfx);
+  tone('sine', 80, 40, 0.5, 0.3, t);
+}
+// Game over: three falling notes, and the music ducks for a moment.
+function sfxOver() {
+  if (!AU.ctx) return;
+  AU.duck = 0.25; applyVolumes();
+  setTimeout(() => { AU.duck = 1; applyVolumes(); }, 1600);
+  if (!AU.on.sfx) return;
+  const t = AU.ctx.currentTime;
+  [523, 392, 262].forEach((f, i) => tone('triangle', f, f * 0.97, 0.22, 0.22, t + i * 0.12));
+}
+// Pause and hidden tabs freeze all sound.
+function audioPause(on) {
+  if (!AU.ctx) return;
+  if (on) AU.ctx.suspend().catch(() => {});
+  else AU.ctx.resume().catch(() => {});
+}
+function sfxStart() { if (!AU.ctx || !AU.on.sfx) return; const t = AU.ctx.currentTime; tone('triangle', 523, 523, 0.12, 0.2, t); tone('triangle', 784, 784, 0.16, 0.2, t + 0.1); }
+function toggleMusic() {
+  AU.on.music = !AU.on.music;
+  SET.musicOn = AU.on.music; saveSettings();
+  applyVolumes();
+  renderToggles();
+}
+// Master speaker (N): drops the master volume to 0 and brings back the level it had.
+function toggleMute() {
+  ensureAudio();
+  if (SET.master > 0) { SET.unmuteTo = SET.master; SET.master = 0; }
+  else SET.master = SET.unmuteTo || 0.8;
+  applyVolumes();
+  saveSettings();
+  renderToggles();
+}
+function toggleSfx() {
+  AU.on.sfx = !AU.on.sfx;
+  SET.sfxOn = AU.on.sfx; saveSettings();
+  applyVolumes();
+  renderToggles();
+}
+
+// ---------- UI ----------
+// Inline SVG icons (24x24, stroke = currentColor): no OS glyphs or emoji in the interface.
+const svg = (d, extra = '') => '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' + extra + '>' + d + '</svg>';
+const ICON = {
+  pause: svg('<line x1="8" y1="5" x2="8" y2="19"/><line x1="16" y1="5" x2="16" y2="19"/>'),
+  music: svg('<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/>'),
+  sound: svg('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/>'),
+  globe: svg('<circle cx="12" cy="12" r="9.5"/><line x1="2.5" y1="12" x2="21.5" y2="12"/><path d="M12 2.5a14 14 0 0 1 0 19"/><path d="M12 2.5a14 14 0 0 0 0 19"/>'),
+  gear: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'),
+  check: '<svg class="simit-i" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ',
+};
+// Gust arrow for the chip: the same arrow glyph, mirrored for the direction.
+const ARROW = (dir) => '<svg class="simit-i" viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleX(' + dir + ')" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg> ';
+// Simit: a gold ring with sesame dots.
+const SIMIT_SVG = '<svg class="simit-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="#C87D2A" stroke-width="5"/><circle cx="12" cy="12" r="8" fill="none" stroke="#E9A857" stroke-width="2.5"/><g fill="#FFF6D6"><circle cx="12" cy="4.8" r="1.1"/><circle cx="18.2" cy="8.8" r="1.1"/><circle cx="18" cy="15.8" r="1.1"/><circle cx="11" cy="19.2" r="1.1"/><circle cx="5.2" cy="15" r="1.1"/><circle cx="5.8" cy="8.2" r="1.1"/></g></svg>';
+const FEATHER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#FFD166" d="M20.6 3.4c-5.8 0-11.5 3.9-12.9 9.3l-1.7 5.1-2.5 3.1 1 .6 3.2-1.5c4.6-.5 8.2-4.9 8.2-9.9 0-2.3-.3-4.6 1.3-6.7z"/><path stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" d="M5.5 19.5L16 8.5"/></svg>';
+for (const b of document.querySelectorAll('[data-icon]')) b.innerHTML = ICON[b.dataset.icon];
+$('#bLang').insertAdjacentHTML('beforeend', '<span class="code"></span>');
+$('#bMute').insertAdjacentHTML('beforeend', '<span class="code">N</span>');
+
+function renderLives() {
+  const el = $('#lives');
+  if (el.dataset.k === String(S.lives)) return;
+  let html = '';
+  for (let i = 0; i < 3; i++) html += FEATHER.replace('<svg', '<svg class="' + (i < S.lives ? '' : 'lost') + '"');
+  el.innerHTML = html; el.dataset.k = String(S.lives);
+}
+function renderToggles() {
+  $('#bMusic').classList.toggle('off', !AU.on.music);
+  $('#bSfx').classList.toggle('off', !AU.on.sfx);
+  $('#bMute').classList.toggle('off', SET.master === 0);
+  $('#bLang .code').textContent = nextLang().toUpperCase();
+  $('#bLangT').textContent = languageNames[nextLang()];
+  const aria = { bPause: 'aPause', bMute: 'aMute', bMusic: 'aMusic', bSfx: 'aSound', bLang: 'aLang', bSet: 'aSet', bDive: 'aDive' };
+  for (const id in aria) { const b = $('#' + id); if (b) { b.setAttribute('aria-label', tx(aria[id])); b.title = tx(aria[id]); } }
+  $('#bMusic').setAttribute('aria-pressed', String(AU.on.music));
+  $('#bSfx').setAttribute('aria-pressed', String(AU.on.sfx));
+  renderSettings();
+}
+function setLang(l) {
+  LANG = l;
+  SET.lang = l; saveSettings();
+  applyLang();
+}
+function applyLang() {
+  document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
+  if (window.Arena) Arena.lang(LANG);
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = tx(el.dataset.i18n); });
+  $('#how').innerHTML = I18N[LANG].how.map((h) => '<li>' + h + '</li>').join('');
+  renderStartButton();
+  renderMissionList();
+  renderHighList();
+  renderToggles();
+  renderOverMissions();
+  renderVersion();
+  renderNews();
+  renderOverAch();
+  if (lastRun) {
+    $('#overReason').textContent = deathCauseText(lastRun.deathCause || lastRun.reason);
+    const tip = getSurvivalTip(lastRun.deathCause || lastRun.reason, lastRun.tipIdx);
+    const tipEl = $('#overTip');
+    if (tipEl) tipEl.classList.toggle('hidden', !tip);
+    const oTip = $('#oTip');
+    if (oTip) oTip.textContent = tip;
+    $('#oFact').textContent = factText(lastRun.fact);
+  }
+  renderTitle();
+  if (S.state === 'over') $('#newBest').textContent = S.newBest ? tx('newBest') : '';
+  if (S.state === 'playing' || S.state === 'paused') renderChips();
+}
+function renderStartButton() {
+  const b = $('#bStart');
+  b.disabled = !assetsReady;
+  b.textContent = assetsReady ? tx('start') : tx('loading', { n: assetsLoaded, m: MODEL_FILES.length });
+}
+// "12/60", or "1234/3000 m" for the distance mission (rounded).
+function missionProgress(id) {
+  const def = MISSION_DEFS[id], p = Math.round(Math.min(MS.p[id] || 0, def.goal));
+  return p + '/' + def.goal + (id === 'dist' ? ' ' + tx('m') : '');
+}
+function renderMissionList() {
+  if (!MS) missionsLoad();
+  const ids = dailyIds();
+  $('#missList').innerHTML = ids.map((id) => '<li class="' + (MS.done[id] ? 'done' : '') + '"><span>' + missionName(id) + '</span><span>' + missionProgress(id) + '</span></li>').join('');
+}
+function renderHighList() {
+  const h = HIGHS;
+  $('#highList').innerHTML = h.length ? h.map((r) => '<li><span>' + r.s + '</span><span>' + r.d + ' m · ' + r.n + ' ' + SIMIT_SVG + '</span></li>').join('') : '<li><span>—</span></li>';
+  $('#bestLine').textContent = h.length ? tx('bestLine', { n: h[0].s }) : '';
+}
+function renderOverMissions() {
+  if (!MS) return;
+  const ids = dailyIds();
+  $('#overMissions').innerHTML = ids.map((id) => (MS.done[id] ? ICON.check : '') + missionName(id) + ' (' + missionProgress(id) + ')').join(' · ');
+}
+function renderChips() {
+  const chips = [];
+  if (S.tailT > 0) chips.push(['on', tx('tailChip') + ' ' + Math.ceil(S.tailT) + 's']);
+  if (S.goldT > 0) chips.push(['on', tx('goldChip') + ' ' + Math.ceil(S.goldT) + 's']);
+  if (S.shieldOn) chips.push(['on', tx('shieldChip')]);
+  if (S.combo >= 4) chips.push(['', 'x' + comboMult() + ' · ' + S.combo]);
+  if (S.flock > 0) chips.push([S.flock >= FLOCK.BREAK ? 'on' : '', tx('flockChip', { n: S.flock, m: flockMult().toFixed(2) })]);
+  if (S.gustWarned && S.t < S.gustAt) chips.push(['on', ARROW(-S.gustDir) + tx('gustChip')]);
+  const el = $('#chips');
+  const sig = chips.map((c) => c[1]).join('|');
+  if (el.dataset.sig !== sig) {
+    el.dataset.sig = sig;
+    el.innerHTML = chips.map((c) => '<span class="chip ' + c[0] + '">' + c[1] + '</span>').join('');
+  }
+}
+// Toast variants: 'good', 'bad', 'info'.
+function toast(text, kind) {
+  if (!text || simming) return;
+  const box = $('#toasts');
+  const el = document.createElement('div');
+  el.className = 'toast ' + (kind || 'info');
+  el.textContent = text;
+  box.appendChild(el);
+  while (box.children.length > 3) box.firstElementChild.remove();
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 480); }, 2200);
+}
+// First-run prompts: each shows once and is remembered in META.hints. The bot (?auto) and the sim never use up a prompt.
+function hintOnce(key, text) {
+  if (simming || FLAG.auto || META.hints[key]) return;
+  META.hints[key] = 1; msDirty = true;
+  toast(text, 'info');
+}
+// Late-run gusts: a warning chip and a toast 2 s ahead, then a sideways push (S.gustX, see checkHits for storms).
+function gustTick() {
+  if (!S.gustAt) S.gustAt = S.t + 12;
+  if (!S.gustWarned && S.t >= S.gustAt - 2) {
+    S.gustWarned = true; S.gustDir = Math.random() < 0.5 ? -1 : 1;
+    toast(tx('gust'), 'info');
+  }
+  if (S.t >= S.gustAt) {
+    S.gustX += S.gustDir * 9;
+    S.gustAt = S.t + rnd(10, 14); S.gustWarned = false;
+  }
+}
+// Combo badge: a chunky "Combo x2!" that pops in each time the multiplier goes up. A new element restarts the animation.
+let popT = 0;
+function popCombo(m) {
+  if (simming) return;
+  const el = $('#combo');
+  el.innerHTML = '<span class="cb">' + tx('comboUp', { m }) + '</span>';
+  clearTimeout(popT);
+  popT = setTimeout(() => {
+    const b = el.querySelector('.cb');
+    if (b) b.classList.add('out');
+    popT = setTimeout(() => { el.innerHTML = ''; }, 320);
+  }, 1000);
+}
+// "+points" text at the pickup's world position, projected to the screen.
+function floatText(x, y, z, text) {
+  if (simming) return;
+  _tmp.set(x, y, z);
+  _tmp.project(camera);
+  if (_tmp.z > 1) return;
+  const el = document.createElement('div');
+  el.className = 'float';
+  el.textContent = text;
+  el.style.left = ((_tmp.x + 1) / 2) * window.innerWidth + 'px';
+  el.style.top = ((-_tmp.y + 1) / 2) * window.innerHeight + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 950);
+}
+let lastRun = null;
+function setScreen(mode, run, isNew) {
+  const hud = $('#hud');
+  $('#title').classList.toggle('hidden', mode !== 'title');
+  $('#pause').classList.toggle('hidden', mode !== 'paused');
+  $('#over').classList.toggle('hidden', mode !== 'over');
+  hud.classList.toggle('hidden', mode === 'title' || mode === 'over');
+  if (mode === 'title') { renderMissionList(); renderHighList(); renderTitle(); $('#chips').innerHTML = ''; $('#toasts').innerHTML = ''; }
+  if (mode === 'over' && run) {
+    lastRun = run;
+    $('#overReason').textContent = deathCauseText(run.deathCause || run.reason);
+    const tip = getSurvivalTip(run.deathCause || run.reason, run.tipIdx);
+    const tipEl = $('#overTip');
+    if (tipEl) tipEl.classList.toggle('hidden', !tip);
+    const oTip = $('#oTip');
+    if (oTip) oTip.textContent = tip;
+    $('#oScore').textContent = run.score;
+    $('#oBest').textContent = Math.max(bestScore(), run.score);
+    $('#oDist').textContent = fmtDist(run.dist);
+    $('#oSimit').textContent = run.simit;
+    $('#newBest').textContent = isNew ? tx('newBest') : '';
+    $('#oFact').textContent = factText(run.fact);
+    $('#oDaily').textContent = S.arenaStreak ? tx('dailyOver', { s: S.arenaStreak.streak, b: S.arenaStreak.best }) : '';
+    renderOverMissions();
+    renderHighList();
+  }
+  if (mode === 'playing') { $('#toasts').innerHTML = ''; }
+  // keyboard focus lands on the main button of the new card
+  if (!simming) {
+    const f = { title: '#bStart', paused: '#bResume', over: '#bRetry' }[mode];
+    if (f) setTimeout(() => { const b = $(f); if (b && !b.disabled && b.offsetParent) b.focus({ preventScroll: true }); }, 60);
+    else if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  }
+}
+function fmtDist(m) { return m >= 1000 ? (m / 1000).toFixed(2) + ' ' + tx('km') : Math.round(m) + ' ' + tx('m'); }
+// Title: the chick's nest for its current stage, and the next "did you know" fact.
+const NEST_SVG = [
+  // 1 egg, speckled
+  '<ellipse cx="38" cy="47" rx="27" ry="7" fill="#8B5A2B"/><ellipse cx="38" cy="36" rx="12" ry="15" fill="#F5F0E1" stroke="#CBBBA0" stroke-width="1.5"/><circle cx="34" cy="31" r="1.6" fill="#B7A27A"/><circle cx="41" cy="40" r="1.8" fill="#B7A27A"/>',
+  // 2 hatchling: wet and small, eyes shut
+  '<ellipse cx="38" cy="47" rx="27" ry="7" fill="#8B5A2B"/><circle cx="38" cy="40" r="10" fill="#E9D9A6"/><path d="M33 39h4M40 39h4" stroke="#7C5A2B" stroke-width="1.6" stroke-linecap="round"/><path d="M46 41l5 2-5 2z" fill="#FACC15"/>',
+  // 3 fluffy chick: grey down
+  '<ellipse cx="38" cy="47" rx="27" ry="7" fill="#8B5A2B"/><circle cx="38" cy="36" r="14" fill="#CBD5E1"/><circle cx="31" cy="42" r="6" fill="#E2E8F0"/><circle cx="45" cy="42" r="6" fill="#E2E8F0"/><circle cx="41" cy="29" r="3" fill="#111827"/><path d="M50 33l5 2-5 2z" fill="#FACC15"/>',
+  // 4 young gull: white with grey wing tips and a yellow beak
+  '<ellipse cx="38" cy="48" rx="27" ry="6" fill="#8B5A2B"/><ellipse cx="38" cy="37" rx="13" ry="9" fill="#F8FAFC"/><path d="M27 34l-12-4 10 10z" fill="#9AA6B2"/><path d="M49 34l12-4-10 10z" fill="#9AA6B2"/><circle cx="46" cy="29" r="5" fill="#F8FAFC"/><circle cx="47.5" cy="28" r="1.2" fill="#111827"/><path d="M51 29l6 2-6 2z" fill="#FACC15"/>',
+];
+function renderTitle() {
+  const st = chickStage();
+  if (window.Arena) { const d = Arena.daily(); $('#dailyLine').textContent = (d.done ? tx('dailyDone') + ' · ' : '') + tx('dailyLine', { s: d.streak, b: d.best }); }
+  else $('#bDaily').classList.add('hidden');
+  $('#titleFact').textContent = factText(META.factIdx);
+  // stil-3d: the chick from the song video (it grows with the stage); the drawn nest stays as the fallback
+  const pic = SPR.marti ? '<img class="chick3d" src="assets/3d/' + (st >= 4 ? 'poz-marti' : 'poz-yavru') + '.webp" alt="" style="width:' + (st >= 4 ? 76 : 40 + 6 * st) + 'px">' : '<svg viewBox="0 0 76 56" aria-hidden="true">' + NEST_SVG[st - 1] + '</svg>';
+  $('#nestCard').innerHTML = pic + '<span>' + tx('chickLine', { s: I18N[LANG].stages[st - 1], n: META.chick }) + '</span>';
+}
+let hudT = 0;
+function updateHud(dt) {
+  hudT -= dt;
+  if (hudT > 0) return;
+  hudT = 0.1;
+  const playing = S.state === 'playing' || S.state === 'paused';
+  $('#sScore').textContent = Math.round(S.score);
+  $('#sCombo').textContent = 'x' + comboMult();
+  $('#sDist').textContent = fmtDist(S.d);
+  $('#sBest').textContent = Math.max(bestScore(), Math.round(S.score));
+  if (S.state === 'playing' && !S.beatShown && S.bestAtStart > 0 && S.score > S.bestAtStart) beatBest();
+  renderLives();
+  const st = $('#stamina');
+  st.classList.toggle('low', S.stamina < 25);
+  $('#stBar').style.transform = 'scaleX(' + clamp(S.stamina / 100, 0, 1).toFixed(3) + ')';
+  if ($('#carry').dataset.k !== String(S.carried)) { $('#carry').dataset.k = String(S.carried); $('#carry').innerHTML = SIMIT_SVG.repeat(S.carried); }
+  if (playing) renderChips();
+  if (msDirty && S.state === 'playing' && Math.random() < 0.5) missionsFlush();
+}
+function updateDebug() {
+  if (!FLAG.debug) return;
+  const lines = [
+    'FPS ' + S.fps.toFixed(0) + '  draws ' + S.draws + '  tris ' + (renderer.info.render.triangles || 0) + '  quality ' + (isLow() ? 'low' : 'high') + '  assets ' + S.assets.length + '/' + MODEL_FILES.length,
+    'state ' + S.state + '  t ' + S.t.toFixed(1) + 's  d ' + S.d.toFixed(0) + 'm  v ' + S.speed.toFixed(1),
+    'score ' + Math.round(S.score) + '  simit ' + S.simit + '  fish ' + S.fish + '  combo ' + S.combo + '  lives ' + S.lives + '  stam ' + S.stamina.toFixed(0) + '  cause ' + S.deathCause,
+    'tail ' + S.tailT.toFixed(1) + '  gold ' + S.goldT.toFixed(1) + '  shield ' + S.shieldOn + '  runs ' + S.runs.length,
+    'runs: ' + S.runs.slice(-8).map((r) => r.score + ' / ' + r.dist + 'm / ' + r.t + 's ' + (r.deathCause || r.reason)).join('  |  '),
+    'gull x ' + G.x.toFixed(1) + ' y ' + G.y.toFixed(1) + ' z ' + gull.position.z.toFixed(1) + ' vis ' + gull.visible + '  cam ' + camera.position.x.toFixed(1) + ',' + camera.position.y.toFixed(1) + ',' + camera.position.z.toFixed(1),
+    'carried ' + S.carried + '  feeds ' + S.feeds + '  nests ' + PR.nest.length + '  piers ' + S.piers + ' posts ' + PR.post.length + '  near ' + S.nearMiss + '  chick ' + META.chick + ' stage ' + chickStage() + (S.mate ? ' mate' : '') + '  late ' + lateK().toFixed(2),
+    'flock ' + S.flock + ' (max ' + S.flockMax + ', lost ' + S.flockLost + ')  kites cut ' + S.kitesCut + '  rivals chased ' + S.rivalsScared,
+  ];
+  $('#dbgL').textContent = lines.join('\n') + '\n';
+}
+
+// ---------- settings ----------
+let settingsOpen = false;
+function openSettings() {
+  settingsOpen = true;
+  document.body.classList.add('setopen');
+  renderSettings();
+  $('#settings').classList.remove('hidden');
+  setTimeout(() => $('#vMaster').focus({ preventScroll: true }), 60);
+}
+function closeSettings() {
+  settingsOpen = false;
+  document.body.classList.remove('setopen');
+  $('#settings').classList.add('hidden');
+  const f = { title: '#bSetT', paused: '#bSetP' }[S.state];
+  if (f) $(f).focus({ preventScroll: true });
+}
+function renderSettings() {
+  $('#vMaster').value = Math.round(SET.master * 100);
+  $('#vMusic').value = Math.round(SET.music * 100);
+  $('#vSfx').value = Math.round(SET.sfx * 100);
+  $('#sZH').classList.toggle('on', LANG === 'zh');
+  $('#sTR').classList.toggle('on', LANG === 'tr');
+  $('#sEN').classList.toggle('on', LANG === 'en');
+  $('#sLow').classList.toggle('on', isLow());
+  $('#sHigh').classList.toggle('on', !isLow());
+  $('#sFull').classList.toggle('on', !!document.fullscreenElement);
+}
+// Low: no shadows, pixel ratio 1.0, fewer firework sparks. High: shadows, pixel ratio up to 1.5.
+function applyQuality() {
+  renderer.setPixelRatio(pixelRatio(isLow()));
+  arenaPerfAttach();
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  if (CFX) CFX.setSize(window.innerWidth, window.innerHeight);
+  if (renderer.shadowMap.enabled !== !isLow()) {
+    renderer.shadowMap.enabled = !isLow();
+    scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; });
+  }
+}
+function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  } catch (e) { /* fullscreen not allowed */ }
+}
+document.addEventListener('fullscreenchange', renderSettings);
+for (const [id, k] of [['vMaster', 'master'], ['vMusic', 'music'], ['vSfx', 'sfx']]) {
+  $('#' + id).addEventListener('input', (e) => {
+    SET[k] = clamp(+e.target.value / 100, 0, 1);
+    ensureAudio();
+    // moving a slider up also turns that channel back on
+    if (k === 'music' && SET.music > 0 && !AU.on.music) toggleMusic();
+    if (k === 'sfx' && SET.sfx > 0 && !AU.on.sfx) toggleSfx();
+    applyVolumes();
+    saveSettings();
+  });
+}
+const click = (id, fn) => $(id).addEventListener('click', (e) => { e.stopPropagation(); fn(); });
+click('#sZH', () => setLang('zh'));
+click('#sTR', () => setLang('tr'));
+click('#sEN', () => setLang('en'));
+click('#sLow', () => { SET.quality = 'low'; saveSettings(); applyQuality(); renderSettings(); });
+click('#sHigh', () => { SET.quality = 'high'; saveSettings(); applyQuality(); renderSettings(); });
+click('#sFull', toggleFullscreen);
+click('#bSetBack', closeSettings);
+
+// ---------- v2.1 code: achievements, news window, record-beaten cue ----------
+function achCheck(run) {
+  S.newAch = [];
+  if (FLAG.auto) return;
+  for (const a of ACH_DEFS) {
+    let hit = false;
+    try { hit = !META.ach[a.id] && a.ok(run); } catch (e) { hit = false; }
+    if (hit) { META.ach[a.id] = dayKey(); S.newAch.push(a.id); }
+  }
+}
+function renderOverAch() {
+  const names = S.newAch.map((id) => ACH_DEFS.find((a) => a.id === id)).filter(Boolean).map((a) => a[LANG]);
+  $('#oAch').textContent = S.state === 'over' && names.length ? tx('newAch') + ': ' + names.join(' · ') : '';
+}
+function beatBest() {
+  S.beatShown = true;
+  if (simming) return;
+  toast(tx('beatBest'), 'good');
+  sfxChime(9);
+  haptic(30);
+  if (!calm()) for (const dx of [-7, 7]) FW.burst(G.x + dx, G.y + 7, S.d + 40, '#FDE68A', isLow() ? 10 : 18, 10, 1.4, 6);
+}
+function renderVersion() {
+  const v = 'v' + VERSION.v + ' · ' + VERSION[LANG];
+  $('#verTag').textContent = v;
+  $('#setVer').textContent = 'Martı ' + v;
+  $('#newsVer').textContent = 'Martı ' + v;
+}
+function renderNews() {
+  $('#newsList').innerHTML = NEWS[LANG].map((t) => '<li>' + t + '</li>').join('');
+  const got = ACH_DEFS.filter((a) => META.ach[a.id]).length;
+  $('#achCount').textContent = got + '/' + ACH_DEFS.length;
+  $('#achList').innerHTML = ACH_DEFS.map((a) => '<li class="' + (META.ach[a.id] ? 'on' : '') + '"><b>' + (META.ach[a.id] ? ICON.check : '') + a[LANG] + '</b><span>' + a['d' + LANG] + '</span></li>').join('');
+}
+let newsOpen = false;
+function openNews() {
+  if (S.state !== 'title') return;
+  newsOpen = true; renderNews();
+  $('#news').classList.remove('hidden');
+  setTimeout(() => $('#bNewsBack').focus({ preventScroll: true }), 60);
+}
+function closeNews() {
+  newsOpen = false;
+  $('#news').classList.add('hidden');
+  $('#bNews').focus({ preventScroll: true });
+}
+click('#bNews', openNews);
+click('#bNewsBack', closeNews);
+$('#news').addEventListener('click', (e) => { if (e.target.id === 'news') closeNews(); });
+
+// ---------- main loop ----------
+let lastFrame = performance.now(), fpsAcc = 0, fpsN = 0;
+function renderFrame(now) {
+  const dt = Math.min(0.05, Math.max(0, (now - lastFrame) / 1000));
+  lastFrame = now;
+  if (document.hidden) return;
+  if (S.state !== 'paused') frameLogic(dt);
+  fpsAcc += dt; fpsN++;
+  if (fpsAcc > 0.5) { S.fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; }
+  updateHud(dt);
+  if (CFX) CFX.render(); else renderer.render(scene, camera);
+  S.draws = renderer.info.render.calls;
+  updateDebug();
+}
+// One native sample per rendered frame. Menus and diagnostics consume the same sample.
+function suspendTv() {
+  S.diveHold = false;
+  for (const key of Object.keys(KEYS)) KEYS[key] = false;
+  if (S.state === 'playing') togglePause();
+}
+const tvPad = createController({ keyboard: true, width: 160, top: '92px', onSuspend: suspendTv, onCancel: suspendTv });
+let tvFrame = tvPad.peek(), tvFrames = 0;
+const tvGl = renderer.getContext(), tvVersion = tvGl.getParameter(tvGl.VERSION);
+function tvSnapshot() {
+  return { game: 'marti', renderer: 'webgl2', webglVersion: tvVersion, ready: assetsReady, loading: !assetsReady, frames: tvFrames,
+    canvasWidth: tvGl.drawingBufferWidth, canvasHeight: tvGl.drawingBufferHeight,
+    stage: S.state === 'title' ? 'menu' : S.state === 'over' ? 'ended' : S.state, paused: S.state === 'paused', controller: tvPad.peek(),
+    gameplay: { x: G.x, height: G.y, distance: S.dist, dives: S.dives, dive: !!(S.diveHold || tvFrame.buttons.A), score: S.score } };
+}
+window.JoystickGameQA = { snapshot: tvSnapshot };
+function pollTv() {
+  tvFrames++;
+  tvFrame = tvPad.poll();
+  const p = tvFrame.pressed;
+  if (tvFrame.cancelled || navigateAccessibility(tvFrame)) return;
+  if (S.state === 'playing') {
+    if (p.START || p.B) togglePause();
+    if (p.X) toggleMusic();
+    if (p.Y) toggleMute();
+  } else if (settingsOpen) {
+    navigateMenu(tvFrame, $('#settings'), $('#bSetBack'), closeSettings);
+  } else if (newsOpen) {
+    navigateMenu(tvFrame, $('#news'), $('#bNewsBack'), closeNews);
+  } else {
+    const [menu, primary] = { title: ['#title','#bStart'], paused: ['#pause','#bResume'], over: ['#over','#bRetry'] }[S.state] || [];
+    if (menu) navigateMenu(tvFrame, $(menu), $(primary), S.state === 'paused' ? togglePause : S.state === 'title' ? () => window.PureGameHost?.exit?.() : null);
+  }
+  tvPad.setPlaying(S.state === 'playing');
+  if (tvFrames % 6 === 0 && window.PureGameHost?.publish) {
+    // The phone state channel is capped at 4096 bytes. Room QR data belongs to the local panel.
+    const { game, stage, paused, gameplay } = tvSnapshot();
+    window.PureGameHost.publish(JSON.stringify({ game, stage, paused, gameplay }));
+  }
+}
+
+function loop(now) {
+  pollTv();
+  requestAnimationFrame(loop);
+  renderFrame(now);
+}
+
+// Pause (and silence) while the tab is hidden.
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && S.state === 'playing' && (!window.Arena || Arena.settings.autoPause)) togglePause(); // arena-kit: the player's auto-pause setting
+  if (document.hidden) audioPause(true);
+  else if (S.state !== 'paused') audioPause(false);
+  lastFrame = performance.now();
+});
+
+// Resize.
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  if (CFX) CFX.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
+
+// ---------- buttons ----------
+click('#bStart', () => { if (assetsReady) startRun(); });
+click('#bRetry', () => retryRun(arenaDailyAgain())); // a daily run retries as the same daily
+click('#bCont', continueRun);
+click('#bDaily', () => { if (assetsReady && window.Arena) startRun(Arena.daily()); });
+click('#bShare', () => { if (!lastRun || !window.Arena) return; Arena.share({ title: 'Martı · ' + tx('over'), url: 'https://furkiozknn.github.io/marti/',
+  lines: [tx('shareLine', { n: lastRun.score, d: fmtDist(lastRun.dist), k: lastRun.simit })].concat(S.arenaStreak ? [tx('dailyOver', { s: S.arenaStreak.streak, b: S.arenaStreak.best })] : []) }); });
+click('#bOther', () => { if (!window.Arena) return; const g = Arena.games.filter((x) => x !== 'marti'); window.open('https://furkiozknn.github.io/' + g[(Date.now() / 60000 | 0) % g.length] + '/', '_blank', 'noopener'); });
+click('#bResume', togglePause);
+click('#bRestart', () => startRun(arenaDailyAgain()));
+click('#bMenuP', goMenu);
+click('#bMenuO', () => afterBreak(goMenu));
+click('#bPause', togglePause);
+click('#bMute', toggleMute);
+click('#bMusic', () => { ensureAudio(); toggleMusic(); });
+click('#bSfx', () => { ensureAudio(); toggleSfx(); });
+click('#bLang', () => setLang(nextLang()));
+click('#bLangT', () => setLang(nextLang()));
+click('#bSetT', openSettings);
+click('#bSetP', openSettings);
+click('#bSet', () => { if (S.state === 'playing') togglePause(); openSettings(); });
+const bDiveBtn = $('#bDive');
+if (bDiveBtn) {
+  bDiveBtn.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    ensureAudio();
+    if (S.state === 'playing') {
+      isDiveZoneActive = true;
+      S.diveHold = true;
+      bDiveBtn.classList.add('active');
+    }
+  });
+  const endDiveBtn = (e) => {
+    e.stopPropagation();
+    if (S.state === 'playing' && S.diveHold) {
+      S.diveTimer = 0.7;
+    }
+    S.diveHold = false;
+    isDiveZoneActive = false;
+    bDiveBtn.classList.remove('active');
+  };
+  bDiveBtn.addEventListener('pointerup', endDiveBtn);
+  bDiveBtn.addEventListener('pointercancel', endDiveBtn);
+}
+function goMenu() {
+  S.state = 'title';
+  S.attract = true;
+  S.overT = 0;
+  S.diveHold = false;
+  isDiveZoneActive = false;
+  if (touchHoldTimer) { clearTimeout(touchHoldTimer); touchHoldTimer = null; }
+  const b = $('#bDive'); if (b) b.classList.remove('active');
+  audioPause(false);
+  setScreen('title');
+  clearWorld();
+  S.d = 0; S.t = 0; S.speed = 27;
+}
+
+// ---------- test hooks ----------
+// martiSim(seconds): fast-forward the simulation without rendering. With ?auto the bot
+// restarts after each game over, and every finished run is appended to marti.runs.
+window.martiSim = function martiSim(seconds) {
+  simming = true;
+  const n = Math.round(seconds * 60);
+  if (FLAG.auto && S.state === 'title') startRun();
+  for (let i = 0; i < n; i++) {
+    if (S.state === 'paused') break;
+    frameLogic(1 / 60);
+    if (S.state === 'over' && FLAG.auto) startRun();
+  }
+  simming = false;
+  PR.dirty = true;
+  return { state: S.state, score: Math.round(S.score), dist: Math.round(S.d), t: +S.t.toFixed(1), runs: S.runs.length, lastRun: S.runs[S.runs.length - 1] || null };
+};
+
+// ---------- boot ----------
+$('#fatal').style.display = 'none'; // the module runs, so the CDN watchdog message (if shown) is wrong now
+missionsLoad();
+applyLang();
+renderLives();
+if (window.Arena && Arena.portal && Arena.portal.name !== 'none') $('#titleHub').classList.add('hidden'); // portals: no cross-promotion (same rule as the end card)
+setScreen('title');
+// arena-kit: accessibility button bottom-right (that corner holds no game controls); a run pauses when it is opened
+if (window.Arena) {
+  Arena.mountSettingsButton();
+  document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('.arena-gear') && S.state === 'playing') togglePause(); }, true);
+  Arena.on('settings', () => { if (calm()) S.shake = 0; }); // "reduce motion" switched on mid-run: stop a running shake now
+}
+if (FLAG.debug) { $('#dbg').classList.remove('hidden'); }
+if (Q.has('noassets')) document.querySelectorAll('.mascot').forEach((el) => el.remove()); // the mascot is an asset too
+// for screenshot tests (camera placement while paused) and the nest test (feeding)
+if (FLAG.debug) window.martiDebug = { THREE, scene, camera, gull, gullShadow, G, PR, boats: () => obsBoats, boxes: BOAT_BOXES,
+  // flock tests: pickups, hits and obstacles driven from the page
+  collectSimit, hitPlayer, kitePattern, flockPattern, kites: () => obsKites, flocks: () => flocks, WM, FLOCK, IM,
+  SURVIVAL_TIPS, deathCauseText, getSurvivalTip };
+spawnAhead(); // the title screen is never empty
+S.d = 0;
+updateVisuals(1 / 60);
+// arena-core v2 test contract: window.__game.read() / step(seconds) for bots, gates and ?capture recordings
+if (window.ArenaCore) ArenaCore.test.kur({ read: () => ({ fps: S.fps, state: S.state, assetsReady, fx: CFX && CFX.info }), step: s => window.martiSim(s) });
+requestAnimationFrame((t) => { lastFrame = t; loop(t); });
+// Start is enabled once the models loaded (or failed, or after 10 s); the procedural look is the fallback.
+Promise.race([loadAssets(), new Promise((r) => setTimeout(r, 10000))]).then(() => {
+  applyAssets();
+  if (window.ArenaCore) ArenaCore.kabuk.onceDerle(renderer, scene, camera); // shader warm-up (Intel: no parallel compile)
+  assetsReady = true;
+  renderStartButton();
+  if (S.state === 'title' && !simming) setTimeout(() => { if (S.state === 'title' && !settingsOpen) $('#bStart').focus({ preventScroll: true }); }, 60);
+  if (FLAG.run) startRun(); // ?run: start a run without the bot (manual test; keys still steer)
+  if (SIM_SECONDS > 0) window.martiSim(SIM_SECONDS);
+});

@@ -1,0 +1,520 @@
+{
+  "game": "mechapede",
+  "targetPackage": "com.ecojust.joystick.mechapede",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "056f922ec1bae4540b8af0afc21c4f0e44984f20",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/mechapede/mechapede-0.1.1.apk",
+    "bytes": 2770257,
+    "sha256": "399889b98d6f825689dbd601080d04f1073ef24c4e0a72e7c59430395cdbce1d"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/mechapede/observer-mechapede.apk",
+    "bytes": 16783,
+    "sha256": "7d78e09caf7c6ba65ab4c75eb2298bf2ffa8959c7b520a54739998610d7e5f6e"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77581,
+      "sha256": "fa5ac4b08a35d2a9ae28bceb5671feba1b4993f1c3adbcfd6ee50afc6274a236"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13566,
+      "sha256": "fd5986c8c462b9fd057424cda32c294cc849fcdb630ab3c9c39cd288428dd218"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/mechapede/qa-plan.json": {
+      "bytes": 1524,
+      "sha256": "67d342b99afd6039c967c958b412af38035b5fa33d0d03b64f91dc5384d7342a"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 13779,
+      "sha256": "78084067d6772d3ad2e7c932e291d68e5f765a6087e376eb3d4e77c9cfac89ef"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.mechapede",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795568800.8148613,
+      "snapshot": {
+        "game": {
+          "game": "mechapede",
+          "ready": true,
+          "stage": "menu",
+          "paused": false,
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "frames": 1,
+          "gameplay": {
+            "frame": 0,
+            "playerX": 120,
+            "playerY": 252,
+            "shots": 0,
+            "score": 0,
+            "lives": 3,
+            "wave": 1
+          },
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:45011/?room=ZicUHj9NSWwKWeT358RdPq3Cl_7vPmpY",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "registering",
+                "serviceName": "机甲蜈蚣",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:45011/?room=ZicUHj9NSWwKWeT358RdPq3Cl_7vPmpY",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "机甲蜈蚣",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 810,
+              "height": 1080,
+              "clientWidth": 405,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 788,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 278
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.mechapede"
+      }
+    }
+  ],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.mechapede",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568798.3351266,
+      "endedAt": 1795568798.3964143,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568798.5208423,
+      "endedAt": 1795568798.5391557,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568798.6678367,
+      "endedAt": 1795568798.67719,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568798.7980263,
+      "endedAt": 1795568798.8024125,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568798.9231355,
+      "endedAt": 1795568798.9252596,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.0459752,
+      "endedAt": 1795568799.0479324,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.1687052,
+      "endedAt": 1795568799.172124,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.2929387,
+      "endedAt": 1795568799.2951002,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.4168441,
+      "endedAt": 1795568799.4183471,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.5392566,
+      "endedAt": 1795568799.5405962,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.6614425,
+      "endedAt": 1795568799.6629055,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.783845,
+      "endedAt": 1795568799.7869642,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568799.908072,
+      "endedAt": 1795568799.9095538,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 2,
+      "priorTransportFailures": 1,
+      "startedAt": 1795568800.0324352,
+      "endedAt": 1795568800.180586,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568802.3598318,
+      "endedAt": 1795568817.3750553,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795568817.5792232,
+      "endedAt": 1795568832.5947018,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 14.64418678300001,
+      "startedAt": 1795568832.7156425,
+      "endedAt": 1795568847.3735435,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 39223,
+    "controller": 39421
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "机甲蜈蚣",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2709",
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1230, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 632, in setup\n    self.capture('join-before-connection', [])\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 558, in capture\n    before = self.snapshot()\n             ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 384, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 151, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 297, in _read_status\n    line = str(self.fp.readline(_MAXLINE + 1), \"iso-8859-1\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/socket.py\", line 707, in readinto\n    return self._sock.recv_into(b)\n           ^^^^^^^^^^^^^^^^^^^^^^^\nTimeoutError: timed out\n"
+}
