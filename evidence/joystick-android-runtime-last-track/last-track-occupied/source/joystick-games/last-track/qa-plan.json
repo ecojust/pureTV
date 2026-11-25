@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.x",
+    "gameplay.y",
+    "gameplay.time",
+    "gameplay.ammo",
+    "gameplay.armor",
+    "gameplay.cash"
+  ],
+  "steps": [
+    {
+      "name": "Focus settings from original New Game focus",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 16,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "设置画面 · 声音 · 操作"
+        }
+      ]
+    },
+    {
+      "name": "Open original settings",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.modal",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Focus original Low preset",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 16,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "低"
+        }
+      ]
+    },
+    {
+      "name": "Select original Low preset",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.quality",
+          "op": "eq",
+          "value": "low"
+        }
+      ]
+    },
+    {
+      "name": "Close settings",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.modal",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Focus New Game",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 16,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "title"
+        }
+      ]
+    },
+    {
+      "name": "Start new game normally",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "carSelect"
+        }
+      ]
+    },
+    {
+      "name": "Confirm original car choice",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "garage"
+        }
+      ]
+    },
+    {
+      "name": "Navigate down through the garage upgrades to the track action",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 3000,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "garage"
+        },
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "前往赛道"
+        }
+      ]
+    },
+    {
+      "name": "Open track selection",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "trackSelect"
+        },
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "选择"
+        }
+      ],
+      "androidDomMenu": true
+    },
+    {
+      "name": "Select first unlocked track",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "raceSettings"
+        },
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "下一步：比赛设置"
+        }
+      ],
+      "androidDomMenu": true
+    },
+    {
+      "name": "Next original setup screen",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "raceSettings"
+        },
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "开始比赛"
+        }
+      ],
+      "androidDomMenu": true
+    },
+    {
+      "name": "Start race and wait for original countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "racing"
+        },
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Accelerate original simulation",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 3000,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "changed"
+        },
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Fire the original machine gun",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 600,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.ammo",
+          "op": "lt",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "name": "Turn and drift with independent B",
+      "keys": [
+        "UP",
+        "RIGHT",
+        "B"
+      ],
+      "holdMs": 800,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Use independent nitro Y",
+      "keys": [
+        "UP",
+        "Y"
+      ],
+      "holdMs": 500,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.nitro",
+          "op": "lt",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Pause explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}

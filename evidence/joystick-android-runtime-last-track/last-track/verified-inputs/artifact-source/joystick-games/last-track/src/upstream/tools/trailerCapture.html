@@ -1,0 +1,48 @@
+<!doctype html><meta charset="utf-8"><title>trailer capture</title>
+<canvas id="c" width="1280" height="720" style="width:1280px;height:720px"></canvas>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js"}}</script>
+<script type="module">
+// Dev tool: deterministic frame capture of the live 3D race view for the trailer (hidden-tab safe: no rAF).
+Object.defineProperty(window, 'devicePixelRatio', { value: 1 });
+import { buildTrack } from '../src/core/trackModel.js';
+import { getTrack } from '../src/data/tracks/index.js';
+import { createRaceConfig } from '../src/data/raceConfig.js';
+import { defaultSave } from '../src/data/saveStore.js';
+import { createRaceSim } from '../src/sim/raceSim.js';
+import { createRenderHost } from '../src/render/renderHost.js';
+import { createRaceController } from '../src/render/raceController.js';
+const NO = { throttle: 0, brake: 0, steer: 0, fire: false, cycleWeapon: false, selectWeapon: null, handbrake: false };
+const LOAD = { hammer: [{ id: 'machinegun', ammo: 300 }, { id: 'rocket', ammo: 30 }, { id: 'mine', ammo: 12 }], wasp: [{ id: 'flamethrower', ammo: 300 }], bulwark: [{ id: 'machinegun', ammo: 300 }, { id: 'ramplate', ammo: 1 }] };
+const mk = (trackId, carId, seed) => {
+  const save = { ...defaultSave(), carId, weapons: LOAD[carId].map((w) => ({ ...w })) };
+  const cfg = createRaceConfig({ mode: 'race', trackId, save, seed });
+  return { cfg, sim: createRaceSim(cfg, { aiPlayer: true, aiSkill: 0.85 }), track: buildTrack(getTrack(trackId)) };
+};
+/** Dry run: times (s) of explosions/wrecks/hits to find the action. */
+window.scan = (trackId, carId = 'hammer', seed = 7, secs = 60) => {
+  const { sim } = mk(trackId, carId, seed); const out = [];
+  for (let i = 0; i < secs * 120; i++) { sim.step(NO); const s = sim.snapshot(); for (const e of s.events || []) if (e.type === 'explosion' || e.type === 'wreck') out.push([+(i / 120).toFixed(1), e.type]); }
+  return out;
+};
+const host = createRenderHost(document.getElementById('c'));
+host.resize(1280, 720);
+window.host = host;
+const post = (n, d) => fetch('http://localhost:8001/' + n, { method: 'POST', body: d }).then((r) => r.text());
+/** capture({track, car, seed, t0, dur, fps, name, cam, every}) → posts JPEG frames to assets/frames/<name>/NNNN.jpg */
+window.capture = async ({ track: trackId, car = 'hammer', seed = 7, t0 = 0, dur = 4, fps = 20, name, cam = 0, still = false }) => {
+  const { cfg, sim, track } = mk(trackId, car, seed);
+  const ctl = createRaceController(host, track, cfg); host.resize(1280, 720);
+  for (let i = 0; i < cam; i++) ctl.cycleCamera();
+  for (let i = 0; i < t0 * 120; i++) sim.step(NO);
+  let a = sim.snapshot(), b = a; const per = 120 / fps, n = still ? 1 : Math.round(dur * fps);
+  for (let f = 0; f < n; f++) {
+    for (let k = 0; k < per; k++) { sim.step(NO); a = b; b = sim.snapshot(); }
+    ctl.update(a, b, 1, 1 / fps); host.render();
+    const url = document.getElementById('c').toDataURL('image/jpeg', 0.88);
+    await post(still ? `shots/${name}.jpg` : `frames/${name}/${String(f + 1).padStart(4, '0')}.jpg`, url);
+  }
+  ctl.dispose();
+  return n;
+};
+window.ready = true;
+</script>

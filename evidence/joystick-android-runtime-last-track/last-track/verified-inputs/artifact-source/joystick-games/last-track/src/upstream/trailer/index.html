@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=1920, height=1080"><title>Last Track — Trailer</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+:root{--black:#0b0b14;--navy:#1d2b53;--plum:#7e2553;--green:#008751;--rust:#ab5236;--dgrey:#5f574f;--lgrey:#c2c3c7;--white:#fff1e8;--red:#ff004d;--orange:#ffa300;--yellow:#ffec27;--lime:#00e436;--sky:#29adff;--lav:#83769c;--pink:#ff77a8;--sand:#ffccaa}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--black)}
+body{font-family:'League Gothic',sans-serif;color:var(--white)}
+.mono{font-family:'Space Mono',monospace;letter-spacing:.04em}
+#root{position:relative;width:100%;height:100%;overflow:hidden;background:var(--black)}
+.scene{position:absolute;inset:0;overflow:hidden}
+.vid,.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.vid.dim{filter:brightness(.45) saturate(.8)}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,20,.86),rgba(11,11,20,.25) 70%,rgba(11,11,20,.0))}
+.shade.light{background:linear-gradient(90deg,rgba(11,11,20,.7),rgba(11,11,20,.1) 60%)}
+.shade.bottom{background:linear-gradient(0deg,rgba(11,11,20,.92),rgba(11,11,20,0) 55%)}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 160px}
+.card.left{align-items:flex-start;text-align:left;padding-left:140px}
+.card h1{font-size:200px;line-height:.95;font-weight:400;letter-spacing:.04em;text-shadow:0 6px 0 rgba(0,0,0,.6)}
+.card h1.huge{font-size:300px;line-height:.9}
+.kicker{font-family:'Space Mono',monospace;font-size:34px;letter-spacing:.3em;color:var(--lgrey);margin-bottom:26px}
+em{font-style:normal}.y{color:var(--yellow)}.g{color:var(--lime)}.r{color:var(--red)}
+.cash{font-size:84px;color:var(--lime);margin-top:30px}.cash.big{position:absolute;right:120px;bottom:90px;font-size:110px;color:var(--yellow)}
+.bar{height:18px;width:760px;margin-top:28px;background:var(--red)}
+.tag{position:absolute;left:120px;top:90px;font-size:36px;color:var(--lgrey);letter-spacing:.22em}
+.stripes{position:absolute;inset:-100px;background:repeating-linear-gradient(115deg,var(--navy) 0 90px,#16204a 90px 180px);opacity:.9}
+.stripes::after{content:'';position:absolute;left:0;right:0;bottom:200px;height:30px;background:var(--c)}
+.carimg{position:absolute;right:20px;top:120px;width:1260px;height:auto}
+.carname{position:absolute;left:120px;bottom:150px;width:820px}
+.carname h2{font-size:300px;line-height:.85;font-weight:400;text-shadow:0 8px 0 rgba(0,0,0,.6)}
+.carname p{font-size:30px;color:var(--sand);margin:18px 0 22px;max-width:760px}
+.stats{display:flex;gap:34px;font-size:28px;color:var(--lgrey)}.stats b{color:var(--yellow);display:block;font-size:34px}
+.grid{position:absolute;left:120px;right:120px;top:190px;bottom:60px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:34px 40px}
+.rv{position:relative;background:var(--navy);border:6px solid var(--lav);overflow:hidden}
+.rv img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
+.rv figcaption{position:absolute;left:0;right:0;bottom:0;padding:10px 16px;background:rgba(11,11,20,.88);display:flex;flex-direction:column}
+.rv b{font-weight:400;font-size:44px;letter-spacing:.05em;line-height:1}.rv span{font-size:20px;color:var(--orange)}
+.overlay{pointer-events:none}
+.wcard{position:absolute;left:100px;bottom:110px;display:flex;align-items:center;gap:50px;background:rgba(11,11,20,.88);border-left:22px solid var(--c);padding:34px 60px 34px 40px}
+.wicon{width:330px}.wicon svg{width:100%;display:block}
+.wtxt span{font-size:30px;color:var(--lgrey)}.wtxt h2{font-size:190px;font-weight:400;line-height:.95;color:var(--c)}
+.wtxt p{font-size:32px;color:var(--white);margin-top:6px}
+#s3u{background:var(--navy)}
+.shop{position:absolute;left:120px;top:230px;display:flex;flex-direction:column;gap:46px}
+.up{display:flex;align-items:center;gap:50px}.up>span{font-size:54px;width:330px}
+.pips{display:flex;gap:22px}.pips i{display:block;width:150px;height:62px;background:var(--lime);box-shadow:inset 0 -10px 0 rgba(0,0,0,.25)}
+.tlabel{position:absolute;left:100px;bottom:80px;display:flex;flex-direction:column;gap:2px}
+.tlabel h2{font-size:190px;font-weight:400;line-height:.95;text-shadow:0 6px 0 rgba(0,0,0,.7)}
+.tlabel span{font-size:36px;color:var(--yellow)}.tlabel .prize{color:var(--lime)}
+.title{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.logo{font-weight:400;display:flex;flex-direction:column;align-items:center;line-height:.8;font-size:430px;letter-spacing:.03em;text-shadow:10px 10px 0 var(--plum),0 0 40px rgba(255,0,77,.35)}
+.logo .l1{color:var(--white)}.logo .l2{color:var(--red)}
+.tag2{font-family:'Space Mono',monospace;font-weight:700;font-size:44px;letter-spacing:.14em;color:var(--yellow);margin-top:40px}
+.sub{font-size:30px;color:var(--lgrey);margin-top:20px}
+#flash{position:absolute;inset:0;background:var(--white);opacity:0;z-index:50;pointer-events:none}
+#crt{position:absolute;inset:0;z-index:60;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.26) 0 2px,transparent 2px 4px),radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.72) 100%);mix-blend-mode:multiply}
+#fade{position:absolute;inset:0;background:#000;opacity:0;z-index:70;pointer-events:none}
+</style></head>
+<body>
+<div data-hf-id="hf-qbnw" id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+<video data-hf-id="hf-u2dj" id="v-c0" class="clip vid dim" src="assets/clips/c0.mp4" muted playsinline data-start="2.4" data-duration="4" data-track-index="2"></video>
+<video data-hf-id="hf-9d5e" id="v-c2" class="clip vid" src="assets/clips/c2.mp4" muted playsinline data-start="9.6" data-duration="2.4" data-track-index="2"></video>
+<video data-hf-id="hf-lvtp" id="v-c1" class="clip vid" src="assets/clips/c1.mp4" muted playsinline data-start="24" data-duration="4" data-track-index="2"></video>
+<video data-hf-id="hf-w3n1" id="v-c3" class="clip vid" src="assets/clips/c3.mp4" muted playsinline data-start="28" data-duration="4" data-track-index="2"></video>
+<video data-hf-id="hf-rroa" id="v-c4" class="clip vid" src="assets/clips/c4.mp4" muted playsinline data-start="32" data-duration="4" data-track-index="2"></video>
+<video data-hf-id="hf-ovz4" id="v-c3b" class="clip vid" src="assets/clips/c3.mp4" muted playsinline data-start="44.4" data-duration="3" data-track-index="2"></video>
+<video data-hf-id="hf-f059" id="v-c4b" class="clip vid" src="assets/clips/c4.mp4" muted playsinline data-start="47.4" data-duration="3" data-track-index="2"></video>
+<section data-hf-id="hf-954k" id="s1" class="clip scene" data-start="0" data-duration="9.6" data-track-index="1">
+ 
+ <div data-hf-id="hf-qr75" class="card" id="c1a"><span data-hf-id="hf-52gb" class="kicker">TRANSMISSION · 20XX</span><h1 data-hf-id="hf-lc35">IN THE FUTURE…</h1></div>
+ <div data-hf-id="hf-upb6" class="card" id="c1b"><h1 data-hf-id="hf-8rbm">RACES ARE HELD<br data-hf-id="hf-x5px">ACROSS <em data-hf-id="hf-e8rs" class="y">AMERICA</em>.</h1></div>
+ <div data-hf-id="hf-ynf7" class="card" id="c1c"><h1 data-hf-id="hf-1qhh">DRIVERS RACE FOR <em data-hf-id="hf-5z7m" class="g">MONEY</em></h1><div data-hf-id="hf-hk4e" class="cash mono" id="cash1">$0</div></div>
+ <div data-hf-id="hf-b5xo" class="card" id="c1d"><h1 data-hf-id="hf-xe7z">…AND THEIR <em data-hf-id="hf-btw2" class="r">LIVES</em>.</h1></div></section>
+<section data-hf-id="hf-xlwm" id="s2a" class="clip scene" data-start="9.6" data-duration="2.4" data-track-index="1">
+ 
+ <div data-hf-id="hf-q0n7" class="shade"></div>
+ <div data-hf-id="hf-q63l" class="card left" id="c2a"><h1 data-hf-id="hf-0bp8" class="huge">YOU ARE<br data-hf-id="hf-rsrt"><em data-hf-id="hf-t0ak" class="y">THE ROOKIE.</em></h1><div data-hf-id="hf-c7g5" class="bar r"></div></div></section>
+<section data-hf-id="hf-dqg4" id="s2c0" class="clip scene" data-start="12" data-duration="2.4" data-track-index="1">
+   <div data-hf-id="hf-9dti" class="stripes" style="--c:#ff004d"></div>
+   <div data-hf-id="hf-syeh" class="tag mono" id="ct0">01 / 03 — CHOOSE YOUR RIDE</div>
+   <img data-hf-id="hf-wv1x" class="carimg" id="ci0" src="assets/cars/wasp.png" alt="Wasp">
+   <div data-hf-id="hf-b9mq" class="carname" id="cn0"><h2 data-hf-id="hf-8508">WASP</h2><p data-hf-id="hf-6e07" class="mono">Fast, nimble and paper-thin. One gun, no excuses.</p>
+    <div data-hf-id="hf-3ude" class="stats mono"><span data-hf-id="hf-6t3v">TOP SPEED <b data-hf-id="hf-8s7r">223 KPH</b></span><span data-hf-id="hf-hsiw">ARMOR <b data-hf-id="hf-da6v">130</b></span><span data-hf-id="hf-djdk">WEAPON SLOTS <b data-hf-id="hf-t4n0">1</b></span></div></div></section>
+<section data-hf-id="hf-exr5" id="s2c1" class="clip scene" data-start="14.4" data-duration="2.4" data-track-index="1">
+   <div data-hf-id="hf-6oia" class="stripes" style="--c:#ffa300"></div>
+   <div data-hf-id="hf-7eel" class="tag mono" id="ct1">02 / 03 — CHOOSE YOUR RIDE</div>
+   <img data-hf-id="hf-kzrw" class="carimg" id="ci1" src="assets/cars/hammer.png" alt="Hammer">
+   <div data-hf-id="hf-f7qr" class="carname" id="cn1"><h2 data-hf-id="hf-m3z1">HAMMER</h2><p data-hf-id="hf-0l54" class="mono">Muscle with a roof-mounted arsenal. Three slots of hurt.</p>
+    <div data-hf-id="hf-rism" class="stats mono"><span data-hf-id="hf-4nq3">TOP SPEED <b data-hf-id="hf-sy76">202 KPH</b></span><span data-hf-id="hf-te3k">ARMOR <b data-hf-id="hf-aizx">125</b></span><span data-hf-id="hf-jb1s">WEAPON SLOTS <b data-hf-id="hf-sc0y">3</b></span></div></div></section>
+<section data-hf-id="hf-tg7s" id="s2c2" class="clip scene" data-start="16.8" data-duration="2.4" data-track-index="1">
+   <div data-hf-id="hf-hmav" class="stripes" style="--c:#008751"></div>
+   <div data-hf-id="hf-4sot" class="tag mono" id="ct2">03 / 03 — CHOOSE YOUR RIDE</div>
+   <img data-hf-id="hf-m0wf" class="carimg" id="ci2" src="assets/cars/bulwark.png" alt="Bulwark">
+   <div data-hf-id="hf-6juw" class="carname" id="cn2"><h2 data-hf-id="hf-yhyl">BULWARK</h2><p data-hf-id="hf-cb01" class="mono">An armoured brick. Slow, stubborn, hard to kill.</p>
+    <div data-hf-id="hf-rx3n" class="stats mono"><span data-hf-id="hf-49f2">TOP SPEED <b data-hf-id="hf-1qhw">198 KPH</b></span><span data-hf-id="hf-s76h">ARMOR <b data-hf-id="hf-stkt">190</b></span><span data-hf-id="hf-i44p">WEAPON SLOTS <b data-hf-id="hf-rxpx">2</b></span></div></div></section>
+<section data-hf-id="hf-8ywa" id="s2d" class="clip scene" data-start="19.2" data-duration="4.8" data-track-index="1">
+ <div data-hf-id="hf-fexg" class="tag mono" id="rt">THE FIELD — 8 DRIVERS. NO MERCY.</div>
+ <div data-hf-id="hf-vb60" class="grid" id="rgrid"><figure data-hf-id="hf-tnqt" class="rv" id="rv0"><img data-hf-id="hf-js32" src="assets/portraits/vex.png" alt="Vex Calloway"><figcaption data-hf-id="hf-7c45"><b data-hf-id="hf-ivqg">VEX CALLOWAY</b><span data-hf-id="hf-89mu" class="mono">“The Razor”</span></figcaption></figure><figure data-hf-id="hf-sw30" class="rv" id="rv1"><img data-hf-id="hf-6hme" src="assets/portraits/rust.png" alt="Mama Rust"><figcaption data-hf-id="hf-8rih"><b data-hf-id="hf-s8kt">MAMA RUST</b><span data-hf-id="hf-a3r3" class="mono">“Mama”</span></figcaption></figure><figure data-hf-id="hf-1jyv" class="rv" id="rv2"><img data-hf-id="hf-erpa" src="assets/portraits/fuse.png" alt="Doc Fuse"><figcaption data-hf-id="hf-9yfk"><b data-hf-id="hf-cekq">DOC FUSE</b><span data-hf-id="hf-2ia3" class="mono">“The Surgeon”</span></figcaption></figure><figure data-hf-id="hf-xluu" class="rv" id="rv3"><img data-hf-id="hf-w58g" src="assets/portraits/kane.png" alt="Ironjaw Kane"><figcaption data-hf-id="hf-9k4j"><b data-hf-id="hf-3c24">IRONJAW KANE</b><span data-hf-id="hf-opu3" class="mono">“The Warden”</span></figcaption></figure><figure data-hf-id="hf-69qp" class="rv" id="rv4"><img data-hf-id="hf-h0p2" src="assets/portraits/grave.png" alt="Tamsin Gault"><figcaption data-hf-id="hf-7kle"><b data-hf-id="hf-pht2">TAMSIN GAULT</b><span data-hf-id="hf-uol7" class="mono">“The Gravedigger”</span></figcaption></figure><figure data-hf-id="hf-5i2w" class="rv" id="rv5"><img data-hf-id="hf-d8ac" src="assets/portraits/slick.png" alt="Sonny Vance"><figcaption data-hf-id="hf-76ad"><b data-hf-id="hf-xpiz">SONNY VANCE</b><span data-hf-id="hf-onb7" class="mono">“Slick”</span></figcaption></figure><figure data-hf-id="hf-gdkj" class="rv" id="rv6"><img data-hf-id="hf-pq02" src="assets/portraits/cinder.png" alt="Jonah Cinder"><figcaption data-hf-id="hf-8d7g"><b data-hf-id="hf-igqa">JONAH CINDER</b><span data-hf-id="hf-a8mm" class="mono">“Brother Cinder”</span></figcaption></figure><figure data-hf-id="hf-cfgi" class="rv" id="rv7"><img data-hf-id="hf-pjuz" src="assets/portraits/dolores.png" alt="Dolores Maddox"><figcaption data-hf-id="hf-7ywf"><b data-hf-id="hf-32ge">DOLORES MADDOX</b><span data-hf-id="hf-d3fm" class="mono">“Wrecking Ball”</span></figcaption></figure></div></section>
+<section data-hf-id="hf-8mg7" id="s3v0" class="clip scene" data-start="24" data-duration="4" data-track-index="1"><div data-hf-id="hf-o3o7" class="shade light"></div></section>
+<section data-hf-id="hf-uqs2" id="s3v1" class="clip scene" data-start="28" data-duration="4" data-track-index="1"><div data-hf-id="hf-3frr" class="shade light"></div></section>
+<section data-hf-id="hf-aa0u" id="s3v2" class="clip scene" data-start="32" data-duration="4" data-track-index="1"><div data-hf-id="hf-31gq" class="shade light"></div></section>
+<section data-hf-id="hf-f8zk" id="s3w0" class="clip scene overlay" data-start="24" data-duration="2.4" data-track-index="1"><div data-hf-id="hf-dega" class="wcard" id="wc0" style="--c:#ffec27"><div data-hf-id="hf-h4a8" class="wicon"><svg data-hf-id="hf-b8os" viewBox="0 0 200 120"><g data-hf-id="hf-ajtv" fill="#ffec27"><rect data-hf-id="hf-pcs7" x="10" y="52" width="26" height="10" /><rect data-hf-id="hf-tpm6" x="44" y="38" width="26" height="10" /><rect data-hf-id="hf-y9l5" x="78" y="52" width="26" height="10" /><rect data-hf-id="hf-yx10" x="112" y="38" width="26" height="10" /><rect data-hf-id="hf-naix" x="146" y="52" width="26" height="10" /><rect data-hf-id="hf-3aix" x="150" y="30" width="40" height="60" opacity=".35" /></g></svg></div><div data-hf-id="hf-zdi5" class="wtxt"><span data-hf-id="hf-0117" class="mono">ARM — 1 / 5</span><h2 data-hf-id="hf-hc47">MACHINE GUNS</h2><p data-hf-id="hf-df07" class="mono">Rapid-fire. Never enough.</p></div></div></section>
+<section data-hf-id="hf-h5j9" id="s3w1" class="clip scene overlay" data-start="26.4" data-duration="2.4" data-track-index="1"><div data-hf-id="hf-zem6" class="wcard" id="wc1" style="--c:#ffa300"><div data-hf-id="hf-2k7c" class="wicon"><svg data-hf-id="hf-nigk" viewBox="0 0 200 120"><g data-hf-id="hf-wp1q" fill="#ffa300"><polygon data-hf-id="hf-8jco" points="20,60 60,40 160,40 190,60 160,80 60,80" /><polygon data-hf-id="hf-cmqx" points="10,60 40,45 40,75" fill="#ff004d" /></g></svg></div><div data-hf-id="hf-clyp" class="wtxt"><span data-hf-id="hf-xh4u" class="mono">ARM — 2 / 5</span><h2 data-hf-id="hf-xtwk">ROCKETS</h2><p data-hf-id="hf-k3q7" class="mono">Fire and forget. Or don’t.</p></div></div></section>
+<section data-hf-id="hf-884s" id="s3w2" class="clip scene overlay" data-start="28.8" data-duration="2.4" data-track-index="1"><div data-hf-id="hf-88gh" class="wcard" id="wc2" style="--c:#29adff"><div data-hf-id="hf-1da9" class="wicon"><svg data-hf-id="hf-mbjh" viewBox="0 0 200 120"><g data-hf-id="hf-d3xy" fill="#29adff"><polygon data-hf-id="hf-54lu" points="40,62 48,80 58,80 50,88 54,100 40,92 26,100 30,88 22,80 32,80" /><polygon data-hf-id="hf-ejk0" points="100,32 108,50 118,50 110,58 114,70 100,62 86,70 90,58 82,50 92,50" /><polygon data-hf-id="hf-n6w6" points="150,67 158,85 168,85 160,93 164,105 150,97 136,105 140,93 132,85 142,85" /><polygon data-hf-id="hf-6kk1" points="75,12 83,30 93,30 85,38 89,50 75,42 61,50 65,38 57,30 67,30" /></g></svg></div><div data-hf-id="hf-dsvs" class="wtxt"><span data-hf-id="hf-f4bl" class="mono">ARM — 3 / 5</span><h2 data-hf-id="hf-zpxl">CALTROPS</h2><p data-hf-id="hf-fx99" class="mono">Pop their tyres. Leave them behind.</p></div></div></section>
+<section data-hf-id="hf-l2ut" id="s3w3" class="clip scene overlay" data-start="31.2" data-duration="2.4" data-track-index="1"><div data-hf-id="hf-10ug" class="wcard" id="wc3" style="--c:#ff004d"><div data-hf-id="hf-1rla" class="wicon"><svg data-hf-id="hf-mpui" viewBox="0 0 200 120"><g data-hf-id="hf-cftj" fill="none" stroke="#ff004d" stroke-width="6"><circle data-hf-id="hf-sjej" cx="100" cy="60" r="44" /><circle data-hf-id="hf-xd1l" cx="100" cy="60" r="20" /><path data-hf-id="hf-yvku" d="M100 4v30M100 86v30M44 60H14M186 60h-30" /></g><polygon data-hf-id="hf-8xxo" points="60,60 140,60 160,60 140,70 60,70" fill="#fff1e8" opacity=".0" /></svg></div><div data-hf-id="hf-dekr" class="wtxt"><span data-hf-id="hf-nw9w" class="mono">ARM — 4 / 5</span><h2 data-hf-id="hf-hvkr">TERMINATORS</h2><p data-hf-id="hf-dvlf" class="mono">Homing. Heavy. Final.</p></div></div></section>
+<section data-hf-id="hf-6id8" id="s3w4" class="clip scene overlay" data-start="33.6" data-duration="2.4" data-track-index="1"><div data-hf-id="hf-rq6u" class="wcard" id="wc4" style="--c:#ff77a8"><div data-hf-id="hf-0ko7" class="wicon"><svg data-hf-id="hf-opdn" viewBox="0 0 200 120"><g data-hf-id="hf-h3qv" fill="#ff77a8"><ellipse data-hf-id="hf-f1iq" cx="100" cy="76" rx="62" ry="22" /><rect data-hf-id="hf-1u7y" x="92" y="38" width="16" height="30" /></g><circle data-hf-id="hf-vaw4" id="mnl" cx="100" cy="34" r="8" fill="#ff004d" /></svg></div><div data-hf-id="hf-bf1m" class="wtxt"><span data-hf-id="hf-3mtj" class="mono">ARM — 5 / 5</span><h2 data-hf-id="hf-ohut">MINES</h2><p data-hf-id="hf-g76v" class="mono">Drop the surprise.</p></div></div></section>
+<section data-hf-id="hf-rclf" id="s3u" class="clip scene" data-start="36" data-duration="2.4" data-track-index="1">
+ <div data-hf-id="hf-95tm" class="tag mono">UPGRADE OR DIE</div><div data-hf-id="hf-o4r8" class="shop"><div data-hf-id="hf-ks8u" class="up" id="up0"><span data-hf-id="hf-jwtz" class="mono">ARMOR</span><div data-hf-id="hf-8jnu" class="pips"><i data-hf-id="hf-dul4" id="pip00"></i><i data-hf-id="hf-gtup" id="pip01"></i><i data-hf-id="hf-kryq" id="pip02"></i></div></div><div data-hf-id="hf-oqcv" class="up" id="up1"><span data-hf-id="hf-t0hu" class="mono">ENGINE</span><div data-hf-id="hf-xt1q" class="pips"><i data-hf-id="hf-1pn7" id="pip10"></i><i data-hf-id="hf-xrj6" id="pip11"></i><i data-hf-id="hf-ttf5" id="pip12"></i></div></div><div data-hf-id="hf-g2h0" class="up" id="up2"><span data-hf-id="hf-0ia7" class="mono">TYRES</span><div data-hf-id="hf-y7cr" class="pips"><i data-hf-id="hf-jsby" id="pip20"></i><i data-hf-id="hf-nqfz" id="pip21"></i><i data-hf-id="hf-f2k4" id="pip22"></i></div></div></div>
+ <div data-hf-id="hf-mpe4" class="cash mono big" id="cash2">$5,000</div></section>
+<section data-hf-id="hf-v4ud" id="s4t0" class="clip scene" data-start="38.4" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-gx08" class="shot" data-layout-allow-overflow="" id="sh0" src="assets/shots/t_scrapyard.jpg" alt="Detroit Scrapyard"><div data-hf-id="hf-5anw" class="shade bottom"></div><div data-hf-id="hf-trmm" class="tlabel"><span data-hf-id="hf-ud9d" class="mono">01 / 10 · DETROIT</span><h2 data-hf-id="hf-ml1j">DETROIT SCRAPYARD</h2><span data-hf-id="hf-6d4l" class="mono prize">PURSE $4,000</span></div></section>
+<section data-hf-id="hf-4x4h" id="s4t1" class="clip scene" data-start="39" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-4t2w" class="shot" data-layout-allow-overflow="" id="sh1" src="assets/shots/t_strip.jpg" alt="Vegas Strip"><div data-hf-id="hf-27ck" class="shade bottom"></div><div data-hf-id="hf-ovsy" class="tlabel"><span data-hf-id="hf-3o3n" class="mono">02 / 10 · LAS VEGAS</span><h2 data-hf-id="hf-n5yd">VEGAS STRIP</h2><span data-hf-id="hf-qjrz" class="mono prize">PURSE $6,000</span></div></section>
+<section data-hf-id="hf-620m" id="s4t2" class="clip scene" data-start="39.6" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-45xm" class="shot" data-layout-allow-overflow="" id="sh2" src="assets/shots/t_mojave.jpg" alt="Mojave Run"><div data-hf-id="hf-10fh" class="shade bottom"></div><div data-hf-id="hf-pa3z" class="tlabel"><span data-hf-id="hf-qzes" class="mono">03 / 10 · MOJAVE</span><h2 data-hf-id="hf-7b2a">MOJAVE RUN</h2><span data-hf-id="hf-lgl2" class="mono prize">PURSE $9,000</span></div></section>
+<section data-hf-id="hf-emjn" id="s4t3" class="clip scene" data-start="40.2" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-crwl" class="shot" data-layout-allow-overflow="" id="sh3" src="assets/shots/t_bayou.jpg" alt="Bayou Bloodbath"><div data-hf-id="hf-1eqi" class="shade bottom"></div><div data-hf-id="hf-pof0" class="tlabel"><span data-hf-id="hf-2vy3" class="mono">04 / 10 · NEW ORLEANS</span><h2 data-hf-id="hf-d7ng">BAYOU BLOODBATH</h2><span data-hf-id="hf-hzq4" class="mono prize">PURSE $12,000</span></div></section>
+<section data-hf-id="hf-29rm" id="s4t4" class="clip scene" data-start="40.8" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-ffxh" class="shot" data-layout-allow-overflow="" id="sh4" src="assets/shots/t_lakeshore.jpg" alt="Lakeshore Drive"><div data-hf-id="hf-3e9n" class="shade bottom"></div><div data-hf-id="hf-q2q1" class="tlabel"><span data-hf-id="hf-lve2" class="mono">05 / 10 · CHICAGO</span><h2 data-hf-id="hf-0615">LAKESHORE DRIVE</h2><span data-hf-id="hf-22z4" class="mono prize">PURSE $16,000</span></div></section>
+<section data-hf-id="hf-1pso" id="s4t5" class="clip scene" data-start="41.4" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-4s7b" class="shot" data-layout-allow-overflow="" id="sh5" src="assets/shots/t_badlands.jpg" alt="Badlands Blitz"><div data-hf-id="hf-3sko" class="shade bottom"></div><div data-hf-id="hf-qh12" class="tlabel"><span data-hf-id="hf-7fnu" class="mono">06 / 10 · SOUTH DAKOTA</span><h2 data-hf-id="hf-i16r">BADLANDS BLITZ</h2><span data-hf-id="hf-96dt" class="mono prize">PURSE $20,000</span></div></section>
+<section data-hf-id="hf-xt8g" id="s4t6" class="clip scene" data-start="42" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-yenm" class="shot" data-layout-allow-overflow="" id="sh6" src="assets/shots/t_spillway.jpg" alt="Spillway Run"><div data-hf-id="hf-2lnl" class="shade bottom"></div><div data-hf-id="hf-qvc3" class="tlabel"><span data-hf-id="hf-vtqr" class="mono">07 / 10 · LOS ANGELES</span><h2 data-hf-id="hf-b36r">SPILLWAY RUN</h2><span data-hf-id="hf-xvj6" class="mono prize">PURSE $25,000</span></div></section>
+<section data-hf-id="hf-bd05" id="s4t7" class="clip scene" data-start="42.6" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-o7sf" class="shot" data-layout-allow-overflow="" id="sh7" src="assets/shots/t_rustbelt.jpg" alt="Rustbelt Rumble"><div data-hf-id="hf-2zym" class="shade bottom"></div><div data-hf-id="hf-r9n4" class="tlabel"><span data-hf-id="hf-6c3b" class="mono">08 / 10 · PITTSBURGH</span><h2 data-hf-id="hf-f2ox">RUSTBELT RUMBLE</h2><span data-hf-id="hf-9qb2" class="mono prize">PURSE $29,000</span></div></section>
+<section data-hf-id="hf-2wo1" id="s4t8" class="clip scene" data-start="43.2" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-1tsb" class="shot" data-layout-allow-overflow="" id="sh8" src="assets/shots/t_harbor.jpg" alt="Gulf Harbor"><div data-hf-id="hf-4zhr" class="shade bottom"></div><div data-hf-id="hf-lb1p" class="tlabel"><span data-hf-id="hf-d9bk" class="mono">09 / 10 · HOUSTON</span><h2 data-hf-id="hf-goqd">GULF HARBOR</h2><span data-hf-id="hf-s4ip" class="mono prize">PURSE $33,000</span></div></section>
+<section data-hf-id="hf-id1e" id="s4t9" class="clip scene" data-start="43.8" data-duration="0.6" data-track-index="1"><img data-hf-id="hf-lcb9" class="shot" data-layout-allow-overflow="" id="sh9" src="assets/shots/t_liberty.jpg" alt="Liberty Deathtrack"><div data-hf-id="hf-5dss" class="shade bottom"></div><div data-hf-id="hf-lpcq" class="tlabel"><span data-hf-id="hf-adjl" class="mono">10 / 10 · NEW YORK</span><h2 data-hf-id="hf-t8zf">LIBERTY DEATHTRACK</h2><span data-hf-id="hf-qeyv" class="mono prize">PURSE $40,000</span></div></section>
+<section data-hf-id="hf-5qzo" id="s4a" class="clip scene" data-start="44.4" data-duration="3" data-track-index="1"><div data-hf-id="hf-2n5p" class="shade light"></div><div data-hf-id="hf-nb6z" class="card left" id="c4a"><h1 data-hf-id="hf-adnh" class="huge">RACE FOR <em data-hf-id="hf-wu6c" class="g">MONEY.</em></h1></div></section>
+<section data-hf-id="hf-s1fw" id="s4b" class="clip scene" data-start="47.4" data-duration="3" data-track-index="1"><div data-hf-id="hf-5faw" class="shade light"></div><div data-hf-id="hf-ghog" class="card left" id="c4b"><h1 data-hf-id="hf-a9pt" class="huge">RACE FOR <em data-hf-id="hf-7rxs" class="r">YOUR LIFE.</em></h1></div></section>
+<section data-hf-id="hf-zriz" id="s5a" class="clip scene" data-start="50.4" data-duration="2.4" data-track-index="1"><div data-hf-id="hf-46hp" class="card" id="c5a"><span data-hf-id="hf-grwv" class="kicker">YOU ARE THE ROOKIE</span><h1 data-hf-id="hf-ra5z">WELCOME TO</h1></div></section>
+<section data-hf-id="hf-pn4h" id="s5b" class="clip scene" data-start="52.8" data-duration="7.2" data-track-index="1"><div data-hf-id="hf-m8iq" class="title" id="title"><h1 data-hf-id="hf-jz3w" class="logo" id="logo"><span data-hf-id="hf-u70w" class="l1">LAST</span><span data-hf-id="hf-ly0a" class="l2">TRACK</span></h1><p data-hf-id="hf-d2xm" class="tag2" id="tag2">RACE FOR MONEY. RACE FOR YOUR LIFE.</p><p data-hf-id="hf-ogjs" class="mono sub" id="sub">VEHICULAR COMBAT RACING · 16 COLOURS · NO MERCY</p></div></section>
+
+<audio data-hf-id="hf-nddy" id="score" src="assets/music/trailer.mp3" data-start="0" data-duration="60" data-track-index="9" data-volume="1"></audio>
+<div data-hf-id="hf-cvmb" id="flash" data-layout-allow-occlusion=""></div><div data-hf-id="hf-3nrw" id="crt" data-layout-allow-occlusion=""></div>
+
+
+<div data-hf-id="hf-cafo" id="grain-overlay" style="
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+  ">
+  <div data-hf-id="hf-0qtj" class="grain-texture"></div>
+</div>
+
+<style>
+  @keyframes hf-grain-noise {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    10% {
+      transform: translate(-5%, -5%);
+    }
+    20% {
+      transform: translate(-10%, 5%);
+    }
+    30% {
+      transform: translate(5%, -10%);
+    }
+    40% {
+      transform: translate(-5%, 15%);
+    }
+    50% {
+      transform: translate(-10%, 5%);
+    }
+    60% {
+      transform: translate(15%, 0);
+    }
+    70% {
+      transform: translate(0, 10%);
+    }
+    80% {
+      transform: translate(-15%, 0);
+    }
+    90% {
+      transform: translate(10%, 5%);
+    }
+  }
+
+  #grain-overlay .grain-texture {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.15;
+    animation: hf-grain-noise 0.5s steps(1) infinite;
+  }
+</style>
+
+<div data-hf-id="hf-128z" id="fade"></div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+const set = (s, v) => tl.set(s, v, 0);
+const inOut = (sel, a, b, o = {}) => { tl.fromTo(sel, { opacity: 0, y: o.y ?? 30, scale: o.s ?? 1 }, { opacity: 1, y: 0, scale: 1, duration: o.d ?? 0.35, ease: 'power3.out' }, a); tl.to(sel, { opacity: 0, duration: 0.2, ease: 'power1.in' }, b - 0.2); };
+const shake = (sel, t, amp = 14) => { for (let k = 0; k < 6; k++) tl.to(sel, { x: (k % 2 ? 1 : -1) * amp * (1 - k / 6), y: (k % 3 - 1) * amp * 0.5 * (1 - k / 6), duration: 0.04 }, t + k * 0.04); tl.to(sel, { x: 0, y: 0, duration: 0.05 }, t + 0.26); };
+inOut('#c1a', 0.4, 2.4, { y: 0 }); tl.fromTo('#c1a h1', { scale: 1.12 }, { scale: 1, duration: 2, ease: 'power2.out' }, 0.4);
+inOut('#c1b', 2.4, 4.8); inOut('#c1c', 4.8, 7.2); inOut('#c1d', 7.2, 9.55, { s: 1.12, d: 0.15 });
+tl.fromTo('#v-c0', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 2.4); tl.to('#v-c0', { opacity: 0, duration: 0.4 }, 6.0);
+const cashObj = { v: 0 }; tl.to(cashObj, { v: 250000, duration: 2.2, ease: 'power2.in', onUpdate: () => { document.getElementById('cash1').textContent = '$' + Math.round(cashObj.v).toLocaleString('en-US'); } }, 4.9);
+tl.to('#c1d em', { x: 6, duration: 0.05, repeat: 7, yoyo: true, ease: 'none' }, 8.4); tl.to('#c1d em', { x: 0, duration: 0.03 }, 8.85);
+tl.fromTo('#c2a h1', { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'expo.out' }, 9.6); shake('#c2a', 9.6, 18); tl.fromTo('#c2a .bar', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'power4.out', transformOrigin: 'left center' }, 9.8);
+tl.fromTo('#v-c2', { scale: 1.12 }, { scale: 1, duration: 2.4, ease: 'none' }, 9.6);
+tl.fromTo('#ci0', { x: 220, opacity: 0, scale: .92 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'power4.out' }, 12); tl.to('#ci0', { x: -40, scale: 1.04, duration: 1.9, ease: 'none' }, 12.5);
+ tl.fromTo('#cn0 h2', { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power4.out' }, 12.05); tl.fromTo('#cn0 p, #cn0 .stats', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.12 }, 12.3);
+ tl.fromTo('#s2c0 .stripes', { xPercent: -12 }, { xPercent: 0, duration: 2.4, ease: 'none' }, 12); shake('#cn0', 12, 6);
+tl.fromTo('#ci1', { x: 220, opacity: 0, scale: .92 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'power4.out' }, 14.4); tl.to('#ci1', { x: -40, scale: 1.04, duration: 1.9, ease: 'none' }, 14.9);
+ tl.fromTo('#cn1 h2', { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power4.out' }, 14.45); tl.fromTo('#cn1 p, #cn1 .stats', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.12 }, 14.7);
+ tl.fromTo('#s2c1 .stripes', { xPercent: -12 }, { xPercent: 0, duration: 2.4, ease: 'none' }, 14.4); shake('#cn1', 14.4, 6);
+tl.fromTo('#ci2', { x: 220, opacity: 0, scale: .92 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'power4.out' }, 16.8); tl.to('#ci2', { x: -40, scale: 1.04, duration: 1.9, ease: 'none' }, 17.3);
+ tl.fromTo('#cn2 h2', { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power4.out' }, 16.85); tl.fromTo('#cn2 p, #cn2 .stats', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.12 }, 17.1);
+ tl.fromTo('#s2c2 .stripes', { xPercent: -12 }, { xPercent: 0, duration: 2.4, ease: 'none' }, 16.8); shake('#cn2', 16.8, 6);
+tl.from('#rt', { opacity: 0, x: -40, duration: 0.3 }, 19.2); 
+tl.fromTo('#rv0', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 19.2);
+tl.fromTo('#rv1', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 19.38);
+tl.fromTo('#rv2', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 19.56);
+tl.fromTo('#rv3', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 19.74);
+tl.fromTo('#rv4', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 21.6);
+tl.fromTo('#rv5', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 21.78);
+tl.fromTo('#rv6', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 21.96);
+tl.fromTo('#rv7', { opacity: 0, y: 60, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 22.14);
+shake('#rgrid', 19.2, 8); shake('#rgrid', 21.6, 8);
+tl.fromTo('#v-c1', { scale: 1.1 }, { scale: 1, duration: 4, ease: 'none' }, 24);
+tl.fromTo('#v-c3', { scale: 1.1 }, { scale: 1, duration: 4, ease: 'none' }, 28);
+tl.fromTo('#v-c4', { scale: 1.1 }, { scale: 1, duration: 4, ease: 'none' }, 32);
+tl.fromTo('#wc0', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, 24); tl.fromTo('#wc0 .wicon', { scale: 1.8, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(2)' }, 24); tl.to('#wc0', { x: 160, opacity: 0, duration: 0.18, ease: 'power2.in' }, 26.2); shake('#wc0', 24, 10);
+tl.fromTo('#wc1', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, 26.4); tl.fromTo('#wc1 .wicon', { scale: 1.8, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(2)' }, 26.4); tl.to('#wc1', { x: 160, opacity: 0, duration: 0.18, ease: 'power2.in' }, 28.6); shake('#wc1', 26.4, 10);
+tl.fromTo('#wc2', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, 28.8); tl.fromTo('#wc2 .wicon', { scale: 1.8, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(2)' }, 28.8); tl.to('#wc2', { x: 160, opacity: 0, duration: 0.18, ease: 'power2.in' }, 31); shake('#wc2', 28.8, 10);
+tl.fromTo('#wc3', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, 31.2); tl.fromTo('#wc3 .wicon', { scale: 1.8, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(2)' }, 31.2); tl.to('#wc3', { x: 160, opacity: 0, duration: 0.18, ease: 'power2.in' }, 33.4); shake('#wc3', 31.2, 10);
+tl.fromTo('#wc4', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, 33.6); tl.fromTo('#wc4 .wicon', { scale: 1.8, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(2)' }, 33.6); tl.to('#wc4', { x: 160, opacity: 0, duration: 0.18, ease: 'power2.in' }, 35.8); shake('#wc4', 33.6, 10);
+tl.to('#mnl', { opacity: 0.2, duration: 0.15, repeat: 7, yoyo: true, ease: 'none' }, 33.65);
+tl.from('#s3u .tag', { opacity: 0, duration: .3 }, 36); const lvl = [[0,0.6],[1,1.2],[2,1.8]]; lvl.forEach(([i, o]) => { for (let k = 0; k < 3; k++) tl.fromTo('#pip' + i + k, { scale: 0, opacity: 0.2 }, { scale: 1, opacity: 1, duration: 0.18, ease: 'back.out(3)' }, 36.0 + (i * 3 + k) * 0.22 + 0.2); });
+ tl.from('.up', { x: -200, opacity: 0, stagger: 0.12, duration: 0.3, ease: 'power3.out' }, 36);
+ const cash2 = { v: 5000 }; tl.to(cash2, { v: 0, duration: 1.8, ease: 'none', onUpdate: () => { document.getElementById('cash2').textContent = '$' + Math.round(cash2.v).toLocaleString('en-US'); } }, 36.1);
+tl.fromTo('#sh0', { scale: 1.0 }, { scale: 1.15, duration: 0.6, ease: 'none' }, 38.4); tl.fromTo('#s4t0 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 38.4);
+tl.fromTo('#sh1', { scale: 1.0 }, { scale: 1.09, duration: 0.6, ease: 'none' }, 39); tl.fromTo('#s4t1 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 39);
+tl.fromTo('#sh2', { scale: 1.0 }, { scale: 1.15, duration: 0.6, ease: 'none' }, 39.6); tl.fromTo('#s4t2 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 39.6);
+tl.fromTo('#sh3', { scale: 1.0 }, { scale: 1.09, duration: 0.6, ease: 'none' }, 40.2); tl.fromTo('#s4t3 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 40.2);
+tl.fromTo('#sh4', { scale: 1.0 }, { scale: 1.15, duration: 0.6, ease: 'none' }, 40.8); tl.fromTo('#s4t4 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 40.8);
+tl.fromTo('#sh5', { scale: 1.0 }, { scale: 1.09, duration: 0.6, ease: 'none' }, 41.4); tl.fromTo('#s4t5 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 41.4);
+tl.fromTo('#sh6', { scale: 1.0 }, { scale: 1.15, duration: 0.6, ease: 'none' }, 42); tl.fromTo('#s4t6 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 42);
+tl.fromTo('#sh7', { scale: 1.0 }, { scale: 1.09, duration: 0.6, ease: 'none' }, 42.6); tl.fromTo('#s4t7 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 42.6);
+tl.fromTo('#sh8', { scale: 1.0 }, { scale: 1.15, duration: 0.6, ease: 'none' }, 43.2); tl.fromTo('#s4t8 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 43.2);
+tl.fromTo('#sh9', { scale: 1.0 }, { scale: 1.09, duration: 0.6, ease: 'none' }, 43.8); tl.fromTo('#s4t9 .tlabel', { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: 'power3.out' }, 43.8);
+tl.fromTo('#v-c3b', { scale: 1.1 }, { scale: 1, duration: 3, ease: 'none' }, 44.4); tl.fromTo('#v-c4b', { scale: 1.1 }, { scale: 1, duration: 3, ease: 'none' }, 47.4);
+tl.fromTo('#c4a h1', { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 44.4); shake('#c4a', 44.4, 14); tl.fromTo('#c4b h1', { opacity: 0, x: 200, scale: 1.2 }, { opacity: 1, x: 0, scale: 1, duration: 0.25, ease: 'expo.out' }, 47.4); shake('#c4b', 47.4, 22);
+tl.fromTo('#flash', { opacity: 0.084 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 0);
+tl.fromTo('#flash', { opacity: 0.106 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 2.4);
+tl.fromTo('#flash', { opacity: 0.129 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 4.8);
+tl.fromTo('#flash', { opacity: 0.151 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 7.2);
+tl.fromTo('#flash', { opacity: 0.85 }, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 9.6);
+tl.fromTo('#flash', { opacity: 0.224 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 12);
+tl.fromTo('#flash', { opacity: 0.224 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 14.4);
+tl.fromTo('#flash', { opacity: 0.224 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 16.8);
+tl.fromTo('#flash', { opacity: 0.224 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 19.2);
+tl.fromTo('#flash', { opacity: 0.224 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 21.6);
+tl.fromTo('#flash', { opacity: 0.85 }, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 24);
+tl.fromTo('#flash', { opacity: 0.252 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 26.4);
+tl.fromTo('#flash', { opacity: 0.252 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 28.8);
+tl.fromTo('#flash', { opacity: 0.252 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 31.2);
+tl.fromTo('#flash', { opacity: 0.252 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 33.6);
+tl.fromTo('#flash', { opacity: 0.252 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 36);
+tl.fromTo('#flash', { opacity: 0.85 }, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 38.4);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 39);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 39.6);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 40.2);
+tl.fromTo('#flash', { opacity: 0.266 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 40.8);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 41.4);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 42);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 42.6);
+tl.fromTo('#flash', { opacity: 0.266 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 43.2);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 43.8);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 44.4);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 45);
+tl.fromTo('#flash', { opacity: 0.266 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 45.6);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 46.2);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 46.8);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 47.4);
+tl.fromTo('#flash', { opacity: 0.266 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 48);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 48.6);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 49.2);
+tl.fromTo('#flash', { opacity: 0.154 }, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 49.8);
+tl.fromTo('#flash', { opacity: 0.85 }, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 52.8);
+tl.fromTo('#c5a h1', { scale: 1.25, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.6, ease: 'power2.out' }, 50.4); tl.fromTo('#c5a .kicker', { opacity: 0 }, { opacity: 1, duration: .5 }, 50.6);
+ tl.to('#c5a', { opacity: 0.1, duration: 0.05, repeat: 5, yoyo: true }, 51.8); tl.set('#c5a', { opacity: 0 }, 52.2);
+tl.fromTo('#logo', { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.22, ease: 'expo.out' }, 52.8); shake('#title', 52.8, 30);
+ tl.fromTo('#logo .l1', { x: -30 }, { x: 0, duration: 1.2, ease: 'power3.out' }, 52.8); tl.fromTo('#logo .l2', { x: 30 }, { x: 0, duration: 1.2, ease: 'power3.out' }, 52.8);
+ tl.fromTo('#tag2', { opacity: 0, y: 20, scale: 1.08 }, { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power2.out' }, 54.6);
+ tl.fromTo('#sub', { opacity: 0 }, { opacity: 1, duration: 0.8 }, 56.2);
+ tl.to('#logo', { textShadow: '8px 0 #ff004d, -8px 0 #29adff', duration: 0.06, repeat: 3, yoyo: true }, 55.2);
+ tl.to('#fade', { opacity: 1, duration: 1.8, ease: 'power1.in' }, 58.2);
+window.__timelines['main'] = tl;
+
+</script></body></html>
