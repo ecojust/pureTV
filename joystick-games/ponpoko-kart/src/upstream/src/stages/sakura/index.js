@@ -4,9 +4,9 @@ import { buildSakura } from './build.js';
 
 export default {
   id: 'sakura',
-  name: '桜咲く千本鳥居',
+  name: '樱花千鸟居',
   subtitle: 'Sakura Senbon Torii',
-  description: '満開の桜の城下町から山道をのぼり、千本鳥居をくぐって山頂の五重塔へ。崖から滝つぼを越えてグライド！',
+  description: '从樱花盛开的城下町爬上山道，穿过千座鸟居，抵达山顶的五重塔。从悬崖滑翔越过瀑布吧！',
   laps: 3,
   bgm: 'sakura',
   ambience: 'sakura',

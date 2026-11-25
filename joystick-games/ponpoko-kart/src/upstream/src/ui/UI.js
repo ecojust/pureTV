@@ -32,32 +32,32 @@ const KEYMAP = {
   Enter: 'ok', NumpadEnter: 'ok', Space: 'ok', Escape: 'back', Backspace: 'back',
 };
 
-const STATS = [['speed', 'スピード'], ['accel', 'かそく'], ['handling', 'ハンドリング'], ['weight', 'おもさ']];
+const STATS = [['speed', '速度'], ['accel', '加速'], ['handling', '操控'], ['weight', '重量']];
 const DIFFS = [
-  { id: '50cc', label: 'ゆったり', lv: 1 },
-  { id: '100cc', label: 'ふつう', lv: 2 },
-  { id: '150cc', label: 'はやい', lv: 3 },
+  { id: '50cc', label: '休闲', lv: 1 },
+  { id: '100cc', label: '标准', lv: 2 },
+  { id: '150cc', label: '高速', lv: 3 },
 ];
-const DEFAULT_KANJI = { tanuki: '狸', kitsune: '狐', neko: '猫', shiba: '犬', usagi: '兎', kappa: '河', tengu: '天', oni: '鬼' };
-const COURSE_NUM = ['壱', '弐', '参', '肆', '伍', '陸'];
+const DEFAULT_KANJI = { tanuki: '狸', kitsune: '狐', neko: '猫', shiba: '犬', usagi: '兔', kappa: '河', tengu: '天', oni: '鬼' };
+const COURSE_NUM = ['壹', '贰', '叁', '肆', '伍', '陆'];
 const ROULETTE_KEYS = ['dango3', 'daruma', 'shuriken', 'makibishi', 'manekineko', 'kanedarai', 'koban'];
 export const DEFAULT_CONTROLS = [
-  ['↑ / W', 'アクセル'],
-  ['↓ / S', 'ブレーキ'],
-  ['← → / A D', 'ハンドル'],
-  ['Space / Shift', 'ジャンプ・ドリフト'],
-  ['E / X', 'アイテム'],
-  ['Esc', 'ポーズ'],
+  ['↑ / W', '油门'],
+  ['↓ / S', '刹车'],
+  ['← → / A D', '转向'],
+  ['Space / Shift', '跳跃 / 漂移'],
+  ['E / X', '道具'],
+  ['Esc', '暂停'],
 ];
 const TIPS = [
-  'ドリフトを長くつづけると、火花の色が 青 → オレンジ → むらさき に変わるよ！',
-  'ジャンプ台で飛んだ瞬間にジャンプボタンを押すと、トリックが決まって加速！',
-  '小判を集めると最高速が少しアップ。最大10枚まで持てるよ。',
-  '和傘グライダーで空をすべろう。ゆっくり降りればショートカットも…？',
-  'ダッシュ板を踏むと一気に加速！コースの矢印をよく見よう。',
-  '金だらいは上から降ってくる！ 音がしたら気をつけて。',
-  'だるまはライバルを追いかけて転がっていくよ。',
-  'アイテムを持ったまま ↓ を押しながら使うと、うしろに投げられる。',
+  '漂移时间越长，火花会从蓝色变为橙色，最后变成紫色！',
+  '从跳台腾空时按下跳跃键，完成特技能获得加速！',
+  '收集金币可以提高最高速度，最多可携带十枚。',
+  '撑开纸伞在空中滑翔。试着放慢下降速度，也许会发现捷径。',
+  '驶过加速板就能提速！注意赛道上的箭头。',
+  '金盆会从天而降！听到提示音要小心。',
+  '不倒翁会翻滚着追赶对手。',
+  '持有道具时，按住 ↓ 再使用就能向后投掷。',
 ];
 
 // ---------------------------------------------------------------------------------------------
@@ -120,11 +120,11 @@ function charType(c) {
   const v = { speed: s.speed || 0, accel: s.accel || 0, handling: s.handling || 0, weight: s.weight || 0 };
   const vals = Object.values(v);
   const max = Math.max(...vals), min = Math.min(...vals);
-  if (max - min <= 1) return 'バランス型';
-  if (v.handling === max) return 'テクニック型';
-  if (v.speed === max) return 'スピード型';
-  if (v.accel === max) return 'ダッシュ型';
-  return 'パワー型';
+  if (max - min <= 1) return '均衡型';
+  if (v.handling === max) return '操控型';
+  if (v.speed === max) return '速度型';
+  if (v.accel === max) return '加速型';
+  return '力量型';
 }
 const uPx = () => Math.min(window.innerWidth / 1280, window.innerHeight / 720);
 
@@ -369,7 +369,7 @@ export class UI {
     bar.appendChild(head);
     if (step != null) {
       const steps = h('div', 'pk-steps');
-      ['キャラ', 'コース', 'レース'].forEach((label, i) => {
+      ['车手', '赛道', '竞速'].forEach((label, i) => {
         if (i) steps.appendChild(h('i', 'pk-steps__line' + (i <= step ? ' is-done' : '')));
         const st = h('div', 'pk-step' + (i < step ? ' is-done' : i === step ? ' is-active' : ''));
         st.appendChild(h('span', 'pk-step__n', String(i + 1)));
@@ -380,14 +380,14 @@ export class UI {
     }
     if (chip) {
       const c = h('div', 'pk-topchip');
-      c.appendChild(h('span', 'pk-topchip__label', 'コース'));
+      c.appendChild(h('span', 'pk-topchip__label', '赛道'));
       c.appendChild(h('span', 'pk-topchip__text', chip));
       bar.appendChild(c);
     }
     return bar;
   }
 
-  _footer(hints, { ok, back, backLabel = 'もどる' } = {}) {
+  _footer(hints, { ok, back, backLabel = '返回' } = {}) {
     const f = h('div', 'pk-foot');
     const left = h('div', 'pk-foot__left');
     if (back) {
@@ -487,8 +487,8 @@ export class UI {
         row.appendChild(c);
       });
     };
-    addChars(rowA, 'ぽんぽこ', 0);
-    addChars(rowB, 'カート', 4);
+    addChars(rowA, '狸猫', 0);
+    addChars(rowB, '卡丁车', 4);
     logo.append(rowA, rowB);
     logo.appendChild(h('div', 'pk-logo__leaf'));
     logo.appendChild(h('div', 'pk-logo__en', 'PONPOKO KART'));
@@ -496,14 +496,14 @@ export class UI {
     ribbon.appendChild(h('span', 'pk-logo__ribbon-end pk-logo__ribbon-end--l'));
     ribbon.appendChild(h('span', 'pk-logo__ribbon-end pk-logo__ribbon-end--r'));
     const rb = h('span', 'pk-logo__ribbon-body');
-    rb.appendChild(ot('ニッポン爆走グランプリ', 'pk-d pk-logo__ribbon-text'));
+    rb.appendChild(ot('日本竞速大奖赛', 'pk-d pk-logo__ribbon-text'));
     ribbon.appendChild(rb);
     logo.appendChild(ribbon);
     main.appendChild(logo);
 
     const start = h('div', 'pk-title__start');
     start.appendChild(h('span', 'pk-title__tri'));
-    start.appendChild(h('span', 'pk-title__start-t', 'Enter または クリックでスタート'));
+    start.appendChild(h('span', 'pk-title__start-t', '按回车或点击开始'));
     start.appendChild(h('span', 'pk-title__tri pk-title__tri--r'));
     main.appendChild(start);
     root.appendChild(main);
@@ -541,7 +541,7 @@ export class UI {
 
     const root = h('div', 'pk-scr pk-chars');
     root.appendChild(h('div', 'pk-vignette'));
-    root.appendChild(this._topbar('キャラクターをえらぶ', 'CHOOSE YOUR RACER', 0));
+    root.appendChild(this._topbar('选择车手', 'CHOOSE YOUR RACER', 0));
 
     const panel = h('div', 'pk-chars__panel');
     const grid = h('div', 'pk-chars__grid');
@@ -557,7 +557,7 @@ export class UI {
       inner.appendChild(art);
       inner.appendChild(h('div', 'pk-ccard__name', c.name));
       inner.appendChild(h('div', 'pk-ccard__tag', '1P'));
-      inner.appendChild(h('div', 'pk-ccard__stamp', '決定'));
+      inner.appendChild(h('div', 'pk-ccard__stamp', '确定'));
       card.appendChild(inner);
       card.addEventListener('pointerenter', () => { if (this._mouseArmed && !this._locked) setFocus(i); });
       card.addEventListener('click', (e) => { e.stopPropagation(); if (this._locked) return; setFocus(i, true); confirm(); });
@@ -590,7 +590,7 @@ export class UI {
       row.appendChild(bar);
       stats.appendChild(row);
     }
-    const cta = this._button('このキャラで けってい！', 'pk-btn--cta');
+    const cta = this._button('使用这名车手！', 'pk-btn--cta');
     cta.addEventListener('click', (e) => { e.stopPropagation(); if (!this._locked) confirm(); });
     body.append(top, name, desc, stats);
     info.append(band, kanji, body, cta);
@@ -604,7 +604,7 @@ export class UI {
       this._pick(() => onConfirm && onConfirm(chars[idx].id), 480);
     };
     const back = () => this._goBack(onBack);
-    root.appendChild(this._footer([['← ↑ ↓ →', 'えらぶ'], ['Enter', 'けってい', 'ok']], { ok: confirm, back: onBack ? back : null }));
+    root.appendChild(this._footer([['← ↑ ↓ →', '选择'], ['Enter', '确定', 'ok']], { ok: confirm, back: onBack ? back : null }));
 
     const fillInfo = (c, animate) => {
       info.style.setProperty('--cc', charColor(c));
@@ -667,7 +667,7 @@ export class UI {
     if (!n) return;
     const root = h('div', 'pk-scr pk-courses');
     root.appendChild(h('div', 'pk-vignette pk-vignette--course'));
-    root.appendChild(this._topbar('コースをえらぶ', 'SELECT COURSE', 1));
+    root.appendChild(this._topbar('选择赛道', 'SELECT COURSE', 1));
 
     const col = h('div', 'pk-courses__col');
     const listEl = h('div', 'pk-courses__list');
@@ -693,7 +693,7 @@ export class UI {
       txt.appendChild(h('div', 'pk-course__sub', c.subtitle || ''));
       const laps = h('div', 'pk-course__laps');
       laps.appendChild(h('b', 'pk-d', String(c.laps || 3)));
-      laps.appendChild(h('span', null, '周'));
+      laps.appendChild(h('span', null, '圈'));
       inner.append(num, em, txt, laps);
       card.appendChild(inner);
       card.addEventListener('pointerenter', () => { if (this._mouseArmed && !this._locked) setFocus(i); });
@@ -705,9 +705,9 @@ export class UI {
 
     const diffEl = h('div', 'pk-diff');
     const dHead = h('div', 'pk-diff__head');
-    dHead.appendChild(h('span', 'pk-diff__label', 'むずかしさ'));
+    dHead.appendChild(h('span', 'pk-diff__label', '难度'));
     const dHint = h('span', 'pk-diff__hint');
-    dHint.append(h('span', 'pk-key pk-key--s', '←'), h('span', 'pk-key pk-key--s', '→'), h('span', null, 'でかえる'));
+    dHint.append(h('span', 'pk-key pk-key--s', '←'), h('span', 'pk-key pk-key--s', '→'), h('span', null, '切换'));
     dHead.appendChild(dHint);
     const dRow = h('div', 'pk-diff__row');
     dRow.appendChild(h('span', 'pk-diff__arrow pk-diff__arrow--l'));
@@ -728,7 +728,7 @@ export class UI {
     diffEl.append(dHead, dRow);
     col.appendChild(diffEl);
 
-    const go = this._button('しゅっぱつ！', 'pk-btn--cta pk-btn--go');
+    const go = this._button('出发！', 'pk-btn--cta pk-btn--go');
     go.addEventListener('click', (e) => { e.stopPropagation(); if (!this._locked) confirm(); });
     col.appendChild(go);
     root.appendChild(col);
@@ -759,7 +759,7 @@ export class UI {
     };
     const back = () => this._goBack(onBack);
     root.appendChild(this._footer(
-      [['↑ ↓', 'コース'], ['← →', 'むずかしさ'], ['Enter', 'しゅっぱつ', 'ok']],
+      [['↑ ↓', '赛道'], ['← →', '难度'], ['Enter', '出发', 'ok']],
       { ok: confirm, back: onBack ? back : null }));
 
     const fillInfo = (animate) => {
@@ -767,11 +767,11 @@ export class UI {
       const [ca, cb] = (c.colors && c.colors.length ? c.colors : ['#e0b04a', '#d8401f']).map(cssColor);
       info.style.setProperty('--ca', ca);
       info.style.setProperty('--cb', cb || ca);
-      iNum.textContent = `COURSE ${sel + 1}`;
+      iNum.textContent = `赛道 ${sel + 1}`;
       setOt(iName, c.name || c.id);
       iSub.textContent = c.subtitle || '';
       iDesc.textContent = c.description || '';
-      chipLaps.textContent = `${c.laps || 3}周`;
+      chipLaps.textContent = `${c.laps || 3}圈`;
       if (animate) info.animate([{ opacity: 0, transform: `translateY(${10 * uPx()}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.3,1)' });
     };
     const fillDiff = () => {
@@ -839,7 +839,7 @@ export class UI {
     text.append(label, dots);
     center.append(drum, text);
     const tip = h('div', 'pk-loading__tip');
-    tip.appendChild(h('span', 'pk-loading__tiplabel', 'ヒント'));
+    tip.appendChild(h('span', 'pk-loading__tiplabel', '提示'));
     const tipText = h('span', 'pk-loading__tiptext');
     tip.appendChild(tipText);
     root.append(center, tip, h('div', 'pk-loading__wave'));
@@ -848,7 +848,7 @@ export class UI {
   }
 
   /** Full-screen loading overlay. opts.title: optional big heading (e.g. the course name); opts.tip: hint text. */
-  showLoading(text = 'コースを準備中…', { tip, title } = {}) {
+  showLoading(text = '正在准备赛道…', { tip, title } = {}) {
     const L = this._loading;
     L.label.textContent = String(text).replace(/(…|\.\.\.|・・・)$/, '');
     L.title.textContent = title || '';
@@ -896,7 +896,7 @@ export class UI {
     // lap / time / minimap (top-right)
     const tr = h('div', 'pk-hud__tr');
     const lap = h('div', 'pk-lap');
-    const lapLabel = ot('LAP', 'pk-d pk-lap__label');
+    const lapLabel = ot('圈数', 'pk-d pk-lap__label');
     const lapNum = ot('1', 'pk-d pk-lap__num');
     const lapTot = ot('/3', 'pk-d pk-lap__tot');
     lap.append(lapLabel, lapNum, lapTot);
@@ -930,7 +930,7 @@ export class UI {
     const posWrap = h('div', 'pk-hud__pos');
     const pos = h('div', 'pk-pos pk-pos--1');
     const posNum = ot('1', 'pk-d pk-pos__n');
-    const posSuf = ot('位', 'pk-d pk-pos__s');
+    const posSuf = ot('名', 'pk-d pk-pos__s');
     pos.append(posNum, posSuf);
     const posDelta = h('div', 'pk-pos__delta');
     posWrap.append(pos, posDelta);
@@ -1130,7 +1130,7 @@ export class UI {
       }
       el.appendChild(burst);
     }
-    el.appendChild(ot(goNow ? 'GO!' : String(n), 'pk-d pk-count__num'));
+    el.appendChild(ot(goNow ? '出发！' : String(n), 'pk-d pk-count__num'));
     this._fx.appendChild(el);
     this._later(() => el.remove(), goNow ? 1500 : 1050);
   }
@@ -1249,7 +1249,7 @@ export class UI {
     const el = h('div', 'pk-wrong');
     const inner = h('div', 'pk-wrong__in');
     inner.appendChild(h('span', 'pk-wrong__icon'));
-    inner.appendChild(ot('逆走中！', 'pk-d pk-wrong__t'));
+    inner.appendChild(ot('逆向行驶！', 'pk-d pk-wrong__t'));
     el.appendChild(inner);
     this._fx.appendChild(el);
     this._wrong = el;
@@ -1271,17 +1271,17 @@ export class UI {
     const panel = h('div', 'pk-pause__panel');
     const title = h('div', 'pk-pause__title');
     title.appendChild(h('div', 'pk-pause__brush'));
-    title.appendChild(ot('ポーズ', 'pk-d pk-pause__t'));
+    title.appendChild(ot('暂停', 'pk-d pk-pause__t'));
     panel.appendChild(title);
     panel.appendChild(h('div', 'pk-pause__leaf'));
-    const labels = [['つづける', onResume], ['やりなおす', onRestart], ['コースえらびへ', onQuit]];
+    const labels = [['继续', onResume], ['重新开始', onRestart], ['返回赛道选择', onQuit]];
     const btns = labels.map(([l]) => this._button(l, 'pk-btn--wide'));
     const list = h('div', 'pk-pause__btns');
     btns.forEach((b) => list.appendChild(b));
     panel.appendChild(list);
     const hint = h('div', 'pk-pause__hint');
-    hint.append(h('span', 'pk-key', '↑'), h('span', 'pk-key', '↓'), h('span', null, 'えらぶ'),
-      h('span', 'pk-key', 'Enter'), h('span', null, 'けってい'), h('span', 'pk-key', 'Esc'), h('span', null, 'つづける'));
+    hint.append(h('span', 'pk-key', '↑'), h('span', 'pk-key', '↓'), h('span', null, '选择'),
+      h('span', 'pk-key', 'Enter'), h('span', null, '确定'), h('span', 'pk-key', 'Esc'), h('span', null, '继续'));
     panel.appendChild(hint);
     root.appendChild(panel);
     const nav = this._menuList(btns, { onPick: (i) => this._pick(labels[i][1], 200) });
@@ -1302,25 +1302,25 @@ export class UI {
   showResults({ rows = [], courseName = '', onRetry, onCourseSelect, onTitle } = {}) {
     const root = h('div', 'pk-scr pk-results');
     root.appendChild(h('div', 'pk-results__shade'));
-    root.appendChild(this._topbar('リザルト', 'RACE RESULTS', null, courseName || null));
+    root.appendChild(this._topbar('比赛结果', 'RACE RESULTS', null, courseName || null));
 
     const me = rows.find((r) => r.isPlayer);
     if (me) {
       const box = h('div', 'pk-rme');
       const rank = me.rank | 0;
       const dnf = me.time == null;
-      box.appendChild(h('div', 'pk-rme__label', 'あなたの順位'));
+      box.appendChild(h('div', 'pk-rme__label', '你的名次'));
       const big = h('div', `pk-pos pk-rme__pos pk-pos--${rank >= 1 && rank <= 3 ? rank : 'n'}`);
-      big.append(ot(String(rank || '-'), 'pk-d pk-pos__n'), ot('位', 'pk-d pk-pos__s'));
+      big.append(ot(String(rank || '-'), 'pk-d pk-pos__n'), ot('名', 'pk-d pk-pos__s'));
       box.appendChild(big);
-      const msg = dnf ? 'リタイア…' : rank === 1 ? '優勝！' : rank <= 3 ? '表彰台！' : 'ゴール！';
-      const sub = dnf ? 'つぎはゴールをめざそう！' : rank === 1 ? 'おめでとう！' : rank <= 3 ? 'ナイスラン！' : 'つぎは表彰台をめざそう！';
+      const msg = dnf ? '未完赛…' : rank === 1 ? '冠军！' : rank <= 3 ? '登上领奖台！' : '冲线！';
+      const sub = dnf ? '下次争取跑完全程！' : rank === 1 ? '恭喜！' : rank <= 3 ? '跑得漂亮！' : '下次争取登上领奖台！';
       const m = h('div', 'pk-rme__msg');
       m.appendChild(ot(msg, 'pk-d pk-rme__msgt'));
       box.appendChild(m);
       box.appendChild(h('div', 'pk-rme__sub', sub));
       const tm = h('div', 'pk-rme__time');
-      tm.appendChild(h('span', 'pk-rme__timel', 'タイム'));
+      tm.appendChild(h('span', 'pk-rme__timel', '用时'));
       tm.appendChild(h('span', 'pk-d', formatTime(me.time)));
       box.appendChild(tm);
       if (rank === 1) box.classList.add('is-win');
@@ -1329,7 +1329,7 @@ export class UI {
 
     const board = h('div', 'pk-board');
     const head = h('div', 'pk-board__head');
-    head.append(h('span', null, '順位'), h('span', null, ''), h('span', null, 'なまえ'), h('span', null, 'タイム'));
+    head.append(h('span', null, '名次'), h('span', null, ''), h('span', null, '姓名'), h('span', null, '用时'));
     board.appendChild(head);
     rows.forEach((r, i) => {
       const row = h('div', 'pk-rrow' + (r.isPlayer ? ' is-player' : ''));
@@ -1341,7 +1341,7 @@ export class UI {
       const face = this._portrait(r.characterId, 'pk-rrow__face', cssColor(r.color));
       const nm = h('div', 'pk-rrow__name');
       nm.appendChild(h('span', null, r.name || ''));
-      if (r.isPlayer) nm.appendChild(h('span', 'pk-rrow__you', 'あなた'));
+      if (r.isPlayer) nm.appendChild(h('span', 'pk-rrow__you', '你'));
       const tm = h('div', 'pk-rrow__time pk-d', r.time == null ? '--' : formatTime(r.time));
       inner.append(rank, face, nm, tm);
       row.appendChild(inner);
@@ -1349,7 +1349,7 @@ export class UI {
     });
     root.appendChild(board);
 
-    const labels = [['もういちど', onRetry], ['コースえらび', onCourseSelect], ['タイトルへ', onTitle]];
+    const labels = [['再来一次', onRetry], ['选择赛道', onCourseSelect], ['返回标题', onTitle]];
     const btnRow = h('div', 'pk-results__btns');
     const btns = labels.map(([l], i) => { const b = this._button(l, i === 0 ? 'pk-btn--primary' : ''); b.style.setProperty('--i', i); btnRow.appendChild(b); return b; });
     root.appendChild(btnRow);

@@ -203,7 +203,7 @@ export function refreshTitle(info) {
   EL['mi-select'].hidden = !t.canSelect;
   EL['mi-continue'].hidden = !t.cont;
   if (t.cont) EL.contval.textContent = t.cont.label;
-  EL.newhint.textContent = t.hasSave ? 'NEW GAME · 上書き' : 'NEW GAME';
+  EL.newhint.textContent = t.hasSave ? '新游戏 · 覆盖进度' : 'NEW GAME';
   EL['tfoot-r'].textContent = t.footR;
 }
 function refreshSettings() {

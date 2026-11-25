@@ -309,53 +309,53 @@ const WING_REAR_AT = 640;   // the wingmen fly in front until here, then mostly 
 
 function script(at) {
   // ===== OCEAN =====
-  at(120, () => radio('hou', 'こちらホウ。所属不明機の編隊を捕捉した。全機、迎撃せよ！', { hold: 2.2 }));
-  at(520, () => radio('kota', 'よーし、いっくぞー！　隊長、しっかりついてくからね！'));
-  at(330, () => tip(`${K('W')}${K('A')}${K('S')}${K('D')} / 矢印キー：移動　${K('J')} / ${K('Space')}：ショット`, 6, '左下をドラッグで移動 ／ FIRE でショット'));
+  at(120, () => radio('hou', '这里是枭。发现身份不明的机群。全机迎击！', { hold: 2.2 }));
+  at(520, () => radio('kota', '好嘞，出发！队长，我一定跟紧你！'));
+  at(330, () => tip(`${K('W')}${K('A')}${K('S')}${K('D')} / 方向键：移动　${K('J')} / ${K('Space')}：射击`, 6, '拖动左下角移动，按射击键开火'));
   at(WING_REAR_AT, () => setWingStance('rear', 0.5));   // after Kota's "I'll stick with you": the squadron drops back to cover the leader
   at(700, () => { vWing('dart', 5, 760, 20, { noFire: true }); });
-  at(820, () => radio('gantetsu', '前方に敵編隊。落ち着いて、一機ずつ確実に落とせ。'));
+  at(820, () => radio('gantetsu', '前方有敌机。沉住气，一架一架击落。'));
   at(1250, () => snake('dart', 5, 720, 18, 20));
   at(1400, () => { scheduleNow('ring', 1750, { u: -8, v: 18 }); });
-  at(960, () => radio('rio', '前方にリング。通るとシールドが回復するわ。'));
-  at(1700, () => { fromBehind('dart', 6); radio('kota', '後ろから来るよ！　抜かせて撃っちゃえ！', { prio: 1 }); });
+  at(960, () => radio('rio', '前方有光环，穿过去能恢复护盾。'));
+  at(1700, () => { fromBehind('dart', 6); radio('kota', '后面有敌人！等他们超过去再打！', { prio: 1 }); });
   at(2150, () => crossing('dart', 5, 230, 1, 24));
-  at(2350, () => radio('gantetsu', '岩のアーチだ。くぐり抜けろ！'));
+  at(2350, () => radio('gantetsu', '前方岩拱，穿过去！'));
   at(2500, () => { holders('raptor', 2, 170); });
-  at(2560, () => { radio('gantetsu', '敵弾はローリングではじける。傾けるキーを素早く2回だ！', { prio: 1 }); tip(`${K('Q')} / ${K('E')} を素早く2回：ローリング（敵弾をはじく）`, 7, 'ROLL ボタン：ローリング（敵弾をはじく）'); });
-  at(3000, () => { ringOf('drone', 8, 190, { r: 20 }); radio('rio', 'ショットを長押しでチャージ！　ロックオンしてまとめて吹き飛ばして！', { prio: 1 }); tip(`ショット長押し → チャージ完了で離す：ロックオン弾`, 7, 'FIRE 長押し → 離す：ロックオン弾'); });
-  at(3400, () => { holders('carrier', 1, 150, { carry: 'laser', carryIndex: 0, stay: 8, v: 24 }); snake('dart', 3, 650, -20, 26); radio('kota', 'あの輸送機、何か積んでるよ！　撃ち落として！'); });
+  at(2560, () => { radio('gantetsu', '翻滚可以弹开敌弹。快速连按两次倾斜键！', { prio: 1 }); tip(`${K('Q')} / ${K('E')} 快速连按两次：翻滚弹开敌弹`, 7, '翻滚键：翻滚以弹开敌弹'); });
+  at(3000, () => { ringOf('drone', 8, 190, { r: 20 }); radio('rio', '按住射击蓄力！锁定后把他们一网打尽！', { prio: 1 }); tip(`按住射击蓄力，充满后松开可发射锁定弹`, 7, '长按射击后松开，发射锁定弹'); });
+  at(3400, () => { holders('carrier', 1, 150, { carry: 'laser', carryIndex: 0, stay: 8, v: 24 }); snake('dart', 3, 650, -20, 26); radio('kota', '那架运输机装着什么东西！把它打下来！'); });
   at(3850, () => rescueKota());
   at(4300, () => { fromBehind('interceptor', 4, { stay: 5 }); });
-  at(4500, () => { radio('gantetsu', '峡谷に入るぞ。岩壁に擦るなよ。'); tip(`${K('L')} / ${K('Shift')}：ブースト　${K('I')} / ${K('V')}：ブレーキ`, 6, 'BOOST / BRAKE ボタンで加減速'); });
+  at(4500, () => { radio('gantetsu', '进入峡谷了，小心别擦到岩壁。'); tip(`${K('L')} / ${K('Shift')}：加速　${K('I')} / ${K('V')}：减速`, 6, '按加速或减速键调整速度'); });
   at(4680, () => { gunshipFlyby(); });
 
   // ===== CANYON =====
-  at(4950, () => radio('rio', '岩柱が倒れてくる！　撃てば砕けるわ！', { prio: 1 }));
+  at(4950, () => radio('rio', '石柱要倒了！开火把它打碎！', { prio: 1 }));
   at(5250, () => divers('dart', 4));
   at(5500, () => { turret(5850, -34); turret(5930, 30); turret(6010, -12); });
   at(5900, () => { holders('raptor', 1, 160, { v: 22 }); snake('dart', 4, 700, 10, 22, { au: 18 }); });
-  at(6150, () => { radio('rio', '中間地点を通過。いい調子よ、隊長。'); });
-  at(6300, () => { turret(6720, -26, { onGround: false, v: 33 }); turret(6720, 26, { onGround: false, v: 33 }); radio('gantetsu', '橋の上に砲台だ。下をくぐるか、先に潰せ！'); });
+  at(6150, () => { radio('rio', '已过中途点。干得好，队长。'); });
+  at(6300, () => { turret(6720, -26, { onGround: false, v: 33 }); turret(6720, 26, { onGround: false, v: 33 }); radio('gantetsu', '桥上有炮台，从下面钻过或先摧毁它！'); });
   at(6700, () => { ringOf('drone', 10, 200, { r: 22, v: 30 }); });
-  at(7050, () => { for (let i = 0; i < 8; i++) mine(7450 + i * 45, rand(-30, 30), rand(10, 40)); kotaOr('機雷だ！　近づくと爆発するよ！', 'rio', '機雷よ！　近づくと爆発するわ！'); });
-  at(7300, () => { fromBehind('interceptor', 5); kotaOr('また後ろ！　しつこいなぁ、もう！', 'gantetsu', 'また後ろだ。抜かせてから撃て。', { prio: 1 }); });
+  at(7050, () => { for (let i = 0; i < 8; i++) mine(7450 + i * 45, rand(-30, 30), rand(10, 40)); kotaOr('是水雷！靠近就会爆炸！', 'rio', '小心水雷！靠近就会引爆！'); });
+  at(7300, () => { fromBehind('interceptor', 5); kotaOr('后面又来了！真是缠人！', 'gantetsu', '后面又来了，等他们超过去再打。', { prio: 1 }); });
   at(7700, () => { holders('raptor', 2, 170, { v: 30 }); crossing('drone', 6, 240, -1, 20); });
 
   // ===== FORTRESS =====
-  at(7900, () => radio('hou', '前方に敵の前線基地を確認。防衛網を突破せよ！', { hold: 2 }));
+  at(7900, () => radio('hou', '前方发现敌军基地。突破防线！', { hold: 2 }));
   at(8150, () => { turret(8600, -60, { type: 'aagun' }); turret(8700, 60, { type: 'aagun' }); turret(8850, -58, { type: 'aagun' }); });
   at(8300, () => { divers('interceptor', 4); });
-  at(8650, () => { radio('gantetsu', 'エネルギーゲートだ！　両脇の発生装置を撃て！', { prio: 1 }); });
+  at(8650, () => { radio('gantetsu', '能量门！击毁两侧的发生器！', { prio: 1 }); });
   at(8900, () => { vWing('dart', 7, 700, 24, { speed: 34 }); });
   at(9250, () => { turret(9600, -40); turret(9660, 40); turret(9760, 0); turret(9850, -20, { type: 'aagun' }); });
   at(9500, () => { crossing('dart', 6, 220, -1, 30); });
   at(9800, () => { fromBehind('interceptor', 6); holders('raptor', 2, 190, { v: 34 }); });
   at(10150, () => { ringOf('drone', 10, 200, { r: 24, v: 28 }); });
-  at(10350, () => radio('gantetsu', '基地を抜けるぞ！　全機、上昇して海へ出ろ！'));
+  at(10350, () => radio('gantetsu', '穿过基地了！全机爬升，飞向海面！'));
 
   // ===== BOSS =====
-  at(10550, () => { radio('hou', '待て……海中から巨大な反応！　警戒しろ！', { prio: 2, hold: 1.4 }); warning(true); AudioSys.stopMusic(1.2); G.warnLoop = AudioSys.loop('siren'); });
+  at(10550, () => { radio('hou', '等等……海里有巨大信号！保持警戒！', { prio: 2, hold: 1.4 }); warning(true); AudioSys.stopMusic(1.2); G.warnLoop = AudioSys.loop('siren'); });
   at(10720, () => { G.run.checkpoint = 10700; });
   at(10760, () => { warning(false); if (G.warnLoop) { G.warnLoop.stop(0.5); G.warnLoop = null; } emit('bossStart'); });
 
@@ -395,8 +395,8 @@ function scheduleNow(type, s, o) { spawnProp(type, s, o); }
 // Gunship crossing overhead, carrying a bomb
 function gunshipFlyby() {
   spawnEnemy('gunship', 'flyby', { s: D() + 900, dist: 260, enter: 4, close: 3, u0: 80, su: -8, v: 40, life: 20 }, { carry: 'bomb' });
-  radio('gantetsu', '大型艦だ！　砲撃に注意しつつ集中攻撃しろ！', { prio: 1 });
-  tip(`大型艦には ${K('K')} / ${K('B')} のスマートボムが有効`, 5, '大型艦には BOMB が有効');
+  radio('gantetsu', '大型战舰！躲开炮火，集中攻击！', { prio: 1 });
+  tip(`对付大型舰船可用 ${K('K')} / ${K('B')} 投放智能炸弹`, 5, '智能炸弹对大型舰船很有效');
 }
 
 // Wingman rescue event
@@ -404,7 +404,7 @@ function rescueKota() {
   const kota = WING.byId.kota;
   if (!kota || kota.gone) return;
   kota.mode = 'chased'; kota.modeT = 0;
-  radio('kota', 'うわっ！　後ろに付かれた！　隊長、助けてー！', { prio: 2 });
+  radio('kota', '哇！敌机咬住我了！队长，救命！', { prio: 2 });
   const anchor = kota;
   const marker = addMarker(kota.pos, 'KOTA', '#ffb070');
   let resolved = false;
@@ -415,7 +415,7 @@ function rescueKota() {
     kota.mode = 'formation'; kota.modeT = 0; kota.barrelRoll();
     holdOut(kota, 5);
     if (group.byPlayer > 0) { G.run.savedKota = true; emit('bonus', 3000, kota.pos.clone(), 'RESCUE +3000'); }
-    radio('kota', '助かったぁ！　隊長、恩に着るよ！', { prio: 1 });
+    radio('kota', '得救了！多谢，队长！', { prio: 1 });
   });
   for (let i = 0; i < 3; i++) {
     spawnEnemy('dart', 'chase', { anchor, back: 20 + i * 9, ou: (i - 1) * 7, ov: (i - 1) * 3, ph: i, s: kota.s - 40, u: kota.u, v: kota.v }, { group, noFire: true });
@@ -426,22 +426,22 @@ function rescueKota() {
     marker.active = false;
     kota.mode = 'retreat'; kota.modeT = 0; kota.damaged = true;
     G.run.kotaLost = true;
-    radio('kota', 'くっ……被弾した！　ごめん、いったん離脱する！', { prio: 1 });
+    radio('kota', '呃……中弹了！对不住，我先撤一下！', { prio: 1 });
   });
 }
 
 // ------------------------------------------------------------ Boss radio
 let firstCharge = true;   // the beam warning is given once per session
 function onBossPhase(p) {
-  if (p === 1) { radio('rio', 'まずは背中の砲台を叩いて！', { prio: 1 }); }
-  if (p === 2) { radio('rio', '砲台は全滅！　口が開いた瞬間、中のコアを狙って！', { prio: 2 }); }
-  if (p === 3) { radio('mizuchi', '……ハイジョ……ハイジョ、スル……', { prio: 2, hold: 1.2 }); kotaOr('お、怒ってる！？　みんな気をつけて！', 'rio', '動きが変わった……！　みんな気をつけて！'); }
+  if (p === 1) { radio('rio', '先打它背上的炮台！', { prio: 1 }); }
+  if (p === 2) { radio('rio', '炮台全毁！等它张嘴时瞄准里面的核心！', { prio: 2 }); }
+  if (p === 3) { radio('mizuchi', '……排除……执行排除……', { prio: 2, hold: 1.2 }); kotaOr('它、它生气了？！大家小心！', 'rio', '它的动作变了……！大家小心！'); }
 }
-function onBossCharge() { if (firstCharge) { firstCharge = false; radio('gantetsu', 'ビームが来るぞ！　射線から外れろ！', { prio: 2, hold: 1 }); } }
-function onBossDying() { radio('mizuchi', 'ガ……ガガ……キノウ、テイ……シ……', { prio: 2, hold: 0.8 }); }
+function onBossCharge() { if (firstCharge) { firstCharge = false; radio('gantetsu', '光束来了！避开射线！', { prio: 2, hold: 1 }); } }
+function onBossDying() { radio('mizuchi', '咔……咔咔……机能……停……止……', { prio: 2, hold: 0.8 }); }
 function onBossPartDown(left) {   // turrets left on the back (6 at first)
-  if (left === 5) kotaOr('ひとつ潰した！　その調子！', 'gantetsu', 'ひとつ潰した。その調子だ。');
-  if (left === 2) radio('rio', '砲台、残り2基よ！');
+  if (left === 5) kotaOr('打掉一个！就这样继续！', 'gantetsu', '解决了一个，继续。');
+  if (left === 2) radio('rio', '还剩两座炮台！');
 }
 
 // ------------------------------------------------------------ Definition
@@ -449,9 +449,9 @@ export default {
   id: 'azure',
   no: 1,
   title: 'AZURE COAST',
-  place: '惑星アクエリア',
-  sub: '惑星アクエリア　沿岸防衛線',           // mission-start banner
-  resultSub: '惑星アクエリア 沿岸防衛線 突破',  // results panel
+  place: '阿奎利亚星',
+  sub: '阿奎利亚星 · 海岸防线',           // mission-start banner
+  resultSub: '已突破阿奎利亚海岸防线',  // results panel
   music: 'stage1',
   bossAt: 10500,                  // a restart past here is the boss restart (no stage music, BOSS banner)
   checkpoints: [0, 6100, 10700],  // supply ring, boss approach (set by the ring and by the script)
@@ -463,11 +463,11 @@ export default {
   onSetup(d, run) { if (run.kotaLost && d > 3850) WING.byId.kota.hide(); },
   // The first machine beast: Rio recognises the sea dragon of her grandmother's tales, and HQ adopts the name.
   boss: {
-    id: 'mizuchi', en: 'MIZUCHI', title: '機械獣　ミズチ', bar: '機械獣 ミズチ', bannerAt: 4.6,
+    id: 'mizuchi', en: 'MIZUCHI', title: '机械兽·水蛟', bar: '机械兽·水蛟', bannerAt: 4.6,
     introLines: [
-      { who: 'mizuchi', text: '……侵入者ヲ確認。排除スル。', hold: 0.8 },
-      { who: 'rio', text: 'ミズチ……おばあちゃんの昔話の海竜と同じ……！', hold: 1.0 },
-      { who: 'hou', text: '……以後、目標を「ミズチ」と呼称する。各機、迎撃せよ！', hold: 1.2 },
+      { who: 'mizuchi', text: '……发现入侵者。执行排除。', hold: 0.8 },
+      { who: 'rio', text: '水蛟……和奶奶故事里的海龙一模一样！', hold: 1.0 },
+      { who: 'hou', text: '……即刻起，目标代号“水蛟”。全机迎击！', hold: 1.2 },
     ],
   },
   onBossPhase, onBossCharge, onBossDying, onBossPartDown,
@@ -476,35 +476,35 @@ export default {
   clearTime: 13.6,
   onClear(run) {
     after(1.4, () => run.kotaLost
-      ? radio('rio', '目標の沈黙を確認。……お見事よ、隊長。', { prio: 2 })
-      : radio('kota', 'やったー！　隊長、最高だよ！', { prio: 2 }));
-    after(1.6, () => radio('hou', 'よくやった、ランサー隊。アクエリアは守られた。', { hold: 1.2 }));
+      ? radio('rio', '确认目标停止活动。……漂亮，队长。', { prio: 2 })
+      : radio('kota', '太好了！队长，你最棒！', { prio: 2 }));
+    after(1.6, () => radio('hou', '干得好，枪骑兵队。阿奎利亚守住了。', { hold: 1.2 }));
     after(7.0, () => { crossView('ibuki'); AudioSys.sfx('roll', { vol: 0.45, pitch: 0.6 }); });
-    after(9.2, () => { radio('gantetsu', '……今の機体は……', { prio: 1, hold: 1.6 }); radio('rio', '……レーダーには、何も映っていないわ。', { hold: 1.6 }); });
+    after(9.2, () => { radio('gantetsu', '……刚才那架战机是……', { prio: 1, hold: 1.6 }); radio('rio', '……雷达上什么都没有。', { hold: 1.6 }); });
   },
-  onFragment() { radio('rio', '今の光……何かの破片？　ずいぶん古い金属みたい……', { prio: 1 }); },
+  onFragment() { radio('rio', '那道光……是什么碎片吗？金属似乎非常古老……', { prio: 1 }); },
   absent(run) { return run.kotaLost ? ['kota'] : []; },   // wingmen missing from the clear formation
   rank: { S: 125, A: 100, B: 70, medal: 115 },             // hits needed (S also needs no deaths)
-  resultNote(run) { return (run.savedKota ? 'コタ救出 <b>成功</b>' : 'コタ救出 <b>失敗</b>') + (run.gotFrag ? '　槍のかけら <b>取得</b>' : ''); },
+  resultNote(run) { return (run.savedKota ? '营救小太 <b>成功</b>' : '营救小太 <b>失败</b>') + (run.gotFrag ? '　长枪碎片 <b>已取得</b>' : ''); },
   squadAfter(run, squad) { return run.kotaLost ? squad | 1 : squad; },   // Kota bailed out: under repair at the start of mission 02
 
   // ---- story mode
   map: { target: 'aquelia' },
   briefing: {
     lines: [
-      { who: 'hou', text: 'ランサー隊、聞こえるか。ホウだ。' },
-      { who: 'hou', text: '一時間前、惑星アクエリアの沿岸に、所属不明の機械の軍勢が上陸した。' },
-      { who: 'hou', text: '敵は海から次々と現れ、沿岸に前線基地を築いている。' },
-      { who: 'hou', text: '海上から進入し、峡谷を抜けて、敵の前線基地を突破せよ。' },
-      { who: 'hou', text: '……無理をするな、ランサー1。全員で帰ってこい。' },
+      { who: 'hou', text: '枪骑兵队，听得见吗？我是枭。' },
+      { who: 'hou', text: '一小时前，一支来历不明的机械部队登陆阿奎利亚的海岸。' },
+      { who: 'hou', text: '敌人不断从海里冒出来，已在岸上建起前线基地。' },
+      { who: 'hou', text: '从海上切入，穿过峡谷，突破敌方前线基地。' },
+      { who: 'hou', text: '……别硬撑，枪骑兵一号。所有人都要回来。' },
     ],
-    objective: 'アクエリア沿岸の敵部隊を撃破し、前線基地を突破せよ',
+    objective: '击溃阿奎利亚沿岸的敌军，突破前线基地',
   },
   talk: [
-    { who: 'rio', text: 'ミズチの残骸から、信号を拾ったわ。どこかへ向けて、何かを送り続けてる。' },
-    { who: 'rio', text: '発信源は……サルガッソ宙域。難破船が漂う「船の墓場」よ。' },
-    { who: 'gantetsu', text: '……あんな所に、何がある。' },
-    { who: 'hou', text: '確かめるしかあるまい。ランサー隊、補給が済みしだい、サルガッソへ向かえ。' },
-    { who: 'kota', text: '休む暇なしだね……。でも、行こう、隊長！' },
+    { who: 'rio', text: '我从水蛟的残骸上收到了信号。它还在向某处发送数据。' },
+    { who: 'rio', text: '信号源是……萨尔加索空域，那里是沉船漂流的“船墓”。' },
+    { who: 'gantetsu', text: '……那种地方能有什么？' },
+    { who: 'hou', text: '只能亲自去确认。枪骑兵队，补给完毕后立刻前往萨尔加索。' },
+    { who: 'kota', text: '一刻也不能歇啊……走吧，队长！' },
   ],
 };

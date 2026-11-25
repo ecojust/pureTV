@@ -1,14 +1,13 @@
 import { tvStore } from './tv-storage.js';
 // Chinese / English. The game is written in Chinese; t() looks each string up in EN when the page runs in English.
 // Placeholders {0} {1} … are filled from t()'s extra arguments. Language: ?lang=zh|en, then the player's choice in
-// settings ('nr-lang'), then the browser's language (Chinese → zh, anything else → en).
+// settings ('nr-lang'), then Simplified Chinese.
 // Scenery text painted into the world (shop signs, lantern-fair banners, the gantries) stays Chinese on purpose.
 const pick = () => {
   const q = new URLSearchParams(location.search).get('lang');
   if (q === 'zh' || q === 'en') return q;
   try { const s = tvStore.get('nr-lang'); if (s === 'zh' || s === 'en') return s; } catch {}
-  const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
-  return /^zh/i.test(langs[0] || '') ? 'zh' : 'en';
+  return 'zh';
 };
 export const LANG = pick();
 document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';

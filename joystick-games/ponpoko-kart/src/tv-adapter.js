@@ -23,7 +23,7 @@ export function createTVAdapter() {
   const panel = document.getElementById('puretv-controller-panel');
   const help = document.createElement('div');
   help.className = 'tv-control-help';
-  help.innerHTML = '<strong>ぽんぽこカート</strong><span>菜单：方向选择 · A / START 确认 · Y 返回</span><span>↑ 油门 · ↓ 刹车 / 倒车<br>← → 转向 · A 跳跃 / 漂移<br>B 道具 · X 回看 · Y 操作说明<br>START 暂停 / 手动继续</span>';
+  help.innerHTML = '<strong>狸猫卡丁车</strong><span>菜单：方向选择 · A / START 确认 · Y 返回</span><span>↑ 油门 · ↓ 刹车 / 倒车<br>← → 转向 · A 跳跃 / 漂移<br>B 道具 · X 回看 · Y 操作说明<br>START 暂停 / 手动继续</span>';
   panel.appendChild(help);
 
   function stage() {

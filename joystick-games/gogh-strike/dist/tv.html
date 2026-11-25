@@ -12,6 +12,399 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23112b35'/%3E%3Cpath d='M13 44 25 15l7 24 15-26-6 36' fill='none' stroke='%23efc56b' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./tv.css">
+<script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "Gogh Strike · Paint Clash": "梵高突击 · 颜料大战",
+    "Gogh Strike": "梵高突击",
+    "GOGH": "梵高",
+    "STRIKE": "突击",
+    "Opening the town…": "正在进入小镇…",
+    "Van Gogh Strike home": "梵高突击首页",
+    "Settings": "设置",
+    "Choose your artist": "选择画家",
+    "VAN GOGH’S TOWN": "梵高的小镇",
+    "Paint Clash": "颜料大战",
+    "First to": "先得",
+    "3 minutes · Quick respawns": "限时 3 分钟 · 快速复活",
+    "Choose your crew": "选择阵营",
+    "Pick your artist": "选择画家",
+    "One artist. One signature weapon.": "每位画家都有自己的招牌武器。",
+    "Your artist’s equipment": "画家装备",
+    "Signature weapon preview": "招牌武器预览",
+    "ASSAULT RIFLE": "突击步枪",
+    "Provençal": "普罗旺斯",
+    "28 rounds": "28 发",
+    "Automatic": "全自动",
+    "SIDEARM": "副武器",
+    "Atelier": "画室",
+    "Pistol": "手枪",
+    "YOUR ART TAG": "你的涂鸦",
+    "Spray a wall": "对墙面喷绘",
+    "YOU’RE PLAYING": "当前画家",
+    "Van Gogh": "梵高",
+    "Inspect artist": "查看画家",
+    "Sunflower spin": "向日葵旋舞",
+    "Play": "开始",
+    "Against": "对阵",
+    "The Independents": "独立派",
+    "Real artists. An entirely imagined paint fight.": "真实的画家，虚构的颜料大战。",
+    "Match information": "比赛信息",
+    "YOUR CREW": "我方",
+    "FIRST TO 20": "先得 20 分获胜",
+    "ENEMY": "敌方",
+    "Recent eliminations": "最近击败",
+    "Brief spawn protection": "短暂复活保护",
+    "Your health": "你的生命值",
+    "Health": "生命",
+    "Armour": "护甲",
+    "Stamina": "体力",
+    "Your ammunition": "弹药",
+    "Reload": "换弹",
+    "Carried weapons": "携带武器",
+    "Abilities": "技能",
+    "Healing": "治疗中",
+    "Your art tag": "你的涂鸦",
+    "Spray": "喷绘",
+    "J: taunt dance": "J：跳挑衅舞",
+    "Taunt": "挑衅",
+    "Back in": "复活倒计时",
+    "Eliminated by": "击败你的是",
+    "an opponent": "一名对手",
+    "Click to play": "点击开始",
+    "Mouse look will be captured": "鼠标将锁定以控制视角",
+    "Match starting": "比赛即将开始",
+    "Game paused": "游戏已暂停",
+    "Paused.": "已暂停",
+    "Resume": "继续",
+    "Change artist": "更换画家",
+    "Move": "移动",
+    "MOUSE": "鼠标",
+    "Aim & fire": "瞄准并射击",
+    "RIGHT CLICK": "右键",
+    "Aim closer": "放大瞄准",
+    "Sprint": "奔跑",
+    "SPACE": "空格",
+    "Jump": "跳跃",
+    "Crouch": "蹲下",
+    "Smoke": "烟雾",
+    "Paint bomb": "颜料弹",
+    "Hold to heal": "按住治疗",
+    "Spray art tag": "喷绘涂鸦",
+    "Dance / cancel": "跳舞 / 取消",
+    "Switch weapon": "切换武器",
+    "Scoreboard": "记分板",
+    "Restart match": "重新开始比赛",
+    "Settings.": "设置",
+    "Close settings": "关闭设置",
+    "Mouse sensitivity": "鼠标灵敏度",
+    "Sound": "音量",
+    "Brushwork quality": "笔触品质",
+    "Graphics quality": "画质",
+    "Light": "轻量",
+    "Balanced": "均衡",
+    "Rich": "精细",
+    "Done": "完成",
+    "Match scores": "比赛比分",
+    "The score.": "比分",
+    "Hold": "按住",
+    "Match results": "比赛结果",
+    "Your crew wins.": "我方获胜。",
+    "Play again": "再来一局",
+    "A little paint spill.": "颜料洒了，出了一点小状况。",
+    "Try again": "重试",
+    "Vincent van Gogh": "文森特·梵高",
+    "Paul Gauguin": "保罗·高更",
+    "Crimson swagger": "绯红阔步",
+    "Paul Cézanne": "保罗·塞尚",
+    "Mountain measure": "山峦之步",
+    "Georges Seurat": "乔治·修拉",
+    "Dotted shuffle": "点彩舞步",
+    "Paul Signac": "保罗·西涅克",
+    "Sailor’s flourish": "水手旋身",
+    "Henri de Toulouse-Lautrec": "亨利·德·图卢兹-洛特雷克",
+    "Poster bow": "海报谢幕",
+    "Claude Monet": "克洛德·莫奈",
+    "Bridge sway": "桥上摇曳",
+    "Pierre-Auguste Renoir": "皮埃尔-奥古斯特·雷诺阿",
+    "Paris two-step": "巴黎双步舞",
+    "Edgar Degas": "埃德加·德加",
+    "Curtain call": "舞台谢幕",
+    "Berthe Morisot": "贝尔特·莫里索",
+    "Butterfly turn": "蝴蝶转身",
+    "Camille Pissarro": "卡米耶·毕沙罗",
+    "Orchard welcome": "果园迎客",
+    "Mary Cassatt": "玛丽·卡萨特",
+    "Opera encore": "歌剧返场",
+    "Face": "面部",
+    "Full body": "全身",
+    "Walk": "行走",
+    "Home": "归位",
+    "The 3D view was interrupted.": "3D 视图已中断。",
+    "The 3D view was interrupted. Reload the page to reopen the studio.": "3D 视图已中断，请重新加载页面以打开画室。",
+    "Unknown artist selection": "所选画家未知",
+    "The studio could not open. Close it and try again.": "画室打开失败，请关闭后重试。",
+    "An imagined rivalry inspired by artists of the 1880s.": "这场虚构的对决以十九世纪八十年代的画家为灵感。",
+    "The artists are real. Their crews, combat roles, costumes and rivalry are imagined.": "画家确有其人，阵营、战斗分工、服装和对决均为虚构。",
+    "The Yellow House": "黄房子画派",
+    "Yellow House": "黄房子",
+    "Make room for a different vision.": "给不同的眼光留些空间。",
+    "An imagined crew of colour experimenters, from Van Gogh’s expressive strokes to Seurat’s measured marks.": "一群虚构的色彩实验者，从梵高奔放的笔触到修拉严谨的点彩。",
+    "Sunflower gold, broad colour planes and bold silhouettes.": "向日葵金色、大片色面和鲜明的轮廓。",
+    "The Sunflower": "向日葵",
+    "In 1888, Van Gogh prepared the Yellow House in Arles for a shared artists’ studio.": "1888 年，梵高将阿尔勒的黄房子布置成画家们的共同画室。",
+    "Gauguin": "高更",
+    "The Colourist": "色彩大师",
+    "The Mountain": "山峦",
+    "Cézanne developed increasingly ordered brushwork during the 1880s, building form through colour.": "十九世纪八十年代，塞尚的笔触愈加有序，用色彩塑造形体。",
+    "Seurat": "修拉",
+    "The Measured Light": "点彩之光",
+    "Seurat first exhibited La Grande Jatte at the final Impressionist exhibition in 1886.": "1886 年，修拉在最后一届印象派展览中首次展出《大碗岛的星期天下午》。",
+    "Signac": "西涅克",
+    "The Harbour": "港湾",
+    "Signac was a leading Neo-Impressionist and visited his friend Van Gogh in Arles in March 1889.": "西涅克是新印象派的代表人物，1889 年 3 月到阿尔勒拜访好友梵高。",
+    "The Night Sketch": "夜间速写",
+    "Toulouse-Lautrec became known for his depictions of performers and the life of Montmartre.": "图卢兹-洛特雷克因描绘演员和蒙马特生活而闻名。",
+    "A studio imagined": "想象中的画室",
+    "Van Gogh hoped to build an artists’ community in the Yellow House. Gauguin was the only artist who lived and worked there with him. This expanded crew is fictional.": "梵高希望在黄房子建立艺术家社区，只有高更曾与他在此同住作画。游戏中扩大的阵容是虚构的。",
+    "Friends across styles": "画风不同的朋友",
+    "Signac visited Van Gogh in Arles in March 1889. Their friendship crossed differences in painting technique.": "1889 年 3 月，西涅克在阿尔勒探望梵高。不同的画法并未妨碍他们的友谊。",
+    "Colour and structure": "色彩与结构",
+    "Cézanne associated with the Impressionists while pursuing his own ordered approach to form and colour.": "塞尚与印象派来往密切，也在形体与色彩上探索出自己的秩序。",
+    "Independents": "独立派",
+    "Catch the light in your own way.": "用自己的方式捕捉光线。",
+    "An imagined crew of leading Impressionists, each with a distinct way of painting modern life.": "这支虚构的队伍由印象派名家组成，每个人都以独特的方式描绘现代生活。",
+    "Cobalt blue, luminous accents and individual silhouettes.": "钴蓝、明亮的点缀和各具特色的轮廓。",
+    "Monet": "莫奈",
+    "The Changing Light": "变幻之光",
+    "Renoir": "雷诺阿",
+    "The Warm Light": "暖光",
+    "Renoir and Monet painted together on the Seine in 1869, developing lighter colours and broken brushwork.": "1869 年，雷诺阿与莫奈一起在塞纳河畔作画，探索更明亮的色彩和断续的笔触。",
+    "Degas": "德加",
+    "The Gesture": "姿态",
+    "Degas exhibited with the Impressionists and studied modern life through drawing, painting and pastel.": "德加参加了印象派展览，通过素描、绘画和粉彩描绘现代生活。",
+    "Morisot": "莫里索",
+    "The Open Air": "露天写生",
+    "Morisot was a principal Impressionist, exhibiting alongside Monet, Renoir, Degas and Pissarro.": "莫里索是印象派的主要画家，曾与莫奈、雷诺阿、德加和毕沙罗同台展出。",
+    "Pissarro": "毕沙罗",
+    "The Orchard": "果园",
+    "Pissarro adopted Neo-Impressionism in 1886, then returned to freer brushwork by 1890.": "毕沙罗于 1886 年尝试新印象派画法，到 1890 年重归自由的笔触。",
+    "Cassatt": "卡萨特",
+    "The Modern Eye": "现代之眼",
+    "Cassatt joined the Impressionist exhibitions in 1879, returning in 1880, 1881 and 1886.": "卡萨特于 1879 年首次参加印象派展览，此后又于 1880、1881 和 1886 年参展。",
+    "Independent visions": "独立视角",
+    "These painters participated in the Impressionist movement. The game’s crew name does not claim membership of the Société des artistes indépendants.": "这些画家都参加过印象派运动。游戏中的队名并不表示他们属于独立艺术家协会。",
+    "Morisot’s place": "莫里索的地位",
+    "Morisot was a principal member of the Impressionist group, alongside Monet, Renoir, Degas and Pissarro.": "莫里索与莫奈、雷诺阿、德加和毕沙罗同为印象派的重要成员。",
+    "Cassatt’s exhibitions": "卡萨特参展经历",
+    "Invited by Degas, Cassatt exhibited with the Impressionists in 1879, 1880, 1881 and 1886.": "应德加邀请，卡萨特于 1879、1880、1881 和 1886 年参加印象派展览。",
+    "Changing methods": "变化的画法",
+    "Pissarro tried Neo-Impressionism from 1886 before returning to freer brushwork by 1890.": "毕沙罗从 1886 年起尝试新印象派画法，到 1890 年重归更自由的笔触。",
+    "Draw": "平局",
+    "You": "你",
+    "The blast": "爆炸",
+    "Impact": "冲击",
+    "Paint burst": "颜料爆裂",
+    "Melee": "近战",
+    "Space": "空格",
+    "Aim at a nearby wall": "瞄准附近的墙面",
+    "Match complete": "比赛结束",
+    "Protective vest": "防护背心",
+    "Pigment smoke": "颜料烟雾",
+    "A 14-second screen that breaks enemy sight lines.": "持续 14 秒的烟幕，可遮挡敌方视线。",
+    "Fragment canister": "破片罐",
+    "A timed area threat. Stone walls stop the blast.": "延时范围攻击，石墙可挡住爆炸。",
+    "Field dressing": "战地绷带",
+    "Hold H while still for 2.6 seconds to restore up to 45 health.": "静止时按住 H 2.6 秒，最多恢复 45 点生命。",
+    "Requisition is available between rounds.": "可在回合之间申领装备。",
+    "Already equipped or insufficient credits.": "已装备或点数不足。",
+    "Insufficient credits.": "点数不足。",
+    "This weapon does not support that attachment.": "此武器不支持该配件。",
+    "Attachments require credits during staging.": "在准备阶段安装配件需要点数。",
+    "Weapon configuration updated.": "武器配置已更新。",
+    "Assault rifle": "突击步枪",
+    "SMG": "冲锋枪",
+    "Shotgun": "霰弹枪",
+    "Sniper rifle": "狙击步枪",
+    "Paint": "颜料",
+    "Heal": "治疗",
+    "Paint canister": "颜料罐",
+    "Elimination": "击败",
+    "Artist": "画家",
+    "Bolt action": "栓动式",
+    "Pump action": "泵动式",
+    "Go": "开始",
+    "USED": "已使用",
+    "Healing — hold H": "治疗中 · 按住 H",
+    "Cancel": "取消",
+    "HEADSHOT": "爆头",
+    "Headshot": "爆头",
+    "DOUBLE": "双连击",
+    "TRIPLE": "三连击",
+    "NICE SHOT": "好枪法",
+    "Aim at a wall": "瞄准墙壁",
+    "ARTIST": "画家",
+    "ELIMS": "击败",
+    "DEATHS": "阵亡",
+    "YOU": "你",
+    "A perfect tie.": "双方平局。",
+    "Your crew loses.": "我方落败。",
+    "A light sidearm with a walnut grip and fast, deliberate handling.": "轻巧的胡桃木握把手枪，操作利落，射击精准。",
+    "Mistral": "密斯特拉风",
+    "A versatile machined receiver, warm walnut furniture, and controlled burst fire.": "结构精密，搭配温润的胡桃木部件，点射平稳。",
+    "Harvester": "收割者",
+    "A ribbed walnut pump, brass-backed shells, and a close-range eight-pellet pattern.": "带纹路的胡桃木护木，搭配黄铜底弹壳，近距离每次散射八枚弹丸。",
+    "Nocturne": "夜曲",
+    "Precision rifle": "精确步枪",
+    "A fluted barrel, precision optic, and manually cycled bolt reward a patient shot.": "沟槽枪管、精密瞄具和手动枪栓，适合耐心瞄准。",
+    "Sunflower": "向日葵",
+    "Crimson vision": "绯红幻象",
+    "Mountain & apple": "山与苹果",
+    "Divided sunlight": "点彩阳光",
+    "Colour under sail": "彩帆",
+    "The cabaret star": "歌舞明星",
+    "Water-lily bridge": "睡莲之桥",
+    "Paris in the rain": "雨中巴黎",
+    "Ballet ribbons": "芭蕾丝带",
+    "The butterfly hunt": "追逐蝴蝶",
+    "The orchard lane": "果园小径",
+    "A view from the loge": "包厢风景",
+    "THE ARTISTS": "画家名录",
+    "Previous artist": "上一位画家",
+    "Next artist": "下一位画家",
+    "Close character studio": "关闭人物画室",
+    "Close · Esc": "关闭 · Esc",
+    "Return to the three-quarter view": "恢复四分之三视角",
+    "Reset view": "重置视角",
+    "Opening the studio…": "正在打开画室…",
+    "Drag to rotate": "拖动旋转",
+    "Scroll to zoom": "滚动缩放",
+    "Character view": "人物视图",
+    "Semi-auto": "半自动",
+    "vanguard": "先锋",
+    "flanker": "侧翼",
+    "anchor": "支柱",
+    "marksman": "射手",
+    "support": "支援",
+    "scout": "侦察",
+    "SNIPER RIFLE": "狙击步枪",
+    "SHOTGUN": "霰弹枪",
+    "Toulouse-Lautrec": "图卢兹-洛特雷克",
+    "Cézanne": "塞尚",
+  },
+  patterns: [
+    [/^(\d+) years old · 1888$/, "1888 年 · $1 岁"],
+    [/^(\d+) rounds$/i, "$1 发"],
+    [/^(\d+)s$/, "$1 秒"],
+  ],
+});
+
+</script>
 </head>
 <body data-screen="menu">
   <div id="world-veil" aria-hidden="true"></div>

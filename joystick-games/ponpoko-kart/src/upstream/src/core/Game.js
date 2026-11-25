@@ -284,7 +284,7 @@ export class Game {
     const opts = this._lastOpts;
     if (!opts) return;
     await this.ui.fade(true, 300);
-    this.ui.showLoading('コースを準備中…');
+    this.ui.showLoading('正在准备赛道…');
     await this.loadRace(opts);
     this.ui.hideLoading();
     await this.ui.fade(false, 400);
@@ -301,7 +301,7 @@ export class Game {
     this._lastOpts = opts;
     await this.ui.fade(true, 350);
     this.ui.hideMenus();
-    this.ui.showLoading('コースを準備中…');
+    this.ui.showLoading('正在准备赛道…');
     this.audio.stopMusic({ fadeOut: 0.4 });
     await this.loadRace(opts);
     this.ui.hideLoading();
@@ -319,15 +319,15 @@ export class Game {
           this.audio.play(e.n === 0 ? 'go' : 'count');
           break;
         case 'rocket':
-          if (e.good) this.ui.toast('ロケットスタート！');
-          else this.ui.toast('エンスト…');
+          if (e.good) this.ui.toast('弹射起步！');
+          else this.ui.toast('熄火了…');
           break;
         case 'lap':
           this.ui.banner(`LAP ${e.lap}/${race.laps}`, { style: 'lap', durationMs: 1500 });
           this.audio.play('lap');
           break;
         case 'final_lap':
-          this.ui.banner('ファイナルラップ！', { style: 'final', durationMs: 2200 });
+          this.ui.banner('最后一圈！', { style: 'final', durationMs: 2200 });
           this.audio.playJingle('final_lap');
           this.audio.setFinalLap(true);
           break;
@@ -364,9 +364,9 @@ export class Game {
         A.play('jump');
         if (e.ramp === 'glide') A.play('glider_open');
         break;
-      case 'glide_start': A.play('glider_open'); this.ui.toast('和傘グライダー！'); break;
+      case 'glide_start': A.play('glider_open'); this.ui.toast('纸伞滑翔！'); break;
       case 'trick': A.play('trick'); break;
-      case 'trick_land': this.ui.toast('ナイス！'); break;
+      case 'trick_land': this.ui.toast('漂亮！'); break;
       case 'land':
         A.play('land', { volume: Math.min(1, e.impact / 12) });
         this.rig.shake(Math.min(0.5, e.impact / 30));
@@ -423,7 +423,7 @@ export class Game {
   _playerFinished(rank) {
     this.mode = 'finished';
     this.rig.mode = 'orbit';
-    this.ui.banner('ゴール！', { style: 'finish', durationMs: 3000 });
+    this.ui.banner('冲线！', { style: 'finish', durationMs: 3000 });
     this.audio.setFinalLap(false);
     this.audio.stopMusic({ fadeOut: 0.3 });
     this.audio.playJingle(rank <= 3 ? 'finish_win' : 'finish_lose');

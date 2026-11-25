@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8">
+<html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NOVA LANCER</title>
 <meta property="og:type" content="website">
@@ -380,6 +380,248 @@
     .press, #warning.on, .hits.pop, #title .logo, #title .logo .l2, .comm.wait .c-next, .story-box.wait .c-next, .pw-slots span.cur { animation: none; }
   }
 </style>
+<script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "NOVA LANCER": "新星枪骑兵",
+    "SHIELD": "护盾",
+    "BOOST": "加速",
+    "ゴールドリング": "金环",
+    "HITS": "击坠",
+    "SCORE": "得分",
+    "LASER · SINGLE": "单束激光",
+    "BOMB": "炸弹",
+    "MIZUCHI": "水蛟",
+    "機械獣 ミズチ": "机械兽·水蛟",
+    "巨大反応接近": "巨大信号正在接近",
+    "WARNING": "警报",
+    "ROLL◀": "◀翻滚",
+    "BRAKE": "减速",
+    "▶ROLL": "翻滚▶",
+    "FIRE": "射击",
+    "ポーズ": "暂停",
+    "NOVA": "新星",
+    "LANCER": "枪骑兵",
+    "ノヴァ・ランサー": "新星枪骑兵",
+    "A · STORY MENU": "A · 剧情菜单",
+    "START / P · 快速出击 · QUICK SORTIE": "START / P · 快速出击",
+    "ストーリー": "剧情",
+    "STORY": "故事模式",
+    "ミッション選択": "任务选择",
+    "MISSION SELECT": "选择关卡",
+    "キャラクター": "角色",
+    "CHARACTERS": "人物档案",
+    "難易度": "难度",
+    "NORMAL": "普通",
+    "操作方法": "操作说明",
+    "CONTROLS": "按键说明",
+    "設定": "设置",
+    "SETTINGS": "游戏设置",
+    "つづきから": "继续上次进度",
+    "MISSION 01": "任务 01",
+    "はじめから": "从头开始",
+    "NEW GAME": "新游戏",
+    "パスワード": "通关密码",
+    "PASSWORD": "输入密码",
+    "プロローグ": "序章",
+    "PROLOGUE": "故事序章",
+    "戻る": "返回",
+    "BACK": "返回",
+    "BEST": "最佳成绩",
+    "MISSION 01 · AZURE COAST": "任务 01 · 蔚蓝海岸",
+    "タッチ操作": "触控操作",
+    "画面の左下をドラッグ": "拖动画面左下方",
+    "移動": "移动",
+    "ショット": "射击",
+    "長押しでチャージ → ロックオンして発射": "长按蓄力，锁定后松开发射",
+    "スマートボム": "智能炸弹",
+    "もう一度押すと即起爆": "再按一次可立即引爆",
+    "ブースト": "加速",
+    "ブレーキ": "减速",
+    "ローリング": "翻滚",
+    "素早く2回押す。敵弾をはじく。押し続けると機体を傾けて鋭く旋回": "快速连按两次可翻滚弹开敌弹。按住可倾斜机身急转弯。",
+    "キーボード・マウス・ゲームパッド": "键盘、鼠标和手柄",
+    "Space": "空格",
+    "マウス": "鼠标",
+    "左クリック：ショット／右クリック：ボム": "左键射击，右键投弹",
+    "ゲームパッド": "手柄",
+    "スティック：移動　A：ショット　B：ボム　R2：ブースト　L2：ブレーキ　L1/R1 ×2：ローリング": "摇杆移动，A 射击，B 投弹，R2 加速，L2 减速，连按两次 L1 或 R1 翻滚",
+    "タッチ": "触屏",
+    "画面左下をドラッグで移動、右下のボタンでショット・ボム・ブースト・ブレーキ・ローリング": "拖动左下角移动，通过右下角按钮射击、投弹、加速、减速或翻滚。",
+    "リングを通過するとシールド回復。ゴールドリングを3つ集めるとシールド最大値アップ。敵を撃墜して HITS を稼ごう。": "穿过光环可恢复护盾，集齐三个金环可提高护盾上限。击落敌机可增加击坠数。",
+    "マスター音量": "主音量",
+    "BGM 音量": "音乐音量",
+    "効果音 音量": "音效音量",
+    "上下操作の反転": "反转垂直操控",
+    "OFF": "关",
+    "画面の揺れ": "画面震动",
+    "ON": "开",
+    "画質": "画质",
+    "AUTO": "自动",
+    "PAUSE": "暂停",
+    "一時停止中": "游戏已暂停",
+    "再開": "继续",
+    "RESUME": "恢复游戏",
+    "チェックポイントからやり直す": "从检查点重试",
+    "RETRY": "重试",
+    "タイトルへ戻る": "返回标题",
+    "QUIT": "退出",
+    "GAME OVER": "游戏结束",
+    "ランサー隊、撃墜……": "枪骑兵队被击落了……",
+    "コンティニュー（スコアはリセット）": "继续挑战（分数将清零）",
+    "CONTINUE": "继续",
+    "MISSION COMPLETE": "任务完成",
+    "惑星アクエリア 沿岸防衛線 突破": "成功突破阿奎利亚海岸防线",
+    "TOTAL SCORE": "总分",
+    "MEDAL GET": "获得勋章",
+    "次へ": "下一步",
+    "NEXT": "继续",
+    "もう一度出撃": "再次出击",
+    "ミッション選択へ": "返回任务选择",
+    "SELECT": "选择",
+    "TITLE": "标题",
+    "BRIEFING ·": "任务简报 ·",
+    "AZURE COAST": "蔚蓝海岸",
+    "惑星アクエリア": "阿奎利亚星",
+    "OBJECTIVE · 作戦目標": "作战目标",
+    "出撃": "出击",
+    "SORTIE": "开始行动",
+    "SKIP ▶▶": "跳过 ▶▶",
+    "TO BE CONTINUED": "未完待续",
+    "タイトルへ": "返回标题",
+    "ミッション選択　クリアした面を選んで遊べます": "选择已通关的任务进行游玩",
+    "登場人物": "登场人物",
+    "VOICE": "语音",
+    "パスワードを入れると、その面の始めから続けられます": "输入通关密码可从对应任务的起点继续",
+    "INITIALIZING": "正在初始化",
+    "EASY": "简单",
+    "HARD": "困难",
+    "HIGH": "高",
+    "LOW": "低",
+    "CLEAR": "通关",
+    "RANK": "评级",
+    "MEDAL": "勋章",
+    "NEW RECORD!": "新纪录！",
+    "VIOLET SARGASSO": "紫色船墓",
+    "AMBER DUNES": "琥珀沙丘",
+    "WHITE SILENCE": "白色静寂",
+    "EMERALD STORM": "翠绿风暴",
+    "SCARLET FORGE": "绯红熔炉",
+    "LONG NIGHT": "长夜",
+    "LASER · TWIN": "双束激光",
+    "LASER · HYPER": "超级激光",
+  },
+  patterns: [
+    [/^MISSION (\d+)$/, "任务 $1"],
+  ],
+});
+
+</script>
 </head><body>
 <div id="app">
   <canvas id="hudc"></canvas>

@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import { build } from 'esbuild';
 import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -9,12 +10,12 @@ const result = await build({ absWorkingDir: root, entryPoints: ['src/main.js'], 
   format: 'iife', target: 'es2020', minify: true, write: false, legalComments: 'eof',
   define: { __DEV__: 'false' } });
 const [head, body] = (await read('src/template.html')).split('<!-- @@BODY@@ -->');
-const html = '<!doctype html>\n<html lang="ja"><head><meta charset="utf-8">\n'
+const html = '<!doctype html>\n<html lang="zh-CN"><head><meta charset="utf-8">\n'
   + '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
   + head.trim() + '\n</head><body>\n'
   + body.trim().replace('<!-- @@SCRIPT@@ -->', '<script src="nova-lancer.js"></script>') + '\n</body></html>\n';
 const notices = await Promise.all(['NOTICE.md', 'LICENSE', 'src/Three-LICENSE.txt', 'src/PureTV-LICENSE.txt'].map(read));
-const files = { 'tv.html': html, 'nova-lancer.js': result.outputFiles[0].text,
+const files = { 'tv.html': await localizeHtml(html, root), 'nova-lancer.js': result.outputFiles[0].text,
   'THIRD-PARTY-NOTICES.txt': notices.join('\n\n') };
 const dist = path.join(root, 'dist');
 if (process.argv.includes('--check')) {
