@@ -114,6 +114,7 @@ jobs:
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert os.environ['GAMES']=='kindle' and os.environ['ARTIFACT_SOURCE']=='bbc86c14ddc5ad8082ec04e840b985784422c36f' and os.environ['ARTIFACT_RUN']=='45517718277' and os.environ['ARTIFACT_ID']=='14979931235'
           assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
           if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
               assert os.environ['GAMES']=='backroad-rally', 'Only this single original APK is authorized'
@@ -300,7 +301,7 @@ jobs:
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
@@ -439,7 +440,7 @@ jobs:
               except Exception:errors.append({'game':game,'error':traceback.format_exc()})
           archive=json.loads((out/'archive-verification.json').read_text())
           original_checks_passed=not errors and archive['status']=='passed' and os.environ['RUNTIME_RESULT']=='success'
-          diagnostic=os.environ['PON_CAPTURE_QEMU_STACK']=='true'
+          diagnostic=True  # Controlled Kindle emulator comparison, outside normal acceptance.
           accepted=original_checks_passed and not diagnostic
           (out/'runtime-verification.json').write_text(json.dumps({'status':'passed' if original_checks_passed else 'failed','checks':checks,'errors':errors,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic},indent=2)+'\n')
           files={}
