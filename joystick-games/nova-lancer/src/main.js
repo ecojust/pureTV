@@ -223,7 +223,7 @@ function wireEvents() {
       run.goldRings++; AudioSys.sfx('goldRing');
       if (run.goldRings >= 3) {
         run.goldRings = 0;
-        if (run.maxShield < 140) { run.maxShield = 140; run.shield = 140; tip('シールド最大値アップ！', 3); }
+        if (run.maxShield < 140) { run.maxShield = 140; run.shield = 140; tip('护盾上限提升！', 3); }
         else { run.lives++; AudioSys.sfx('extraLife'); tip('1UP！', 3); }
       }
     } else if (kind === 'check') {
@@ -238,9 +238,9 @@ function wireEvents() {
     if (kind === 'laser') {
       run.laser = Math.min(2, run.laser + 1);
       AudioSys.sfx('powerUp');
-      tip(run.laser === 2 ? 'ハイパーレーザー！' : 'ツインレーザー！', 2.5);
-      radio('rio', run.laser === 2 ? 'ハイパーレーザー装備完了。威力が上がったわ！' : 'ツインレーザーに換装完了。これで戦いやすくなるわ！', { prio: 1 });
-    } else if (kind === 'bomb') { run.bombs = Math.min(9, run.bombs + 1); AudioSys.sfx('item'); tip('スマートボム +1', 2); }
+      tip(run.laser === 2 ? '超级激光！' : '双束激光！', 2.5);
+      radio('rio', run.laser === 2 ? '超级激光安装完毕，威力提升了！' : '已换装双束激光。这下好打多了！', { prio: 1 });
+    } else if (kind === 'bomb') { run.bombs = Math.min(9, run.bombs + 1); AudioSys.sfx('item'); tip('智能炸弹 +1', 2); }
     else { run.shield = Math.min(run.maxShield, run.shield + 40); AudioSys.sfx('shieldUp'); }
   });
   on('dropItem', (kind, pos, s, u, v) => {
@@ -258,17 +258,17 @@ function wireEvents() {
   const once = (key, fn) => { const r = G.run; r.said ||= {}; if (r.said[key]) return; r.said[key] = true; fn(); };
   on('enemyKilled', () => {
     const h = G.run.hits;
-    if (h >= 50) once('h50', () => kotaOr('撃墜数50突破！　隊長すごいや！', 'rio', '撃墜数50突破。さすがね、隊長。'));
-    if (h >= 100) once('h100', () => radio('gantetsu', '100機撃墜か……腕を上げたな、隊長。'));
+    if (h >= 50) once('h50', () => kotaOr('击落五十架了！队长真厉害！', 'rio', '击落五十架。真有你的，队长。'));
+    if (h >= 100) once('h100', () => radio('gantetsu', '击落一百架了啊……队长，你又进步了。'));
   });
-  on('combo', (kills) => { if (kills >= 3) once('combo', () => radio('gantetsu', '見事なまとめ撃ちだ。その調子で行け。')); });
-  on('deflect', () => once('deflect', () => radio('gantetsu', 'いいぞ、その要領だ！　弾は正面から受けるな。')));
+  on('combo', (kills) => { if (kills >= 3) once('combo', () => radio('gantetsu', '一举击落好几架，干得漂亮。继续！')); });
+  on('deflect', () => once('deflect', () => radio('gantetsu', '对，就这样！别硬接敌弹。')));
   on('playerDamaged', () => {
     const r = G.run;
-    if (r.shield > 0 && r.shield < r.maxShield * 0.3) once('low', () => radio('rio', 'シールド残量低下！　リングを探して回復して！', { prio: 1 }));
+    if (r.shield > 0 && r.shield < r.maxShield * 0.3) once('low', () => radio('rio', '护盾快耗尽了！找个光环补充一下！', { prio: 1 }));
   });
-  on('ring', (kind) => { if (kind === 'gold') once('gold', () => kotaOr('金色のリングだ！　3つ集めるといいことあるよ！', 'rio', '金色のリングね。3つ集めると、いいことがあるわ。')); });
-  on('bombUsed', () => once('bomb', () => kotaOr('ボムだー！　どっかーん！', 'gantetsu', 'ボムか。思い切りがいいな。')));
+  on('ring', (kind) => { if (kind === 'gold') once('gold', () => kotaOr('是金环！集齐三个有好东西哦！', 'rio', '金环，收集三个会有惊喜。')); });
+  on('bombUsed', () => once('bomb', () => kotaOr('炸弹来啦！轰！', 'gantetsu', '用炸弹啊，够果断。')));
   // legendary spear fragment: one bit per mission, carried through the story (all six → the true ending)
   on('fragment', () => {
     const run = G.run;
@@ -278,7 +278,7 @@ function wireEvents() {
     P.found ||= {};
     if (!P.found[CUR.id]) { P.found[CUR.id] = true; saveProgress(); }
     AudioSys.sfx('extraLife');
-    tip('伝説の槍のかけらを手に入れた', 3.5);
+    tip('获得传说之枪的碎片', 3.5);
     CUR.onFragment?.();
   });
 
@@ -351,7 +351,7 @@ function refreshTitleInfo() {
   refreshTitle({
     best: P.best.azure || null,
     canSelect: MISSIONS.some(m => m.def && P.cleared[m.id]),
-    cont: st ? { label: `MISSION ${pad2(st.stage + 1)}${MISSIONS[st.stage]?.def ? '' : '（準備中）'}` } : null,
+    cont: st ? { label: `MISSION ${pad2(st.stage + 1)}${MISSIONS[st.stage]?.def ? '' : '（准备中）'}` } : null,
     hasSave: !!st,
     footR: st ? `STORY · MISSION ${pad2(st.stage + 1)}` : 'MISSION 01 · AZURE COAST',
   });
@@ -486,7 +486,7 @@ function setupStage(d, intro) {
   } else if (d > 0) {
     banner('RESTART', d >= CUR.bossAt ? 'BOSS' : 'CHECKPOINT', '', 2);
   }
-  if (!intro && G.run.deaths > 0) after(1.2, () => radio('hou', '無理をするな、ランサー1。体勢を立て直せ！', { prio: 1 }));
+  if (!intro && G.run.deaths > 0) after(1.2, () => radio('hou', '别硬撑，枪骑兵一号。稳住阵形！', { prio: 1 }));
 }
 
 function respawn(fromMenu) {
@@ -519,7 +519,7 @@ function gameOver() {
   G.state = 'gameover';
   AudioSys.playMusic('gameover', { fade: 0.3 });
   hudVisible(false);
-  setGameOverText(G.run.hits > 0 ? `撃墜数 ${G.run.hits}　スコア ${G.run.score.toLocaleString()}` : 'ランサー隊、撃墜……');
+  setGameOverText(G.run.hits > 0 ? `击坠数 ${G.run.hits}　得分 ${G.run.score.toLocaleString()}` : '枪骑兵队被击落了……');
   S.goT = 0; S.goShown = false;
 }
 
@@ -546,7 +546,7 @@ function startClear() {
   resetCharge();
   AudioSys.playMusic('clear', { fade: 0.6 });
   hudVisible(true);
-  after(1.2, () => banner('MISSION', 'COMPLETE', 'ミッション　コンプリート', 5, 'gold'));
+  after(1.2, () => banner('MISSION', 'COMPLETE', '任务完成', 5, 'gold'));
   CUR.onClear?.(G.run);
   WING.list.forEach((w, i) => after(2.4 + i * 0.35, () => { if (!w.gone) { w.barrelRoll(); AudioSys.sfx('roll', { vol: 0.5, pan: i - 1 }); } }));
   setWingStance('front');
@@ -571,8 +571,8 @@ function finishRun() {
   const medal = run.hits >= R.medal;
   const mm = Math.floor(run.time / 60), ss = Math.floor(run.time % 60);
   const rows = [
-    { label: 'HITS 撃墜数', value: run.hits },
-    { label: 'SCORE スコア', value: run.score },
+    { label: '击坠数', value: run.hits },
+    { label: '得分', value: run.score },
     { label: 'HIT BONUS', value: hitBonus },
     { label: 'SHIELD BONUS', value: shieldBonus, note: `${Math.round(run.shield / run.maxShield * 100)}%` },
     { label: 'LIFE BONUS', value: lifeBonus, note: `×${run.lives}` },
@@ -589,9 +589,9 @@ function finishRun() {
     };
     CAMP.stage += 1;
     saveStoryPoint(CAMP.stage, CAMP.carry);
-    storyLine = `<br>ストーリー合計 <b>${CAMP.carry.score.toLocaleString()}</b>`;
+    storyLine = `<br>剧情总分 <b>${CAMP.carry.score.toLocaleString()}</b>`;
   }
-  const meta = `命中率 <b>${acc}%</b>　リング <b>${run.rings}</b>　タイム <b>${mm}:${String(ss).padStart(2, '0')}</b><br>${CUR.resultNote?.(run) ?? ''}${isBest ? '　<b>NEW RECORD!</b>' : ''}${storyLine}`;
+  const meta = `命中率 <b>${acc}%</b>　光环 <b>${run.rings}</b>　用时 <b>${mm}:${String(ss).padStart(2, '0')}</b><br>${CUR.resultNote?.(run) ?? ''}${isBest ? '　<b>NEW RECORD!</b>' : ''}${storyLine}`;
   G.state = 'results';
   hudVisible(false);
   showResults({ rows, total, rank, medal, meta, sub: CUR.resultSub, mode: CAMP.mode });

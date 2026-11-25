@@ -1,5 +1,5 @@
 // AGP's Java compilation does not honor AndroidSourceDirectorySet include filters.
-// Give it a generated directory containing exactly the three shared controller files.
+// Give it a generated directory containing the shared controller and language sources.
 def controllerOutput = layout.buildDirectory.dir('generated/sources/puretv-controller')
 def prepareController = tasks.register('preparePuretvControllerSources', Sync) {
     from(file('../../resource/game-kit/android/src/main/java')) {
@@ -8,6 +8,7 @@ def prepareController = tasks.register('preparePuretvControllerSources', Sync) {
     }
     from(file('../../resource/game-kit/legacy-controller-native/src/main/java')) {
         include 'com/ecojust/controller/LegacyWifiController.java'
+        include 'com/ecojust/controller/GameLanguage.java'
     }
     into(controllerOutput)
 }

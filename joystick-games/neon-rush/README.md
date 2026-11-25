@@ -1,8 +1,10 @@
 # 霓虹飞车 · Neon Rush TV
 
 <!-- apk-resource:start -->
-[Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
+[Android TV 0.1.6 · APK](neon-rush-0.1.6.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/neon-rush-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/neon-rush-windows-x64-setup.exe)
 <!-- apk-resource:end -->
+
+历史安装包（Android 0.1.5） · [Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
 
 ## 历史 Android 版本 0.1.4 · 手柄与手机连接
 
@@ -76,7 +78,7 @@ Android 客户端自 0.1.2 起提供 pureTV 九键 TCP 手柄与 mDNS 自动发�
 
 ## 画面与声音
 
-原创三维赛车、赛道、城市、海岸和山谷由本地代码生成，游戏内容不依赖在线图片、模型或音频下载。界面提供小地图、名次、圈数、计时、时速，以及漂移和氮气提示。声音可在顶部按钮开启或关闭，菜单中也可用 B / 遥控器菜单键切换。安装版首次跟随系统中英文，使用鼠标或触屏时也可点顶部语言按钮切换。
+原创三维赛车、赛道、城市、海岸和山谷由本地代码生成，游戏内容不依赖在线图片、模型或音频下载。界面提供小地图、名次、圈数、计时、时速，以及漂移和氮气提示。声音可在顶部按钮开启或关闭，菜单中也可用 B / 遥控器菜单键切换。首次启动默认使用简体中文。点击顶部语言按钮可切换为英文，游戏会记住选择。
 
 本作参考指定仓库中飞车游戏的漂移竞速体验，采用独立名称、车型、赛道和实现；未复制腾讯品牌、官方赛道或上游源码。参考记录与实际验证范围分别保留，详见[参考来源](docs/REFERENCE.md)。
 

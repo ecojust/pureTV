@@ -245,3 +245,23 @@ test('A same-frame shift away from the wall frees space before rotation is check
   const g=game(),p=g.players[0];p.piece={type:'I',rotation:1,x:-1,y:5};
   frames(g,1,{x:1,a:true});assert.equal(p.piece.x,0);assert.equal(p.piece.rotation,0);
 });
+
+test('Canvas challenge result uses Chinese glyphs by default and pixel lettering in English', () => {
+  const {TetrisRenderer} = require('../src/main/assets/renderer.js');
+  const labels = [];
+  let pixels = 0;
+  const context = {
+    save() {}, restore() {}, strokeRect() {},
+    fillRect() { pixels++; },
+    fillText(label) { labels.push(label); }
+  };
+  const canvas = {style: {}, getContext: () => context};
+  const ended = {phase: 'gameover', players: [{joined: true, completed: true}]};
+  new TetrisRenderer(canvas).overlay(ended);
+  assert.deepEqual(labels, ['挑战成功', '按 START 返回标题画面']);
+  pixels = 0;
+  labels.length = 0;
+  new TetrisRenderer(canvas, 'en-US').overlay(ended);
+  assert.equal(labels.length, 0);
+  assert.ok(pixels > 20);
+});

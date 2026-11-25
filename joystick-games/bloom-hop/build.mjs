@@ -1,5 +1,6 @@
 import { build } from 'esbuild';
 import fs from 'node:fs';
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -25,7 +26,8 @@ function collect(dir) {
 collect('src/assets');
 files.set('audio-bank.js', Buffer.from('window.BloomAudio=Object.freeze(' + JSON.stringify(audio) + ');\n'));
 const font = 'data:font/ttf;base64,' + read('src/fonts/Fredoka.ttf').toString('base64');
-files.set('tv.html', Buffer.from(read('src/index.html').toString().replace('fonts/Fredoka.ttf', font)));
+const html = read('src/index.html').toString().replace('fonts/Fredoka.ttf', font);
+files.set('tv.html', Buffer.from(await localizeHtml(html, root)));
 files.set('bloom-hop.js', await bundle('src/main.js'));
 files.set('hint-worker.js', await bundle('src/solve-worker.js'));
 files.set('THIRD-PARTY-NOTICES.txt', Buffer.from(['NOTICE.md', 'LICENSE', 'src/fonts/OFL.txt', 'docs/puretv-LICENSE.txt'].map(read).join('\n\n')));

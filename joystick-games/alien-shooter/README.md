@@ -1,8 +1,10 @@
 # 孤胆枪手 TV
 
 <!-- apk-resource:start -->
-[Android 0.1.6 APK](alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [图标与安装验证](docs/releases/0.1.6/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.5 实玩录像](docs/releases/0.1.5/gameplay.mp4?raw=1)
+[Android TV 0.1.7 · APK](alien-shooter-0.1.7.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/alien-shooter-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/alien-shooter-windows-x64-setup.exe)
 <!-- apk-resource:end -->
+
+历史安装包（Android 0.1.6） · [Android 0.1.6 APK](alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [图标与安装验证](docs/releases/0.1.6/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.5 实玩录像](docs/releases/0.1.5/gameplay.mp4?raw=1)
 
 ## 历史 Android 版本 0.1.5 · 手柄与手机连接
 

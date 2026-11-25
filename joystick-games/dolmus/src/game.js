@@ -1,3 +1,4 @@
+import zh from './zh-cn.js';
 import './arena-core.js';
 import { createController } from '../../shared/web/standard-gamepad.js';
 import { navigateMenu, navigateAccessibility } from './menu.js';
@@ -41,13 +42,21 @@ const wpick = arr => arr[Math.floor(WR() * arr.length)];
 
 // ---------------------------------------------------------------- i18n
 const STOPS = {
-  balat: ['Balat', 'Balat'], galata: ['Galata', 'Galata'], meydan: ['Cami Meydanı', 'Mosque Square'],
-  besiktas: ['Beşiktaş', 'Beşiktaş'], tram: ['Tramvay Durağı', 'Tram Stop'], carsi: ['Çarşı', 'Bazaar'],
-  kopru: ['Köprü Başı', 'Bridge End'], iskele: ['Vapur İskelesi', 'Ferry Pier'], kadikoy: ['Kadıköy', 'Kadıköy'],
-  karakoy: ['Karaköy', 'Karaköy'], eminonu: ['Eminönü', 'Eminönü'], fener: ['Fener', 'Fener'],
+  balat: ['Balat', 'Balat', '巴拉特'], galata: ['Galata', 'Galata', '加拉塔'], meydan: ['Cami Meydanı', 'Mosque Square', '清真寺广场'],
+  besiktas: ['Beşiktaş', 'Beşiktaş', '贝西克塔斯'], tram: ['Tramvay Durağı', 'Tram Stop', '电车站'], carsi: ['Çarşı', 'Bazaar', '集市'],
+  kopru: ['Köprü Başı', 'Bridge End', '桥头'], iskele: ['Vapur İskelesi', 'Ferry Pier', '渡轮码头'], kadikoy: ['Kadıköy', 'Kadıköy', '卡德柯伊'],
+  karakoy: ['Karaköy', 'Karaköy', '卡拉柯伊'], eminonu: ['Eminönü', 'Eminönü', '埃米诺努'], fener: ['Fener', 'Fener', '费内尔'],
 };
 const STR = {
+  zh,
   tr: {
+    routeSign: "İSTANBUL ŞEHİR İÇİ DOLMUŞ HATTI",
+    routeDest: "KADIKÖY — BOSTANCI",
+    routeMotto: "★ MÂŞÂALLÂH · TEK RAKİBİM THY ★",
+    receiptSeal: "★ İSTANBUL DOLMUŞÇULAR ESNAF ODASI ★",
+    receiptReport: "GÜNLÜK HESAP PUSULASI · VARDİYA RAPORU",
+    gameName: "DOLMUŞ",
+    madeBy: "built by Claude Sonnet 5.5",
     subtitle: 'İstanbul sokaklarında dolmuş sür, yolcuları al, bırak, kazan.',
     howtoTouch: 'Direksiyonu çubukla çevir. Sağdaki pedal kaydırıcısını yukarı çek: gaz, aşağı çek: fren. Sarı halkada kapı düğmesiyle dur ve yolcuları al. Kırmızıda geçme!',
     howto: 'Yön tuşlarıyla sür. Sarı halkada A ile dur ve kapıyı aç. X korna. Yolcuların sabrı sınırlı, kırmızıda geçme!',
@@ -143,6 +152,13 @@ const STR = {
     moodLike: ['Aç şu sesi kaptan!', 'Bu şarkı benim!'], moodDislike: ['Kıs şunu biraz...', 'Başka kanal yok mu?'],
   },
   en: {
+    routeSign: "Istanbul city minibus line",
+    routeDest: "Kadıköy — Bostancı",
+    routeMotto: "★ Godspeed · Only the airlines can keep up ★",
+    receiptSeal: "★ Istanbul Minibus Drivers’ Guild ★",
+    receiptReport: "Daily statement · Shift report",
+    gameName: "Dolmuş",
+    madeBy: "built by Claude Sonnet 5.5",
     subtitle: 'Drive a dolmuş through Istanbul streets: pick up, drop off, earn.',
     howtoTouch: 'Steer with the slider. On the right, slide the pedal up for gas and down to brake. At a yellow ring tap the door button to stop and load passengers. Never run a red light!',
     howto: 'Steer with the D-pad. Press A at a yellow ring to stop and open the door. Sound the horn with X. Passengers are impatient, never run a red light!',
@@ -237,7 +253,9 @@ const STR = {
     moodLike: ['Turn it up, driver!', 'That is my song!'], moodDislike: ['Turn that down a bit...', 'Any other station?'],
   },
 };
-let LANG = 'tr';
+const languages = ['zh', 'en', 'tr'];
+let LANG = 'zh';
+const nextLanguage = () => languages[(languages.indexOf(LANG) + 1) % languages.length];
 function t(k, ...a) {
   let s = (STR[LANG] && STR[LANG][k]);
   if (s === undefined) s = STR.en[k];
@@ -245,19 +263,20 @@ function t(k, ...a) {
   if (Array.isArray(s)) return s;
   return s.replace(/\{(\d)\}/g, (_, i) => (a[+i] === undefined ? '' : a[+i]));
 }
-const stopName = key => (STOPS[key] ? STOPS[key][LANG === 'tr' ? 0 : 1] : key);
-const fmt = n => Math.round(Number.isFinite(Number(n)) ? Number(n) : 0).toLocaleString(LANG === 'tr' ? 'tr-TR' : 'en-US');
+const stopName = key => (STOPS[key] ? STOPS[key][LANG === 'zh' ? 2 : LANG === 'tr' ? 0 : 1] : key);
+const fmt = n => Math.round(Number.isFinite(Number(n)) ? Number(n) : 0).toLocaleString(LANG);
 
 // ---------------------------------------------------------------- settings / save (all in try/catch)
 const KEY_SET = 'arena.dolmus.settings', KEY_SAVE = 'arena.dolmus.save';
 const isPhone = /Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent) || (matchMedia && matchMedia('(pointer:coarse)').matches && Math.min(screen.width, screen.height) < 800);
-const settings = { master: 0.8, music: 0.6, sfx: 0.8, lang: String(navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en', quality: isPhone ? 'low' : 'high', qualityManual: false, mapRot: true, mobileUnifiedPedal: true };   // mobileUnifiedPedal: touch gas/brake as one vertical slider (false = the two separate pedals)
+const settings = { master: 0.8, music: 0.6, sfx: 0.8, lang: 'zh', quality: isPhone ? 'low' : 'high', qualityManual: false, mapRot: true, mobileUnifiedPedal: true };   // mobileUnifiedPedal: touch gas/brake as one vertical slider (false = the two separate pedals)
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } }
 (function loadSettings() {
   const s = lsGet(KEY_SET);
   if (s && typeof s === 'object') for (const k of Object.keys(settings)) if (s[k] !== undefined) settings[k] = s[k];
-  LANG = (Q.get('lang') === 'en' || Q.get('lang') === 'tr') ? Q.get('lang') : settings.lang;   // URL override is not saved
+  if (!languages.includes(settings.lang)) settings.lang = 'zh';
+  LANG = languages.includes(Q.get('lang')) ? Q.get('lang') : settings.lang;   // URL override is not saved
 })();
 const saveSettings = () => lsSet(KEY_SET, settings);
 // arena.dolmus.save = { best: {...}, run: {level,total,stars} | null }
@@ -3822,23 +3841,23 @@ const G = { state: 'loading', horns: 0, mode: 'campaign', lvIdx: 0, wave: 1, tot
 const el = {};
 ['sTitle', 'sPause', 'sSettings', 'sEnd', 'hud', 'bPlay', 'playTxt', 'bCont', 'bEndless', 'bestLine', 'lvCard', 'cdTitle', 'cdDesc', 'cdList', 'cdTarget', 'countdown', 'cdNum', 'cdSub', 'mascot', 'mascotImg', 'enTips', 'enTitle', 'enSub', 'enStars', 'enStats', 'enRec', 'nextTxt', 'bNext', 'bRetry',
   'stLevel', 'stClock', 'stFare', 'fareBar', 'stSeats', 'dentBar', 'toasts', 'floaters', 'bubbles', 'seatsStrip', 'spVal', 'spArc', 'spNeedle', 'guideBox', 'guideArrow', 'guideTxt', 'hint', 'hurt', 'dbg', 'touch', 'steer', 'pGas', 'pBrake', 'tDoor', 'tHorn',
-  'rMaster', 'rMusic', 'rSfx', 'oMaster', 'oMusic', 'oSfx', 'bTR', 'bEN', 'bQLow', 'bQHigh', 'bMapH', 'bMapN', 'bSound', 'langTxt', 'sRoute', 'hatLv', 'hatStopsH', 'hatStops', 'hatCh', 'hatChd', 'hatBestLine', 'bHatGo', 'hatGoTxt'].forEach(id => { el[id] = document.getElementById(id); });
+  'rMaster', 'rMusic', 'rSfx', 'oMaster', 'oMusic', 'oSfx', 'bZH', 'bTR', 'bEN', 'bQLow', 'bQHigh', 'bMapH', 'bMapN', 'bSound', 'langTxt', 'sRoute', 'hatLv', 'hatStopsH', 'hatStops', 'hatCh', 'hatChd', 'hatBestLine', 'bHatGo', 'hatGoTxt'].forEach(id => { el[id] = document.getElementById(id); });
 const SCREENS = ['sTitle', 'sPause', 'sSettings', 'sEnd', 'sRoute', 'sNews'];
 for (const id of ['sNews', 'bNews', 'bNewsBack', 'newsList', 'boardList', 'badgeList', 'bDaily', 'dailyLine', 'bA11y', 'bShare', 'aOther', 'pUni', 'bPedU', 'bPedS']) el[id] = document.getElementById(id);
 function showScreen(id) { for (const s of SCREENS) el[s].classList.toggle('show', s === id); if (id) { const b = el[id].querySelector('.btn.primary:not([disabled])') || el[id].querySelector('.btn'); if (b && id !== 'sTitle') setTimeout(() => b.focus({ preventScroll: true }), 30); } }
 
 function applyLang() {
-  document.documentElement.lang = LANG;
+  document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
   if (window.Arena) Arena.lang(LANG);
   const touch = document.body.classList.contains('touch');   // touch devices: no keyboard keys in the help texts
   $$('[data-i]').forEach(n => { const k = n.dataset.i; n.textContent = t(touch && (k === 'howto' || k === 'keysHelp') ? k + 'Touch' : k, 0, 0); });
   $$('[data-t]').forEach(n => { const s = t(n.dataset.t); n.title = s; n.setAttribute('aria-label', s); });
-  el.steer.setAttribute('aria-label', LANG === 'tr' ? 'Direksiyon' : 'Steering');
-  el.langTxt.textContent = LANG === 'tr' ? 'TR · EN' : 'EN · TR';
+  el.steer.setAttribute('aria-label', LANG === 'zh' ? '转向' : LANG === 'tr' ? 'Direksiyon' : 'Steering');
+  el.langTxt.textContent = { zh: '简体中文', en: 'English', tr: 'Türkçe' }[LANG];
   el.hint.innerHTML = t('hintSpace');
-  el.bTR.classList.toggle('sel', LANG === 'tr'); el.bEN.classList.toggle('sel', LANG === 'en');
+  el.bZH.classList.toggle('sel', LANG === 'zh'); el.bTR.classList.toggle('sel', LANG === 'tr'); el.bEN.classList.toggle('sel', LANG === 'en');
   el.bQLow.classList.toggle('sel', lowQ()); el.bQHigh.classList.toggle('sel', !lowQ());
-  document.title = 'Dolmuş';
+  document.title = t('gameName');
   updateRoofSign();
   if (G.state === 'title' || G.state === 'loading') refreshTitle();
   if (el.sNews && el.sNews.classList.contains('show')) fillNews();
@@ -4115,7 +4134,7 @@ function nextAction() {
 function syncSettingsUI() {
   el.rMaster.value = Math.round(settings.master * 100); el.rMusic.value = Math.round(settings.music * 100); el.rSfx.value = Math.round(settings.sfx * 100);
   el.oMaster.textContent = el.rMaster.value + '%'; el.oMusic.textContent = el.rMusic.value + '%'; el.oSfx.textContent = el.rSfx.value + '%';
-  el.bTR.classList.toggle('sel', LANG === 'tr'); el.bEN.classList.toggle('sel', LANG === 'en');
+  el.bZH.classList.toggle('sel', LANG === 'zh'); el.bTR.classList.toggle('sel', LANG === 'tr'); el.bEN.classList.toggle('sel', LANG === 'en');
   el.bQLow.classList.toggle('sel', lowQ()); el.bQHigh.classList.toggle('sel', !lowQ());
   el.bMapH.classList.toggle('sel', settings.mapRot !== false); el.bMapN.classList.toggle('sel', settings.mapRot === false);
   el.bPedU.classList.toggle('sel', settings.mobileUnifiedPedal !== false); el.bPedS.classList.toggle('sel', settings.mobileUnifiedPedal === false);
@@ -4162,8 +4181,8 @@ function openNews() { fillNews(); showScreen('sNews'); }
 function closeNews() { showScreen('sTitle'); }
 function openSettings(from) { G.settingsFrom = from; syncSettingsUI(); showScreen('sSettings'); }
 function closeSettings() { saveSettings(); showScreen(G.settingsFrom === 'pause' ? 'sPause' : 'sTitle'); }
-function toggleMusic() { settings.musicOn = !settings.musicOn; saveSettings(); AUD.applyGains(); toast((LANG === 'tr' ? 'Müzik ' : 'Music ') + (settings.musicOn ? (LANG === 'tr' ? 'açık' : 'on') : (LANG === 'tr' ? 'kapalı' : 'off')), 'info'); syncSettingsUI(); }
-function toggleSfx() { settings.sfxOn = !settings.sfxOn; saveSettings(); AUD.applyGains(); toast((LANG === 'tr' ? 'Efektler ' : 'Effects ') + (settings.sfxOn ? (LANG === 'tr' ? 'açık' : 'on') : (LANG === 'tr' ? 'kapalı' : 'off')), 'info'); syncSettingsUI(); }
+function toggleMusic() { settings.musicOn = !settings.musicOn; saveSettings(); AUD.applyGains(); toast((LANG === 'zh' ? '音乐' : LANG === 'tr' ? 'Müzik ' : 'Music ') + (settings.musicOn ? (LANG === 'zh' ? '开启' : LANG === 'tr' ? 'açık' : 'on') : (LANG === 'zh' ? '关闭' : LANG === 'tr' ? 'kapalı' : 'off')), 'info'); syncSettingsUI(); }
+function toggleSfx() { settings.sfxOn = !settings.sfxOn; saveSettings(); AUD.applyGains(); toast((LANG === 'zh' ? '音效' : LANG === 'tr' ? 'Efektler ' : 'Effects ') + (settings.sfxOn ? (LANG === 'zh' ? '开启' : LANG === 'tr' ? 'açık' : 'on') : (LANG === 'zh' ? '关闭' : LANG === 'tr' ? 'kapalı' : 'off')), 'info'); syncSettingsUI(); }
 function toggleFullscreen() { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { /* ignore */ } }
 
 // ---- HUD
@@ -4229,7 +4248,7 @@ function updateHUD(dt) {
     el.guideBox.style.display = 'flex';
     const dx = g.x - P.x, dz = g.z - P.z, fx = Math.sin(P.camHd), fz = Math.cos(P.camHd), ang = Math.atan2(dx * -fz + dz * fx, dx * fx + dz * fz);
     el.guideArrow.style.transform = 'rotate(' + ang + 'rad)';
-    const name = g.stop ? stopName(g.stop.key) : (LANG === 'tr' ? 'El sallayan yolcu' : 'Waving passenger');
+    const name = g.stop ? stopName(g.stop.key) : (LANG === 'zh' ? '招手的乘客' : LANG === 'tr' ? 'El sallayan yolcu' : 'Waving passenger');
     el.guideTxt.innerHTML = name + '<small>' + (coachNow ? t(document.body.classList.contains('touch') ? 'coachTouch' : 'coach') : t(g.kind === 'drop' ? 'guideDrop' : g.kind === 'pick' ? 'guidePick' : 'guideCruise') + ' · ' + t('guideM', Math.round(hyp(dx, dz)))) + '</small>';
   } else el.guideBox.style.display = 'none';
 }
@@ -4275,7 +4294,7 @@ window.addEventListener('keydown', e => {
     else if (el.sSettings.classList.contains('show')) closeSettings();
     else if (el.sNews.classList.contains('show')) closeNews();
   }
-  else if (e.code === 'KeyM') toggleMusic(); else if (e.code === 'KeyX') toggleSfx(); else if (e.code === 'KeyL') setLang(LANG === 'tr' ? 'en' : 'tr'); else if (e.code === 'KeyN') { setMapMode(settings.mapRot === false); toast(t(settings.mapRot === false ? 'mapNorth' : 'mapHead'), 'info'); }
+  else if (e.code === 'KeyM') toggleMusic(); else if (e.code === 'KeyX') toggleSfx(); else if (e.code === 'KeyL') setLang(nextLanguage()); else if (e.code === 'KeyN') { setMapMode(settings.mapRot === false); toast(t(settings.mapRot === false ? 'mapNorth' : 'mapHead'), 'info'); }
   else if (e.code === 'Enter' && G.state === 'countdown' && tgt !== 'BUTTON') beginShift();
   AUD.init(); AUD.resume();
 });
@@ -4331,16 +4350,16 @@ if (FLAG.touch || (matchMedia && matchMedia('(pointer:coarse)').matches)) enable
 // ---- buttons
 const on = (id, fn) => document.getElementById(id).addEventListener('click', e => { AUD.init(); AUD.click(); fn(e); });
 on('bPlay', () => { const now = performance.now(); if (runSave && !(newArm && now - newArm < 4000)) { newArm = now; el.playTxt.textContent = t('newGameSure'); setTimeout(() => { if (G.state === 'title' && newArm === now) refreshTitle(); }, 4000); return; } newArm = 0; startCampaign(false); }); on('bCont', () => startCampaign(true)); on('bEndless', () => startEndless());
-on('bNews', () => openNews()); on('bNewsBack', () => closeNews()); on('bSettingsT', () => openSettings('title')); on('bLangT', () => setLang(LANG === 'tr' ? 'en' : 'tr'));
+on('bNews', () => openNews()); on('bNewsBack', () => closeNews()); on('bSettingsT', () => openSettings('title')); on('bLangT', () => setLang(nextLanguage()));
 on('bCardX', () => showCard(false));
 on('bPause', () => { if (G.state === 'play') pauseGame(); else if (G.state === 'paused') resumeGame(); });
 on('bSound', () => { settings.mute = !settings.mute; saveSettings(); AUD.applyGains(); syncSettingsUI(); });
-on('bLang', () => setLang(LANG === 'tr' ? 'en' : 'tr'));
+on('bLang', () => setLang(nextLanguage()));
 on('bResume', () => resumeGame()); on('bRestart', () => { G.retries++; setupShift(); beginShift(); });   // restart keeps the chosen route and channel
 on('bHatGo', () => confirmRoute()); on('bMenuR', () => toMenu());
 on('bSettingsP', () => openSettings('pause')); on('bMenuP', () => toMenu());
 on('bSetBack', () => closeSettings());
-on('bTR', () => { setLang('tr'); syncSettingsUI(); }); on('bEN', () => { setLang('en'); syncSettingsUI(); });
+on('bZH', () => { setLang('zh'); syncSettingsUI(); }); on('bTR', () => { setLang('tr'); syncSettingsUI(); }); on('bEN', () => { setLang('en'); syncSettingsUI(); });
 on('bQLow', () => { settings.quality = 'low'; settings.qualityManual = true; autoLow = false; saveSettings(); applyQuality(); syncSettingsUI(); }); on('bQHigh', () => { settings.quality = 'high'; settings.qualityManual = true; autoLow = false; saveSettings(); applyQuality(); syncSettingsUI(); });
 on('bFull', () => toggleFullscreen());
 function setMapMode(rot) { settings.mapRot = rot; saveSettings(); syncSettingsUI(); if (G.state === 'play' || G.state === 'paused' || G.state === 'countdown') drawMinimap(); }

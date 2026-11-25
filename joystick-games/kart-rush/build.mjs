@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -7,6 +8,8 @@ const check=process.argv.includes('--check');const i=process.argv.indexOf('--out
 const files=new Map();
 function walk(dir,prefix=''){for(const n of fs.readdirSync(dir).sort()){const p=path.join(dir,n),rel=prefix+n;if(fs.lstatSync(p).isSymbolicLink())throw Error('Symlink '+p);if(fs.statSync(p).isDirectory())walk(p,rel+'/');else if(!['manifest.webmanifest','vendor/fonts/upstream.css','lib/pwa.js','lib/a11y.js','lib/page-audio.js'].includes(rel)){files.set(rel==='index.html'?'tv.html':rel,fs.readFileSync(p));}}}
 walk(path.join(root,'src'));
+files.delete('zh-cn.js'); // The dictionary is embedded in tv.html.
+files.set('tv.html',Buffer.from(await localizeHtml(files.get('tv.html').toString(),root)));
 for(const n of ['input.js','controller-clients.js'])files.set('shared/web/'+n,fs.readFileSync(path.join(root,'../shared/web',n)));
 files.set('THIRD-PARTY-NOTICES.txt',fs.readFileSync(path.join(root,'NOTICE.md')));
 files.set('UPSTREAM-LICENSE.txt',fs.readFileSync(path.join(root,'LICENSE.txt')));

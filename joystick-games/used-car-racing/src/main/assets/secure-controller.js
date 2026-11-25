@@ -19,7 +19,7 @@
     createSocket: function (url) { return new WebSocket(url); }
   };
   var $ = function (id) { return document.getElementById(id); };
-  var english = !/^zh\b/i.test(navigator.language || 'zh');
+  var english = new URL(location.href).searchParams.get('lang') === 'en';
   var words = english ? {
     eyebrow: 'THIS TV ONLY · NO INTERNET REQUIRED', title: 'Set up gyroscope steering',
     intro: 'The virtual stick works now. To use your phone’s motion sensors, first trust this TV’s local certificate in your phone settings. The controller then connects directly to the TV using HTTPS.',
@@ -135,6 +135,7 @@
   $('tls-continue').addEventListener('click', function () {
     if (!opened || !configuration) return;
     var target = new URL(configuration.secureUrl), controller = root.UsedCarController;
+    if (english) target.searchParams.set('lang', 'en');
     var session = controller && controller.getSession ? controller.getSession() : '';
     var hash = new URLSearchParams();
     if (TOKEN.test(session)) hash.set('session', session);

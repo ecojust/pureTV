@@ -247,68 +247,68 @@ function updateSeq() {
 
 function script(at) {
   // ===== DRIFT =====
-  at(120, () => radio('hou', 'サルガッソ宙域に入った。信号の発信源は、この奥だ。', { hold: 2.2 }));
-  at(520, () => kotaOr('うわぁ、宇宙だ！　星がすっごく近いよ！', 'rio', 'コタはアケボノで修理中。しばらく3機で行くわ。'));
+  at(120, () => radio('hou', '已进入萨尔加索空域，信号源就在深处。', { hold: 2.2 }));
+  at(520, () => kotaOr('哇，是太空！星星离我们好近！', 'rio', '小太的飞机还在曙光号上维修。我们暂时三机行动。'));
   at(WING_REAR_AT, () => setWingStance('rear', 0.5));
   at(700, () => vWing('dart', 5, 760, 26, { noFire: true }));
-  at(820, () => radio('gantetsu', '無人機だ。上にも下にも回り込まれるな。'));
+  at(820, () => radio('gantetsu', '是无人机。小心，别让他们从上下包围过来。'));
   at(1100, () => ringOf('drone', 8, 200, { r: 20, v: 30 }));
-  at(1250, () => radio('rio', '漂ってる岩や残骸は、撃てば砕けるものもあるわ。'));
+  at(1250, () => radio('rio', '有些漂浮的岩石和碎片可以开火击碎。'));
   at(1400, () => snake('dart', 5, 720, -20, 24));
-  at(1650, () => { fromBehind('dart', 6); kotaOr('後ろからも来るよ！　抜かせて撃っちゃえ！', 'gantetsu', '後ろだ。抜かせてから撃て。', { prio: 1 }); });
+  at(1650, () => { fromBehind('dart', 6); kotaOr('后面也有！让他们飞过去再打！', 'gantetsu', '后方有敌机。让他们超过去再开火。', { prio: 1 }); });
   at(1900, () => crossing('drone', 6, 230, 1, 30));
   at(2150, () => holders('raptor', 2, 170, { v: 30 }));
-  at(2300, () => radio('gantetsu', '小惑星帯だ。でかい岩は避けろ。小さいのは砕いて進め。'));
+  at(2300, () => radio('gantetsu', '小行星带！避开大块，击碎小块前进。'));
 
   // ===== ASTEROID BELT =====
   at(2600, () => snake('interceptor', 4, 700, 18, 32));
   at(2800, () => { for (let i = 0; i < 8; i++) mine(3150 + i * 55, rand(-36, 36), rand(10, 50)); });
-  at(3000, () => { holders('carrier', 1, 150, { carry: 'laser', carryIndex: 0, stay: 8, v: 28 }); kotaOr('あの輸送機、何か積んでるよ！　撃ち落として！', 'rio', 'あの輸送機、何か積んでるわ。撃ち落として！'); });
+  at(3000, () => { holders('carrier', 1, 150, { carry: 'laser', carryIndex: 0, stay: 8, v: 28 }); kotaOr('那架运输机装着什么东西！把它打下来！', 'rio', '那架运输机载着什么。击落它！'); });
   at(3300, () => divers('dart', 4));
-  at(3550, () => radio('rio', '前方に大きな岩塊！', { prio: 1 }));
-  at(3680, () => radio('gantetsu', '右へ抜けろ！', { prio: 1, hold: 1.2 }));
+  at(3550, () => radio('rio', '前方有大块陨石！', { prio: 1 }));
+  at(3680, () => radio('gantetsu', '从右侧通过！', { prio: 1, hold: 1.2 }));
   at(3800, () => fromBehind('interceptor', 4));
   at(4100, () => ringOf('drone', 10, 200, { r: 22, v: 28 }));
   at(4400, () => crossing('dart', 6, 220, -1, 30));
-  at(4600, () => radio('hou', '前方に大型艦の残骸を多数確認。……ここが「船の墓場」か。', { hold: 2 }));
+  at(4600, () => radio('hou', '前方发现大量战舰残骸。……这就是“船墓”吗？', { hold: 2 }));
 
   // ===== SHIP GRAVEYARD =====
   at(4800, () => { holders('raptor', 2, 170, { v: 26 }); turret(5150, 62, { onGround: false, v: 33 }); turret(5230, 58, { onGround: false, v: 33 }); });
-  at(5000, () => radio('gantetsu', '前の船……まだ回っているぞ。', { prio: 1 }));
-  at(5130, () => radio('rio', '中を抜けるしかないわ！　隔壁の穴をくぐって！', { prio: 1 }));
-  at(5200, () => tip('回転する隔壁の、穴をくぐり抜けろ', 4));
+  at(5000, () => radio('gantetsu', '前面那艘船……还在旋转。', { prio: 1 }));
+  at(5130, () => radio('rio', '只能从里面穿过去！对准隔板上的缺口！', { prio: 1 }));
+  at(5200, () => tip('穿过旋转隔板上的缺口', 4));
   at(5380, () => ringOf('drone', 6, 170, { r: 13, v: 30, stay: 4 }));
-  at(5760, () => kotaOr('ふぅ、抜けたぁ……！', 'rio', 'ふぅ……抜けたわね。'));
+  at(5760, () => kotaOr('呼，出来了……！', 'rio', '呼，总算出来了。'));
   at(5850, () => crossing('drone', 6, 230, 1, 26));
-  at(6120, () => radio('rio', '中間地点よ。……待って、何か来る。'));
+  at(6120, () => radio('rio', '到中途点了。……等等，有东西来了。'));
 
   // ===== KAMAITACHI ===== (they talk on the way in and only fight once the exchange is over)
   at(6250, () => {
     G.run.rivalsDown = 0; G.run.rivalsBeaten = false; G.run.saidHired = false;   // (again after a restart from the checkpoint)
-    radio('rio', '後方から高速の機影、3つ！　無人機じゃないわ！', { prio: 2, hold: 1.4 });
+    radio('rio', '后方发现三架高速战机！不是无人机！', { prio: 2, hold: 1.4 });
     after(0.6, () => startRivals(onRival));
-    say(['tsumuji', 'よう、ヒヨッコども！　オレたちはカマイタチ隊だ！', { hold: 1.3 }], ['kiri', '……斬る。', { hold: 1.0 }], ['hari', 'あ、あの……ごめんなさいっ！', { hold: 1.2 }],
-      ['gantetsu', '傭兵か。……誰に雇われた。', { hold: 1.2 }], () => engageRivals(), ['tsumuji', '旦那からの依頼でね。悪く思うなよ！']);
+    say(['tsumuji', '哟，小菜鸟们！我们是镰鼬队！', { hold: 1.3 }], ['kiri', '……斩。', { hold: 1.0 }], ['hari', '那、那个……对不起！', { hold: 1.2 }],
+      ['gantetsu', '佣兵吗。……谁雇了你们？', { hold: 1.2 }], () => engageRivals(), ['tsumuji', '老板让我们来的。可别怪我！']);
   });
   at(7700, () => engageRivals());   // in case the radio was held up
   at(KOTA_BACK, () => kotaReturns());
   at(9600, () => {
     if (!RIVALS.list.some(r => r.alive)) return;
-    if (rivalUp('tsumuji')) radio('tsumuji', 'ちっ、時間切れだ。報酬分は働いたぜ！', { prio: 1 });
-    if (rivalUp('kiri')) radio('kiri', '……次は、斬る。');
+    if (rivalUp('tsumuji')) radio('tsumuji', '啧，时间到了。这钱我也算挣够了！', { prio: 1 });
+    if (rivalUp('kiri')) radio('kiri', '……下次必斩。');
     retreatRivals();
     afterRivals();
   });
 
   // ===== BONE WORKS =====
-  at(9950, () => sayBy(10700, ['hou', '発信源は近い。……なんだ、あれは。', { prio: 1, hold: 1.4 }], ['rio', '無人機が残骸を溶かして、何かを組み立ててる……！']));
+  at(9950, () => sayBy(10700, ['hou', '信号源近了。……那是什么？', { prio: 1, hold: 1.4 }], ['rio', '无人机正在熔化残骸，组装着什么……！']));
   at(10100, () => { holders('raptor', 2, 170, { v: 30 }); turret(10320, -44, { onGround: false, v: 8 }); turret(10400, 44, { onGround: false, v: 8 }); });
   at(10250, () => ringOf('drone', 10, 200, { r: 22, v: 30 }));
   at(10450, () => fromBehind('interceptor', 5));
-  at(10560, () => radio('gantetsu', '骨の下をくぐれ。頭をぶつけるなよ！', { prio: 1 }));
+  at(10560, () => radio('gantetsu', '从骨架下方穿过，小心别撞头！', { prio: 1 }));
 
   // ===== BOSS =====
-  at(10750, () => { radio('hou', '待て……周りの残骸が動いている！　集まってくるぞ！', { prio: 2, hold: 1.4 }); warning(true); AudioSys.stopMusic(1.2); G.warnLoop = AudioSys.loop('siren'); });
+  at(10750, () => { radio('hou', '等等……周围的残骸在动！它们正在聚集！', { prio: 2, hold: 1.4 }); warning(true); AudioSys.stopMusic(1.2); G.warnLoop = AudioSys.loop('siren'); });
   at(10900, () => { G.run.checkpoint = 10900; });
   at(10950, () => { warning(false); if (G.warnLoop) { G.warnLoop.stop(0.5); G.warnLoop = null; } emit('bossStart'); });
 
@@ -351,22 +351,22 @@ function script(at) {
 // Kamaitachi radio and score (rivals.js calls back here).
 function onRival(type, r) {
   const run = G.run;
-  if (type === 'wave') radio('gantetsu', '衝撃波だ！　輪の内か外へ抜けろ！', { prio: 1 });
-  else if (type === 'dash') kotaOr('キリが後ろに回ったよ！　来る！', 'rio', 'キリが後ろに回ったわ！　来るわよ！', { prio: 1 });
-  else if (type === 'repair') { radio('hari', 'に、兄ちゃん、いま直すから……！', { prio: 1 }); after(2.6, () => radio('gantetsu', '整備役を先に落とせ。切りがないぞ。')); }
-  else if (type === 'flinch' && !run.saidFlinch) { run.saidFlinch = true; radio('hari', 'ひゃっ！？　う、撃たないでぇ！'); }
-  else if (type === 'waveHit' && !run.saidWaveHit) { run.saidWaveHit = true; radio('gantetsu', '体勢を立て直せ！', { hold: 1 }); }
-  else if (type === 'cut' && !run.saidCut) { run.saidCut = true; radio('rio', 'キリの刃、まともに受けたら危ないわ！'); }
+  if (type === 'wave') radio('gantetsu', '冲击波！从圆环内侧或外侧躲过去！', { prio: 1 });
+  else if (type === 'dash') kotaOr('雾刃绕到你背后了！小心！', 'rio', '雾刃到后方了！来袭！', { prio: 1 });
+  else if (type === 'repair') { radio('hari', '哥、哥哥，我这就修好……！', { prio: 1 }); after(2.6, () => radio('gantetsu', '先击落维修机，不然没完没了。')); }
+  else if (type === 'flinch' && !run.saidFlinch) { run.saidFlinch = true; radio('hari', '哇啊！别、别打我！'); }
+  else if (type === 'waveHit' && !run.saidWaveHit) { run.saidWaveHit = true; radio('gantetsu', '稳住阵形！', { hold: 1 }); }
+  else if (type === 'cut' && !run.saidCut) { run.saidCut = true; radio('rio', '别正面硬接雾刃的刀翼！'); }
   else if (type === 'down') {
     run.rivalsDown = (run.rivalsDown || 0) + 1;
     const pts = { tsumuji: [5, 3000], kiri: [5, 3000], hari: [3, 1500] }[r.id];
     run.hits += pts[0];
     emit('bonus', pts[1], r.pos.clone(), `${r.def.name} +${pts[0]}`);
-    const line = { tsumuji: 'ぐあっ！？　やるじゃねえか……！', kiri: '……不覚。', hari: 'ご、ごめん、先に下がるね……！' }[r.id];
+    const line = { tsumuji: '呃啊？！你还真有两下子……！', kiri: '……失手了。', hari: '对、对不起，我先撤了……！' }[r.id];
     radio(r.id, line, { prio: 1 });
     if (!rivalUp('tsumuji') && !rivalUp('kiri') && !run.rivalsBeaten) {
       run.rivalsBeaten = true;
-      say(['tsumuji', 'ちっ、撤収だ！　覚えてろよ、ランサー隊！'], () => { if (rivalUp('hari')) radio('hari', 'ま、待ってよ、兄ちゃーん！'); retreatRivals(); });
+      say(['tsumuji', '啧，撤退！枪骑兵队，你给我记住！'], () => { if (rivalUp('hari')) radio('hari', '等、等等我，哥哥！'); retreatRivals(); });
       afterRivals();
     }
   }
@@ -376,7 +376,7 @@ function onRival(type, r) {
 function afterRivals() {
   if (G.run.saidHired) return;
   G.run.saidHired = true;
-  sayBy(9950, ['rio', '「旦那」……裏に誰かいるのね。', { hold: 1.4 }], ['gantetsu', '敵には、指揮官がいるということだ。', { hold: 1.4 }]);
+  sayBy(9950, ['rio', '“老板”……他们背后有人。', { hold: 1.4 }], ['gantetsu', '看来敌人也有个指挥官。', { hold: 1.4 }]);
 }
 
 function kotaReturns() {
@@ -384,31 +384,31 @@ function kotaReturns() {
   if (!kota.gone) return;
   kota.show(); kota.reset(); holdOut(kota, 6);
   G.run.kotaBack = true;
-  radio('kota', 'お待たせ、隊長！　ランサー2、戦線復帰！', { prio: 1 });
-  after(2.8, () => radio('rio', 'コタ！　修理、間に合ったのね！'));
+  radio('kota', '让你久等啦，队长！枪骑兵二号归队！', { prio: 1 });
+  after(2.8, () => radio('rio', '小太！及时修好了啊！'));
 }
 
 // ------------------------------------------------------------ Boss radio
 let saidCharge = false;   // the swipe warning is given once per session
 function onBossPhase(p) {
-  if (p === 1) radio('rio', '光ってる腕の関節を撃って！　腕ごと崩せるはずよ！', { prio: 1 });
-  if (p === 2) radio('rio', '頭蓋骨が開いた！　中のコアを狙って！', { prio: 2 });
-  if (p === 3) { radio('gashadokuro', '……ホネ……ホネヲ、ヨコセ……', { prio: 2, hold: 1.2 }); kotaOr('まだ動くの！？　しつこいなぁ！', 'gantetsu', 'まだ動くか……しぶといな。'); }
-  if (p === 4 && !G.run.saidRebuild) { G.run.saidRebuild = true; kotaOr('また組み上がった！？', 'rio', 'また組み上がっていく……！', { prio: 1 }); after(2.2, () => radio('gantetsu', '何度でも崩せ。中身を叩くまでだ。')); }
-  if (p === 5 && !G.run.saidLone) { G.run.saidLone = true; radio('rio', '崩した腕が戻っていく……！　両腕を続けて崩して！', { prio: 1 }); }
+  if (p === 1) radio('rio', '瞄准发光的手臂关节，就能让整条手臂崩解！', { prio: 1 });
+  if (p === 2) radio('rio', '头骨打开了！瞄准里面的核心！', { prio: 2 });
+  if (p === 3) { radio('gashadokuro', '……骨头……把骨头给我……', { prio: 2, hold: 1.2 }); kotaOr('它还能动？！真缠人！', 'gantetsu', '还能动吗……真顽强。'); }
+  if (p === 4 && !G.run.saidRebuild) { G.run.saidRebuild = true; kotaOr('又拼回去了？！', 'rio', '又开始重新组合了……！', { prio: 1 }); after(2.2, () => radio('gantetsu', '那就再打散，直到击中里面的核心。')); }
+  if (p === 5 && !G.run.saidLone) { G.run.saidLone = true; radio('rio', '打碎的手臂又回来了！接连击碎两条手臂！', { prio: 1 }); }
 }
-function onBossCharge() { if (!saidCharge) { saidCharge = true; radio('gantetsu', '腕が来るぞ！　上か下へかわせ！', { prio: 2, hold: 1 }); } }
-function onBossDying() { radio('gashadokuro', 'ガ……ガガ……ホネ、ニ……カエ、ル……', { prio: 2, hold: 0.8 }); }
-function onBossPartDown(left) { if (left === 1) radio('rio', '片腕が崩れたわ！　もう片方も！', { prio: 1 }); }
+function onBossCharge() { if (!saidCharge) { saidCharge = true; radio('gantetsu', '手臂来了！往上或往下躲！', { prio: 2, hold: 1 }); } }
+function onBossDying() { radio('gashadokuro', '咔……咔咔……归……于……白骨……', { prio: 2, hold: 0.8 }); }
+function onBossPartDown(left) { if (left === 1) radio('rio', '一条手臂碎了！还有另一条！', { prio: 1 }); }
 
 // ------------------------------------------------------------ Definition
 export default {
   id: 'violet',
   no: 2,
   title: 'VIOLET SARGASSO',
-  place: 'サルガッソ宙域',
-  sub: 'サルガッソ宙域　船の墓場',
-  resultSub: 'サルガッソ宙域 船の墓場 突破',
+  place: '萨尔加索空域',
+  sub: '萨尔加索空域 · 船墓',
+  resultSub: '已突破萨尔加索船墓',
   music: 'stage2',
   bossAt: 10750,
   checkpoints: [0, 6050, 10900],
@@ -423,12 +423,12 @@ export default {
   onExit() { clearRivals(); stopWarp(); SEQ.length = 0; },
   warm: () => [...rivalModels(), warpModel()],
   boss: {
-    id: 'gashadokuro', en: 'GASHADOKURO', title: '機械獣　ガシャドクロ', bar: '機械獣 ガシャドクロ', bannerAt: 4.4,
+    id: 'gashadokuro', en: 'GASHADOKURO', title: '机械兽·荒骷髅', bar: '机械兽·荒骷髅', bannerAt: 4.4,
     introLines: [
-      { who: 'gashadokuro', text: '……ホネ、タリナイ。オマエノ、ホネモ……ヨコセ。', hold: 0.8 },
-      { who: 'rio', text: '残骸が集まって……骸骨になった！？', hold: 0.8 },
-      { who: 'gantetsu', text: '……昔話の「がしゃどくろ」そのものだな。', hold: 0.8 },
-      { who: 'hou', text: '以後、目標を「ガシャドクロ」と呼称する。各機、迎撃せよ！', hold: 1.2 },
+      { who: 'gashadokuro', text: '……骨头，不够。把你的骨头……也交给我。', hold: 0.8 },
+      { who: 'rio', text: '残骸聚在一起……变成了骷髅？！', hold: 0.8 },
+      { who: 'gantetsu', text: '……简直就是传说中的荒骷髅。', hold: 0.8 },
+      { who: 'hou', text: '目标代号“荒骷髅”。全机迎击！', hold: 1.2 },
     ],
   },
   onBossPhase, onBossCharge, onBossDying, onBossPartDown,
@@ -436,41 +436,41 @@ export default {
   // The radio stays quiet while the gate is open: on phones the radio panel sits across the top of the screen.
   clearTime: 14.6,
   onClear(run) {
-    after(1.4, () => kotaOr('やったー！　骸骨、バラバラだ！', 'rio', '目標、沈黙。……やったわ、隊長。', { prio: 2 }));
-    after(2.6, () => radio('hou', 'よくやった。……待て、宙域の奥に巨大な重力反応！', { prio: 1, hold: 1.0 }));
+    after(1.4, () => kotaOr('太好了！骷髅散架啦！', 'rio', '目标停止活动。……干得好，队长。', { prio: 2 }));
+    after(2.6, () => radio('hou', '干得好。……等等，空域深处出现巨大引力信号！', { prio: 1, hold: 1.0 }));
     after(4.4, () => { startWarp(); bigFlash(0.5, [0.8, 0.6, 1]); });
-    after(10.0, () => { radio('gantetsu', '……持っていかれたか。', { prio: 1, hold: 1.0 }); radio('rio', 'あれ……いったい何の骨なの？', { hold: 2.0 }); });
+    after(10.0, () => { radio('gantetsu', '……被带走了吗。', { prio: 1, hold: 1.0 }); radio('rio', '那……究竟是什么的骨头？', { hold: 2.0 }); });
   },
   clearShot: warpShot,
   onFragment() {
-    radio('rio', G.run.frags & 1 ? 'また、あの光……！　アクエリアのかけらと同じ金属よ。' : 'この光……古い金属のかけら？　難破船の積み荷かしら。', { prio: 1 });
+    radio('rio', G.run.frags & 1 ? '又是那道光！和阿奎利亚的碎片是同一种金属。' : '这道光……古老的金属碎片？难道是沉船的货物？', { prio: 1 });
   },
   absent(run) { return []; },   // Kota is back by the end of the mission in any case
   rank: { S: 120, A: 95, B: 65, medal: 110 },
-  resultNote(run) { return `カマイタチ隊 撃退 <b>${run.rivalsDown || 0}/3</b>` + (run.gotFrag ? '　槍のかけら <b>取得</b>' : ''); },
+  resultNote(run) { return `击退镰鼬队 <b>${run.rivalsDown || 0}/3</b>` + (run.gotFrag ? '　长枪碎片 <b>已取得</b>' : ''); },
   squadAfter(run, squad) { return squad & ~1; },   // Kota's repairs are done
 
   // ---- story mode
   map: { target: 'sargasso' },
   briefing: {
     lines: (carry) => [
-      { who: 'hou', text: 'ランサー隊、ミズチの残骸の信号を追った結果が出た。' },
-      { who: 'rio', text: '発信源はサルガッソ宙域。古い難破船が流れ着く「船の墓場」よ。' },
-      { who: 'rio', text: '信号は今も出続けてる。宙域の奥で、何かが動いてるわ。' },
-      { who: 'hou', text: '小惑星帯と残骸のあいだを抜け、発信源を突き止めろ。' },
-      ...(carry && carry.squad & 1 ? [{ who: 'hou', text: 'コタの機体は修理中だ。間に合いしだい、合流させる。' }] : []),
-      { who: 'hou', text: '何が待っているか、わからん。……気を抜くな、ランサー1。' },
+      { who: 'hou', text: '枪骑兵队，追踪水蛟残骸信号的结果出来了。' },
+      { who: 'rio', text: '信号源位于萨尔加索空域。那是一片古老沉船漂流的“船墓”。' },
+      { who: 'rio', text: '信号仍未停止。空域深处有什么东西在活动。' },
+      { who: 'hou', text: '穿过小行星带和残骸，找出信号源。' },
+      ...(carry && carry.squad & 1 ? [{ who: 'hou', text: '小太的战机正在维修，修好后他就会归队。' }] : []),
+      { who: 'hou', text: '谁也不知道前面有什么……保持警惕，枪骑兵一号。' },
     ],
-    objective: 'サルガッソ宙域を抜け、信号の発信源を突き止めよ',
+    objective: '穿过萨尔加索空域，找到信号源',
   },
   talk: [
-    { who: 'rio', text: 'ガシャドクロの残骸を調べたわ。あれは、骨格を組み立てる現場の「番人」だったみたい。' },
-    { who: 'gantetsu', text: '……運び去られた骨は、どこへ行った。' },
-    { who: 'rio', text: 'ワープの行き先は追えなかった。でも、あの形……船の骨組みじゃない。生き物の骨格よ。' },
-    { who: 'kota', text: 'あんなにでっかい生き物なんて、いるわけないよね……？' },
-    { who: 'hou', text: '傭兵の言う「旦那」も気になる。……敵には、頭がいる。' },
-    { who: 'rio', text: '手がかりがもう一つ。機械獣が、惑星アリディアの古い遺跡を掘り返してるわ。' },
-    { who: 'hou', text: '次の目標はアリディアだ。ランサー隊、補給を急げ。' },
+    { who: 'rio', text: '我检查了荒骷髅的残骸。它似乎是负责看守骨架组装现场的“守卫”。' },
+    { who: 'gantetsu', text: '……那些被带走的骨头，都去了哪里？' },
+    { who: 'rio', text: '我没能追踪到跃迁终点。但那个形状……不是船体骨架，而是生物的骨骼。' },
+    { who: 'kota', text: '那么巨大的生物……不可能真的存在吧？' },
+    { who: 'hou', text: '佣兵口中的“老板”也让我在意。……敌人背后有人指挥。' },
+    { who: 'rio', text: '还有一条线索。机械兽正在阿里迪亚星上挖掘古代遗迹。' },
+    { who: 'hou', text: '下一个目标是阿里迪亚。枪骑兵队，抓紧补给。' },
   ],
 
   // dev-build test bot: shoot the rivals too, and steer for the open hole of the rotating wreck

@@ -113,7 +113,7 @@ export function openBriefing(def, opts) {
   $('br-map').innerHTML = starMap(def.map?.target);
   $('br-obj').textContent = def.briefing.objective;
   $('br-pass').innerHTML = opts.password
-    ? `<span class="lbl">PASSWORD</span><b>${opts.password}</b><small>保存が消えたときは、タイトルの「ストーリー → パスワード」で、この面の始めから続けられます。</small>` : '';
+    ? `<span class="lbl">PASSWORD</span><b>${opts.password}</b><small>如果存档丢失，可从标题菜单进入“剧情 → 通关密码”，从本关起点继续。</small>` : '';
   $('br-menu').hidden = true;
   $('br-skip').hidden = false;
   open('briefing', updateBriefing);
@@ -139,12 +139,12 @@ function updateBriefing(rdt) {
 
 // The Amatera system, seen from above. The mission's planet is ringed and labelled.
 const BODIES = [
-  { id: 'ignia', name: 'イグニア', r: 36, a: -40, col: '#ff6a3d', size: 4.5 },
-  { id: 'aridia', name: 'アリディア', r: 60, a: 205, col: '#f2b45a', size: 5.5 },
-  { id: 'aquelia', name: 'アクエリア', r: 86, a: 325, col: '#4fc8ff', size: 6.5 },
-  { id: 'silva', name: 'シルヴァ', r: 110, a: 62, col: '#5ed27a', size: 6 },
-  { id: 'sargasso', name: 'サルガッソ宙域', r: 132, a: 245, col: '#b28cff', belt: true },
-  { id: 'glacia', name: 'グラシア', r: 154, a: 148, col: '#d8f0ff', size: 5.5 },
+  { id: 'ignia', name: '伊格尼亚', r: 36, a: -40, col: '#ff6a3d', size: 4.5 },
+  { id: 'aridia', name: '阿里迪亚', r: 60, a: 205, col: '#f2b45a', size: 5.5 },
+  { id: 'aquelia', name: '阿奎利亚', r: 86, a: 325, col: '#4fc8ff', size: 6.5 },
+  { id: 'silva', name: '席尔瓦', r: 110, a: 62, col: '#5ed27a', size: 6 },
+  { id: 'sargasso', name: '萨尔加索空域', r: 132, a: 245, col: '#b28cff', belt: true },
+  { id: 'glacia', name: '格拉西亚', r: 154, a: 148, col: '#d8f0ff', size: 5.5 },
 ];
 function starMap(target) {
   const cx = 200, cy = 132, k = 0.52, pos = (b, a = b.a) => [cx + b.r * Math.cos(a * Math.PI / 180), cy + b.r * k * Math.sin(a * Math.PI / 180)];
@@ -152,7 +152,7 @@ function starMap(target) {
     <defs><radialGradient id="map-sun"><stop offset="0" stop-color="#fff6d8"/><stop offset=".35" stop-color="#ffc24a"/><stop offset="1" stop-color="#ff7a1e" stop-opacity="0"/></radialGradient></defs>`;
   for (const b of BODIES) s += `<ellipse cx="${cx}" cy="${cy}" rx="${b.r}" ry="${b.r * k}" fill="none" stroke="${b.id === target ? 'rgba(127,231,255,.55)' : 'rgba(127,231,255,.16)'}" stroke-width="${b.belt ? 6 : 1}" ${b.belt ? 'stroke-dasharray="1 5"' : ''}/>`;
   s += `<circle cx="${cx}" cy="${cy}" r="34" fill="url(#map-sun)" opacity=".7"/><circle cx="${cx}" cy="${cy}" r="9" fill="#fff3c4"/>
-    <text x="${cx}" y="${cy + 26}" text-anchor="middle" font-size="8" fill="#ffd27a" letter-spacing="2">恒星アマテラ</text>`;
+    <text x="${cx}" y="${cy + 26}" text-anchor="middle" font-size="8" fill="#ffd27a" letter-spacing="2">天照恒星</text>`;
   for (const b of BODIES) {
     const on = b.id === target;
     if (b.belt) {
@@ -218,8 +218,8 @@ function updateStory(rdt) {
 export function openTbc(nextNo, password, onTitle, afterClear) {
   CB = { onTitle };
   $('tbc-head').textContent = afterClear ? 'MISSION COMPLETE' : 'STORY';
-  $('tbc-sub').textContent = `MISSION ${pad2(nextNo)} は準備中です`;
-  $('tbc-pass').innerHTML = password ? `<span class="lbl">PASSWORD</span><b>${password}</b><small>MISSION ${pad2(nextNo)} ができたら、「ストーリー → つづきから」か、このパスワードで続けられます。</small>` : '';
+  $('tbc-sub').textContent = `MISSION ${pad2(nextNo)} 正在准备中`;
+  $('tbc-pass').innerHTML = password ? `<span class="lbl">PASSWORD</span><b>${password}</b><small>MISSION ${pad2(nextNo)} 开放后，从“剧情 → 继续上次进度”或输入此密码即可继续。</small>` : '';
   open('tbc', () => updateMenus());
   setMenu(M.tbc); M.tbc.focus(0);
 }
@@ -233,10 +233,10 @@ export function openSelect(onPick, onBack) {
     const b = P.best[m.id];
     return `<button class="mi${ok ? '' : ' locked'}" data-act="${ok ? 'm' + m.no : 'locked'}">
       <span class="m-no">MISSION ${pad2(m.no)}</span><span class="m-name">${ok ? m.title : '？？？'}</span>
-      <span class="m-best">${ok && b ? `BEST <b>${b.score.toLocaleString()}</b><br>RANK <b>${b.rank}</b>${b.medal ? '　MEDAL' : ''}${P.found?.[m.id] ? '　かけら<b>◆</b>' : ''}` : ''}</span>
+      <span class="m-best">${ok && b ? `BEST <b>${b.score.toLocaleString()}</b><br>RANK <b>${b.rank}</b>${b.medal ? '　MEDAL' : ''}${P.found?.[m.id] ? '　碎片<b>◆</b>' : ''}` : ''}</span>
       <span class="m-place">${ok ? m.place : ''}</span></button>`;
   }).join('');
-  $('sel-actions').innerHTML = '<button class="mi" data-act="back"><span>戻る</span><span class="en">BACK</span></button>';
+  $('sel-actions').innerHTML = '<button class="mi" data-act="back"><span>返回</span><span class="en">BACK</span></button>';
   M.sel = new Menu($('sel-panel'), (act) => {
     if (act === 'back') { AudioSys.sfx('uiBack'); onBack(); }
     else if (act === 'locked') AudioSys.sfx('uiBack');
@@ -277,8 +277,8 @@ function pickChar(i, speak) {
   $('ch-name').textContent = known ? p.nameJa : '？？？';
   $('ch-en').textContent = known ? p.name : 'UNKNOWN';
   $('ch-stats').innerHTML = known ? p.stats.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('') : '';
-  $('ch-prof').textContent = known ? p.text : 'まだ出会っていません。';
-  $('ch-line').textContent = known && !p.line ? '（無線では喋らない）' : '';
+  $('ch-prof').textContent = known ? p.text : '尚未遇到此角色。';
+  $('ch-line').textContent = known && !p.line ? '（无线电中保持沉默）' : '';
   CH.voice = known && p.line ? { chars: [...p.line], shown: 0, t: speak ? 0 : -0.35, mouthT: 0, who: p.face } : null;
   CB.onFocus(known ? p.ship : null);
   if (speak) AudioSys.sfx('uiMove');
@@ -352,11 +352,11 @@ function pwPress() {
   pwRender();
 }
 function pwOk() {
-  if (PW.text.length < 10) { AudioSys.sfx('uiBack'); pwMsg('10文字すべて入れてください', 'bad'); return; }
+  if (PW.text.length < 10) { AudioSys.sfx('uiBack'); pwMsg('请输入完整的十位密码', 'bad'); return; }
   const res = decodePassword(PW.text);
-  if (!res) { AudioSys.sfx('uiBack'); pwMsg('パスワードが違います', 'bad'); return; }
+  if (!res) { AudioSys.sfx('uiBack'); pwMsg('密码有误', 'bad'); return; }
   AudioSys.sfx('uiSelect');
-  pwMsg(`MISSION ${pad2(res.stage + 1)} から再開します`, 'ok');
+  pwMsg(`MISSION ${pad2(res.stage + 1)} 将从该任务重新开始`, 'ok');
   CB.onOk(res);
 }
 function updatePassword() {

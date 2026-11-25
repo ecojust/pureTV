@@ -161,7 +161,7 @@ function renderCommands() {
 
   if (pendingTarget) {
     hint.textContent = 'Tap an enemy above to aim.';
-    host.append(el('button.btn', { onclick: () => { pendingTarget = null; renderAll(); } }, 'Cancel'));
+    host.append(el('button#battle-back.btn', { onclick: () => { pendingTarget = null; renderAll(); } }, 'Cancel'));
     return;
   }
 
@@ -181,11 +181,11 @@ function renderCommands() {
   hint.textContent = 'Everyone has their orders.';
   host.append(
     el('button.btn.primary', { style: { gridColumn: 'span 2' }, onclick: runRound }, 'Go'),
-    cmdButton('Rethink', () => { battle.clearCommands(); wardenUsed = false; commandFor = null; renderAll(); }));
+    cmdButton('Rethink', () => { battle.clearCommands(); wardenUsed = false; commandFor = null; renderAll(); }, 'battle-back'));
 }
 
-function cmdButton(label, onClick) {
-  return el('button.btn', { onclick: () => { sfx.ui(); onClick(); } }, label);
+function cmdButton(label, onClick, id) {
+  return el('button.btn', { id, onclick: () => { sfx.ui(); onClick(); } }, label);
 }
 
 function setCommand(actor, cmd) {

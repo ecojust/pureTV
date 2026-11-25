@@ -14,9 +14,12 @@
     const english = String(info.language).startsWith("en");
     const tr = (zh, en) => (english ? en : zh);
     document.documentElement.lang = english ? "en" : "zh-CN";
-    document.title = config.title;
+    document.title = tr(config.titleZh, config.title);
+    canvas.setAttribute("aria-label", document.title);
+    $("room-qr").alt = tr("房间二维码", "Room QR code");
+    document.querySelector(".players").setAttribute("aria-label", tr("玩家", "Players"));
     const labels = {
-      "room-brand": [config.title, config.title],
+      "room-brand": [config.titleZh, config.title],
       "join-label": ["手机手柄", "PHONE CONTROLLERS"],
       "lan-label": ["同一局域网", "SAME LOCAL NETWORK"],
       "scan-title": ["扫码连接手柄", "Scan to connect"],
@@ -31,7 +34,7 @@
       "move-label": ["移动", "MOVE"],
       "a-label": config.actions.a,
       "b-label": config.actions.b,
-      "footer-left": [config.title, config.title],
+      "footer-left": [config.titleZh, config.title],
       "footer-right": [
         "返回：退出游戏 · 播放键：START",
         "Back: exit game · Play: START",

@@ -100,7 +100,7 @@ export class UI {
     hud(G, ctl) {
         const arc = Math.min(G.arc, 21);
         const after = G.won;
-        const name = G.won ? 'Afterglow' : `${G.mode === 'endless' ? 'Omen ' : ''}${ARCANA[arc].numeral} · ${ARCANA[arc].name}`;
+        const name = G.won ? 'Afterglow' : `${G.mode === 'endless' ? '预兆 ' : ''}${ARCANA[arc].numeral} · ${globalThis.PureTVChinese.translate(ARCANA[arc].name)}`;
         this.set('hud-arc-name', name);
         this.set('hud-light', `${fmt(G.light)} / ${fmt(G.goal)}`);
         const w = `${Math.min(100, (G.light / G.goal) * 100).toFixed(1)}%`;
@@ -136,7 +136,7 @@ export class UI {
             b.disabled = !usable && ctl.target !== p;
             const P = POWERS[p];
             b.querySelector('.cost').textContent = owned ? `✦${P.cost}` : ARCANA[P.from].numeral;
-            b.title = owned ? `${P.name} (✦${P.cost}): ${P.text}` : `Rekindle ${ARCANA[P.from].name} to awaken ${P.name}`;
+            b.title = owned ? `${globalThis.PureTVChinese.translate(P.name)}（✦${P.cost}）：${globalThis.PureTVChinese.translate(P.text)}` : `Rekindle ${ARCANA[P.from].name} to awaken ${P.name}`;
             b.setAttribute('aria-label', b.title);
         }
         $('stuck').hidden = !G.stuck || G.over;
@@ -206,8 +206,10 @@ export class UI {
         const quest = G.mode === 'quest';
         $('over-head').textContent = G.won ? 'The Afterglow Fades' : 'The Reading Ends';
         const n = G.restored.length;
-        $('over-text').textContent = `${fmt(G.score)} light gathered in ${G.moves} moves, ${G.lines} ${G.lines === 1 ? 'line' : 'lines'} cleared, best resonance ×${(1 + 0.5 * G.bestResonance).toFixed(1)}.` +
-            (quest ? (n ? ` You rekindled ${n} ${n === 1 ? 'arcanum' : 'arcana'}.` : '') : ` Best free reading: ${fmt(meta.bestFree)}.`);
+        const summary = `共用 ${G.moves} 步收集了 ${fmt(G.score)} 点光芒，消除了 ${G.lines} 行，最高共鸣 ×${(1 + 0.5 * G.bestResonance).toFixed(1)}。`;
+        $('over-text').textContent = summary + (quest
+            ? (n ? `你重燃了 ${n} 张秘仪牌。` : '')
+            : `自由占卜最高分：${fmt(meta.bestFree)}。`);
         const box = $('over-cards');
         box.innerHTML = '';
         for (const i of G.restored) {
@@ -227,7 +229,7 @@ export class UI {
         const grid = $('deck-grid');
         this.deckCards = ARCANA.map((a, i) => {
             const b = document.createElement('button');
-            b.setAttribute('aria-label', `${a.numeral} ${a.name}`);
+            b.setAttribute('aria-label', `${a.numeral} ${globalThis.PureTVChinese.translate(a.name)}`);
             b.setAttribute('aria-pressed', 'false');
             const cv = document.createElement('canvas');
             cv.width = 120; cv.height = 200;
@@ -255,19 +257,20 @@ export class UI {
     }
     deckDetail(i) {
         const a = ARCANA[i];
+        const translate = globalThis.PureTVChinese.translate;
         const lit = this.deckRestored?.has(i);
         this.deckCards.forEach((d, k) => d.b.setAttribute('aria-pressed', String(k === i)));
         const P = a.power ? POWERS[a.power] : null;
         const o = omensFor(i);
-        const omen = [o.sigils && `${o.sigils} sigil${o.sigils > 1 ? 's' : ''}`, o.blight && `${o.blight} blight (${o.blightHp} hits)`, o.creep && 'the creeping Void', o.harmony && 'harmony bonus'].filter(Boolean).join(', ');
+        const omen = [o.sigils && `${o.sigils} sigil${o.sigils > 1 ? 's' : ''}`, o.blight && `${o.blight} blight (${o.blightHp} hits)`, o.creep && 'the creeping Void', o.harmony && 'harmony bonus'].filter(Boolean).map(value => translate(value)).join('、');
         $('deck-detail').innerHTML = '';
         const head = document.createElement('div');
-        head.innerHTML = `<b>${a.numeral} · ${a.name}</b> — ${lit ? 'rekindled' : 'still dark'}`;
+        head.innerHTML = `<b>${a.numeral} · ${translate(a.name)}</b> · ${lit ? '已重燃' : '尚未重燃'}`;
         const line = document.createElement('div');
         line.textContent = a.line;
         const extra = document.createElement('div');
         extra.className = 'dim';
-        extra.textContent = `Light to rekindle: ${fmt(goalFor(i))}.${omen ? ` Omens: ${omen}.` : ''}${P ? ` Grants ${P.name}: ${P.text}` : ''}`;
+        extra.textContent = `重燃所需光芒：${fmt(goalFor(i))}。${omen ? `预兆：${omen}。` : ''}${P ? `解锁${translate(P.name)}：${translate(P.text)}` : ''}`;
         $('deck-detail').append(head, line, extra);
     }
 }

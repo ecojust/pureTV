@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
@@ -25,6 +26,7 @@ for (const [dest,source] of Object.entries({
   'tv.html':'src/index.html','style.css':'src/style.css','tv.css':'src/tv.css',
   'character-inspector.css':'src/character-inspector.css','makehuman-sources.json':'src/vendor/makehuman/SOURCES.json',
 })) files.set(dest, await read(source));
+files.set('tv.html', Buffer.from(await localizeHtml(files.get('tv.html').toString(), root)));
 const portraitSources=JSON.parse(await read('src/tv-portraits/sources.json'));
 const hash=value=>createHash('sha256').update(value).digest('hex');
 for (const name of await names('src/assets')) {

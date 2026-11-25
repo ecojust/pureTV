@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="arena-game" content="dolmus">
@@ -1887,6 +1887,11 @@ body.a3d #sEnd .receipt-header { padding-left: 84px; padding-right: 84px; min-he
 
   /* ---------- language ---------- */
   var STR = {
+    zh: { again: '再玩一次', another: '试玩其他游戏', close: '关闭', settings: '辅助功能',
+      textSize: '文字大小', contrast: '高对比度', motion: '减少动态效果', vibration: '振动',
+      autoPause: '切至后台时暂停', copied: '已复制到剪贴板', streak: '连续挑战', days: '天', share: '分享',
+      fbAsk: '玩得开心吗？', like: '喜欢', dislike: '不喜欢', thanks: '谢谢反馈！',
+      freezeUsed: '❄️ 已使用补签保留连续挑战纪录', freezeEarned: '❄️ 获得一次补签机会，错过一天也可保留纪录' },
     tr: { again: 'Bir daha', another: 'Başka bir oyun dene', close: 'Kapat', settings: 'Erişilebilirlik',
       textSize: 'Yazı boyutu', contrast: 'Yüksek karşıtlık', motion: 'Hareketi azalt', vibration: 'Titreşim',
       autoPause: 'Sekme değişince duraklat', copied: 'Panoya kopyalandı', streak: 'Seri', days: 'gün', share: 'Paylaş',
@@ -1898,8 +1903,8 @@ body.a3d #sEnd .receipt-header { padding-left: 84px; padding-right: 84px; min-he
       fbAsk: 'Did you enjoy it?', like: 'I liked it', dislike: 'I did not like it', thanks: 'Thanks!',
       freezeUsed: '❄️ A streak freeze saved the day you missed', freezeEarned: '❄️ Streak freeze earned: miss a day and your streak survives' },
   };
-  var lang = 'en';
-  try { lang = /^tr/i.test((hasDOM && document.documentElement.lang) || (root.navigator && navigator.language) || '') ? 'tr' : 'en'; } catch (e) {}
+  var lang = 'zh';
+
   function t(k) { return (STR[lang] && STR[lang][k]) || STR.en[k] || k; }
 
   /* ---------- game id + passport ---------- */
@@ -2318,7 +2323,7 @@ body.a3d #sEnd .receipt-header { padding-left: 84px; padding-right: 84px; min-he
   })();
 
   root.Arena = {
-    version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (l) lang = l === 'tr' ? 'tr' : 'en'; return lang; },
+    version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (l) lang = Object.prototype.hasOwnProperty.call(STR, l) ? l : 'zh'; return lang; },
     perf: perf, hint: hint, toast: toast, endCard: endCard, daily: daily, share: share, shareCard: shareCard,
     profile: profile, award: award, settings: settings, openSettings: openSettings, mountSettingsButton: mountSettingsButton,
     track: track, complete: complete, portal: portal,
@@ -2332,16 +2337,17 @@ body.a3d #sEnd .receipt-header { padding-left: 84px; padding-right: 84px; min-he
 (function () {
   var C = {"play":"#bPlay","key":"arena.dolmus.settings","wrap":"screen dim show","card":"card glass","btn":"btn primary","btn2":"btn","cardStyle":"text-align:center"};
   var S = {
+    zh: { gt: '无法启动 WebGL', gb: '此游戏需要 WebGL。请在浏览器中开启硬件加速，或换用支持 WebGL 的浏览器。', lt: '无法加载 3D 引擎', lb: '请重新加载游戏，检查安装文件是否完整。', rt: '重试', sw: 'English' },
     tr: { gt: 'WebGL kullanılamıyor', gb: 'Bu oyun WebGL ister ama tarayıcın başlatamadı. Tarayıcı ayarlarından donanım hızlandırmayı aç ya da başka bir tarayıcı dene (Chrome, Edge, Firefox).',
-          lt: '3D motoru yüklenemedi', lb: 'three.js internetten (jsDelivr) indirilemedi. Bağlantını kontrol edip sayfayı yenile; bir reklam veya içerik engelleyici cdn.jsdelivr.net adresini engelliyor olabilir.', rt: 'Yeniden dene', sw: 'English' },
+          lt: '3D motoru yüklenemedi', lb: 'three.js internetten (jsDelivr) indirilemedi. Bağlantını kontrol edip sayfayı yenile; bir reklam veya içerik engelleyici cdn.jsdelivr.net adresini engelliyor olabilir.', rt: 'Yeniden dene', sw: '简体中文' },
     en: { gt: 'WebGL is not available', gb: 'This game needs WebGL, but your browser could not start it. Turn on hardware acceleration in the browser settings or try another browser (Chrome, Edge, Firefox).',
           lt: 'The 3D engine could not load', lb: 'three.js could not be downloaded (jsDelivr). Check your connection and reload; an ad or content blocker may be blocking cdn.jsdelivr.net.', rt: 'Try again', sw: 'Türkçe' }
   };
   var G = window.__glGuard = { up: false, kind: null, lang: null, box: null };
   function pick() {
-    try { var q = new URLSearchParams(location.search).get('lang'); if (q === 'tr' || q === 'en') return q; } catch (e) {}
-    try { var s = JSON.parse(localStorage.getItem(C.key)); if (s && (s.lang === 'tr' || s.lang === 'en')) return s.lang; } catch (e) {}
-    return /^tr/i.test(navigator.language || '') ? 'tr' : 'en';
+    try { var q = new URLSearchParams(location.search).get('lang'); if (q === 'tr' || q === 'en' || q === 'zh') return q; } catch (e) {}
+    try { var s = JSON.parse(localStorage.getItem(C.key)); if (s && (s.lang === 'tr' || s.lang === 'en' || s.lang === 'zh')) return s.lang; } catch (e) {}
+    return 'zh';
   }
   function paint() {
     var T = S[G.lang], b = G.box; if (!b) return;
@@ -2360,7 +2366,7 @@ body.a3d #sEnd .receipt-header { padding-left: 84px; padding-right: 84px; min-he
       w.innerHTML = '<div class="' + C.card + '" style="' + (C.cardStyle || '') + '"><h2 style="' + (C.h2 || '') + '"></h2><p style="margin:10px 0 16px;line-height:1.45;' + (C.p || '') + '"></p>' +
         '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button type="button" class="' + C.btn + ' gg-r"></button><button type="button" class="' + C.btn2 + ' gg-s"></button></div></div>';
       w.querySelector('.gg-r').onclick = function () { location.reload(); };
-      w.querySelector('.gg-s').onclick = function () { G.lang = G.lang === 'tr' ? 'en' : 'tr'; paint(); };
+      w.querySelector('.gg-s').onclick = function () { G.lang = { zh: 'en', en: 'tr', tr: 'zh' }[G.lang]; paint(); };
       (document.body || document.documentElement).appendChild(w); G.box = w;
     }
     paint();
@@ -2430,7 +2436,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
     <div class="brand">
       <svg viewBox="0 0 68 52"><use href="#logo"/></svg><img class="f3d brand3d" data-src="assets/3d/sofor-yuz.webp" data-swap="prev" alt="" hidden>
       <div class="brand-text">
-        <span class="brand-name">DOLMUŞ</span>
+        <span class="brand-name" data-i="gameName">伊斯坦布尔小巴</span>
         <span class="brand-sub">İSTANBUL</span>
       </div>
     </div>
@@ -2555,14 +2561,14 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
     <div class="card">
       <div class="route-levha">
         <span class="rivet tl"></span><span class="rivet tr"></span>
-        <div class="levha-sub">İSTANBUL ŞEHİR İÇİ DOLMUŞ HATTI</div>
-        <div class="levha-main">KADIKÖY — BOSTANCI</div>
-        <div class="levha-slogan">★ MÂŞÂALLÂH · TEK RAKİBİM THY ★</div>
+        <div class="levha-sub" data-i="routeSign">伊斯坦布尔市内小巴线路</div>
+        <div class="levha-main" data-i="routeDest">卡德柯伊 — 博斯坦哲</div>
+        <div class="levha-slogan" data-i="routeMotto">★ 一路顺风，车速直追航班 ★</div>
         <span class="rivet bl"></span><span class="rivet br"></span>
       </div>
 
       <svg id="logoBig" viewBox="0 0 68 52" role="img" aria-label="Dolmuş"><use href="#logo"/></svg><img id="logo3d" class="f3d" data-src="assets/3d/dolmus-sofor.webp" data-swap="prev" alt="Dolmuş" hidden>
-      <div class="h1row"><img class="f3d face" data-src="assets/3d/sofor-yuz.webp" alt="" hidden><h1>DOLMUŞ</h1><img class="f3d face" data-src="assets/3d/turist-yuz.webp" alt="" hidden></div>
+      <div class="h1row"><img class="f3d face" data-src="assets/3d/sofor-yuz.webp" alt="" hidden><h1 data-i="gameName">伊斯坦布尔小巴</h1><img class="f3d face" data-src="assets/3d/turist-yuz.webp" alt="" hidden></div>
       <p class="sub" data-i="subtitle"></p>
       <p class="how" data-i="howto"></p>
       <div class="col">
@@ -2572,13 +2578,13 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
         <button class="btn" id="bDaily"><svg class="ic"><use href="#i-star"/></svg><span data-i="daily"></span></button>
         <div class="row">
           <button class="btn" id="bSettingsT"><svg class="ic"><use href="#i-gear"/></svg><span data-i="settings"></span></button>
-          <button class="btn" id="bLangT"><svg class="ic"><use href="#i-globe"/></svg><span id="langTxt">TR / EN</span></button>
+          <button class="btn" id="bLangT"><svg class="ic"><use href="#i-globe"/></svg><span id="langTxt">简体中文</span></button>
           <button class="btn" id="bNews"><svg class="ic"><use href="#i-star"/></svg><span data-i="news"></span></button>
         </div>
       </div>
       <div class="best" id="bestLine"></div>
       <div class="best" id="dailyLine"></div>
-      <div class="foot"><a href="https://github.com/Furkiozknn" target="_blank" rel="noopener">Claude Game Arena</a> · built by Claude Sonnet 5.5 · <span class="vtag" id="verTag" data-i="verTag"></span> · <a href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i="others"></a></div>
+      <div class="foot"><a href="https://github.com/Furkiozknn" target="_blank" rel="noopener">Claude Game Arena</a> · <span data-i="madeBy">由 Claude Sonnet 5.5 制作</span> · <span class="vtag" id="verTag" data-i="verTag"></span> · <a href="https://furkiozknn.github.io/" target="_blank" rel="noopener" data-i="others"></a></div>
     </div>
   </section>
 
@@ -2603,7 +2609,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
         <label for="rMaster" data-i="master"></label><input type="range" id="rMaster" min="0" max="100"><output id="oMaster"></output>
         <label for="rMusic" data-i="music"></label><input type="range" id="rMusic" min="0" max="100"><output id="oMusic"></output>
         <label for="rSfx" data-i="effects"></label><input type="range" id="rSfx" min="0" max="100"><output id="oSfx"></output>
-        <label data-i="language"></label><div class="seg"><button class="btn" id="bTR">Türkçe</button><button class="btn" id="bEN">English</button></div>
+        <label data-i="language"></label><div class="seg"><button class="btn" id="bZH">简体中文</button><button class="btn" id="bTR">Türkçe</button><button class="btn" id="bEN">English</button></div>
         <label data-i="quality"></label><div class="seg"><button class="btn" id="bQLow" data-i="low"></button><button class="btn" id="bQHigh" data-i="high"></button></div>
         <label data-i="mapMode"></label><div class="seg"><button class="btn" id="bMapH" data-i="mapHead"></button><button class="btn" id="bMapN" data-i="mapNorth"></button></div>
         <label class="t-only" data-i="pedalMode"></label><div class="seg t-only"><button class="btn" id="bPedU" data-i="pedSlider"></button><button class="btn" id="bPedS" data-i="pedSep"></button></div>
@@ -2633,8 +2639,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
   <section class="screen dim" id="sEnd" role="dialog" aria-modal="true">
     <div class="card receipt" style="position:relative">
       <div class="receipt-header">
-        <div class="receipt-seal">★ İSTANBUL DOLMUŞÇULAR ESNAF ODASI ★</div>
-        <div class="receipt-sub">GÜNLÜK HESAP PUSULASI &middot; VARDİYA RAPORU</div>
+        <div class="receipt-seal" data-i="receiptSeal">★ 伊斯坦布尔小巴司机公会 ★</div>
+        <div class="receipt-sub" data-i="receiptReport">每日结算 · 班次报告</div>
       </div>
       <div class="driver3d"><img class="f3d" data-src="assets/3d/sofor-yuz.webp" alt="" hidden></div>
       <div class="mascot hidden" id="mascot"><img id="mascotImg" alt="Kadıköy Kedisi" width="84" height="84"></div>

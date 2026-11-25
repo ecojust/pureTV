@@ -61,7 +61,8 @@
   };
   const DIRECTIONS = ["up", "right", "down", "left"];
   class TankRenderer {
-    constructor(canvas) {
+    constructor(canvas, language = "zh") {
+      this.english = language.startsWith("en");
       this.canvas = canvas;
       canvas.width = SCREEN_W;
       canvas.height = SCREEN_H;
@@ -79,7 +80,20 @@
         Math.round(h),
       );
     }
+    chinese(text, x, y, color = C.white, size = 11) {
+      const ctx = this.ctx;
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.font = 'bold ' + size + 'px "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif';
+      ctx.textBaseline = "top";
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
     text(value, x, y, color = C.white) {
+      if (/[㐀-鿿]/.test(value)) {
+        this.chinese(value, x, y - 1, color);
+        return;
+      }
       this.ctx.fillStyle = color;
       for (const char of String(value).toUpperCase()) {
         const rows = FONT[char];
@@ -235,7 +249,8 @@
         if (id === 2 && (game.selectedPlayers || 1) < 2) continue;
         const p = (game.players || []).find((v) => v.id === id),
           y = id === 1 ? 128 : 152;
-        this.text(id + "P", 232, y, C.black);
+        if (this.english) this.text(id + "P", 232, y, C.black);
+        else this.chinese(id === 1 ? "玩家一" : "玩家二", 230, y - 2, C.black, 8);
         this.sprite("lives", 232, y + 8);
         this.text(p ? Math.max(0, (p.lives || 0) - 1) : 0, 240, y + 8, C.black);
       }
@@ -320,10 +335,11 @@
     title(game) {
       this.rect(0, 0, 256, 240, C.black);
       const shift = Number(game.titleOffset) || 0;
-      this.text("I-    00", 16, 16 + shift);
-      this.text("HI- " + String(game.highScore || 20000), 88, 16 + shift);
-      this.sprite("battle_city", 28, 40 + shift);
-      const labels = ["1 PLAYER", "2 PLAYERS", "CONSTRUCTION"];
+      this.text(this.english ? "I-    00" : "得分 00", 16, 16 + shift);
+      this.text((this.english ? "HI- " : "最高分 ") + String(game.highScore || 20000), 88, 16 + shift);
+      if (this.english) this.sprite("battle_city", 28, 40 + shift);
+      else this.chinese("坦克大战", 52, 54 + shift, C.gold, 38);
+      const labels = this.english ? ["1 PLAYER", "2 PLAYERS", "CONSTRUCTION"] : ["单人游戏", "双人游戏", "自建地图"];
       for (let i = 0; i < labels.length; i++)
         this.text(labels[i], 80, 128 + i * 16 + shift);
       this.sprite(
@@ -335,12 +351,12 @@
       this.sprite("namcot", 88, 176 + shift);
       this.sprite("copyright", 32, 192 + shift);
       this.text("1980 1985 NAMCO LTD.", 48, 192 + shift);
-      this.text("ALL RIGHTS RESERVED", 48, 208 + shift);
+      this.text(this.english ? "ALL RIGHTS RESERVED" : "保留所有权利", 48, 208 + shift);
     }
     stageIntro(game) {
       this.rect(0, 0, 256, 240, C.frame);
       this.text(
-        "STAGE " + String(game.stage || 1).padStart(2, " "),
+        this.english ? "STAGE " + String(game.stage || 1).padStart(2, " ") : "第 " + (game.stage || 1) + " 关",
         88,
         112,
         C.black,
@@ -348,17 +364,17 @@
     }
     results(game) {
       this.rect(0, 0, 256, 240, C.black);
-      this.text("HI-SCORE", 56, 16, C.red);
+      this.text(this.english ? "HI-SCORE" : "最高分", 56, 16, C.red);
       this.text(
         String(game.highScore || 20000).padStart(5, " "),
         128,
         16,
         C.gold,
       );
-      this.text("STAGE " + String(game.stage || 1).padStart(2, " "), 96, 32);
+      this.text(this.english ? "STAGE " + String(game.stage || 1).padStart(2, " ") : "第 " + (game.stage || 1) + " 关", 96, 32);
       const dual = (game.selectedPlayers || 1) === 2;
-      this.text("I-PLAYER", 16, 48, C.red);
-      if (dual) this.text("II-PLAYER", 168, 48, C.red);
+      this.text(this.english ? "I-PLAYER" : "玩家一", 16, 48, C.red);
+      if (dual) this.text(this.english ? "II-PLAYER" : "玩家二", 168, 48, C.red);
       for (let id = 1; id <= (dual ? 2 : 1); id++) {
         const p = (game.players || []).find((v) => v.id === id);
         this.text(
@@ -387,14 +403,14 @@
             count = Math.min(Number(stat[types[row]]) || 0, visible),
             x = id === 1 ? 16 : 168;
           this.text(String(count * (row + 1) * 100).padStart(4, " "), x, y);
-          this.text("PTS", id === 1 ? 56 : 208, y);
+          this.text(this.english ? "PTS" : "分", id === 1 ? 56 : 208, y);
           this.text(String(count).padStart(2, " "), id === 1 ? 96 : 144, y);
           this.text(id === 1 ? ">" : "<", id === 1 ? 112 : 136, y);
         }
       }
       this.rect(88, 180, 24, 1, C.white);
       if (dual) this.rect(144, 180, 24, 1, C.white);
-      this.text("TOTAL", 40, 192);
+      this.text(this.english ? "TOTAL" : "合计", 40, 192);
       if (tallyDone && elapsed > 0) {
         this.text(
           String(((game.stats || [])[0] || {}).total || 0).padStart(2, " "),
@@ -410,7 +426,7 @@
         for (let id = 1; id <= (dual ? 2 : 1); id++) {
           const bonus = Number(((game.stats || [])[id - 1] || {}).bonus) || 0;
           if (bonus) {
-            this.text("BONUS", id === 1 ? 16 : 176, 208, C.red);
+            this.text(this.english ? "BONUS" : "奖励", id === 1 ? 16 : 176, 208, C.red);
             this.text(bonus, id === 1 ? 24 : 184, 224);
           }
         }
@@ -444,17 +460,23 @@
       else if (phase === "construction") this.construction(game);
       else if (phase === "gameover") {
         this.rect(0, 0, 256, 240, C.black);
-        this.sprite("game_over", 66, 80);
+        if (this.english) this.sprite("game_over", 66, 80);
+        else this.chinese("游戏结束", 80, 85, C.red, 24);
       } else {
         this.field(game);
         if (phase === "paused") {
-          this.rect(96, 112, 48, 8, C.black);
-          this.text("PAUSE", 104, 112, C.red);
+          this.rect(96, this.english ? 112 : 110, 48, this.english ? 8 : 15, C.black);
+          this.text(this.english ? "PAUSE" : "暂停", this.english ? 104 : 108, 112, C.red);
         } else if (game.resultGameOver && game.transition > 0) {
           const y = Math.max(112, 208 - (180 - game.transition));
-          this.rect(96, y, 32, 16, C.black);
-          this.text("GAME", 96, y, C.red);
-          this.text("OVER", 96, y + 8, C.red);
+          if (this.english) {
+            this.rect(96, y, 32, 16, C.black);
+            this.text("GAME", 96, y, C.red);
+            this.text("OVER", 96, y + 8, C.red);
+          } else {
+            this.rect(90, y, 60, 16, C.black);
+            this.chinese("游戏结束", 94, y + 1, C.red, 13);
+          }
         }
       }
     }

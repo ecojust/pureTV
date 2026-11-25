@@ -269,6 +269,216 @@
     #startScreen .slug.tl{display:none;}
   }
 </style>
+<script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "OPERATION IRONHOLD — Warehouse District": "铁垒行动：仓储区",
+    "HOLD BREATH": "屏息",
+    "Tactical": "战术地图",
+    "SECTOR 7": "第七区",
+    "/ 10 ELIMINATED": "/ 10 已击败",
+    "Vitals": "生命",
+    "Armor": "护甲",
+    "M4 CARBINE": "M4 卡宾枪",
+    "KS-12 PUMP": "KS-12 霰弹枪",
+    "P-9 SIDEARM": "P-9 手枪",
+    "SR-7 LONGBOW": "SR-7 长弓",
+    "FULL AUTO": "全自动",
+    "PAUSED": "已暂停",
+    "IRONHOLD // SECTOR 7": "铁垒行动 · 第七区",
+    "10 HOSTILES · 03:00 ON THE CLOCK": "10 名敌人 · 限时 3 分钟",
+    "CLASSIFIED // TASK FORCE IRONHOLD": "机密 · 铁垒特遣队",
+    "WAREHOUSE": "仓储",
+    "DISTRICT": "区",
+    "SECTOR 7 — HOSTILE": "第七区 · 敌方控制",
+    "← → / MOUSE": "← → / 鼠标",
+    "A / Z / LMB": "A / Z / 鼠标左键",
+    "X / SPACE": "X / 空格",
+    "ELIMINATE ALL 10 HOSTILES BEFORE THE CLOCK RUNS OUT": "在倒计时结束前击败全部 10 名敌人。",
+    "MISSION REPORT": "任务报告",
+    "MISSION FAILED": "任务失败",
+    "SECTOR 7 — WAREHOUSE DISTRICT": "第七区 · 仓储区",
+    "ELIMINATIONS": "击败数",
+    "HEADSHOTS": "爆头数",
+    "ACCURACY": "命中率",
+    "TIME SURVIVED": "存活时间",
+    "REDEPLOY": "重新部署",
+    "LOADING ORDNANCE…": "正在加载装备…",
+    "FAILED TO LOAD THE BUNDLED 3D ENGINE": "内置 3D 引擎加载失败",
+    "FRAGILE": "易碎品",
+    "NO PARKING": "禁止停车",
+    "KEEP CLEAR": "保持畅通",
+    "DANGER — MOVING PLANT": "危险：机械运行中",
+    "IRONHOLD": "铁垒",
+    "LOGISTICS   ·   TERMINAL 7": "物流中心 · 七号站",
+    "CSC SAFETY": "集装箱安全",
+    "APPROVAL": "已核准",
+    "VIPER": "蝰蛇",
+    "GHOST": "幽灵",
+    "REAPER": "死神",
+    "HAVOC": "浩劫",
+    "STRIKER": "突击手",
+    "COBRA": "眼镜蛇",
+    "TALON": "利爪",
+    "WOLF": "孤狼",
+    "DIESEL": "柴油",
+    "SHADOW": "暗影",
+    "SEMI AUTO": "半自动",
+    "PUMP ACTION": "泵动式",
+    "BOLT ACTION": "栓动式",
+    "NO AMMO": "弹药耗尽",
+    "PRESS R TO RELOAD": "按 R 换弹",
+    "SHOTS FIRED —": "听到枪声",
+    "CONTACT, MOVING TO SUPPORT": "发现交火，前去支援",
+    "GUNFIRE, SWEEPING": "听到枪声，搜索中",
+    "IS DOWN —": "已倒下",
+    "MAN DOWN, CONVERGE": "有人倒下，集合",
+    "WE LOST": "我们失去了",
+    ", PUSH IN": "，前进",
+    "COMMAND": "指挥部",
+    "NORTH": "北",
+    "EAST": "东",
+    "SOUTH": "南",
+    "WEST": "西",
+    "CONTACT": "发现敌人",
+    "TARGET SPOTTED —": "发现目标",
+    "EYES ON,": "看见目标",
+    "HOSTILE": "敌人",
+    "FLANKING": "侧翼包抄",
+    "RIGHT": "右侧",
+    "LEFT": "左侧",
+    "MOVING WIDE": "从外围绕行",
+    "GOING AROUND, PIN HIM": "绕过去，牵制他",
+    "PUSHING UP": "向前推进",
+    "CLOSING IN": "正在接近",
+    "ON HIM": "盯住他了",
+    "RELOADING — COVER ME": "正在换弹，掩护我",
+    "MAG OUT": "弹匣空了",
+    "CHANGING MAGS": "正在换弹",
+    "LOST VISUAL": "目标消失",
+    "WHERE IS HE": "他在哪儿",
+    "HE BROKE CONTACT": "目标脱离视野",
+    "SECTOR CLEARED": "区域已肃清",
+    "KILLED IN ACTION": "行动中阵亡",
+    "TIME EXPIRED": "时间已到",
+    "MISSION REPORT // SUCCESS": "任务报告 · 成功",
+    "MISSION REPORT // FAILURE": "任务报告 · 失败",
+    "YOU": "你",
+    "WALK · 前后移动": "前后移动",
+    "TURN · 转向": "转向",
+    "FIRE · 射击": "射击",
+    "AIM · 瞄准俯仰": "调整瞄准高度",
+    "JUMP · 跳跃": "跳跃",
+    "WEAPON · 切换装备": "切换装备",
+  },
+});
+
+</script>
 </head>
 <body>
 
@@ -4077,7 +4287,7 @@ const WICONS = [
 /* =========================================================================
    10. ENEMIES
    ========================================================================= */
-const ENEMY_NAMES = ['VIPER','GHOST','REAPER','HAVOC','STRIKER','COBRA','TALON','WOLF','DIESEL','SHADOW'];
+const ENEMY_NAMES = ['VIPER','GHOST','死神','浩劫','突击手','眼镜蛇','利爪','孤狼','柴油','暗影'];
 /* Multi-scale blob camo. Flat-coloured primitives are the single loudest tell
    that a model was generated rather than made; a pattern at a believable
    physical scale kills it faster than any amount of extra geometry. */
@@ -4440,9 +4650,9 @@ function updateAmmoUI(){
   UI.resNum.textContent = '/ ' + w.res;
   UI.magNum.classList.toggle('empty', w.mag===0);
   UI.wname.textContent = w.name;
-  UI.wmode.textContent = w.id==='rifle' ? (w.semi?'SEMI AUTO':'FULL AUTO')
-                        : w.id==='shotgun' ? 'PUMP ACTION'
-                        : w.id==='sniper'  ? 'BOLT ACTION' : 'SEMI AUTO';
+  UI.wmode.textContent = w.id==='rifle' ? (w.semi?'半自动':'FULL AUTO')
+                        : w.id==='shotgun' ? '泵动式'
+                        : w.id==='sniper'  ? 'BOLT ACTION' : '半自动';
   if (UI._icon !== player.weapon){ UI._icon = player.weapon; UI.wicon.innerHTML = WICONS[player.weapon]; }
   const need = w.mag===0 || (w.mag <= w.magSize*0.25 && w.res>0);
   UI.reloadHint.textContent = (w.mag===0 && w.res===0) ? 'NO AMMO'
@@ -4469,7 +4679,7 @@ function killFeed(victim, head){
 function pushComms(who, text){
   const el = document.createElement('div');
   el.className='cm';
-  el.innerHTML = `<i>&gt;&gt;</i> <b>${who}</b> — ${text}`;
+  el.innerHTML = `<i>&gt;&gt;</i> <b>${who}</b> — <span>${text}</span>`;
   UI.comms.appendChild(el);
   setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),520); }, 3400);
   while (UI.comms.children.length>4) UI.comms.firstChild.remove();
@@ -5024,8 +5234,8 @@ let _noiseCd = 0;
 function alertToGunfire(radius){
   if (perfNow - _noiseCd < 0.55) return;      // one alert per burst, not per round
   _noiseCd = perfNow;
-  alertSquad(radius, 3, e => pick(['SHOTS FIRED — '+bearingWord(e), 'CONTACT, MOVING TO SUPPORT',
-                                   'GUNFIRE, SWEEPING '+bearingWord(e)]), 0.7);
+  alertSquad(radius, 3, e => pick(['听到枪声 '+bearingWord(e), 'CONTACT, MOVING TO SUPPORT',
+                                   '听到枪声，搜索中 '+bearingWord(e)]), 0.7);
 }
 
 function damageEnemy(e, dmg, head, dir, point){
@@ -5060,8 +5270,8 @@ function killEnemy(e, head, dir){
   /* a man going down is louder than the shot that did it, and the squad's
      reach grows as it shrinks — the survivors come to you */
   alertSquad(30 + G.kills*7, 5,
-             ex => pick([e.name+' IS DOWN — '+bearingWord(ex), 'MAN DOWN, CONVERGE',
-                         'WE LOST '+e.name+', PUSH IN']), 0.85);
+             ex => pick([e.name+' 已倒下 '+bearingWord(ex), 'MAN DOWN, CONVERGE',
+                         '我们失去了 '+e.name+'，前进']), 0.85);
   if (G.kills>=10) endGame(true);
 }
 
@@ -5302,7 +5512,7 @@ function bearingWord(e){
   const dx = e.obj.position.x - player.pos.x, dz = e.obj.position.z - player.pos.z;
   const a = Math.atan2(dx, -dz);                       // 0 = north (-Z)
   const i = Math.round(((a + PI*2) % (PI*2)) / (PI/4)) % 8;
-  return ['NORTH','NORTH-EAST','EAST','SOUTH-EAST','SOUTH','SOUTH-WEST','WEST','NORTH-WEST'][i];
+  return ['北','NORTH-EAST','东','SOUTH-EAST','南','SOUTH-WEST','西','NORTH-WEST'][i];
 }
 /**
  * Combat director: everyone with eyes on the player keeps manoeuvring, but only
@@ -5418,8 +5628,8 @@ function updateEnemy(e, dt){
       e.state = ST.COMBAT;
       e.tacticT = 0;
       e.engage = 0;
-      comms(e, pick(['CONTACT '+bearingWord(e), 'TARGET SPOTTED — '+bearingWord(e),
-                     'EYES ON, '+bearingWord(e), 'HOSTILE '+bearingWord(e)]), true);
+      comms(e, pick(['发现敌人 '+bearingWord(e), '发现目标 '+bearingWord(e),
+                     '看见目标 '+bearingWord(e), '敌人 '+bearingWord(e)]), true);
     }
   }
   else if (e.state===ST.COMBAT){
@@ -5443,7 +5653,7 @@ function updateEnemy(e, dt){
       e.tactic = roll<0.42 ? 'hold' : (roll<0.72 ? 'flank' : 'push');
       e.cover = null;
       if (e.tactic==='flank' && !wasFlank && Math.random()<0.55)
-        comms(e, pick(['FLANKING '+(e.strafeDir>0?'RIGHT':'LEFT'),
+        comms(e, pick(['侧翼包抄 '+(e.strafeDir>0?'右侧':'左侧'),
                        'MOVING WIDE', 'GOING AROUND, PIN HIM']));
       if (e.tactic==='push' && Math.random()<0.35)
         comms(e, pick(['PUSHING UP','CLOSING IN','ON HIM']));

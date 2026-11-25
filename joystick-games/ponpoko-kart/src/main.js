@@ -47,6 +47,6 @@ try {
   adapter.fail(error);
   const message = document.createElement('p');
   message.id = 'tv-error';
-  message.textContent = '无法启动ぽんぽこカート。此游戏需要支持 WebGL 2 的系统浏览器。' + String(error?.message || error);
+  message.textContent = '无法启动狸猫卡丁车。此游戏需要支持 WebGL 2 的系统浏览器。' + String(error?.message || error);
   document.body.appendChild(message);
 }

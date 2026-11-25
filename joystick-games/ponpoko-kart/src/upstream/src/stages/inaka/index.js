@@ -4,9 +4,9 @@ import { buildInaka } from './build.js';
 
 export default {
   id: 'inaka',
-  name: '夕焼けたんぼ道',
+  name: '晚霞稻田',
   subtitle: 'Yuyake Tanbo Road',
-  description: '夕日にそまる田んぼの農道。踏切の電車と、川越えの和傘グライダーに注目！',
+  description: '穿过夕阳下的田间小道。留意道口的火车，还可以撑伞滑翔过河！',
   laps: 3,
   bgm: 'inaka',
   ambience: 'inaka',

@@ -1,3 +1,4 @@
+import { translated } from "./localize.js";
 import { W, H, T, spikeIn, ICE, SPIKE, EVENTS, B_MINE, B_MINI, MINE_DELAY } from "./sim.js";
 import { createObserver } from "./fx.js";
 import { pickPlan, hash } from "./music.js";
@@ -217,6 +218,7 @@ export const browserSpeech = () => {
     speak(text, volume) {
       try {
         const u = new SpeechSynthesisUtterance(text);
+        u.lang = document.documentElement.lang || "en";
         u.rate = 1.15; u.pitch = 0.9; u.volume = volume;
         ss.cancel();
         ss.speak(u);
@@ -298,7 +300,7 @@ export function createSound({ settings, makeEngine, speech = null, now = () => p
     const t = now();
     if (!speech || !set().voice || muted || t - lastSay < VOICE_GAP) return;
     lastSay = t;
-    speech.speak(String(text).toLowerCase(), volumeOf(set().volume));
+    speech.speak(translated(String(text)).toLowerCase(), volumeOf(set().volume));
   }
 
   return {

@@ -4077,7 +4077,7 @@ const WICONS = [
 /* =========================================================================
    10. ENEMIES
    ========================================================================= */
-const ENEMY_NAMES = ['VIPER','GHOST','REAPER','HAVOC','STRIKER','COBRA','TALON','WOLF','DIESEL','SHADOW'];
+const ENEMY_NAMES = ['VIPER','GHOST','死神','浩劫','突击手','眼镜蛇','利爪','孤狼','柴油','暗影'];
 /* Multi-scale blob camo. Flat-coloured primitives are the single loudest tell
    that a model was generated rather than made; a pattern at a believable
    physical scale kills it faster than any amount of extra geometry. */
@@ -4440,9 +4440,9 @@ function updateAmmoUI(){
   UI.resNum.textContent = '/ ' + w.res;
   UI.magNum.classList.toggle('empty', w.mag===0);
   UI.wname.textContent = w.name;
-  UI.wmode.textContent = w.id==='rifle' ? (w.semi?'SEMI AUTO':'FULL AUTO')
-                        : w.id==='shotgun' ? 'PUMP ACTION'
-                        : w.id==='sniper'  ? 'BOLT ACTION' : 'SEMI AUTO';
+  UI.wmode.textContent = w.id==='rifle' ? (w.semi?'半自动':'FULL AUTO')
+                        : w.id==='shotgun' ? '泵动式'
+                        : w.id==='sniper'  ? 'BOLT ACTION' : '半自动';
   if (UI._icon !== player.weapon){ UI._icon = player.weapon; UI.wicon.innerHTML = WICONS[player.weapon]; }
   const need = w.mag===0 || (w.mag <= w.magSize*0.25 && w.res>0);
   UI.reloadHint.textContent = (w.mag===0 && w.res===0) ? 'NO AMMO'
@@ -4469,7 +4469,7 @@ function killFeed(victim, head){
 function pushComms(who, text){
   const el = document.createElement('div');
   el.className='cm';
-  el.innerHTML = `<i>&gt;&gt;</i> <b>${who}</b> — ${text}`;
+  el.innerHTML = `<i>&gt;&gt;</i> <b>${who}</b> — <span>${text}</span>`;
   UI.comms.appendChild(el);
   setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),520); }, 3400);
   while (UI.comms.children.length>4) UI.comms.firstChild.remove();
@@ -5024,8 +5024,8 @@ let _noiseCd = 0;
 function alertToGunfire(radius){
   if (perfNow - _noiseCd < 0.55) return;      // one alert per burst, not per round
   _noiseCd = perfNow;
-  alertSquad(radius, 3, e => pick(['SHOTS FIRED — '+bearingWord(e), 'CONTACT, MOVING TO SUPPORT',
-                                   'GUNFIRE, SWEEPING '+bearingWord(e)]), 0.7);
+  alertSquad(radius, 3, e => pick(['听到枪声 '+bearingWord(e), 'CONTACT, MOVING TO SUPPORT',
+                                   '听到枪声，搜索中 '+bearingWord(e)]), 0.7);
 }
 
 function damageEnemy(e, dmg, head, dir, point){
@@ -5060,8 +5060,8 @@ function killEnemy(e, head, dir){
   /* a man going down is louder than the shot that did it, and the squad's
      reach grows as it shrinks — the survivors come to you */
   alertSquad(30 + G.kills*7, 5,
-             ex => pick([e.name+' IS DOWN — '+bearingWord(ex), 'MAN DOWN, CONVERGE',
-                         'WE LOST '+e.name+', PUSH IN']), 0.85);
+             ex => pick([e.name+' 已倒下 '+bearingWord(ex), 'MAN DOWN, CONVERGE',
+                         '我们失去了 '+e.name+'，前进']), 0.85);
   if (G.kills>=10) endGame(true);
 }
 
@@ -5302,7 +5302,7 @@ function bearingWord(e){
   const dx = e.obj.position.x - player.pos.x, dz = e.obj.position.z - player.pos.z;
   const a = Math.atan2(dx, -dz);                       // 0 = north (-Z)
   const i = Math.round(((a + PI*2) % (PI*2)) / (PI/4)) % 8;
-  return ['NORTH','NORTH-EAST','EAST','SOUTH-EAST','SOUTH','SOUTH-WEST','WEST','NORTH-WEST'][i];
+  return ['北','NORTH-EAST','东','SOUTH-EAST','南','SOUTH-WEST','西','NORTH-WEST'][i];
 }
 /**
  * Combat director: everyone with eyes on the player keeps manoeuvring, but only
@@ -5418,8 +5418,8 @@ function updateEnemy(e, dt){
       e.state = ST.COMBAT;
       e.tacticT = 0;
       e.engage = 0;
-      comms(e, pick(['CONTACT '+bearingWord(e), 'TARGET SPOTTED — '+bearingWord(e),
-                     'EYES ON, '+bearingWord(e), 'HOSTILE '+bearingWord(e)]), true);
+      comms(e, pick(['发现敌人 '+bearingWord(e), '发现目标 '+bearingWord(e),
+                     '看见目标 '+bearingWord(e), '敌人 '+bearingWord(e)]), true);
     }
   }
   else if (e.state===ST.COMBAT){
@@ -5443,7 +5443,7 @@ function updateEnemy(e, dt){
       e.tactic = roll<0.42 ? 'hold' : (roll<0.72 ? 'flank' : 'push');
       e.cover = null;
       if (e.tactic==='flank' && !wasFlank && Math.random()<0.55)
-        comms(e, pick(['FLANKING '+(e.strafeDir>0?'RIGHT':'LEFT'),
+        comms(e, pick(['侧翼包抄 '+(e.strafeDir>0?'右侧':'左侧'),
                        'MOVING WIDE', 'GOING AROUND, PIN HIM']));
       if (e.tactic==='push' && Math.random()<0.35)
         comms(e, pick(['PUSHING UP','CLOSING IN','ON HIM']));

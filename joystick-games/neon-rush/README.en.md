@@ -1,8 +1,10 @@
 # Neon Rush TV · 霓虹飞车
 
 <!-- apk-resource:start -->
-[Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.5/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.4 gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1)
+[Android TV 0.1.6 · APK](neon-rush-0.1.6.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/neon-rush-macos.dmg) · [Windows x64 · Installer](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/neon-rush-windows-x64-setup.exe)
 <!-- apk-resource:end -->
+
+Earlier downloads (Android 0.1.5) · [Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.5/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.4 gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1)
 
 ## Earlier Android release 0.1.4 · Controllers and phone pairing
 
@@ -78,7 +80,7 @@ Historical version 0.1.1 completed 66 native regressions and six actual-game che
 
 ## Presentation
 
-The original cars, roads, city, coast, canyon scenery, textures, and sound are generated locally. Gameplay does not need online art or audio downloads. The HUD shows a minimap, position, laps, time, speed, and drift/nitro feedback. Sound can be toggled in the top bar or with B / remote Menu while on the race menu. The installed app initially follows the system Chinese/English language; mouse and touch users can also switch it in the top bar.
+The original cars, roads, city, coast, canyon scenery, textures, and sound are generated locally. Gameplay does not need online art or audio downloads. The HUD shows a minimap, position, laps, time, speed, and drift/nitro feedback. Sound can be toggled in the top bar or with B / remote Menu while on the race menu. The first launch uses Simplified Chinese by default. Use the language button in the top bar to switch to English. The game remembers your choice.
 
 The game takes inspiration from the referenced repository's arcade drifting experience. It uses an independent name, vehicles, circuits, and implementation; no Tencent branding, official track layouts, or upstream game source code has been copied. See the [reference record](docs/REFERENCE.md).
 

@@ -585,7 +585,8 @@
   function number(n, d) {
     return String(Math.max(0, Math.floor(n) || 0)).padStart(d, "0");
   }
-  function MarioRenderer(canvas) {
+  function MarioRenderer(canvas, language = "zh") {
+    this.english = language.startsWith("en");
     this.canvas = canvas;
     canvas.width = 256;
     canvas.height = 240;
@@ -593,7 +594,21 @@
     this.ctx.imageSmoothingEnabled = false;
     canvas.style.imageRendering = "pixelated";
   }
+  MarioRenderer.prototype.chinese = function (value, x, y, color, size, align) {
+    var c = this.ctx;
+    c.save();
+    c.fillStyle = color || "#fff4e5";
+    c.font = 'bold ' + size + 'px "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif';
+    c.textBaseline = "top";
+    c.textAlign = align || "left";
+    c.fillText(value, x, y);
+    c.restore();
+  };
   MarioRenderer.prototype.text = function (value, x, y, color, scale) {
+    if (/[㐀-鿿]/.test(value)) {
+      this.chinese(value, x, y - 1, color, (scale || 1) * 11);
+      return;
+    }
     var c = this.ctx,
       s = scale || 1;
     c.fillStyle = color || "#fff4e5";
@@ -609,6 +624,10 @@
       });
   };
   MarioRenderer.prototype.center = function (t, y, color, scale) {
+    if (/[㐀-鿿]/.test(t)) {
+      this.chinese(t, 128, y - 1, color, scale > 1 ? 8 * scale : 11, "center");
+      return;
+    }
     var s = scale || 1;
     this.text(
       t,
@@ -941,6 +960,10 @@
       }
   };
   MarioRenderer.prototype.hudText = function (value, x, y) {
+    if (/[㐀-鿿]/.test(value)) {
+      this.chinese(value, x, y - 3, "#fff4e5", 10);
+      return;
+    }
     var c = this.ctx, text = String(value).toUpperCase();
     c.fillStyle = "#fff9e8";
     for (var i = 0; i < text.length; i++) {
@@ -1066,7 +1089,7 @@
     });
     g.particles.forEach(function (a) {
       if (a.type === "coin") self.coin(a.x - cam, a.y, g.frame);
-      else if (a.type === "score") self.text(a.text, a.x - cam, a.y, "#fff2cf");
+      else if (a.type === "score") self.text(!self.english && a.text === "1UP" ? "加一命" : a.text, a.x - cam, a.y, "#fff2cf");
       else {
         c.fillStyle = "#cb743e";
         c.fillRect(Math.floor(a.x - cam), Math.floor(a.y), a.w, a.h);
@@ -1094,19 +1117,20 @@
           ? "#2043aa"
           : "#080c18";
     c.fillRect(0, 0, 256, 32);
-    this.hudText(p.id === 2 ? "LUIGI" : "MARIO", 24, 16);
+    const name = p.id === 2 ? (this.english ? "LUIGI" : "路易吉") : (this.english ? "MARIO" : "马里奥");
+    this.hudText(name, 24, 16);
     this.hudText(number(p.score, 6), 24, 24);
     c.fillStyle = "#f8b844"; c.fillRect(89, 24, 5, 7);
     c.fillStyle = "#fff1c2"; c.fillRect(90, 25, 1, 5);
     this.hudText("X" + number(p.coins, 2), 96, 24);
-    this.hudText("WORLD", 144, 16);
+    this.hudText(this.english ? "WORLD" : "世界", 144, 16);
     this.hudText(g.level.label, 152, 24);
-    this.hudText("TIME", 208, 16);
+    this.hudText(this.english ? "TIME" : "时间", 208, 16);
     this.hudText(number(g.time, 3), 216, 24);
     if (g.bannerTicks > 0 && g.phase === "playing" && !g.clearTicks) {
       c.fillStyle = "rgba(8,12,24,.8)";
       c.fillRect(64, 42, 128, 19);
-      this.center("WORLD " + g.level.label + "   X " + p.lives, 48);
+      this.center((this.english ? "WORLD " + g.level.label + "   X " : "世界 " + g.level.label + "  生命 ") + p.lives, 48);
     }
     if (g.phase === "title") {
       c.fillStyle = "#7f2a16";
@@ -1115,53 +1139,53 @@
       c.fillRect(27, 45, 202, 2);
       c.fillRect(27, 45, 2, 76);
       c.fillStyle = "#efc29b";
-      this.center("SUPER", 53, "#ffd0a6", 3);
-      this.center("MARIO TV", 80, "#ffd0a6", 3);
-      this.center("INDEPENDENT RECREATION", 114, "#ffe0be");
+      this.center(this.english ? "SUPER" : "超级", 53, "#ffd0a6", 3);
+      this.center(this.english ? "MARIO TV" : "马里奥", 80, "#ffd0a6", 3);
+      this.center(this.english ? "INDEPENDENT RECREATION" : "独立重制版", this.english ? 114 : 110, "#ffe0be");
       c.fillStyle = "rgba(14,25,60,.92)";
       c.fillRect(38, 133, 180, 56);
       this.text(
-        (g.selectedPlayers === 1 ? ">" : " ") + " 1 PLAYER GAME",
+        (g.selectedPlayers === 1 ? ">" : " ") + (this.english ? " 1 PLAYER GAME" : " 单人游戏"),
         54,
         141,
       );
       this.text(
-        (g.selectedPlayers === 2 ? ">" : " ") + " 2 PLAYER ALTERNATE",
+        (g.selectedPlayers === 2 ? ">" : " ") + (this.english ? " 2 PLAYER ALTERNATE" : " 双人轮流游戏"),
         54,
         155,
       );
-      this.center("START TO PLAY", 176, "#ffe4a6");
-      this.center("TOP " + number(g.highScore, 6), 222);
+      this.center(this.english ? "START TO PLAY" : "按 START 开始", 176, "#ffe4a6");
+      this.center((this.english ? "TOP " : "最高分 ") + number(g.highScore, 6), 222);
     } else if (g.phase === "paused") {
       c.fillStyle = "rgba(5,9,22,.88)";
       c.fillRect(20, 78, 216, 91);
       this.center(
-        g.autoPaused ? "CONTROLLER DISCONNECTED" : "PAUSED",
+        g.autoPaused ? (this.english ? "CONTROLLER DISCONNECTED" : "手柄已断开") : (this.english ? "PAUSED" : "暂停"),
         91,
         "#ffe1a3",
       );
       this.center(
-        g.autoPaused ? "CONNECT ACTIVE PLAYER" : "START TO CONTINUE",
+        g.autoPaused ? (this.english ? "CONNECT ACTIVE PLAYER" : "请重新连接当前玩家的手柄") : (this.english ? "START TO CONTINUE" : "按 START 继续"),
         110,
       );
-      this.center("SELECT : MUSIC " + (g.muted ? "OFF" : "ON"), 130, "#c4d2e8");
-      this.center("PLAYER " + g.activePlayer + " TURN", 150, "#fbb884");
+      this.center(this.english ? "SELECT : MUSIC " + (g.muted ? "OFF" : "ON") : "SELECT 切换音乐：" + (g.muted ? "关" : "开"), 130, "#c4d2e8");
+      this.center(this.english ? "PLAYER " + g.activePlayer + " TURN" : "轮到玩家 " + g.activePlayer, 150, "#fbb884");
     } else if (g.phase === "gameover") {
       c.fillStyle = "rgba(5,9,22,.94)";
       c.fillRect(25, 78, 206, 88);
-      this.center("GAME OVER", 91, "#ffd1a3", 2);
-      this.center("TOP " + number(g.highScore, 6), 122);
-      this.center("START : TITLE", 145);
+      this.center(this.english ? "GAME OVER" : "游戏结束", 91, "#ffd1a3", 2);
+      this.center((this.english ? "TOP " : "最高分 ") + number(g.highScore, 6), 122);
+      this.center(this.english ? "START : TITLE" : "按 START 返回标题", 145);
     } else if (g.phase === "ending") {
       c.fillStyle = "#080c18";
       c.fillRect(0, 32, 256, 208);
       this.center(
-        "THANK YOU " + (g.winner === 2 ? "LUIGI" : "MARIO") + "!",
+        this.english ? "THANK YOU " + (g.winner === 2 ? "LUIGI" : "MARIO") + "!" : "谢谢你，" + (g.winner === 2 ? "路易吉" : "马里奥") + "！",
         58,
         "#ffe4b5",
       );
-      this.center("YOUR QUEST IS COMPLETE", 78);
-      this.center("ALL 8 WORLDS CLEARED", 98, "#9ee495");
+      this.center(this.english ? "YOUR QUEST IS COMPLETE" : "冒险完成！", 78);
+      this.center(this.english ? "ALL 8 WORLDS CLEARED" : "八个世界全部通关", 98, "#9ee495");
       this.playerArt("bigIdle", 91, 133, { r: "#c84218", b: "#76450d", s: "#ffb27b" }, false);
       c.fillStyle = "#f8b8a9";
       c.fillRect(144, 136, 12, 12);
@@ -1170,8 +1194,8 @@
       c.fillStyle = "#f394c6";
       c.fillRect(142, 148, 16, 21);
       c.fillRect(138, 164, 24, 5);
-      this.center("SCORE " + number(p.score, 6), 190);
-      this.center("START : TITLE", 216);
+      this.center((this.english ? "SCORE " : "得分 ") + number(p.score, 6), 190);
+      this.center(this.english ? "START : TITLE" : "按 START 返回标题", 216);
     }
   };
   root.MarioRenderer = MarioRenderer;

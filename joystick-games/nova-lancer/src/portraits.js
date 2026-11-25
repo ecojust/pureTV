@@ -8,15 +8,15 @@
 // Every gradient/clipPath id is prefixed with the character id, so any number of portraits
 // can live in one document. Markup is built once per id and cached.
 export const CHARACTERS = {
-  kota:     { name: 'KOTA',     nameJa: 'コタ',     role: 'LANCER 2', color: '#ff8a3d' },
-  gantetsu: { name: 'GANTETSU', nameJa: 'ガンテツ', role: 'LANCER 3', color: '#b7c4a0' },
-  rio:      { name: 'RIO',      nameJa: 'リオ',     role: 'LANCER 4', color: '#5ee0c8' },
-  hou:      { name: 'HQ',       nameJa: 'ホウ司令', role: 'COMMAND',  color: '#ffd166' },
-  mizuchi:  { name: 'MIZUCHI',  nameJa: 'ミズチ',   role: 'UNKNOWN',  color: '#ff3355', enemy: true },
-  tsumuji:  { name: 'TSUMUJI',  nameJa: 'ツムジ',   role: 'KAMAITACHI 1', color: '#5fd18a', enemy: true },
-  kiri:     { name: 'KIRI',     nameJa: 'キリ',     role: 'KAMAITACHI 2', color: '#ff5d73', enemy: true },
-  hari:     { name: 'HARI',     nameJa: 'ハリ',     role: 'KAMAITACHI 3', color: '#ffd34d', enemy: true },
-  gashadokuro: { name: 'GASHADOKURO', nameJa: 'ガシャドクロ', role: 'UNKNOWN', color: '#e070ff', enemy: true },
+  kota:     { name: 'KOTA',     nameJa: '小太',     role: 'LANCER 2', color: '#ff8a3d' },
+  gantetsu: { name: 'GANTETSU', nameJa: '岩铁', role: 'LANCER 3', color: '#b7c4a0' },
+  rio:      { name: 'RIO',      nameJa: '莉欧',     role: 'LANCER 4', color: '#5ee0c8' },
+  hou:      { name: 'HQ',       nameJa: '枭司令', role: 'COMMAND',  color: '#ffd166' },
+  mizuchi:  { name: 'MIZUCHI',  nameJa: '水蛟',   role: 'UNKNOWN',  color: '#ff3355', enemy: true },
+  tsumuji:  { name: 'TSUMUJI',  nameJa: '旋风',   role: 'KAMAITACHI 1', color: '#5fd18a', enemy: true },
+  kiri:     { name: 'KIRI',     nameJa: '雾刃',     role: 'KAMAITACHI 2', color: '#ff5d73', enemy: true },
+  hari:     { name: 'HARI',     nameJa: '小针',     role: 'KAMAITACHI 3', color: '#ffd34d', enemy: true },
+  gashadokuro: { name: 'GASHADOKURO', nameJa: '荒骷髅', role: 'UNKNOWN', color: '#e070ff', enemy: true },
 };
 
 const STYLE = '<style>.pm-open,.pe-closed{display:none}svg.open .pm-open,svg.blink .pe-closed{display:inline}svg.open .pm-closed,svg.blink .pe-open{display:none}</style>';

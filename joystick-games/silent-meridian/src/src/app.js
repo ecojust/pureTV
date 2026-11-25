@@ -8,7 +8,7 @@ import { expeditionView } from './expedition.js';
 const app = document.querySelector('#app');
 let storage;
 try { storage = window.localStorage; } catch { storage = null; }
-const loaded = loadState(storage, navigator.language.startsWith('zh') ? 'zh' : 'en');
+const loaded = loadState(storage);
 let state = loaded.state;
 let saveAvailable = loaded.available;
 let screen = 'title';

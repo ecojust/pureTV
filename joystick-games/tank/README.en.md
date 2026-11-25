@@ -1,8 +1,10 @@
 # Tank TV
 
 <!-- apk-resource:start -->
-[Android 0.5.7 APK](tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.7/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.6 gameplay video](docs/releases/0.5.6/gameplay.mp4?raw=1)
+[Android TV 0.5.8 · APK](tank-0.5.8.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/tank-macos.dmg) · [Windows x64 · Installer](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/tank-windows-x64-setup.exe)
 <!-- apk-resource:end -->
+
+Earlier downloads (Android 0.5.7) · [Android 0.5.7 APK](tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.7/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.6 gameplay video](docs/releases/0.5.6/gameplay.mp4?raw=1)
 
 ## Earlier Android release 0.5.6 · Controllers and phone pairing
 
@@ -34,7 +36,7 @@ Version **0.5.4** independently reimplements the 1985 NES Battle City rules, 35 
 
 The rewrite retains QR pairing and two phone controllers over the local network, with a native 256×240 display and 208×208 battlefield. It does not load or execute a ROM. The 35 maps, 20-enemy stage sequences, four enemy classes, six power-ups, upgrades, co-op tallies and Construction mode have source references. AI, some collisions and animation timings still need frame-by-frame comparison. See [rules and maps](docs/reference.md) and [artwork and audio](docs/reference-art-audio.md) for evidence and limitations.
 
-Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and phone controllers support Chinese and English. In-game menus retain the original English labels.
+Requires Android 8.0 or later; package `com.ecojust.tanktv`. New installations default to Simplified Chinese. The TV room, phone controllers, in-game menus, stage announcements and results screens support Chinese and English.
 
 <!-- visual-release:start -->
 ## Historical: 0.5.2 visual update and verification

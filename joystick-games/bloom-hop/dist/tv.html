@@ -17,7 +17,242 @@
   #tv-help { position: fixed; right: 12px; bottom: 14px; width: calc(var(--rail) - 24px); color: #fff4dc;
     font: 500 clamp(12px,1.15vw,16px)/1.65 Fredoka,system-ui,sans-serif; }
   #tv-help strong { display:block; color:#f5c542; font-size:1.4em; }
-</style></head><body>
+</style><script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+// Simplified Chinese strings for the offline game.
+PureTVChinese.install({
+  strings: {
+    "A gold feather! Press E or tap it to leap far.": "一只金羽毛，按E键或按住它跳得远",
+    "Back": "返回",
+    "Back where you were!": "回到你原来的地方！",
+    "Backspace": "退格键",
+    "Beetle Ballet": "贝叶芭蕾舞团",
+    "Beetle Bother": "贝托·伯德",
+    "Beetles block pads: flick them away with your tongue (Shift + arrow, or tap the beetle).": "贝特尔斯块垫:用舌头(Shift + sh箭，或敲击甲虫)来闪开。",
+    "Beetles block pads: tap one to flick it away with your tongue.": "贝特尔斯挡板:用舌头敲一击，",
+    "Bloom Hop": "莲池跃蛙",
+    "Bloom Hop lily pond puzzle": "莲池跃蛙谜题",
+    "Breeze Pond": "微风池",
+    "Cancel": "取消",
+    "Cattail Pond": "猫尾水塘",
+    "Choose a Pond": "选择池塘",
+    "Clover Pond": "克罗弗池塘",
+    "Continue": "继续游戏",
+    "Dewdrop Pond": "滴水池( Dewdrop Pond)",
+    "Done": "完成",
+    "Drizzle Pond": "滴水池( 滴水池)",
+    "Each time you hop off, it loses a dot. At zero it sinks.": "每次跳下去，都会失去点数，零点时就会沉没",
+    "Eat the fly on every pad to win.": "吃每块板上的苍蝇才能赢",
+    "Enter": "回车键",
+    "Fern Pond": "费尔恩塘",
+    "Finish": "完成",
+    "First Hops": "初次跳跃",
+    "Fishy Friends": "鱼友",
+    "Flick beetles away with your tongue!": "飞毛腿的甲虫用舌头拿走了！",
+    "Fresh pond! Undo to go back.": "新鲜的池塘 还没回来",
+    "Full Bloom": "满布鲁",
+    "Gift": "礼物",
+    "Glimmer Pond": "闪光池",
+    "Gold flower! Solved without a hint.": "金色花朵！你没用提示就过关了。",
+    "Hazel Pond": "海泽尔池塘",
+    "Hint": "提示",
+    "Hop and eat": "跳跃与捕食",
+    "Hop to every pad and eat every fly!": "跳到每一块地上，吃每只苍蝇！",
+    "Hop with the arrows, or tap a glowing pad (swipes work too).": "随箭而跳，或敲击发光垫(刷子也工作).",
+    "How to Play": "玩法说明",
+    "Land next to a ripple and a fish brings a gift.": "岸边的海浪和鱼会带礼物",
+    "Land next to a ripple to meet a fish!": "靠近海浪，去见鱼！",
+    "Leap": "跳动",
+    "Let's hop!": "开始跳跃！",
+    "Levels": "关卡",
+    "Lily Pond": "莉莉·庞德",
+    "Loading the pond…": "正在载入莲池……",
+    "Long Jump": "长跳",
+    "Marsh Medley": "玛什·梅德利",
+    "Meadow Pond": "草地水塘( 水塘)",
+    "Mend": "修补",
+    "Minnow Pond": "明诺池塘",
+    "Moonlight": "月光",
+    "Moonrise": "月亮升起时",
+    "Morning": "早 间",
+    "Morning Maze": "晨 报",
+    "Mossy Pond": "摩西池塘( 摩西池塘)",
+    "Next": "下一步",
+    "No hops left from here.": "这里已经无处可跳。",
+    "Pads sink!": "荷叶会下沉！",
+    "Paused": "已暂停",
+    "Pebble Pond": "石塘镇",
+    "Pick a gold pad to leap to!": "挑个金垫跳来跳去！",
+    "Play": "开始游戏",
+    "Pond friends": "池塘伙伴",
+    "Pond in Bloom!": "满池花开！",
+    "Puddle Pond": "水坑池头",
+    "Replay": "再玩一次",
+    "Resume": "继续游戏",
+    "Retry": "重试",
+    "Ripple Pond": "池",
+    "Shell Game": "贝壳游戏",
+    "Skip": "跳过",
+    "Solved! (Gold flowers are for no-hint wins.)": "解了! (金花是用来无胜的)",
+    "Splash! Dunked!": "扑通！落水了！",
+    "Sprout Pond": "芽水塘( Sprout Pond)",
+    "Stuck!": "走投无路！",
+    "Sturdy Pads": "坚硬的纸",
+    "Sunk pads can be hopped over!": "沉垫可以被翻过！",
+    "Sunk pads can be hopped over. Undo is free!": "沉垫可以被翻过，撤销是免费的！",
+    "Sunny Pond": "阳光池塘",
+    "Sunset": "日落",
+    "Tadpole Pond": "塔多波尔池塘",
+    "Tap a glowing pad to hop there (swipes work too).": "拍一个发光板跳到那里(刷子也工作).",
+    "Tap anywhere for sound": "随便打听声音",
+    "Tap or press any key for sound": "磁带或按下任何声音键",
+    "Test: Dead end": "测试: 死端",
+    "Test: Dunk": "测试: 凹陷",
+    "Test: Fish": "测试:鱼",
+    "Test: Leap": "测试: 跳跃",
+    "Test: Stuck": "测试: 粘贴",
+    "That fish left you a gift! Press E or tap it to mend this pad.": "鱼给你留下了礼物，按E键或敲击它来修补这垫子",
+    "The dots show how many more hops a pad can take!": "点数显示一个垫子还能多跳几下!.",
+    "The dots show how many more hops a pad can take.": "点数显示一个垫还能跳多少次。",
+    "The ring shows how many moves a turtle will hold you. Red means it dives as you land!": "戒指显示一只龟会有多远 红色意味着它会潜入你降落的地方",
+    "The turtle dived. Hop back and try again!": "乌龟潜进了水里。退回一步，再试一次！",
+    "The whole pond is in bloom!": "整个池塘都开花啦！",
+    "This pond can't be finished from here. Let's hop back!": "水塘不能从这里完工，我们回去吧！",
+    "Title": "标题画面",
+    "Tricky! Want a fresh pond? Tap Retry.": "诡异，要新池塘吗？",
+    "Turtle Crossing": "龟类的过关",
+    "Turtles are stepping stones that dive. The ring shows how many moves they will hold you.": "龟在跳跳石 戒指显示它们会把你抱住多少动作",
+    "Two turtles, two rhythms. Watch the rings!": "两只乌龟，两只节奏，注意戒指！",
+    "Undo": "撤销",
+    "Whisper Pond": "华声池",
+    "Wild Pond": "野外池塘",
+    "Wild Pond (after level 8)": "野塘(8级之后)",
+    "Willow Pond": "柳塘镇",
+    "You always land on the first pad in line.": "你总是在第一排降落",
+    "You land on the first pad in line, up to 3 cells away.": "你降落在排队的第一个板，最多3个细胞。",
+    "You'll get wet!": "你会湿的！",
+    "hop every pad · eat every fly · make the pond bloom": "跳上每片荷叶 · 吃掉所有飞虫 · 让莲池盛开",
+    "pad": "垫片",
+    "turtle": "乌龟",
+    "turtle rhythm": "龟形节奏"
+  },
+  patterns: [
+    [/^(.{0,240}?) flies eaten · (.*?) moves$/, (_, v1, v2) => "吃掉 " + PureTVChinese.translate(v1) + " 只飞虫 · 移动 " + PureTVChinese.translate(v2) + " 步"],
+    [/^Gold flowers: (.*?) \/ 12$/, "金色花朵：$1 / 12"],
+    [/^Pond #(.*?) in Bloom!$/, (_, v1) => "第 " + PureTVChinese.translate(v1) + " 座池塘开花了！"],
+    [/^Wild Pond #(.*?)$/, (_, v1) => "野外池塘 #" + PureTVChinese.translate(v1)],
+    [/^Sounds: (.*?)$/, (_, v1) => "音效：" + PureTVChinese.translate(v1)],
+    [/^Music: (.*?)$/, (_, v1) => "音乐：" + PureTVChinese.translate(v1)],
+    [/^(\d+) · (.+)$/, (_, level, name) => level + ' · ' + PureTVChinese.translate(name)]
+  ]
+});
+
+</script>
+</head><body>
 <canvas id="game" tabindex="0" aria-label="Bloom Hop lily pond puzzle"></canvas><div id="safe"></div><div id="fontwarm">Bloom Hop</div>
 <aside id="tv-help"><strong>Bloom Hop</strong>方向 · 跳至莲叶<br>A + 方向 · 弹开甲虫<br>B · 撤销　X · 使用道具<br>Y · 提示　START · 开始 / 暂停<br>菜单方向选择，A 确认</aside>
 <script src="audio-bank.js"></script><script src="bloom-hop.js"></script></body></html>

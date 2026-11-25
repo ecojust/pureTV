@@ -124,7 +124,7 @@ async function fixture({locale='zh-CN',storageBlocked=false,changeConfig=null,se
   if(storageBlocked){Storage.prototype.getItem=function(){throw new Error('Test: storage unavailable');};Storage.prototype.setItem=function(){throw new Error('Test: storage unavailable');};}
  },{storageBlocked});
  const page=await context.newPage();page.on('request',r=>requests.push(r.url()));page.on('pageerror',e=>errors.push(e.message));page.on('websocket',ws=>websockets.push(ws.url()));
- await page.goto((secure?secureOrigin:plainOrigin)+'/?room='+room.token);await page.waitForFunction(()=>document.getElementById('controller').dataset.connected==='true');
+ await page.goto((secure?secureOrigin:plainOrigin)+'/?room='+room.token+(locale==='en-US'?'&lang=en':''));await page.waitForFunction(()=>document.getElementById('controller').dataset.connected==='true');
  return {room,context,page,requests,errors,websockets,close:async()=>{await context.close();for(const peer of room.peers)peer.socket.destroy();rooms.delete(room.token);}};
 }
 async function setup(f){await f.page.locator('#steering-gyro').click();await f.page.locator('#tls-setup').waitFor({state:'visible'});await f.page.waitForFunction(()=>!document.getElementById('tls-continue').disabled);}

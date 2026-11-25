@@ -421,6 +421,336 @@ body[data-puretv-playing="true"] #puretv-controller-panel[data-playing=true] {
   top: auto !important; bottom: 6px; right: 6px;
 }
 </style>
+<script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+// Simplified Chinese strings for the offline game.
+PureTVChinese.install({
+  strings: {
+    "🌳 Family": "🌳 类别",
+    "📏 Size": "📏 大小",
+    "🎨 Colour": "🎨 颜色",
+    "🍎 Kind": "🍎 品种",
+    "+5 moves": "+5 移动",
+    "+5 moves!": "+5 移动！",
+    "1 more for golden!": "再来一瓶金色的！",
+    "A new best picnic!": "新的最好野餐！",
+    "A trail of 7 or more grows a golden fruit. Golden fruit links to anything!": "7号或7号以上的小径长出金色水果，金色水果与任何东西都连在一起！",
+    "Apple": "苹果公司",
+    "Back": "返回",
+    "Banana": "香蕉",
+    "Basket": "果篮",
+    "Basket full!": "果篮装满了！",
+    "Bee-utiful!": "美人儿，你这混蛋",
+    "Berry": "贝瑞",
+    "Berry Mix": "贝利混合",
+    "Berry Patch": "浆果园",
+    "Berry Set": "莓调制",
+    "Berry nice!": "贝里不错！",
+    "Big & Small": "大和小块",
+    "Blueberry": "蓝莓",
+    "Bumble": "蜜蜂",
+    "Bumble Basket": "蜜蜂果篮",
+    "Buzz Bomb": "巴斯炸弹",
+    "Buzz on!": "继续采蜜！",
+    "Cherry": "樱桃",
+    "Cherry Tops": "樱桃顶",
+    "Citrus": "锡鲁斯",
+    "Colour": "颜色",
+    "Colour sense! A red apple can hop to a strawberry, a green apple to a lime.": "颜色感知!红苹果可以跳到草莓上，绿苹果跳到石灰上。",
+    "Diamond Dew": "钻石",
+    "Done": "完成",
+    "Drag the bee across 3 or more apples, then let go to pick them.": "把蜜蜂拖过3个或更多苹果，然后放走挑选它们。",
+    "Dragon fruit": "龙果",
+    "Endless picnic": "无尽野餐",
+    "Extra moves are free — they just cap this try at one star.": "额外的动作是免费的——它们只是把这个尝试限制在一个恒星上。",
+    "Fall & Frost": "降霜",
+    "Family": "类别",
+    "Family Tree": "家庭树",
+    "Family sense! Lemons, limes, oranges and grapefruit are all Citrus.": "家喻户晓!柠檬，石灰，橙子和柚子都是Citrus.",
+    "Fill the jar under the blanket to earn a Honey Dipper. Tap the jar, then tap a fruit.": "倒进毯子下的罐子里，挣到一瓶\"蜜酒\",再打一瓶水果",
+    "Finish Sunny Orchard to unlock": "完成太阳园来解锁",
+    "First Pick": "首选",
+    "Frosted fruit can’t join a trail. Pick fruit next to it to thaw it out.": "冰冻的水果无法加入一条小径。 旁边选水果来融化。",
+    "Frosty Fruit": "霜果( 冰果 )",
+    "Frozen! Pick next to it.": "冻死，选旁边",
+    "Fruit Album": "水果专辑",
+    "Giant Set": "巨型设定",
+    "Giant Steps": "巨步步骤",
+    "Giant's Garden": "巨型花园",
+    "Golden Hour": "黄金时段",
+    "Grand Buffet": "大贝菲特",
+    "Grapefruit": "葡萄果( 葡萄果)",
+    "Grapes": "葡萄",
+    "Green Thumbs": "绿色缩略图",
+    "Honey Dipper": "亲爱的丁珀",
+    "Honey Jar": "亲爱的加",
+    "Hop between fruit of the same kind.": "跳到同类水果之间",
+    "Hop from fruit to fruit — every hop shares a": "在水果之间跳跃，相邻的水果须至少有一项相同：",
+    "Ice Cream": "冰块",
+    "Juicy work!": "汁汁的功劳！",
+    "Juicy!": "汁汁，你给我吃点吧！",
+    "Kind": "品种",
+    "Leaf Peepers": "偷窥者",
+    "Leaf piles! Pick fruit next to a pile to rake it away.": "树叶堆 摘水果放在堆旁边",
+    "Lemon": "柠檬",
+    "Let's pick!": "开始采摘！",
+    "Lime": "莱姆",
+    "Link by:": "链接来源:",
+    "Little Ones": "小个子",
+    "Lovely picking!": "摘得真好！",
+    "Mango": "芒果语Name",
+    "Map": "地图",
+    "Need 3 or more!": "需要3个或更多！",
+    "New album stamps:": "新建专辑邮票 :",
+    "New picnic": "新野餐 吃点什么",
+    "Next": "下一步",
+    "Now fruit of the same family link — lemons, limes and oranges are all Citrus.": "现在同一家族连结的果实——柠檬，石灰和橙子都是Citrus.",
+    "Now fruit of the same size link too — a big lemon can hop to a big grape.": "现在同样大小的连结水果——一个大柠檬可以跳到一个大葡萄上。",
+    "Now your bee can also hop between fruit of the same colour — a red apple links to a strawberry!": "现在，你的蜜蜂也可以跳在同样颜色的水果之间——红苹果链接到草莓！",
+    "Orange": "橙色",
+    "Orchard": "果园",
+    "Orchard Set": "园艺集",
+    "Out of moves": "步数已用尽",
+    "Out of moves — use your power-ups!": "动起来，用你的电动起伏！",
+    "Pack up": "收拾东西",
+    "Paint Pollen": "画波伦",
+    "Paint Pot": "画布",
+    "Pause": "暂停",
+    "Peach": "桃子( 桃子)",
+    "Peach Fuzz": "桃花绒",
+    "Pear": "梨子",
+    "Pear-fect!": "梨子酱！",
+    "Picking fruit…": "正在采摘……",
+    "Picnic packed up": "皮克尼收拾好了 已经准备好了",
+    "Picnic time!": "皮克斯时间！",
+    "Picnic!": "开始野餐！",
+    "Pile Up": "铺平",
+    "Pineapple": "菠萝",
+    "Pink Picnic": "粉红色比奇",
+    "Play": "开始游戏",
+    "Rainbow Road": "彩虹路( 彩虹路 )",
+    "Rainbow Wings": "彩虹翼",
+    "Raking Day": "挂起日期",
+    "Raspberry": "树莓",
+    "Replay": "再玩一次",
+    "Reset all stars, stamps and senses?": "重置所有恒星、邮票和感官？",
+    "Reset progress": "重置进度",
+    "Restart": "重新开始",
+    "Resume": "继续游戏",
+    "Ring a Ring": "环环",
+    "Seeing Red": "见红",
+    "Set complete!": "准备完毕！",
+    "Set level! Collect the whole Orchard Set to teach your bee a new sense.": "设定关卡! 收集整个果园集来教你的蜜蜂新感。",
+    "Set level! Gather every berry to learn the next sense.": "设定关卡 召集每个莓汁来学习下一种感觉",
+    "Set level! Gather small, medium and large to learn the last sense.": "设定关卡! 集合中小大小来学习最后的感官。",
+    "Settings": "设置",
+    "Shake shake!": "摇摆！",
+    "Size": "大小",
+    "Size sense! Big fruit links to big fruit, small to small.": "大小感应!大果连结大果，小果连结。",
+    "So close!": "就差一点！",
+    "Strawberry": "草莓( 草莓)",
+    "Sunny Orchard": "阳光果园",
+    "Sunny Side": "阳光侧面",
+    "Sweet as honey!": "甜美的如蜂蜜一样！",
+    "Sweet!": "帅呆了！",
+    "Taking a breather": "休息一下",
+    "Tap a fruit to collect every fruit of that kind.": "拍一个水果收集所有这种水果。",
+    "Tap a fruit — its neighbours turn its colour.": "敲打水果——它的邻居们转动颜色。",
+    "Tap a spot to collect the 3×3 around it.": "拍一个位置来收集周围的3×3。",
+    "The Big Picnic": "大钢琴",
+    "The Gardens": "花园",
+    "The colour jar earns Paint Pollen: tap a fruit and its neighbours take its colour.": "彩色罐子赚到彩色波伦:敲打水果，邻居取其颜色。",
+    "The family jar earns Rainbow Wings: your next trail can hop between any fruit.": "家族罐子赚彩虹翼:你接下来的线索可以跳到任何水果之间。",
+    "The grand finale — collect a full set of every family!": "盛大的决赛——收集每个家庭的完整组合！",
+    "The size jar earns a Buzz Bomb that collects a 3×3 patch.": "大小罐子能赚到一个收集3×3补丁的巴斯炸弹。",
+    "Trails can bend in any direction — even diagonally.": "拖车可以向任何方向弯曲——甚至对角弯曲。",
+    "Tropic Tops": "热带顶部",
+    "Tropical": "热带",
+    "Try again": "再试一次",
+    "Two Baskets": "双篮子",
+    "Un-bee-lievable!": "难以置信！",
+    "What a feast!": "盛宴真精彩! 盛宴真精彩！",
+    "Your bee learned a new sense!": "小蜜蜂学会了一种新的辨别方法！",
+    "Your next trail can hop between any fruit!": "你接下来的路可以跳到水果之间",
+    "any": "任何",
+    "any fruit": "任何水果",
+    "apples": "苹果",
+    "bananas": "香蕉( 香蕉)",
+    "baskets": "果篮数",
+    "best": "最佳成绩",
+    "blue": "蓝色",
+    "blueberries": "蓝莓",
+    "cherries": "樱桃",
+    "colour": "颜色",
+    "dragon fruit": "龙果",
+    "family": "类别",
+    "frost": "霜冻",
+    "full!": "满了！",
+    "golden": "金色果实",
+    "golden!": "黄金！",
+    "grapefruit": "柚子",
+    "grapes": "葡萄( 葡萄 )",
+    "green": "绿色",
+    "kind": "品种",
+    "large": "大块",
+    "leaf": "叶子",
+    "leaf piles": "叶堆",
+    "lemons": "柠檬",
+    "limes": "石灰",
+    "longest trail": "最长连线",
+    "mangoes": "芒果( 芒果)",
+    "medium": "中",
+    "moves": "步数",
+    "or": "或",
+    "orange": "橙色( 橙色 )",
+    "oranges": "橙色( 橙色 )",
+    "peaches": "桃子",
+    "pears": "梨子( 梨子)",
+    "pineapples": "菠萝",
+    "pink": "粉红色",
+    "purple": "紫色",
+    "rainbow!": "彩虹! 彩虹！",
+    "raspberries": "树莓",
+    "red": "红色",
+    "same colour": "颜色相同",
+    "same family": "同一个家庭",
+    "same kind": "同类",
+    "same size": "大小不变",
+    "score": "得分",
+    "size": "大小",
+    "small": "小数",
+    "strawberries": "草莓( 草莓)",
+    "yellow": "黄色",
+    "· drag to pick · H for a hint · P to pause": "拖动以选择 ^ H 提示 ^ P 暂停",
+    "✨ Fancy graphics": "✨ 精细画面",
+    "✨ Golden fruit!": "黄金水果！",
+    "🌀 Gentle motion": "🌀 柔和动画",
+    "🌈 Rainbow Wings!": "彩虹翅膀队！",
+    "🎵 Music": "🎵 音乐",
+    "📖 Album": "📖 图鉴",
+    "🔊 Sound": "🔊 音效",
+    "🧺 Picnic": "🧺 野餐"
+  },
+  patterns: [
+    [/^New jar: fill it with a (.*?) set to earn$/, (_, v1) => "新罐子:装上" + PureTVChinese.translate(v1) + "套来挣钱"],
+    [/^Sweet finish: (.{0,240}?) moves left → \+(.*?)$/, (_, v1, v2) => "甜蜜收尾：剩余 " + PureTVChinese.translate(v1) + " 步 → 奖励 " + PureTVChinese.translate(v2) + " 分"],
+    [/^linear-gradient\(160deg, (.{0,240}?), (.*?)6\)$/, (_, v1, v2) => "线性梯度( 160deg, " + PureTVChinese.translate(v1) + ", " + PureTVChinese.translate(v2) + "6)"],
+    [/^Collect (.{0,240}?) more (.{0,240}?) to earn (.{0,240}?) (.*?)$/, (_, v1, v2, v3, v4) => "收" + PureTVChinese.translate(v1) + ",再收" + PureTVChinese.translate(v2) + ",赚" + PureTVChinese.translate(v3) + "," + PureTVChinese.translate(v4)],
+    [/^🧺 Basket (.*?) full!$/, (_, v1) => "🧺 第 " + PureTVChinese.translate(v1) + " 个果篮装满了！"],
+    [/^(.{0,240}?) · Level (.*?)$/, (_, v1, v2) => PureTVChinese.translate(v1) + " · 第 " + PureTVChinese.translate(v2) + " 关"],
+    [/^Level (.{0,240}?): (.*?)$/, (_, v1, v2) => "第 " + PureTVChinese.translate(v1) + " 关：" + PureTVChinese.translate(v2)],
+    [/^(.{0,240}?) jar: (.*?)$/, (_, v1, v2) => PureTVChinese.translate(v1) + "罐：" + PureTVChinese.translate(v2)],
+    [/^(.*?) sense$/, (_, v1) => PureTVChinese.translate(v1) + "感知"],
+    [/^(.*?) moves$/, "$1 步"],
+    [/^(.*?) more$/, (_, v1) => "还需 " + PureTVChinese.translate(v1)]
+  ]
+});
+
+</script>
 </head>
 <body>
 

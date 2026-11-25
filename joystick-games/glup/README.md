@@ -1,6 +1,8 @@
 # GLUP · 沼泽猫鱼 · pureTV
 
-[Android TV 0.1.2 · APK](glup-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-windows-x64-setup.exe)
+[Android TV 0.1.3 · APK](glup-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/glup-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/glup-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.2） · [Android TV 0.1.2 · APK](glup-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-windows-x64-setup.exe)
 
 [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
@@ -8,7 +10,7 @@
 
 Android 包最低 Android 8.0（API 26），需要可正常运行现代网页的 WebView；本游戏使用 DOM/Canvas 2D，不要求 WebGL2。macOS 为 Apple Silicon / Intel 通用包，声明最低系统 11.0；使用 ad-hoc 签名，未做 Apple 公证。下载 DMG 后将 App 拖到“应用程序”；首次运行按系统提示允许本地网络，供 pureTV 手柄发现并连接。
 
-Nila 带着猫鱼 Bigotes 探索沼泽，通过吸入物体、跳跃、吐出和逐步学到的能力救回小猫鱼。保留原作 9 个地点、121 只小猫鱼、导师任务、关卡解锁、地图、剧情、首领和程序音乐；原作界面与对白为西班牙语，侧栏提供中文操作说明。
+Nila 带着猫鱼 Bigotes 探索沼泽，通过吸入物体、跳跃、吐出和逐步学到的能力救回小猫鱼。保留原作 9 个地点、121 只小猫鱼、导师任务、关卡解锁、地图、剧情、首领和程序音乐；游戏默认使用简体中文，侧栏提供中文操作说明。
 
 改编自 [gavilanbe/glup](https://github.com/gavilanbe/glup/tree/db4bc2cf502b9b53bd06fe65491215ea2324ef82)，固定上游 `db4bc2cf502b9b53bd06fe65491215ea2324ef82`，MIT 许可。保留原 Canvas 2D 像素画、物理、关卡与音频，不是原创 pureTV 游戏。原文件清单与哈希见 [upstream.json](upstream.json)，许可见 [LICENSE](LICENSE)、[NOTICE.md](NOTICE.md)。
 

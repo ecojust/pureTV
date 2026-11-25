@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-rng8alyX/pIcmDlozImPDrs8yvgFzHVRq/8OX5Oai4I=' 'sha256-dGUM+x7cA8B8vZW72U14EXgiELrp1qsEXaahd+xezu8='; style-src 'unsafe-inline'; connect-src 'self'; img-src data:; manifest-src blob:; worker-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BetmiXO16W/806rv6mHgH6Se0gXrShIbxeJum3nVfIk=' 'sha256-rng8alyX/pIcmDlozImPDrs8yvgFzHVRq/8OX5Oai4I=' 'sha256-dGUM+x7cA8B8vZW72U14EXgiELrp1qsEXaahd+xezu8='; style-src 'unsafe-inline'; connect-src 'self'; img-src data:; manifest-src blob:; worker-src 'none'; base-uri 'none'; form-action 'none'">
     <!-- No scale limit here, so menus stay zoomable. `ui/TouchLayer.ts` adds
          `maximum-scale=1, user-scalable=no` only while the touch controls are
          on screen: Firefox on iOS zoomed mid-fight, and nothing in play could
@@ -3946,7 +3946,366 @@
       body.run-held #hud,
       body.run-held #touch { visibility: hidden; }
     .pad-controls{font:12px/1.5 system-ui;color:#9ed8d6;margin-top:8px} #puretv-controller-panel[data-playing=true]{top:auto!important;bottom:12%} #puretv-controller-panel{z-index:35!important} @media(max-height:600px){.pad-controls{font-size:11px;margin-top:4px}} </style>
-      </head>
+      <script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "Clawd Pop 3D": "爆裂实验室 3D",
+    "Downloading game": "正在下载游戏",
+    "Still downloading…": "仍在下载…",
+    "Slow connection — try reloading": "连接较慢，请尝试重新加载",
+    "Building laboratory": "正在生成实验室",
+    "Warming up shaders": "正在预热着色器",
+    "Rebuilding laboratory": "正在重建实验室",
+    "FPS —": "帧率 —",
+    "Facility": "设施",
+    "Scan": "扫描",
+    "Discovered facility minimap": "已探索区域地图",
+    "Score": "得分",
+    "chain": "连击",
+    "Suit": "防护服",
+    "Integrity": "耐久",
+    "Mouse not captured —": "鼠标未锁定 —",
+    "click": "点击",
+    "to capture, or": "锁定鼠标，或",
+    "trackpad click and drag": "在触控板上按住并拖动",
+    "to aim": "瞄准",
+    "Click": "点击",
+    "to capture the mouse": "锁定鼠标",
+    "Pause": "暂停",
+    "Toggle sprint": "切换冲刺",
+    "Run": "奔跑",
+    "Dash": "闪避",
+    "Fire": "射击",
+    "Facility status": "设施状态",
+    "Containment restored": "已恢复收容",
+    "Every specimen popped · the core is quiet": "标本已全部清除，核心归于平静",
+    "Specimen containment facility": "标本收容设施",
+    "Containment has failed.": "收容失效。",
+    "Pop every specimen · reach the core": "清除所有标本，抵达核心",
+    "Start Run": "开始行动",
+    "A new lab every run": "每次行动都会生成新的实验室",
+    "Building laboratory…": "正在生成实验室…",
+    "Daily Lab": "每日挑战",
+    "Same lab for every player today": "今天所有玩家使用相同的地图",
+    "Building today's lab…": "正在生成今日地图…",
+    "Options": "选项",
+    "move  ·  mouse aim\n             ·  click fire": "移动 · 鼠标瞄准 · 点击射击",
+    "sprint  ·": "冲刺 ·",
+    "Space": "空格",
+    "dash\n             ·": "闪避 ·",
+    "pause  ·": "暂停 ·",
+    "mute": "静音",
+    "Left stick moves  ·  push past the rim to run": "左摇杆移动，推至边缘即可奔跑",
+    "Drag right to aim  ·  hold": "拖动右侧瞄准，按住",
+    "and slide to shoot while turning\n             ·": "并滑动，一边转向一边射击 ·",
+    "dodges": "闪避",
+    "Landscape plays best — portrait works too": "建议横屏游玩，也支持竖屏",
+    "A fan project by": "同人作品，作者为",
+    "Lab": "实验室",
+    "PAUSED": "已暂停",
+    "Resume": "继续",
+    "Restart": "重新开始",
+    "Quit to Title": "返回标题",
+    "move  ·  mouse aim  ·  click fire": "移动 · 鼠标瞄准 · 点击射击",
+    "dash  ·": "闪避 ·",
+    "resume  ·": "继续 ·",
+    "twice restarts": "双击重新开始",
+    "Tap anywhere off a button to resume": "点按按钮以外的位置继续",
+    "OPTIONS": "选项",
+    "Option groups": "设置分类",
+    "Controls": "操控",
+    "Display": "显示",
+    "Audio": "声音",
+    "Accessibility": "辅助功能",
+    "Access": "辅助",
+    "Mouse sensitivity": "鼠标灵敏度",
+    "Touch sensitivity": "触控灵敏度",
+    "Portrait keeps its 2× turning rate": "竖屏保持双倍转向速度",
+    "Invert vertical aim": "反转垂直瞄准",
+    "Off": "关",
+    "Auto-fire on touch": "触摸时自动开火",
+    "Fire without the trigger: a resting aim thumb keeps shooting": "手指停在瞄准区即可持续射击",
+    "Keys": "按键",
+    "Move": "移动",
+    "Mouse": "鼠标",
+    "Aim · click to fire": "瞄准 · 点击射击",
+    "Sprint": "冲刺",
+    "Mute": "静音",
+    "Diagnostics": "诊断",
+    "Haptics": "触觉反馈",
+    "Vibrate on shots, pops and hits": "射击、击破或受击时震动",
+    "On": "开",
+    "Quality": "画质",
+    "Auto": "自动",
+    "High": "高",
+    "Medium": "中",
+    "Low": "低",
+    "Tuned for phones: sharp, no shadows": "手机模式：清晰画面，关闭阴影",
+    "Phone": "手机",
+    "Renderer": "渲染器",
+    "Applies on reload": "重新载入后生效",
+    "WebGL on phones and tablets; WebGPU on computers that support it": "手机和平板使用 WebGL，支持 WebGPU 的电脑使用 WebGPU",
+    "Adaptive quality": "自适应画质",
+    "Lowers resolution if frames stay slow": "帧率持续偏低时降低分辨率",
+    "Frame rate counter": "显示帧率",
+    "Master volume": "总音量",
+    "Effects volume": "音效音量",
+    "Cannon, specimens, pops and alarms": "炮声、标本、爆裂声和警报",
+    "Music volume": "音乐音量",
+    "Ambience volume": "环境音量",
+    "The facility's hum, vents and machinery": "设施低鸣、通风和机械声",
+    "Mute all audio": "全部静音",
+    "Same as": "相当于按下",
+    "— your volume levels are kept": "，原有音量设置会保留",
+    "Screen shake": "画面震动",
+    "Camera shake, recoil punch and field-of-view kicks": "镜头晃动、后坐力和视野变化",
+    "Full": "完整",
+    "Reduce motion": "减少动态效果",
+    "Calmer HUD and menus; your system setting also applies": "减弱界面动画，也会遵循系统设置",
+    "Control tips": "操作提示",
+    "Short first-run hints, each shown once": "首次游玩的提示，每条显示一次",
+    "Replay tips": "重看提示",
+    "Show every tip again from the next run": "下次行动时重新显示所有提示",
+    "Replay": "重播",
+    "Back": "返回",
+    "Reset": "重置",
+    "Reload": "重新载入",
+    "Changes apply instantly and are saved on this device": "修改立即生效，并保存在此设备上",
+    "CONTAINMENT LOST": "收容失效",
+    "Grade": "评价",
+    "Retry": "重试",
+    "New Lab": "新实验室",
+    "Title": "标题",
+    "Codex Sentinel": "典籍哨兵",
+    "Twin bolts — sidestep the volley": "双弹齐射，向侧面闪避",
+    "Ember Hopper": "余烬跳虫",
+    "Short high leap — its burst also hits nearby specimens": "短促高跳，爆炸也会波及附近标本",
+    "Chance": "概率",
+    "LINK": "连接",
+    "DECONTAMINATION": "净化区",
+    "AIRLOCK": "气闸",
+    "QUARANTINE ENTRY": "隔离入口",
+    "SERVICE RUN": "检修通道",
+    "TRANSIT CORRIDOR": "中转走廊",
+    "ACCESS SPUR": "通行支路",
+    "SEALED SPUR": "封闭支路",
+    "FLOODED RUN": "积水通道",
+    "UNLOGGED ACCESS": "未登记通道",
+    "SECTOR JUNCTION": "区域交汇处",
+    "CONTROL NODE": "控制节点",
+    "DISTRIBUTION HUB": "配送枢纽",
+    "DARK NODE": "熄灯节点",
+    "ABANDONED CONTROL": "废弃控制室",
+    "SILENT HUB": "静默枢纽",
+    "OBSERVATION RUN": "观察通道",
+    "VIEWING GALLERY": "观察长廊",
+    "SPECIMEN WALK": "标本步道",
+    "EMPTY GALLERY": "空置长廊",
+    "BLIND OBSERVATION": "盲区观测点",
+    "WATCH ROOM": "值守室",
+    "CULTURE VAULT": "培养库",
+    "ASSAY LAB": "分析实验室",
+    "SEQUENCING SUITE": "测序室",
+    "INCUBATION BAY": "孵化区",
+    "SUBJECT ANNEX": "实验体附楼",
+    "CULTURE OVERFLOW": "培养物暂存区",
+    "UNLOGGED ASSAY": "未登记分析室",
+    "SUPPLY HOLD": "物资舱",
+    "CRATE STORE": "箱件库",
+    "MATERIEL BAY": "装备库",
+    "COLD STORE": "冷库",
+    "SPOILED STORE": "变质品仓库",
+    "CONDEMNED HOLD": "封存货舱",
+    "OVERFLOW STACK": "溢出堆放区",
+    "CONTAINMENT BAY": "收容区",
+    "SPECIMEN HOLD": "标本舱",
+    "ISOLATION WARD": "隔离病房",
+    "HOLDING PEN": "暂存围栏",
+    "BREACHED HOLD": "失守货舱",
+    "EMPTY PENS": "空围栏",
+    "RELEASE WARD": "释放区",
+    "COOLANT PLANT": "冷却站",
+    "POWER SPINE": "动力主干",
+    "THERMAL VAULT": "热能库",
+    "RUNAWAY PLANT": "失控厂房",
+    "THERMAL BREACH": "热能泄漏区",
+    "DEAD SPINE": "断电主干",
+    "PRIMARY CONTAINMENT": "主收容区",
+    "REACTOR VAULT": "反应堆室",
+    "CORE CHAMBER": "核心舱",
+    "PRIMARY BREACH": "主收容区破口",
+    "ORIGIN CHAMBER": "起源舱",
+    "CORE — OPEN": "核心已开启",
+    "Press R again to restart · Esc to resume": "再按一次 R 重新开始，按 Esc 继续",
+    "Yield": "收益",
+    "Guard": "防御",
+    "Aim": "瞄准",
+    "Style": "风格",
+    "Route": "路线",
+    "A fall caps the grade at C — finish the route to go higher": "中途倒下最高只能获评 C，完成路线可获得更高评价。",
+    "Run complete": "完成行动",
+    "Suit failure": "防护服失效",
+    "CONTAINMENT RESTORED": "已恢复收容",
+    "New personal best": "刷新个人纪录",
+    "New best on this lab": "刷新本地图纪录",
+    "Fell": "倒下",
+    "No score yet on this lab": "本地图尚无分数",
+    "First run on this lab": "首次挑战本地图",
+    "Specimens popped": "清除标本",
+    "Best chain": "最高连击",
+    "Accuracy": "命中率",
+    "Time": "用时",
+    "Damage taken": "承受伤害",
+    "Close calls": "惊险闪避",
+    "Clean sectors": "无伤区域",
+    "Core": "核心",
+    "Clean": "无伤",
+    "Left thumb — move": "左拇指移动",
+    "Move the mouse — aim": "移动鼠标瞄准",
+    "Drag the right side — aim": "拖动右侧瞄准",
+    "Push the stick past its rim to run": "将摇杆推至边缘即可奔跑",
+    "Eyes flare before a lunge — sidestep or dash": "扑击前眼睛会闪光，侧移或闪避",
+    "Nice": "漂亮！",
+    "Tip": "提示",
+    "Daily Lab — the same layout for every player today": "每日挑战：今天所有玩家使用相同的地图",
+    "Containment has failed — reach the core chamber": "收容失效，抵达核心舱",
+    "Graphics device lost": "图形设备断开",
+    "Reloading this lab on WebGL…": "正在使用 WebGL 重新加载实验室…",
+    "Audio muted": "已静音",
+    "Audio on": "声音已开启",
+    "Press M to unmute": "按 M 取消静音",
+    "Press M to mute": "按 M 静音",
+    "Power cell destroyed": "能量电池已摧毁",
+    "Armour deflects": "护甲弹开了攻击",
+    "Hit the glowing power cells": "击中发光的能量电池",
+    "Production line — active": "生产线已启动",
+    "Destroy its three power cells": "摧毁三块能量电池",
+    "Primary containment — open": "主收容区已开启",
+    "Lift opening — clear the platform": "升降机即将启动，请离开平台",
+    "Primary containment — neutralized": "主收容区威胁已解除",
+    "Production line — offline": "生产线已停机",
+    "Swarm collapsing": "虫群正在瓦解",
+    "All power cells destroyed": "所有电池已摧毁",
+    "Primary containment — secure it to end the run": "控制主收容区以完成行动",
+    "Containment breach detected": "检测到收容区破口",
+    "Sector secure": "区域已安全",
+    "Optional sector secure": "可选区域已安全",
+    "Wave clear": "本波已清除",
+    "Clawd Pop": "爆裂实验室",
+  },
+  patterns: [
+    [/^Sector (\d+)$/i, "第 $1 区"],
+    [/^Wave (\d+)$/i, "第 $1 波"],
+  ],
+});
+
+</script>
+</head>
   <body class="booting boot-preparing boot-stage-download">
     <div id="app">
       <canvas id="view"></canvas>

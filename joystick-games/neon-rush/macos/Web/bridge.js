@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
   const actions = ['a', 'b', 'start', 'left', 'right', 'up', 'down'];
-  let info = { platform: 'macos', language: /^en\b/i.test(root.navigator?.language || '') ? 'en' : 'zh', wifiController: { state: 'starting' } };
+  let info = { platform: 'macos', language: 'zh', wifiController: { state: 'starting' } };
   let player = null, identity = null, lastRevision = -1, initialized = false, everConnected = false;
   let counters = {}, pending = {}, blocked = {}, suspendedRevision = -1, preferencesSeeded = false, inputDisabled = false;
   const preferenceKeys = new Set(['puretv.neon-rush.best', 'neon-rush.language']);

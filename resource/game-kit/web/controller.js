@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id), ui = $('controller');
-  const english = !navigator.language.toLowerCase().startsWith('zh');
+  const english = new URLSearchParams(location.search).get('lang') === 'en';
   const words = english ? {connecting:'Connecting…',connected:'Connected · watch the TV',lost:'Reconnecting…',full:'This game already has a player.',invalid:'Scan the QR code on your TV again.',start:'Start / pause',select:'Restart',retry:'Reconnect',fullscreen:'Fullscreen',direction:'Drag anywhere on the left to steer',error:'Could not connect. Check the TV and Wi-Fi.'} : {connecting:'正在连接…',connected:'已连接 · 看着电视玩',lost:'连接断开，正在重连…',full:'本游戏已有玩家，请使用原来的手机。',invalid:'请重新扫描电视上的二维码。',start:'开始 / 暂停',select:'重新开始',retry:'重新连接',fullscreen:'全屏',direction:'在左侧任意位置滑动控制方向',error:'无法连接，请检查电视和 Wi-Fi。'};
   for (const id of ['start','select','retry','fullscreen']) $(id).textContent = words[id];
   $('stick-caption').textContent = words.direction;

@@ -53,7 +53,7 @@ try{
     await page.screenshot({path:capture+'/used-car-racing-tv'+(language==='en'?'.en':'')+'.png'});
     await page.screenshot({path:diagnostic+'/garage-'+language+'.png'});
     const original=live.players[0].car;await input(page,1,{connected:true});await page.waitForFunction(()=>UsedCarTV.game.playerCount===2);
-    assert.equal((await snapshot(page)).players[0].car,original);assert.equal(await page.locator('.vehicle-card').count(),2);assert.match(await page.locator('#ai-label').innerText(),/4 AI/);
+    assert.equal((await snapshot(page)).players[0].car,original);assert.equal(await page.locator('.vehicle-card').count(),2);assert.equal(await page.locator('#ai-label').innerText(),language==='zh'?'+ 4 名电脑车手':'+ 4 AI');
     await page.locator('[data-track="ridge"]').click();await page.waitForFunction(()=>UsedCarTV.game.trackId==='ridge');assert.equal((await snapshot(page)).players[0].car,original);
     await page.screenshot({path:diagnostic+'/garage-two-'+language+'.png'});
     await page.setViewportSize({width:960,height:540});await page.waitForFunction(()=>UsedCarTV.renderer.renderWidth===960);

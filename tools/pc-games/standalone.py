@@ -2,7 +2,6 @@
 import argparse
 import hashlib
 import json
-import locale
 import re
 import sys
 from pathlib import Path
@@ -15,7 +14,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--smoke-test', action='store_true',
                         help='check the bundled game files and print their identity')
-    parser.add_argument('--language', choices=['zh', 'en'])
+    parser.add_argument('--language', choices=['zh', 'en'], default='zh')
     parser.add_argument('--no-browser', action='store_true')
     parser.add_argument('--http-port', type=int)
     parser.add_argument('--controller-port', type=int, default=63485)
@@ -52,8 +51,7 @@ def main(argv=None):
             print(json.dumps({'id': game['id'], 'version': game['version']}))
             return 0
 
-        system_language = locale.getlocale()[0] or ''
-        language = args.language or ('zh' if system_language.lower().startswith(('zh', 'chinese')) else 'en')
+        language = args.language
         if sys.platform == 'win32' and not args.no_browser and sys.stdout and sys.stdout.isatty():
             import ctypes
 

@@ -1,3 +1,4 @@
+import { translated } from "./localize.js";
 import { ROSTER, BY_ID, ladder, fightOf, load, save, begin, advance, continued, playable, actor, pendingChoice, endingsOf, effectNotes, ENDINGS } from "./campaign.js";
 import { TEXT, PREMISE, banter, DUO, sideLine, sideCheer, sideLose, CHOICE_TEXT, ENDING_TEXT, fillText } from "./story.js";
 import { pixels } from "./storyart.js";
@@ -35,7 +36,7 @@ export function createStoryUI({ root, show, fight, home, reduced, blip = () => {
 
   const box = (rows) => {
     rows = rows.filter(Boolean);
-    texts = rows.map((r) => r.text);
+    texts = rows.map((r) => translated(r.text));
     who = rows.map((r) => r.id);
     return `<div class="dlg px">${rows.map((r) => `<p>${r.id ? `<b class="who" style="--c:${actor(r.id).color}">${esc(actor(r.id).name)}</b>` : ""}<span class="t"></span><span class="t h"></span></p>`).join("")}</div>`;
   };
@@ -156,7 +157,7 @@ export function createStoryUI({ root, show, fight, home, reduced, blip = () => {
     sfx("choice");
     const t = CHOICE_TEXT[c.id], notes = effectNotes(c.opts[k]);
     go("res", `<h2 class="st-head">${esc(t.title)}</h2>${box([{ text: fillText(t.res[k], names(c)) }])}
-      <div class="dim">${notes.length ? esc(`Next fight: ${notes.join(" · ").toLowerCase()}`) : "Nothing changes. Or does it?"}</div>${btn("vs", "Next", "pri adv")}`);
+      <div class="dim">${notes.length ? esc(`Next fight: ${notes.map(translated).join(" · ")}`) : "Nothing changes. Or does it?"}</div>${btn("vs", "Next", "pri adv")}`);
   }
 
   function vs() {
@@ -164,8 +165,8 @@ export function createStoryUI({ root, show, fight, home, reduced, blip = () => {
     const duo = f.co, tag = duo ? ` · 2v${f.ally ? 2 : 1}` : "";
     const side = duo ? `<div class="sub">${pixels("sparky", 3)}<span>+ Sparky</span></div>` : "";
     const ally = f.ally ? `<div class="sub">${mini(f.ally)}<span>+ ${esc(BY_ID[f.ally].name)}</span></div>` : "";
-    const notes = f.notes.length ? ` · ${esc(f.notes.join(" · "))}` : "";
-    go("vs", `<h2 class="st-head ${f.boss ? "red" : ""}">${f.boss ? "Final boss" : `Fight ${i + 1}/${f.n}`}${tag}</h2><div class="dim">Stage: ${esc(f.stage.name)}${notes}</div>
+    const notes = f.notes.length ? ` · ${esc(f.notes.map(translated).join(" · "))}` : "";
+    go("vs", `<h2 class="st-head ${f.boss ? "red" : ""}">${f.boss ? "Final boss" : `Fight ${i + 1}/${f.n}`}${tag}</h2><div class="dim">Stage: ${esc(translated(f.stage.name))}${notes}</div>
       <div class="vs"><figure style="--c:${a.color}">${img(id)}<figcaption>${cap(id)}</figcaption>${side}</figure><b class="big">VS</b>
       <figure class="flip" style="--c:${b.color}">${img(f.foe)}<figcaption>${cap(f.foe)}</figcaption>${ally}</figure></div>
       ${box(duo ? [{ id: f.foe, text: DUO[f.foe] }, f.ally && { id: f.ally, text: TEXT[f.ally].taunt }, { id: "sparky", text: sideLine(id + i) }] : [{ id, text: la }, { id: f.foe, text: lb }])}${btn("fight", "Fight!", "pri adv")}`, { ca: a.color, cb: b.color });

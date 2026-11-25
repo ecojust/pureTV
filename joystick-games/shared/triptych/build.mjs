@@ -1,6 +1,7 @@
 // The original games are dependency-free ES modules. Bundle their unchanged simulation
 // and procedural assets with the pureTV adapter into a self-contained, offline page.
 import fs from 'node:fs';
+import { localizeHtml } from '../web/localize-html.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -18,7 +19,8 @@ export async function buildGame(url, esbuild) {
     .replace('/*__JS__*/', () => js).replace('/*__CSS__*/', () => css)
     .replace('/*__TV_CSS__*/', () => fs.readFileSync(path.join(shared, 'tv.css'), 'utf8'));
   if (/\b(?:src|href)=["'](?:https?:|\.\.\/|icons\/|manifest\.)/i.test(html)) throw new Error('Non-local resource in bundled HTML');
-  const files = { 'tv.html': Buffer.from(html), 'THIRD-PARTY-NOTICES.txt': fs.readFileSync(path.join(root, 'NOTICE.md')) };
+  const localized = fs.existsSync(path.join(root, 'src/zh-cn.js')) ? await localizeHtml(html, root) : html;
+  const files = { 'tv.html': Buffer.from(localized), 'THIRD-PARTY-NOTICES.txt': fs.readFileSync(path.join(root, 'NOTICE.md')) };
   if (check) {
     if (JSON.stringify(fs.readdirSync(output).sort()) !== JSON.stringify(Object.keys(files).sort())) throw new Error('Unexpected dist files');
     for (const [name, data] of Object.entries(files)) if (!data.equals(fs.readFileSync(path.join(output, name)))) throw new Error('Stale dist/' + name);

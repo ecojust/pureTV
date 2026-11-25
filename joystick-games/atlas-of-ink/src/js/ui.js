@@ -74,7 +74,7 @@ export class UI {
         $('brief-role').textContent = c.client.role;
         $('brief-count').textContent = `Commission ${G.idx + 1} of ${G.commissions.length}`;
         $('brief-heading').textContent = c.title;
-        $('brief-quote').textContent = `“${c.quote}”`;
+        $('brief-quote').textContent = `“${globalThis.PureTVChinese.translate(c.quote)}”`;
         $('brief-text').textContent = c.brief;
         $('brief-judged').textContent = c.judged;
         const r = c.region;
@@ -108,7 +108,7 @@ export class UI {
         G.commissions.forEach((c, i) => {
             const li = document.createElement('li');
             const r = G.results[i];
-            li.textContent = `${c.client.name}: ${'★'.repeat(r ? r.stars : 0)}${'☆'.repeat(3 - (r ? r.stars : 0))} ${c.title}`;
+            li.textContent = `${globalThis.PureTVChinese.translate(c.client.name)}：${'★'.repeat(r ? r.stars : 0)}${'☆'.repeat(3 - (r ? r.stars : 0))} ${globalThis.PureTVChinese.translate(c.title)}`;
             ol.appendChild(li);
         });
     }

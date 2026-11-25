@@ -1,3 +1,4 @@
+import { translated } from "./localize.js";
 import { ICONS } from "./render.js";
 import { ABILITIES, SLOT_ABILITY } from "./sim.js";
 import { ROSTER } from "./campaign.js";
@@ -28,7 +29,7 @@ export function initHelp(openers, layer = {}) {
     if (!a) return [];
     const who = [...SLOT_ABILITY.flatMap((ab, k) => (ab === i ? [COLOURS[k]] : [])), ...ROSTER.filter((f) => f.ability === a[0]).map((f) => f.name)];
     const li = document.createElement("li");
-    li.append(Object.assign(document.createElement("b"), { textContent: a[1] }), `${a[3]} (${who.join(", ")})`);
+    li.append(Object.assign(document.createElement("b"), { textContent: a[1] }), `${translated(a[3])} (${who.map(translated).join(", ")})`);
     return [li];
   }));
   let from = null;

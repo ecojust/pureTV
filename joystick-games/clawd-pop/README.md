@@ -1,6 +1,8 @@
 # 爆裂实验室 · Clawd Pop 3D
 
-[Android TV 0.1.2 · APK](clawd-pop-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-windows-x64-setup.exe)
+[Android TV 0.1.3 · APK](clawd-pop-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/clawd-pop-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/clawd-pop-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.2） · [Android TV 0.1.2 · APK](clawd-pop-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-windows-x64-setup.exe)
 
 [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
 

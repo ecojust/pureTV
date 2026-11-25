@@ -1,5 +1,6 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import { build } from 'esbuild';
-import { cp, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { cp, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import assert from 'node:assert/strict';
@@ -16,7 +17,7 @@ async function inventory(root, folder = '') {
 }
 try {
   await build({entryPoints: ['src/controls.js'], outfile: join(staging, 'controls.js'), bundle: true, target: 'es2020'});
-  await cp('src/tv.html', join(staging, 'tv.html'));
+  await writeFile(join(staging, 'tv.html'), await localizeHtml(await readFile('src/tv.html', 'utf8'), process.cwd()));
   await cp('LICENSE', join(staging, 'LICENSE.txt'));
   await cp('NOTICE.md', join(staging, 'NOTICE.txt'));
   if (process.argv.includes('--check')) {

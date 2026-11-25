@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -60,7 +61,7 @@ let html = fs.readFileSync(path.join(src, 'index.html'), 'utf8');
 html = html.replace(/\s*<script type="importmap">[\s\S]*?<\/script>/, '')
   .replace('<script type="module" src="js/main.js"></script>', '<script defer src="penguintrack.js"></script>')
   .replace(/\s*<script>\s*\/\/ Browsers too old[\s\S]*?<\/script>/, '');
-files.set('tv.html', Buffer.from(html));
+files.set('tv.html', Buffer.from(await localizeHtml(html, root)));
 files.set('penguintrack.js', Buffer.from(result.outputFiles[0].text));
 files.set('THIRD-PARTY-NOTICES.txt', Buffer.from([
   fs.readFileSync(path.join(root, 'NOTICE.md'), 'utf8'),

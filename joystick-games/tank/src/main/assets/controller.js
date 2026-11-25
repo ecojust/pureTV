@@ -1,7 +1,10 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const english = !/^zh\b/i.test(navigator.language || 'zh');
+  const english = new URLSearchParams(location.search).get('lang') === 'en';
+  document.title = english ? "TANK TV · Controller" : "坦克大战 · 手机手柄";
+  document.querySelector(".brand strong").textContent = english ? "TANK TV" : "坦克大战";
+  document.querySelector(".system-keys").setAttribute("aria-label", english ? "NES menu controls" : "游戏菜单按键");
   const messages = english ? {
     controller: 'FIELD CONTROLLER', yourTank: 'YOUR TANK', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', move: 'HOLD AND SLIDE ON THE LEFT',
     actionA: 'FIRE', actionB: 'FIRE', hint: 'A / B fires · START begins or pauses', rotate: 'Turn your phone sideways for a better grip',

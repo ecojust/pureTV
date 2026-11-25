@@ -4,9 +4,9 @@ import { buildMatsuri } from './build.js';
 
 export default {
   id: 'matsuri',
-  name: '夏祭り花火ナイト',
+  name: '夏日烟火夜',
   subtitle: 'Natsumatsuri Hanabi Night',
-  description: '提灯きらめく屋台通りと温泉街。夜空に咲く花火の下、川を和傘でひとっ飛び！',
+  description: '穿过灯笼闪耀的庙会街与温泉乡，在绽放的烟火下撑伞飞越河面！',
   laps: 3,
   bgm: 'matsuri',
   ambience: 'matsuri',

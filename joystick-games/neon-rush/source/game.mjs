@@ -22,7 +22,7 @@ function install(){
   document.documentElement.lang=english?'en':'zh-CN';
   document.body.classList.toggle('rush-native',!!root.PureGameHost);
   document.querySelector('.brand-mark').textContent='NR';
-  document.querySelector('header .eyebrow').textContent='PURETV RACING CLUB';
+  document.querySelector('header .eyebrow').textContent=text('pureTV 赛车俱乐部','PURETV RACING CLUB');
   document.querySelector('footer > span').textContent=text('桔子桑 · 原创竞速','ecojust · Original racing');
   const phone=document.createElement('button');phone.id='rush-phone-button';phone.type='button';phone.hidden=!!root.PureGameHost;phone.textContent=text('连接手柄','Controllers');phone.setAttribute('aria-expanded','false');phone.onclick=()=>{const open=document.body.classList.toggle('rush-phone-open');phone.setAttribute('aria-expanded',String(open));};document.querySelector('.top-actions').prepend(phone);
   document.querySelector('.side-heading .eyebrow').textContent=text('扫码手柄','SCAN TO CONNECT');
@@ -100,7 +100,7 @@ function afterUI(state,ctx){
     $('dialog-help').textContent=ctx.paused?'Controller START or remote Play to resume':'Choose a circuit · B sound · ENTER / START race';
   }else{
     $('primary').textContent=ctx.paused?'继续比赛 · P':ctx.phase==='won'||ctx.phase==='lost'?'再跑一场 · ENTER':'开始竞速 · ENTER';
-    if(ctx.phase==='menu')$('dialog-kicker').textContent='PURETV RACING CLUB';
+    if(ctx.phase==='menu')$('dialog-kicker').textContent='pureTV 赛车俱乐部';
   }
   if(renderFailure){$('primary').disabled=true;$('pause-button').disabled=true;$('dialog-title').textContent=text('此设备暂不支持 3D 竞速','3D racing is unavailable');$('dialog-copy').textContent=renderFailure;$('overlay').hidden=false;$('rush-feedback').textContent='';}
   drawMap(state);
@@ -115,6 +115,6 @@ root.GameDef={
   winTitle:text('冲线完成！','Across the line!'),loseTitle:text('时间到，再跑一场','Time is up'),
   hud(s){const p=s.player||s.cars[0];return[{label:text('排名','POSITION'),value:String(s.rank||1).padStart(2,'0')+' / 06'},{label:text('圈数','LAP'),value:Math.min(s.lapTarget,p.lap)+' / '+s.lapTarget},{label:text('用时','TIME'),value:seconds(s.raceTime)},{label:text('时速 km/h','SPEED km/h'),value:Math.round(Math.max(0,p.speed)*3.6),tone:p.boostTime>0?'good':''}];},
   result(s){return text(`第 ${s.rank} 名 · ${seconds(s.raceTime)} · 漂移 ${s.stats.drifts} 次 · 氮气 ${s.stats.nitros} 次`,`Position ${s.rank}/6 · ${seconds(s.raceTime)} · ${s.stats.drifts} drifts · ${s.stats.nitros} nitro boosts`);},
-  createRenderer(canvas){try{return new RushRenderer(canvas);}catch(error){renderFailure=text('无法建立 WebGL 画面。请更新 Android System WebView，或使用支持 WebGL 的设备。','WebGL could not start. Update Android System WebView or use a WebGL-capable device.');document.body.classList.add('rush-webgl-error');console.error('Neon Rush renderer unavailable',error);const c=document.createElement('div');c.className='rush-render-error';c.textContent=renderFailure;canvas.parentElement.append(c);return{begin(){},end(){},draw(){},dispose(){},metrics:{backend:'unsupported',drawCalls:0,triangles:0}};}},
+  createRenderer(canvas){try{return new RushRenderer(canvas, english);}catch(error){renderFailure=text('无法建立 WebGL 画面。请更新 Android System WebView，或使用支持 WebGL 的设备。','WebGL could not start. Update Android System WebView or use a WebGL-capable device.');document.body.classList.add('rush-webgl-error');console.error('Neon Rush renderer unavailable',error);const c=document.createElement('div');c.className='rush-render-error';c.textContent=renderFailure;canvas.parentElement.append(c);return{begin(){},end(){},draw(){},dispose(){},metrics:{backend:'unsupported',drawCalls:0,triangles:0}};}},
   render(renderer,state,time,input){renderer.draw(state,time,input);},afterUI,
 };

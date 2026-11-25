@@ -17,10 +17,10 @@ class CatalogOutputTests(unittest.TestCase):
     def test_redirected_list_preserves_localized_titles_as_utf8(self):
         script = Path(launcher.__file__)
         games = json.loads(script.with_name('catalog.json').read_text(encoding='utf-8'))
-        for language in ('en', 'zh'):
+        for language, options in [('en', ['--language', 'en']), ('zh', ['--language', 'zh']), ('zh', [])]:
             with self.subTest(language=language):
                 output = subprocess.check_output(
-                    [sys.executable, str(script), '--list', '--language', language],
+                    [sys.executable, str(script), '--list', *options],
                     env={**os.environ, 'PYTHONIOENCODING': 'cp1252'},
                 )
                 self.assertEqual(output.decode('utf-8').splitlines(),

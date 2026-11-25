@@ -50,9 +50,13 @@ jobs:
         with:
           packages: platforms;android-35 build-tools;34.0.0
       - uses: gradle/actions/setup-gradle@v4
+      - name: Install gameplay artwork renderer
+        run: python3 -m pip install Pillow==11.3.0
       - name: Verify release artifact rejection boundaries
         run: python3 -m unittest discover -s tools/tests -p 'test_controller_*.py' -v
       - name: Test and lint the shared Android controller host
+        env:
+          JAVA_TOOL_OPTIONS: -Drobolectric.dependency.repo.url=https://maven-central.storage-download.googleapis.com/maven2
         run: |
           set -euo pipefail
           resource/launcher/puretv/gradlew --no-daemon --project-dir resource/game-kit/android testDebugUnitTest lintDebug 2>&1 | tee "$RUNNER_TEMP/shared-host.log"
@@ -113,6 +117,8 @@ jobs:
         with:
           packages: platforms;android-35 build-tools;34.0.0
       - uses: gradle/actions/setup-gradle@v4
+      - name: Install gameplay artwork renderer
+        run: python3 -m pip install Pillow==11.3.0
       - name: Prepare existing Jackal artwork and preview fonts
         run: |
           sudo apt-get update
@@ -139,6 +145,7 @@ jobs:
           PY
       - name: Build unsigned release APKs, native tests and lint
         env:
+          JAVA_TOOL_OPTIONS: -Drobolectric.dependency.repo.url=https://maven-central.storage-download.googleapis.com/maven2
           CONTROLLER_GROUP: ${{ matrix.group }}
         run: |
           set -euo pipefail

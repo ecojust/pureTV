@@ -54,7 +54,8 @@
   function scene(level) { return SCENES[Math.max(0, level | 0) % SCENES.length]; }
 
   class JewelRenderer {
-    constructor(canvas) {
+    constructor(canvas, language) {
+      this.chinese = !/^en(?:-|$)/i.test(language || "zh");
       this.canvas = canvas;
       this.ctx = canvas.getContext("2d", { alpha: false });
       canvas.width = 256; canvas.height = 240;
@@ -68,6 +69,17 @@
     }
     text(value, x, y, color, scale, align) {
       value = String(value).toUpperCase(); scale = scale || 1;
+      if (/[\u3400-\u9fff]/.test(value)) {
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.fillStyle = color || "#ecedec";
+        ctx.font = 'bold ' + 11 * scale + 'px "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif';
+        ctx.textAlign = align || "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(value, Math.round(x), Math.round(y - 1));
+        ctx.restore();
+        return;
+      }
       const width = value.length * 6 * scale - scale;
       if (align === "center") x -= width / 2;
       if (align === "right") x -= width;
@@ -229,61 +241,62 @@
       this.ctx.restore();
       if (player.alive === false && player.joined) {
         this.rect(x, y + Math.floor(h / 2) - 13, w, 27, "#0b1023");
-        this.text("TOP OUT", x + w / 2, y + Math.floor(h / 2) - 4, "#f7adbc", 1, "center");
+        this.text(this.chinese ? "触顶出局" : "TOP OUT", x + w / 2, y + Math.floor(h / 2) - 4, "#f7adbc", 1, "center");
       }
       if (player.chain > 1 && (player.status === 'clearing' || player.status === 'settling')) {
-        this.text("CHAIN " + player.chain, x + w / 2, y - 15, "#fff0b1", 1, "center");
+        this.text((this.chinese ? "连锁 " : "CHAIN ") + player.chain, x + w / 2, y - 15, "#fff0b1", 1, "center");
       }
     }
     title(game) {
       const frame = game.frame || 0;
       this.panel(19, 27, 218, 76, "#be9756");
-      this.text("MAGIC", 129, 38, "#4c2d65", 3, "center");
-      this.text("MAGIC", 127, 36, "#f1d684", 3, "center");
-      this.text("JEWELRY", 129, 68, "#3d2e63", 3, "center");
-      this.text("JEWELRY", 127, 66, "#ddd8ff", 3, "center");
+      this.text(this.chinese ? "钻石" : "MAGIC", 129, 38, "#4c2d65", 3, "center");
+      this.text(this.chinese ? "钻石" : "MAGIC", 127, 36, "#f1d684", 3, "center");
+      this.text(this.chinese ? "方块" : "JEWELRY", 129, 68, "#3d2e63", 3, "center");
+      this.text(this.chinese ? "方块" : "JEWELRY", 127, 66, "#ddd8ff", 3, "center");
       for (let i = 0; i < 7; i++) this.gem(i + 1, 35 + i * 27, 111 + ((Math.floor(frame / 24) + i) % 2), 20, false);
-      this.text((game.selectedPlayers === 2 ? "  " : "> ") + "1 PLAYER", 128, 150, game.selectedPlayers === 2 ? "#929bb5" : "#fff1bf", 1, "center");
-      this.text((game.selectedPlayers === 2 ? "> " : "  ") + "2 PLAYERS", 128, 166, game.selectedPlayers === 2 ? "#fff1bf" : "#929bb5", 1, "center");
-      this.text("LEVEL " + String(game.titleLevel || 0).padStart(3, "0"), 128, 185, "#9baac8", 1, "center");
-      if (Math.floor(frame / 35) % 2 === 0) this.text("PRESS START", 128, 205, "#f1d684", 1, "center");
-      this.text("SELECT MODE  START BEGIN", 128, 222, "#7d8ba9", 1, "center");
+      this.text((game.selectedPlayers === 2 ? "  " : "> ") + (this.chinese ? "单人游戏" : "1 PLAYER"), 128, 150, game.selectedPlayers === 2 ? "#929bb5" : "#fff1bf", 1, "center");
+      this.text((game.selectedPlayers === 2 ? "> " : "  ") + (this.chinese ? "双人游戏" : "2 PLAYERS"), 128, 166, game.selectedPlayers === 2 ? "#fff1bf" : "#929bb5", 1, "center");
+      this.text((this.chinese ? "等级 " : "LEVEL ") + String(game.titleLevel || 0).padStart(3, "0"), 128, 185, "#9baac8", 1, "center");
+      if (Math.floor(frame / 35) % 2 === 0) this.text(this.chinese ? "按 START 开始" : "PRESS START", 128, 205, "#f1d684", 1, "center");
+      if (this.chinese) this.rect(43, 220, 170, 14, "#080d21");
+      this.text(this.chinese ? "SELECT 选择人数　START 开始" : "SELECT MODE  START BEGIN", 128, 222, "#7d8ba9", 1, "center");
     }
     single(game) {
       const player=game.players[0],next=player.next||[1,2,3];
       this.well(player,52,16,16,game.frame||0);
-      this.text("NEXT",26,6,"#3cbcfc",1,"center");
+      this.text(this.chinese ? "预告" : "NEXT",26,6,"#3cbcfc",1,"center");
       for(let i=0;i<3;i++)this.gem(next[i],18,18+i*16,16,false);
-      this.text("SCORE",208,12,"#3cbcfc",1,"center");
+      this.text(this.chinese ? "得分" : "SCORE",208,12,"#3cbcfc",1,"center");
       this.text(String(Math.min(99999999,player.score||0)).padStart(8,"0"),208,23,"#3cbcfc",1,"center");
-      this.text("JEWELRY",208,42,"#f85898",1,"center");
+      this.text(this.chinese ? "消除数" : "JEWELRY",208,42,"#f85898",1,"center");
       this.text(String(Math.min(999999,player.cleared||0)).padStart(6,"0"),208,53,"#f8b800",1,"center");
-      this.text("LEVEL",208,72,"#3cbcfc",1,"center");
+      this.text(this.chinese ? "等级" : "LEVEL",208,72,"#3cbcfc",1,"center");
       this.text(String(player.level||0).padStart(3,"0"),208,83,"#b8f818",1,"center");
       const magic=player.active&&player.active.magic;
       if(magic||player.levelCleared>=70){
         this.rect(160,96,92,10,"#000000");
-        this.text(magic?"MAGIC COLUMN!":"MAGIC READY",207,98,"#fff0b1",1,"center");
+        this.text(this.chinese ? (magic ? "魔法宝石柱！" : "魔法就绪") : (magic ? "MAGIC COLUMN!" : "MAGIC READY"),207,this.chinese ? 95 : 98,"#fff0b1",1,"center");
       }
     }
     double(game) {
-      this.text("JEWELRY DUEL", 128, 10, "#efe0b4", 2, "center");
-      this.text("SAME GEMS - BEST SCORE", 128, 31, "#91a0bd", 1, "center");
+      this.text(this.chinese ? "双人对决" : "JEWELRY DUEL", 128, 10, "#efe0b4", 2, "center");
+      this.text(this.chinese ? "同样的宝石，比拼最高分" : "SAME GEMS - BEST SCORE", 128, 31, "#91a0bd", 1, "center");
       for (let index = 0; index < 2; index++) {
         const p = game.players[index], left = index ? 176 : 20;
-        this.text("P" + (index + 1) + "  LV" + String(p.level || 0).padStart(3, "0"), left + 30, 48, index ? "#f0bedc" : "#e9d68f", 1, "center");
+        this.text((this.chinese ? "玩家" : "P") + (index + 1) + (this.chinese ? " · 等级" : "  LV") + String(p.level || 0).padStart(3, "0"), left + 30, 48, index ? "#f0bedc" : "#e9d68f", 1, "center");
         this.well(p, left, 65, 10, game.frame || 0);
         this.rect(left - 4, 199, 68, 30, "#080d21");
         this.rect(left - 4, 199, 68, 1, "#34344b");
         this.text(String(Math.min(9999999, p.score || 0)).padStart(7, "0"), left + 30, 204, "#e5e8f2", 1, "center");
-        this.text("GEMS " + String(p.cleared || 0).padStart(3, "0"), left + 30, 219, "#8fa4bb", 1, "center");
+        this.text((this.chinese ? "消除 " : "GEMS ") + String(p.cleared || 0).padStart(3, "0"), left + 30, 219, "#8fa4bb", 1, "center");
         const nx = index ? 158 : 88;
         this.rect(nx,65,10,11,"#000000");
-        this.text("N", nx + 5, 67, "#8a93ab", 1, "center");
+        this.text(this.chinese ? "下" : "N", nx + 5, this.chinese ? 65 : 67, "#8a93ab", 1, "center");
         for (let n = 0; n < 3; n++) this.gem((p.next || [1, 2, 3])[n], nx, 80 + 11 * n, 10, false);
       }
       this.rect(118,113,20,13,"#000000");
-      this.text("VS",128,116,"#f8b800",1,"center");
+      this.text(this.chinese ? "对" : "VS",128,this.chinese ? 114 : 116,"#f8b800",1,"center");
     }
     overlay(title, detail) {
       this.rect(17, 96, 222, 50, "#080d21");
@@ -303,10 +316,10 @@
       if (game.phase === "title") this.title(game);
       else {
         if (game.selectedPlayers === 2) this.double(game); else this.single(game);
-        if (game.phase === "paused") this.overlay("PAUSED", game.autoPaused ? "WAIT FOR CONTROLLERS" : "START RESUME / SELECT MUSIC");
-        else if (game.phase === "gameover") this.overlay("GAME OVER", "START TO RETURN TO TITLE");
+        if (game.phase === "paused") this.overlay(this.chinese ? "已暂停" : "PAUSED", this.chinese ? (game.autoPaused ? "等待手柄连接" : "START 继续　SELECT 切换音乐") : (game.autoPaused ? "WAIT FOR CONTROLLERS" : "START RESUME / SELECT MUSIC"));
+        else if (game.phase === "gameover") this.overlay(this.chinese ? "游戏结束" : "GAME OVER", this.chinese ? "按 START 返回标题画面" : "START TO RETURN TO TITLE");
       }
-      if(game.phase==="title"||game.selectedPlayers===2)this.text(game.muted?"SOUND OFF":"SOUND ON",252,231,"#8a98b4",1,"right");
+      if(game.phase==="title"||game.selectedPlayers===2)this.text(this.chinese ? (game.muted ? "音效关" : "音效开") : (game.muted ? "SOUND OFF" : "SOUND ON"),252,this.chinese ? 228 : 231,"#8a98b4",1,"right");
     }
     dispose() { this.disposed = true; this.tiles = Object.create(null); }
   }

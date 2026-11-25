@@ -76,6 +76,10 @@ public class MainActivity extends Activity {
     // Accessed only by the single room worker. A network change keeps the same CA.
     private LanTlsIdentity tlsIdentity;
 
+    @Override protected void attachBaseContext(android.content.Context base) {
+        super.attachBaseContext(com.ecojust.controller.GameLanguage.forActivity(base));
+    }
+
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN

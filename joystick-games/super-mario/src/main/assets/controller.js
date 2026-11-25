@@ -1,7 +1,10 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const english = !/^zh\b/i.test(navigator.language || 'zh');
+  const english = new URLSearchParams(location.search).get('lang') === 'en';
+  document.title = english ? "SUPER MARIO TV · Controller" : "超级马里奥 · 手机手柄";
+  document.querySelector(".brand strong").textContent = english ? "SUPER MARIO TV" : "超级马里奥";
+  document.querySelector(".system-keys").setAttribute("aria-label", english ? "NES menu controls" : "游戏菜单按键");
   const messages = english ? {
     "controller": "PHONE CONTROLLER",
     "status": "Game status",

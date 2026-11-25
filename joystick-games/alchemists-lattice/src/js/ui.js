@@ -406,7 +406,7 @@ export class UI {
         $('dlg-face').alt = C.name;
         $('dlg-face').className = 'dlg-face ' + (b.speaker === 'player' ? 'left' : 'right');
         $('dlg-name').textContent = C.name;
-        $('dlg-text').innerHTML = b.text ? esc(b.text).replace(/\*(.+?)\*/g, '<em>$1</em>') : '<span class="dim">…</span>';
+        $('dlg-text').innerHTML = b.text ? esc(globalThis.PureTVChinese?.translate(b.text) ?? b.text).replace(/\*(.+?)\*/g, '<em>$1</em>') : '<span class="dim">…</span>';
         $('dlg-choices').innerHTML = '';
         $('dlg-more').hidden = false;
         // the next beat's portrait, so it is there when we get to it

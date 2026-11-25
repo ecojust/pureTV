@@ -515,7 +515,9 @@ class Contracts(unittest.TestCase):
         identity='virtual-2c074df64494'
         row={'controllerId':identity,'idText':'ID: '+identity}
         self.assertTrue(runner.Acceptance.full_id_text(row))
-        for bad in ['ID: virtual-2c074df…','ID: virtual-2c074df64493','ID: '+identity+'suffix',
+        row['idText'] = 'ID：' + identity
+        self.assertTrue(runner.Acceptance.full_id_text(row))
+        for bad in ['ID：' + identity[:-1], 'ID：' + identity + 'suffix', 'ID: virtual-2c074df…','ID: virtual-2c074df64493','ID: '+identity+'suffix',
                     'prefix ID: '+identity, 'ID: '+identity[:-1], 'ID: '+identity+' ', None, '']:
             row['idText']=bad; self.assertFalse(runner.Acceptance.full_id_text(row),bad)
         self.assertFalse(runner.Acceptance.full_id_text({'controllerId':'','idText':'ID: '}))

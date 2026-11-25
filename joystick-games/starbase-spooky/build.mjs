@@ -1,5 +1,6 @@
 import { build } from 'esbuild';
 import fs from 'node:fs/promises';
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,7 +26,7 @@ const template = await fs.readFile(path.join(root, 'src/index.html'), 'utf8');
 const css = await fs.readFile(path.join(root, 'src/style.css'), 'utf8');
 const html = template.replace('/*__CSS__*/', () => css)
   .replace('/*__JS__*/', () => js.outputFiles[0].text.replace(/<\/script/gi, '<\\/script'));
-const files = new Map([['tv.html', Buffer.from(html)],
+const files = new Map([['tv.html', Buffer.from(await localizeHtml(html, root))],
   ['THIRD-PARTY-NOTICES.txt', await fs.readFile(path.join(root, 'NOTICE.md'))]]);
 for (const dir of ['art', 'audio']) {
   for (const name of await paths(path.join(root, 'src', dir))) {

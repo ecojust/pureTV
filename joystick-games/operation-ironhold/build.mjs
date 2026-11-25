@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +12,7 @@ const bundle = await build({
 });
 const notices = await Promise.all(['NOTICE.md', 'LICENSE', 'node_modules/three/LICENSE', 'src/licenses/pureTV.txt'].map(read));
 const files = new Map([
-  ['tv.html', await read('src/index.html')],
+  ['tv.html', Buffer.from(await localizeHtml((await read('src/index.html')).toString(), root))],
   ['three.min.js', await read('node_modules/three/build/three.min.js')],
   ['tv-input.js', Buffer.from(bundle.outputFiles[0].contents)],
   ['THIRD-PARTY-NOTICES.txt', Buffer.from(notices.join('\n\n'))],

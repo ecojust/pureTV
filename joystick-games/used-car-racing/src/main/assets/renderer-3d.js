@@ -54,6 +54,7 @@ Renderer.prototype.buildCommon=function(){
 };
 /* One immutable atlas/material per static scene preserves each sign's 512x128
  * texel budget while allowing all signs to submit as a single mesh. */
+Renderer.prototype.label=function(zh,en){return this.options.language==='en'?en:zh;};
 Renderer.prototype.sign=function(text,width,height,color,bg,parent){
  var key=this.inWorld?'worldSignAtlas':'garageSignAtlas',atlas=this[key];
  if(!atlas){var canvas=document.createElement('canvas');canvas.width=this.inWorld?1024:512;canvas.height=this.inWorld?512:256;atlas=this[key]={canvas:canvas,count:0,columns:canvas.width/512};atlas.texture=this.texture(canvas);atlas.material=new T.MeshBasicMaterial({map:atlas.texture,side:T.DoubleSide});(this.inWorld?this.worldMaterials:this.materials).push(atlas.material);}
@@ -76,8 +77,8 @@ Renderer.prototype.buildGarage=function(){
  var ring=this.mesh(this.geo(new T.TorusBufferGeometry(4.55,.035,6,80)),edge,this.garage);ring.rotation.x=Math.PI/2;ring.position.y=-.012;
  for(var i=-7;i<=7;i++){part(parts,this.box,i*2,-.23,0,.014,.012,30);part(parts,this.box,0,-.23,i*2,30,.012,.014);}this.batch(parts,metal,this.garage);parts=[];
  for(i=0;i<6;i++){var a=i*TAU/6;part(parts,this.box,Math.sin(a)*8,2,Math.cos(a)*8,.18,4,.18);part(parts,this.box,Math.sin(a)*8,4,Math.cos(a)*8,2,.12,.12,0,a,0);}this.batch(parts,metal,this.garage);
- var sign=this.sign('USED // NEVER ORDINARY',12,2,'#c6eceb','#0b1721',this.garage);sign.position.set(0,3.1,-9);
- var side=this.sign('DYNO / INSPECTION BAY',5,.8,'#f7ad6e','#15202b',this.garage);side.position.set(-7,1.8,-4);side.rotation.y=.4;
+ var sign=this.sign(this.label('二手车，也不平凡','USED // NEVER ORDINARY'),12,2,'#c6eceb','#0b1721',this.garage);sign.position.set(0,3.1,-9);
+ var side=this.sign(this.label('测功台 / 车检区','DYNO / INSPECTION BAY'),5,.8,'#f7ad6e','#15202b',this.garage);side.position.set(-7,1.8,-4);side.rotation.y=.4;
  var bars=[];for(i=0;i<4;i++){part(bars,this.box,(i%2?1:-1)*5.3,1.3,(i<2?1:-1)*4,.05,2.6,.05);}this.batch(bars,warm,this.garage);this.consolidateStatic(this.garage);
 };
 Renderer.prototype.buildEffects=function(){
@@ -99,8 +100,8 @@ Renderer.prototype.setTrack=function(track){
  for(s=0;s<track.length;s+=45){p=Tracks.sample(track,s);var side=Math.floor(s/45)%2===0?1:-1,x=p.x+p.nx*side*(track.width*.5+2.3),z=p.z+p.nz*side*(track.width*.5+2.3);part(lights,this.cylinder,x,p.y+3.3,z,.09,6.6,.09);part(lights,this.box,x-p.nx*side*.9,p.y+6.6,z-p.nz*side*.9,2.2,.12,.12,0,p.heading,0);part(lamps,this.box,x-p.nx*side*1.7,p.y+6.52,z-p.nz*side*1.7,.9,.07,.4,0,p.heading,0);beams.push({x:x-p.nx*side*1.7,y:p.y+6.5,z:z-p.nz*side*1.7,color:theme.curb});}
  this.batch(lights,steel);this.batch(lamps,this.mat(0xdcf9ff,30,0xaccbff));this.glowPoints(beams,track.id==='harbor'?8:3,.33);
  var start=Tracks.sample(track,0),arch=[];[-1,1].forEach(function(side){part(arch,self.box,start.x+start.nx*side*(track.width*.5+2),start.y+4,start.z+start.nz*side*(track.width*.5+2),.5,8,.5,0,start.heading,0);});part(arch,this.box,start.x,start.y+7.8,start.z,track.width+4.6,.5,.5,0,start.heading,0);this.batch(arch,dark);
- var board=this.sign('SECOND CHANCE / FAST LANE',track.width+1,1.6,'#baf9f1','#0c202c');board.position.set(start.x,start.y+6.7,start.z);board.rotation.y=start.heading+Math.PI;var finish=[];for(var ix=0;ix<14;ix++)for(var iz=0;iz<3;iz++)if((ix+iz)%2===0){var lateral=(ix-6.5)*track.width/14,f=Tracks.sample(track,iz*.55);part(finish,this.box,f.x+f.nx*lateral,f.y+.04,f.z+f.nz*lateral,track.width/14,.02,.55,0,f.heading,0);}this.batch(finish,line);
- for(var marker=0;marker<6;marker++){p=Tracks.sample(track,track.length*(marker+.12)/6);var board2=this.sign(String(marker+1).padStart(2,'0')+' / '+(marker%2?'BRAKE EARLY':'HOLD YOUR LINE'),7,1.7,track.id==='solar'?'#ffd597':'#b9f5f1','#152e3c');board2.position.set(p.x+p.nx*(track.width*.5+5),p.y+3,p.z+p.nz*(track.width*.5+5));board2.rotation.y=p.heading+Math.PI-.2;}
+ var board=this.sign(this.label('重返快车道','SECOND CHANCE / FAST LANE'),track.width+1,1.6,'#baf9f1','#0c202c');board.position.set(start.x,start.y+6.7,start.z);board.rotation.y=start.heading+Math.PI;var finish=[];for(var ix=0;ix<14;ix++)for(var iz=0;iz<3;iz++)if((ix+iz)%2===0){var lateral=(ix-6.5)*track.width/14,f=Tracks.sample(track,iz*.55);part(finish,this.box,f.x+f.nx*lateral,f.y+.04,f.z+f.nz*lateral,track.width/14,.02,.55,0,f.heading,0);}this.batch(finish,line);
+ for(var marker=0;marker<6;marker++){p=Tracks.sample(track,track.length*(marker+.12)/6);var board2=this.sign(String(marker+1).padStart(2,'0')+' / '+(marker%2 ? this.label('提前刹车','BRAKE EARLY') : this.label('保持行车路线','HOLD YOUR LINE')),7,1.7,track.id==='solar'?'#ffd597':'#b9f5f1','#152e3c');board2.position.set(p.x+p.nx*(track.width*.5+5),p.y+3,p.z+p.nz*(track.width*.5+5));board2.rotation.y=p.heading+Math.PI-.2;}
  this.buildRoadWear(track,rand);this.buildSky(track,theme);this.buildTerrain(track,theme,rand);if(track.id==='harbor')this.buildHarbor(track,rand);else if(track.id==='ridge')this.buildRidge(track,rand);else this.buildSolar(track,rand);this.consolidateStatic(this.world);this.inWorld=false;
 };
 Renderer.prototype.buildRoadWear=function(track,rand){

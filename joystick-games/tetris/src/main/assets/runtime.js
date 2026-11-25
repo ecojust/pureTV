@@ -14,9 +14,9 @@
     const english = String(info.language).startsWith("en");
     const tr = (zh, en) => (english ? en : zh);
     document.documentElement.lang = english ? "en" : "zh-CN";
-    document.title = config.title;
+    document.title = tr(config.chineseTitle, config.title);
     const labels = {
-      "room-brand": [config.title, config.title],
+      "room-brand": [config.chineseTitle, config.title],
       "join-label": ["手机手柄", "PHONE CONTROLLERS"],
       "lan-label": ["同一局域网", "SAME LOCAL NETWORK"],
       "scan-title": ["扫码连接手柄", "Scan to connect"],
@@ -31,7 +31,7 @@
       "move-label": ["左右移动／下拉加速", "MOVE / SOFT DROP"],
       "a-label": config.actions.a,
       "b-label": config.actions.b,
-      "footer-left": [config.title, config.title],
+      "footer-left": [config.chineseTitle, config.title],
       "footer-right": [
         "返回：退出游戏 · 播放键：START",
         "Back: exit game · Play: START",

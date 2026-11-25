@@ -66,6 +66,28 @@ const WATER_X = 170;
 
 // ---------- i18n ----------
 const I18N = {
+  zh: {
+    tagline: '飞越博斯普鲁斯海峡，寻找热腾腾的芝麻面包圈',
+    how: ['<b>转向：</b>使用方向键或左摇杆', '<b>俯冲：</b>按住 A 下降，松开爬升', '<b>叼面包圈：</b>补充体力，累积连击，乘上顺风', '<b>避开：</b>桥梁、船桅和风筝。对手的鸟群会抢你的面包圈'],
+    start: '开始', retry: '再玩一次', cont: '观看广告后继续', resume: '继续', menu: '主菜单', restart: '重新开始',
+    paused: '已暂停', over: '飞行结束', loading: '正在加载… {n}/{m}', bestLine: '最高分：{n}',
+    score: '得分', best: '最高分', dist: '距离', simit: '芝麻圈', combo: '连击', stamina: '体力', missions: '每日任务', highs: '高分榜',
+    hint: 'START 暂停 · A 俯冲 · X 音乐 · Y 静音', footer: 'Claude Game Arena · Claude Haiku 5.5 制作 · 素材重制',
+    newBest: '新纪录！', steal: '对手抢走了芝麻圈！', shield: '护盾羽毛！可以抵挡一次撞击', shieldUsed: '护盾挡住了撞击！',
+    hit: '撞到了！', tail: '顺风！速度和得分 ×1.5', gold: '黄金芝麻圈！得分翻倍', missionDone: '任务完成', crash: '撞击三次', energy: '体力耗尽',
+    tipBadge: '提示', cable: '撞上了桥索', bridge: '撞上了桥身', ship: '撞上了船桅', kite: '被风筝线缠住了', post: '撞上了码头木桩', water: '落入海峡',
+    fly: '一路顺风！', m: '米', km: '公里', settings: '设置', master: '主音量', music: '音乐', sfx: '音效', language: '语言', quality: '画质',
+    low: '低', high: '高', fullscreen: '全屏', toggleFs: '开 / 关', back: '返回', aPause: '暂停（P）', aMusic: '音乐（M）', aSound: '音效（X）', aLang: '切换语言（L）', aSet: '设置',
+    diveAction: '俯冲', aDive: '俯冲（按住或轻点）', tailChip: '顺风', goldChip: '黄金芝麻圈 ×2', shieldChip: '护盾就绪',
+    hSteer: '用方向键或左摇杆转向', hDive: '按住 A 俯冲抓鱼', hStamina: '体力在下降，吃芝麻圈能恢复体力', nestNeed: '雏鸟饿了，先带一个芝麻圈回来',
+    fed: '雏鸟吃饱了！羽毛 +1', mateHit: '小海鸥用翅膀挡下了撞击！', pier: '鱼箱！体力 +35',
+    gust: '阵风来袭', gustChip: '阵风', didYou: '你知道吗？', chickLine: '雏鸟：{s} · 已喂食 {n} 次', stages: ['鸟蛋', '初生雏鸟', '绒羽雏鸟', '幼鸥'],
+    aMute: '静音（N）', comboUp: '连击 ×{m}！', flockJoin: '一只海鸥加入了鸟群！（{n} 只）', flockBig: '鸟群壮大了，可以扯断风筝线、赶走对手',
+    flockKite: '鸟群扯断了风筝线！', flockScare: '鸟群赶走了对手！', flockLost: '{n} 只海鸥飞散了', flockChip: '鸟群 {n} 只 · ×{m}',
+    daily: '每日挑战', share: '分享', anotherGame: '其他游戏', dailyLine: '所有人路线相同 · 连续 {s} 天 · 最高分 {b}', dailyDone: '今日已完成',
+    dailyOver: '每日挑战 · 连续 {s} 天 · 最高分 {b}', shareLine: '{n} 分 · {d} · {k} 个芝麻圈', aw1km: '海鸥：首次飞满 1 公里', awChick: '海鸥：雏鸟长大了',
+    news: '更新', newsTitle: '更新内容', achTitle: '成就', otherGames: '更多游戏', newAch: '新成就', beatBest: '刷新了最高分！'
+  },
   tr: {
     tagline: 'Boğaz’ın üstünde, simit peşinde bir martı koşusu',
     how: [
@@ -89,7 +111,7 @@ const I18N = {
     fly: 'İyi uçuşlar!', m: 'm', km: 'km',
     settings: 'Ayarlar', master: 'Genel ses', music: 'Müzik', sfx: 'Efektler', language: 'Dil', quality: 'Kalite',
     low: 'Düşük', high: 'Yüksek', fullscreen: 'Tam ekran', toggleFs: 'Aç / kapat', back: 'Geri',
-    aPause: 'Duraklat (P)', aMusic: 'Müzik (M)', aSound: 'Ses efektleri (X)', aLang: 'Dil: English (L)', aSet: 'Ayarlar',
+    aPause: 'Duraklat (P)', aMusic: 'Müzik (M)', aSound: 'Ses efektleri (X)', aLang: 'Dili değiştir (L)', aSet: 'Ayarlar',
     diveAction: 'Dalış', aDive: 'Dalış (Basılı tut ya da dokun)',
     tailChip: 'Kuyruk rüzgârı', goldChip: 'Altın simit x2', shieldChip: 'Kalkan hazır',
     hSteer: 'Yön: yön tuşları veya sol analog çubuk', hDive: 'Balık için A düğmesini basılı tut',
@@ -127,7 +149,7 @@ const I18N = {
     fly: 'Have a good flight!', m: 'm', km: 'km',
     settings: 'Settings', master: 'Master volume', music: 'Music', sfx: 'Effects', language: 'Language', quality: 'Quality',
     low: 'Low', high: 'High', fullscreen: 'Fullscreen', toggleFs: 'On / off', back: 'Back',
-    aPause: 'Pause (P)', aMusic: 'Music (M)', aSound: 'Sound effects (X)', aLang: 'Language: Türkçe (L)', aSet: 'Settings',
+    aPause: 'Pause (P)', aMusic: 'Music (M)', aSound: 'Sound effects (X)', aLang: 'Change language (L)', aSet: 'Settings',
     diveAction: 'Dive', aDive: 'Dive (Hold or tap)',
     tailChip: 'Tailwind', goldChip: 'Golden x2', shieldChip: 'Shield ready',
     hSteer: 'Steer with the D-pad or left stick', hDive: 'Hold A to dive for fish',
@@ -146,17 +168,17 @@ const I18N = {
 // Facts for the game-over card and the title line, shown in turn. Sources are in the comments (research pool, 2026-10-28).
 const FACTS = [
   // https://doaj.org/article/5a69f0727604460889f1a554982883d6
-  { tr: 'İstanbul kıyılarında en yaygın tür sarıbacaklı martıdır (Larus michahellis).', en: 'The most common gull on Istanbul’s coasts is the yellow-legged gull (Larus michahellis).' },
+  { tr: 'İstanbul kıyılarında en yaygın tür sarıbacaklı martıdır (Larus michahellis).', en: 'The most common gull on Istanbul’s coasts is the yellow-legged gull (Larus michahellis).', zh: '伊斯坦布尔海岸最常见的海鸥是黄脚银鸥（Larus michahellis）。' },
   // https://www.gzt.com/hayat/istanbulda-artan-marti-sesleri-uzmanlar-yavru-beslenme-donemine-dikkat-cekiyor-guncel-haberler-4239807
-  { tr: 'Martılar normalde ada ve kayalıklarda ürer; artık bina çatılarını da yuva alanı yapıyor.', en: 'Gulls normally breed on islands and rocks, but they now also nest on building roofs.' },
+  { tr: 'Martılar normalde ada ve kayalıklarda ürer; artık bina çatılarını da yuva alanı yapıyor.', en: 'Gulls normally breed on islands and rocks, but they now also nest on building roofs.', zh: '海鸥通常在岛屿和岩石上繁殖，如今也会在楼顶筑巢。' },
   // https://www.gzt.com/hayat/istanbulda-artan-marti-sesleri-uzmanlar-yavru-beslenme-donemine-dikkat-cekiyor-guncel-haberler-4239807
-  { tr: 'Yumurtlama nisan-mayıs aylarındadır; kuluçka yaklaşık 28-30 gün sürer, yavru 40-50 günde uçar.', en: 'Eggs are laid in April and May; incubation lasts about 28-30 days and the chick flies after 40-50 days.' },
+  { tr: 'Yumurtlama nisan-mayıs aylarındadır; kuluçka yaklaşık 28-30 gün sürer, yavru 40-50 günde uçar.', en: 'Eggs are laid in April and May; incubation lasts about 28-30 days and the chick flies after 40-50 days.', zh: '海鸥四五月产卵，孵化约需 28 至 30 天。雏鸟出生 40 至 50 天后便可飞行。' },
   // https://www.gzt.com/hayat/istanbulda-artan-marti-sesleri-uzmanlar-yavru-beslenme-donemine-dikkat-cekiyor-guncel-haberler-4239807
-  { tr: 'Martıların beslenmesi balıktan çöpe ve sokağa bırakılan kedi-köpek mamasına kaymış; kolay yiyecek üreme başarısını artırıyor.', en: 'Gulls’ diet has shifted from fish to rubbish and street cat and dog food; easy food raises breeding success.' },
+  { tr: 'Martıların beslenmesi balıktan çöpe ve sokağa bırakılan kedi-köpek mamasına kaymış; kolay yiyecek üreme başarısını artırıyor.', en: 'Gulls’ diet has shifted from fish to rubbish and street cat and dog food; easy food raises breeding success.', zh: '海鸥除了吃鱼，也会捡食垃圾和街边的猫狗粮。容易获得的食物有助于提高繁殖成功率。' },
   // https://en.wikipedia.org/wiki/Simit
-  { tr: '1593’te Üsküdar’da simidin ağırlığı ve fiyatı standartlaştırıldı.', en: 'In 1593 the weight and price of simit were standardised in Üsküdar.' },
+  { tr: '1593’te Üsküdar’da simidin ağırlığı ve fiyatı standartlaştırıldı.', en: 'In 1593 the weight and price of simit were standardised in Üsküdar.', zh: '1593 年，乌斯屈达尔规定了芝麻圈的重量和售价。' },
   // https://en.wikipedia.org/wiki/Simit
-  { tr: 'Evliya Çelebi 1630’larda İstanbul’da 70 simit fırını saydı.', en: 'In the 1630s Evliya Çelebi counted 70 simit bakeries in Istanbul.' },
+  { tr: 'Evliya Çelebi 1630’larda İstanbul’da 70 simit fırını saydı.', en: 'In the 1630s Evliya Çelebi counted 70 simit bakeries in Istanbul.', zh: '17 世纪 30 年代，旅行家埃夫利亚·切莱比在伊斯坦布尔数出了 70 家芝麻圈烘焙坊。' },
 ];
 const factText = (i) => FACTS[((i % FACTS.length) + FACTS.length) % FACTS.length][LANG];
 
@@ -165,57 +187,57 @@ const SURVIVAL_TIPS = [
   {
     cause: 'cable',
     tips: [
-      { tr: 'Köprü altından geçerken alçaktan uç veya kulelerin etrafından geniş kavisle dön.', en: 'Fly low under the bridge or take a wide arc around the suspension towers.' },
-      { tr: 'Köprü kabloları merkeze doğru sarkar; kule diplerinde daha fazla boşluk bulabilirsin.', en: 'Suspension cables sag lowest near the center; find more clearance near the towers.' },
+      { tr: 'Köprü altından geçerken alçaktan uç veya kulelerin etrafından geniş kavisle dön.', en: 'Fly low under the bridge or take a wide arc around the suspension towers.', zh: '低飞穿过桥底，或者大幅转弯绕开桥塔。' },
+      { tr: 'Köprü kabloları merkeze doğru sarkar; kule diplerinde daha fazla boşluk bulabilirsin.', en: 'Suspension cables sag lowest near the center; find more clearance near the towers.', zh: '悬索在桥中央最低，靠近桥塔的地方空间更大。' },
     ],
   },
   {
     cause: 'bridge',
     tips: [
-      { tr: 'Köprüyü uzaktan görünce yüksekliğini ayarla; kuleler geniştir ama altından geçiş rahattır.', en: 'Adjust altitude early when the bridge appears; the clearance below is wide and safe.' },
-      { tr: 'Köprü tabliyesinin hem altından hem üstünden güvenle geçebilirsin.', en: 'You can fly safely either under or well above the bridge road deck.' },
+      { tr: 'Köprüyü uzaktan görünce yüksekliğini ayarla; kuleler geniştir ama altından geçiş rahattır.', en: 'Adjust altitude early when the bridge appears; the clearance below is wide and safe.', zh: '看见桥就提前调整高度，桥底空间宽敞。' },
+      { tr: 'Köprü tabliyesinin hem altından hem üstünden güvenle geçebilirsin.', en: 'You can fly safely either under or well above the bridge road deck.', zh: '你可以从桥面下方通过，也可以高高飞过桥面。' },
     ],
   },
   {
     cause: 'ship',
     tips: [
-      { tr: 'Vapur ve yelkenlilerin direkleri yüksektir; yanlarından geç veya arkalarındaki simitleri kap.', en: 'Ship masts reach high; steer around their sides or catch simit trailing behind ferries.' },
-      { tr: 'Büyük tankerlerin üzerinden aşmak yerine yan koridorları kullanmak daha güvenlidir.', en: 'It is safer to bank around the sides of large tankers than trying to clear their bridges.' },
+      { tr: 'Vapur ve yelkenlilerin direkleri yüksektir; yanlarından geç veya arkalarındaki simitleri kap.', en: 'Ship masts reach high; steer around their sides or catch simit trailing behind ferries.', zh: '船桅很高，沿船侧绕过，或去渡轮后方叼芝麻圈。' },
+      { tr: 'Büyük tankerlerin üzerinden aşmak yerine yan koridorları kullanmak daha güvenlidir.', en: 'It is safer to bank around the sides of large tankers than trying to clear their bridges.', zh: '大型油轮的驾驶台很高，从两侧绕行更稳妥。' },
     ],
   },
   {
     cause: 'kite',
     tips: [
-      { tr: 'Uçurtmalar rüzgârla salınır; sürünü 6 martıya çıkarırsan sürün ipleri koparır!', en: 'Kites drift with the wind; grow your flock to 6 gulls to snap through kite lines!' },
-      { tr: 'Uçurtma iplerini fark ettiğinde ani alçalışla altlarından rahatça sıyrılabilirsin.', en: 'When you spot kite lines, dive down quickly to slip safely beneath them.' },
+      { tr: 'Uçurtmalar rüzgârla salınır; sürünü 6 martıya çıkarırsan sürün ipleri koparır!', en: 'Kites drift with the wind; grow your flock to 6 gulls to snap through kite lines!', zh: '风筝会随风飘动。把鸟群扩大到六只，就能扯断风筝线！' },
+      { tr: 'Uçurtma iplerini fark ettiğinde ani alçalışla altlarından rahatça sıyrılabilirsin.', en: 'When you spot kite lines, dive down quickly to slip safely beneath them.', zh: '看见风筝线时立刻俯冲，从下面钻过去。' },
     ],
   },
   {
     cause: 'post',
     tips: [
-      { tr: 'İskelelerdeki balık sandıkları +35 enerji verir, ama kıyı kazıklarına çok yaklaşma.', en: 'Fish crates at piers give +35 stamina, but keep clear of the wooden jetty posts.' },
-      { tr: 'Kıyıya yakın uçarken su seviyesinden biraz yukarıda kalarak kazıklardan kaçın.', en: 'When skimming near shores, stay slightly above water level to clear jetty posts.' },
+      { tr: 'İskelelerdeki balık sandıkları +35 enerji verir, ama kıyı kazıklarına çok yaklaşma.', en: 'Fish crates at piers give +35 stamina, but keep clear of the wooden jetty posts.', zh: '码头的鱼箱可以恢复 35 点体力，但要避开栈桥木桩。' },
+      { tr: 'Kıyıya yakın uçarken su seviyesinden biraz yukarıda kalarak kazıklardan kaçın.', en: 'When skimming near shores, stay slightly above water level to clear jetty posts.', zh: '靠近岸边时，比水面稍微飞高一点，避开木桩。' },
     ],
   },
   {
     cause: 'stamina',
     tips: [
-      { tr: 'Enerjini yüksek tutmak için simit topla ve zıplayan balıklara dal.', en: 'Snatch simit and dive for leaping fish to keep your stamina meter filled.' },
-      { tr: 'Sürekli dalış yapmak enerjiyi hızla tüketir; dalış butonunu yalnızca gerektiğinde kullan.', en: 'Continuous diving drains stamina quickly; hold the dive button only when aiming for fish.' },
+      { tr: 'Enerjini yüksek tutmak için simit topla ve zıplayan balıklara dal.', en: 'Snatch simit and dive for leaping fish to keep your stamina meter filled.', zh: '叼芝麻圈或俯冲抓跃出水面的鱼都能恢复体力。' },
+      { tr: 'Sürekli dalış yapmak enerjiyi hızla tüketir; dalış butonunu yalnızca gerektiğinde kullan.', en: 'Continuous diving drains stamina quickly; hold the dive button only when aiming for fish.', zh: '连续俯冲会迅速消耗体力，瞄准鱼之后再按住俯冲键。' },
     ],
   },
   {
     cause: 'water',
     tips: [
-      { tr: 'Balık yakaladıktan hemen sonra yüksel; dalgaların hemen üstünde uzun süre kalma.', en: 'Pull up right after catching fish; do not linger too close to the cresting waves.' },
-      { tr: 'Dalıştan çıkarken hızla irtifa kazanarak suya temas etmekten kaçın.', en: 'Pull up quickly after a dive to avoid skimming too low over the water.' },
+      { tr: 'Balık yakaladıktan hemen sonra yüksel; dalgaların hemen üstünde uzun süre kalma.', en: 'Pull up right after catching fish; do not linger too close to the cresting waves.', zh: '抓到鱼后立即爬升，别长时间贴着浪尖飞。' },
+      { tr: 'Dalıştan çıkarken hızla irtifa kazanarak suya temas etmekten kaçın.', en: 'Pull up quickly after a dive to avoid skimming too low over the water.', zh: '俯冲后及时拉起，避免飞得太低而落水。' },
     ],
   },
   {
     cause: 'crash',
     tips: [
-      { tr: 'Kalkan tüyü bularak veya yavru martıyı büyüterek çarpmalara karşı koruma kazan.', en: 'Pick up shield feathers or raise your chick to gain extra protection against hits.' },
-      { tr: 'Yakın geçişler (near-miss) ekstra puan ve hız verir; mesafeni dikkatle ayarla.', en: 'Near-misses reward bonus score and speed; gauge your distance carefully.' },
+      { tr: 'Kalkan tüyü bularak veya yavru martıyı büyüterek çarpmalara karşı koruma kazan.', en: 'Pick up shield feathers or raise your chick to gain extra protection against hits.', zh: '拾取护盾羽毛或养大雏鸟都能为你抵挡撞击。' },
+      { tr: 'Yakın geçişler (near-miss) ekstra puan ve hız verir; mesafeni dikkatle ayarla.', en: 'Near-misses reward bonus score and speed; gauge your distance carefully.', zh: '擦身而过可以加分提速，但要把握好距离。' },
     ],
   },
 ];
@@ -233,10 +255,11 @@ const getSurvivalTip = (cause, idx = 0) => {
 };
 
 // ---------- v2.1: version, news, achievements ----------
-const VERSION = { v: '2.1', tr: 'Kasım 2026', en: 'November 2026' };
+const VERSION = { v: '2.1', tr: 'Kasım 2026', en: 'November 2026', zh: '2026 年 11 月' };
 Object.assign(I18N.tr, { news: 'Yenilikler', newsTitle: 'Neler yeni?', achTitle: 'Başarımlar', otherGames: 'Diğer oyunlar', newAch: 'Yeni başarım', beatBest: 'Rekoru geçtin!' });
 Object.assign(I18N.en, { news: 'What’s new', newsTitle: 'What’s new', achTitle: 'Achievements', otherGames: 'More games', newAch: 'New achievement', beatBest: 'New high score!' });
 const NEWS = {
+  zh: ['新增 11 枚成就徽章，可以在这里或飞行结束时查看。', '刷新最高分时会播放提示音、震动和庆祝特效。', '主菜单新增版本号、更新说明和更多游戏入口。', '触控区域最小为 44 像素，手机上更容易点中。', '新增分享卡片和未找到页面。'],
   tr: [
     'Başarımlar: 11 yeni rozet. Kazandıkların bu pencerede ve koşu bitişinde görünür.',
     'Kendi rekorunu geçtiğin an ses, titreşim ve kutlama efektiyle haber veriliyor.',
@@ -254,24 +277,25 @@ const NEWS = {
 };
 // Achievements are checked once per finished run (never for the ?auto bot) and kept in the save record (META.ach: id -> day).
 const ACH_DEFS = [
-  { id: 'first', tr: 'İlk uçuş', en: 'First flight', dtr: 'Bir koşuyu bitir', den: 'Finish a run', ok: () => true },
-  { id: 'km1', tr: 'Bir kilometre', en: 'One kilometre', dtr: 'Tek koşuda 1 km uç', den: 'Fly 1 km in one run', ok: (r) => r.dist >= 1000 },
-  { id: 'km3', tr: 'Boğaz’ı geçtin', en: 'Across the strait', dtr: 'Tek koşuda 3 km uç', den: 'Fly 3 km in one run', ok: (r) => r.dist >= 3000 },
-  { id: 'simit25', tr: 'Simit sofrası', en: 'Simit feast', dtr: 'Tek koşuda 25 simit kap', den: 'Snatch 25 simit in one run', ok: (r) => r.simit >= 25 },
-  { id: 'fish8', tr: 'Balıkçı martı', en: 'Fisher gull', dtr: 'Tek koşuda 8 balık yakala', den: 'Catch 8 fish in one run', ok: (r) => r.fish >= 8 },
-  { id: 'combo12', tr: 'Kombo ustası', en: 'Combo master', dtr: '12 kombo yap', den: 'Reach a 12 combo', ok: (r) => r.combo >= 12 },
-  { id: 'near6', tr: 'Kıl payı', en: 'Close shave', dtr: 'Tek koşuda 6 yakın geçiş yap', den: 'Make 6 near-misses in one run', ok: () => S.nearMiss >= 6 },
-  { id: 'night', tr: 'Gece martısı', en: 'Night gull', dtr: 'Koşuyu geceye kadar sürdür', den: 'Keep a run going into the night', ok: (r) => r.t >= 150 },
-  { id: 'chick', tr: 'Yavru büyüdü', en: 'All grown up', dtr: 'Yavruyu genç martı yap', den: 'Raise the chick to a young gull', ok: () => chickStage() === 4 },
-  { id: 'daily3', tr: 'Günün üç görevi', en: 'Daily hat-trick', dtr: 'Bir günde 3 görevi tamamla', den: 'Complete all 3 daily missions in a day', ok: () => !!MS && dailyIds().every((id) => MS.done[id]) },
-  { id: 'score3000', tr: 'Üç bin', en: 'Three thousand', dtr: 'Tek koşuda 3000 puan yap', den: 'Score 3000 in one run', ok: (r) => r.score >= 3000 },
+  { id: 'first', tr: 'İlk uçuş', en: 'First flight', dtr: 'Bir koşuyu bitir', den: 'Finish a run', zh: '初次飞行', dzh: '完成一次飞行', ok: () => true },
+  { id: 'km1', tr: 'Bir kilometre', en: 'One kilometre', dtr: 'Tek koşuda 1 km uç', den: 'Fly 1 km in one run', zh: '一公里', dzh: '单次飞行 1 公里', ok: (r) => r.dist >= 1000 },
+  { id: 'km3', tr: 'Boğaz’ı geçtin', en: 'Across the strait', dtr: 'Tek koşuda 3 km uç', den: 'Fly 3 km in one run', zh: '横跨海峡', dzh: '单次飞行 3 公里', ok: (r) => r.dist >= 3000 },
+  { id: 'simit25', tr: 'Simit sofrası', en: 'Simit feast', dtr: 'Tek koşuda 25 simit kap', den: 'Snatch 25 simit in one run', zh: '芝麻圈盛宴', dzh: '单次叼到 25 个芝麻圈', ok: (r) => r.simit >= 25 },
+  { id: 'fish8', tr: 'Balıkçı martı', en: 'Fisher gull', dtr: 'Tek koşuda 8 balık yakala', den: 'Catch 8 fish in one run', zh: '捕鱼能手', dzh: '单次抓到 8 条鱼', ok: (r) => r.fish >= 8 },
+  { id: 'combo12', tr: 'Kombo ustası', en: 'Combo master', dtr: '12 kombo yap', den: 'Reach a 12 combo', zh: '连击大师', dzh: '达成 12 连击', ok: (r) => r.combo >= 12 },
+  { id: 'near6', tr: 'Kıl payı', en: 'Close shave', dtr: 'Tek koşuda 6 yakın geçiş yap', den: 'Make 6 near-misses in one run', zh: '有惊无险', dzh: '单次完成 6 次擦身闪避', ok: () => S.nearMiss >= 6 },
+  { id: 'night', tr: 'Gece martısı', en: 'Night gull', dtr: 'Koşuyu geceye kadar sürdür', den: 'Keep a run going into the night', zh: '夜行海鸥', dzh: '持续飞行直到夜幕降临', ok: (r) => r.t >= 150 },
+  { id: 'chick', tr: 'Yavru büyüdü', en: 'All grown up', dtr: 'Yavruyu genç martı yap', den: 'Raise the chick to a young gull', zh: '羽翼渐丰', dzh: '把雏鸟养成幼鸥', ok: () => chickStage() === 4 },
+  { id: 'daily3', tr: 'Günün üç görevi', en: 'Daily hat-trick', dtr: 'Bir günde 3 görevi tamamla', den: 'Complete all 3 daily missions in a day', zh: '日进三功', dzh: '一天内完成全部 3 项每日任务', ok: () => !!MS && dailyIds().every((id) => MS.done[id]) },
+  { id: 'score3000', tr: 'Üç bin', en: 'Three thousand', dtr: 'Tek koşuda 3000 puan yap', den: 'Score 3000 in one run', zh: '三千分', dzh: '单次获得 3000 分', ok: (r) => r.score >= 3000 },
 ];
 
 // ---------- settings and saves (arena.marti.*; old marti.* keys are read once and kept) ----------
 const KEY = { settings: 'arena.marti.settings', best: 'arena.marti.best', save: 'arena.marti.save' };
-const browserLang = (/^tr/i.test(navigator.language || '') ? 'tr' : 'en');
+const languageNames = { zh: '简体中文', en: 'English', tr: 'Türkçe' };
+const nextLang = () => ({ zh: 'en', en: 'tr', tr: 'zh' })[LANG];
 const coarse = window.matchMedia && matchMedia('(pointer:coarse)').matches;
-const SET = Object.assign({ master: 0.8, music: 0.6, sfx: 0.8, lang: browserLang, quality: coarse ? 'low' : 'high', musicOn: true, sfxOn: true },
+const SET = Object.assign({ master: 0.8, music: 0.6, sfx: 0.8, lang: 'zh', quality: coarse ? 'low' : 'high', musicOn: true, sfxOn: true },
   LS.get(KEY.settings, null) || (() => {
     // migration from the round-1 keys
     const old = {};
@@ -285,18 +309,18 @@ if (LS.get(KEY.save, null) === null && LS.get('marti.missions', null)) LS.set(KE
 // One save record: the daily missions (date, p, done) and what lasts across runs (chick feeds, hints seen, fact index).
 const META = Object.assign({ chick: 0, hints: {}, factIdx: 0, ach: {} }, LS.get(KEY.save, null) || {});
 if (!META.ach || typeof META.ach !== 'object') META.ach = {};
-if (SET.lang !== 'tr' && SET.lang !== 'en') SET.lang = browserLang; // a stored unknown language would break I18N[LANG]
+if (!Object.prototype.hasOwnProperty.call(languageNames, SET.lang)) SET.lang = 'zh'; // a stored unknown language would break I18N[LANG]
 const saveSettings = () => LS.set(KEY.settings, SET);
 saveSettings();
-let LANG = Q.get('lang') === 'en' ? 'en' : Q.get('lang') === 'tr' ? 'tr' : SET.lang;
+let LANG = Object.prototype.hasOwnProperty.call(languageNames, Q.get('lang')) ? Q.get('lang') : SET.lang;
 const tx = (k, v) => { let s = I18N[LANG][k] !== undefined ? I18N[LANG][k] : I18N.en[k]; if (v) for (const n in v) s = s.replace('{' + n + '}', v[n]); return s; };
 
 const MISSION_DEFS = {
-  simit: { goal: 60, tr: (n) => `${n} simit kap`, en: (n) => `Snatch ${n} simit` },
-  fish: { goal: 16, tr: (n) => `${n} balık yakala`, en: (n) => `Catch ${n} fish` },
-  dist: { goal: 3000, tr: (n) => `${n} m uç`, en: (n) => `Fly ${n} m` },
-  power: { goal: 6, tr: (n) => `${n} güçlendirme topla`, en: (n) => `Collect ${n} power-ups` },
-  combo: { goal: 10, tr: (n) => `${n} kombo yap (tek koşuda)`, en: (n) => `Reach a ${n} combo in one run` },
+  simit: { goal: 60, tr: (n) => `${n} simit kap`, en: (n) => `Snatch ${n} simit`, zh: (n) => `叼到 ${n} 个芝麻圈` },
+  fish: { goal: 16, tr: (n) => `${n} balık yakala`, en: (n) => `Catch ${n} fish`, zh: (n) => `抓到 ${n} 条鱼` },
+  dist: { goal: 3000, tr: (n) => `${n} m uç`, en: (n) => `Fly ${n} m`, zh: (n) => `飞行 ${n} 米` },
+  power: { goal: 6, tr: (n) => `${n} güçlendirme topla`, en: (n) => `Collect ${n} power-ups`, zh: (n) => `收集 ${n} 个增益道具` },
+  combo: { goal: 10, tr: (n) => `${n} kombo yap (tek koşuda)`, en: (n) => `Reach a ${n} combo in one run`, zh: (n) => `单次达成 ${n} 连击` },
 };
 const missionName = (id) => MISSION_DEFS[id][LANG](MISSION_DEFS[id].goal);
 
@@ -307,7 +331,7 @@ try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 } catch (e) {
   $('#fatal').style.display = 'flex';
-  $('#fatal').textContent = 'WebGL is not available in this browser. / Tarayıcında WebGL yok.';
+  $('#fatal').textContent = LANG === 'zh' ? '当前浏览器不支持 WebGL。' : LANG === 'tr' ? 'Tarayıcında WebGL yok.' : 'WebGL is not available in this browser.';
   throw e;
 }
 // Software WebGL on low-end TV boxes still renders the full game at a smaller internal resolution.
@@ -2164,7 +2188,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyN') toggleMute();
   if (e.code === 'KeyM') toggleMusic();
   if (e.code === 'KeyX') toggleSfx();
-  if (e.code === 'KeyL') setLang(LANG === 'tr' ? 'en' : 'tr');
+  if (e.code === 'KeyL') setLang(nextLang());
   if (e.code === 'KeyF') toggleFullscreen();
 });
 window.addEventListener('keyup', (e) => {
@@ -2715,8 +2739,8 @@ function renderToggles() {
   $('#bMusic').classList.toggle('off', !AU.on.music);
   $('#bSfx').classList.toggle('off', !AU.on.sfx);
   $('#bMute').classList.toggle('off', SET.master === 0);
-  $('#bLang .code').textContent = LANG === 'tr' ? 'EN' : 'TR';
-  $('#bLangT').textContent = LANG === 'tr' ? 'English' : 'Türkçe';
+  $('#bLang .code').textContent = nextLang().toUpperCase();
+  $('#bLangT').textContent = languageNames[nextLang()];
   const aria = { bPause: 'aPause', bMute: 'aMute', bMusic: 'aMusic', bSfx: 'aSound', bLang: 'aLang', bSet: 'aSet', bDive: 'aDive' };
   for (const id in aria) { const b = $('#' + id); if (b) { b.setAttribute('aria-label', tx(aria[id])); b.title = tx(aria[id]); } }
   $('#bMusic').setAttribute('aria-pressed', String(AU.on.music));
@@ -2729,7 +2753,7 @@ function setLang(l) {
   applyLang();
 }
 function applyLang() {
-  document.documentElement.lang = LANG;
+  document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
   if (window.Arena) Arena.lang(LANG);
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = tx(el.dataset.i18n); });
   $('#how').innerHTML = I18N[LANG].how.map((h) => '<li>' + h + '</li>').join('');
@@ -2959,6 +2983,7 @@ function renderSettings() {
   $('#vMaster').value = Math.round(SET.master * 100);
   $('#vMusic').value = Math.round(SET.music * 100);
   $('#vSfx').value = Math.round(SET.sfx * 100);
+  $('#sZH').classList.toggle('on', LANG === 'zh');
   $('#sTR').classList.toggle('on', LANG === 'tr');
   $('#sEN').classList.toggle('on', LANG === 'en');
   $('#sLow').classList.toggle('on', isLow());
@@ -2995,6 +3020,7 @@ for (const [id, k] of [['vMaster', 'master'], ['vMusic', 'music'], ['vSfx', 'sfx
   });
 }
 const click = (id, fn) => $(id).addEventListener('click', (e) => { e.stopPropagation(); fn(); });
+click('#sZH', () => setLang('zh'));
 click('#sTR', () => setLang('tr'));
 click('#sEN', () => setLang('en'));
 click('#sLow', () => { SET.quality = 'low'; saveSettings(); applyQuality(); renderSettings(); });
@@ -3145,8 +3171,8 @@ click('#bPause', togglePause);
 click('#bMute', toggleMute);
 click('#bMusic', () => { ensureAudio(); toggleMusic(); });
 click('#bSfx', () => { ensureAudio(); toggleSfx(); });
-click('#bLang', () => setLang(LANG === 'tr' ? 'en' : 'tr'));
-click('#bLangT', () => setLang(LANG === 'tr' ? 'en' : 'tr'));
+click('#bLang', () => setLang(nextLang()));
+click('#bLangT', () => setLang(nextLang()));
 click('#bSetT', openSettings);
 click('#bSetP', openSettings);
 click('#bSet', () => { if (S.state === 'playing') togglePause(); openSettings(); });

@@ -204,7 +204,8 @@ export class UI {
             this.dlKey = key;
             const sp = SPEAKERS[line.w] || SPEAKERS.walk;
             const narr = sp.style === 'narr', you = sp.style === 'you';
-            this.dl = { text: line.t, n: 0, acc: 0, voice: sp.voice || 330, look: line.look || sp.look || 'walk', name: line.name || sp.name, narr, you, ask: line.ask || null, done: false };
+            const text = globalThis.PureTVChinese?.translate(line.t) ?? line.t;
+            this.dl = { text, n: 0, acc: 0, voice: sp.voice || 330, look: line.look || sp.look || 'walk', name: line.name || sp.name, narr, you, ask: line.ask || null, done: false };
             $('d-name').textContent = narr ? '' : this.dl.name;
             $('d-text').className = narr ? 'narr' : you ? 'you' : '';
             $('d-text').textContent = '';

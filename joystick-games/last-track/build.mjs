@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, cpSync, renameSync, rmSync, mkdtempSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +15,7 @@ try {
   // Source docs/tests/trailer tools remain in src/upstream but are not runtime dependencies.
   for (const name of ['src', 'assets', 'vendor', 'styles.css', 'hud.css', 'index.html']) cpSync(join(source, name), join(out, name), { recursive: true });
   renameSync(join(out, 'index.html'), join(out, 'tv.html'));
+  writeFileSync(join(out, 'tv.html'), await localizeHtml(readFileSync(join(out, 'tv.html'), 'utf8'), here));
   // Resolve the original bare Three imports to its exact vendored r170 file. Older
   // WKWebView understands ES modules but not import maps; no library upgrade occurs.
   for (const file of files(join(out, 'src')).filter(p => p.endsWith('.js'))) {

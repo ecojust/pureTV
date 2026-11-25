@@ -52,15 +52,32 @@
     while (text.length < digits) text = "0" + text;
     return text;
   }
-  function TetrisRenderer(canvas) {
+  function TetrisRenderer(canvas, language) {
+    this.chinese = !/^en(?:-|$)/i.test(language || "zh");
     this.canvas = canvas;
     canvas.width = 256; canvas.height = 240;
     this.ctx = canvas.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
     this.canvas.style.imageRendering = "pixelated";
   }
+  // The game runs on a 256 × 240 raster. Draw Chinese at this native
+  // resolution so it scales with the original pixel art and numbered counters.
+  TetrisRenderer.prototype.chineseText = function (label, x, y, color, size, align) {
+    var ctx = this.ctx;
+    ctx.save();
+    ctx.fillStyle = color || "#fcfcfc";
+    ctx.font = 'bold ' + size + 'px "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif';
+    ctx.textAlign = align || "left";
+    ctx.textBaseline = "top";
+    ctx.fillText(label, x, y);
+    ctx.restore();
+  };
   TetrisRenderer.prototype.text = function (text, x, y, color, scale) {
     var ctx=this.ctx,size=scale||1;
+    if (/[\u3400-\u9fff]/.test(text)) {
+      this.chineseText(text, x, y - 1, color, 11 * size);
+      return;
+    }
     ctx.fillStyle=color||"#fcfcfc";
     String(text).toUpperCase().split("").forEach(function(letter,index){
       var rows=FONT[letter]||FONT[" "];
@@ -69,7 +86,12 @@
     });
   };
   TetrisRenderer.prototype.smallText = function(text,x,y,color){
-    var ctx=this.ctx;ctx.fillStyle=color||"#fcfcfc";
+    var ctx=this.ctx;
+    if (/[\u3400-\u9fff]/.test(text)) {
+      this.chineseText(text, x, y - 1, color, 10);
+      return;
+    }
+    ctx.fillStyle=color||"#fcfcfc";
     String(text).toUpperCase().split("").forEach(function(letter,index){
       var rows=SMALL_FONT[letter]||SMALL_FONT[" "];
       for(var row=0;row<7;row++)for(var col=0;col<5;col++)
@@ -78,6 +100,10 @@
   };
   TetrisRenderer.prototype.center = function(text,y,color,scale){
     var size=scale||1;
+    if (/[\u3400-\u9fff]/.test(text)) {
+      this.chineseText(text, 128, y - 1, color, 11 * size, "center");
+      return;
+    }
     this.text(text,Math.floor((256-String(text).length*8*size)/2),y,color,size);
   };
   TetrisRenderer.prototype.background = function(){
@@ -147,64 +173,65 @@
     }
     if (player.completed) {
       ctx.fillStyle="#071a20";ctx.fillRect(x,y+59,80,33);
-      this.text("CLEAR!",x+16,y+67,"#fcfcfc");
-      this.text("25 LINES",x+8,y+80,"#bcbcbc");
+      this.text(this.chinese ? "过关！" : "CLEAR!",x+16,y+67,"#fcfcfc");
+      this.text(this.chinese ? "消除 25 行" : "25 LINES",x+8,y+80,"#bcbcbc");
     }
     if (player.joined && !player.alive) {
       ctx.fillStyle="rgba(3,5,16,0.8)";ctx.fillRect(x,y+59,80,33);
-      this.text("TOP OUT",x+12,y+67,"#f83800");
-      this.text("P"+player.id,x+32,y+80,"#bcbcbc");
+      this.text(this.chinese ? "触顶出局" : "TOP OUT",x+12,y+67,"#f83800");
+      this.text((this.chinese ? "玩家" : "P")+player.id,x+32,y+80,"#bcbcbc");
     }
   };
   TetrisRenderer.prototype.title = function(game){
     this.background();this.frame(16,16,224,208);
-    this.center("TETRIS",32,"#fcfcfc",3);
-    this.center((game.mode||"A")+"-TYPE",72,"#fcfcfc");
-    this.text(game.selectedPlayers===2?" ":">",56,96,"#fcfcfc");this.text("1 PLAYER",80,96);
-    this.text(game.selectedPlayers===2?">":" ",56,112,"#fcfcfc");this.text("2 PLAYERS",80,112);
-    this.center("LEVEL < "+number(game.startLevel,2)+" >",140,"#fcfcfc");
-    this.center(game.mode==="B"?"HEIGHT < "+game.startHeight+" >":"LEFT/RIGHT LEVEL",160,"#bcbcbc");
-    this.smallText("A/B TYPE   SELECT PLAYERS",56,181,"#bcbcbc");
-    if(Math.floor((game.frame||0)/30)%2===0)this.center("PRESS START",200,"#fcfcfc");
+    this.center(this.chinese ? "俄罗斯方块" : "TETRIS",32,"#fcfcfc",3);
+    this.center((game.mode||"A") + (this.chinese ? " 模式" : "-TYPE"),72,"#fcfcfc");
+    this.text(game.selectedPlayers===2?" ":">",56,96,"#fcfcfc");this.text(this.chinese ? "单人游戏" : "1 PLAYER",80,96);
+    this.text(game.selectedPlayers===2?">":" ",56,112,"#fcfcfc");this.text(this.chinese ? "双人游戏" : "2 PLAYERS",80,112);
+    this.center((this.chinese ? "等级 < " : "LEVEL < ")+number(game.startLevel,2)+" >",140,"#fcfcfc");
+    this.center(game.mode==="B"?(this.chinese ? "高度 < " : "HEIGHT < ")+game.startHeight+" >":(this.chinese ? "左右键选择等级" : "LEFT/RIGHT LEVEL"),160,"#bcbcbc");
+    this.smallText(this.chinese ? "A/B 模式　SELECT 人数" : "A/B TYPE   SELECT PLAYERS",56,181,"#bcbcbc");
+    if(Math.floor((game.frame||0)/30)%2===0)this.center(this.chinese ? "按 START 开始" : "PRESS START",200,"#fcfcfc");
   };
   TetrisRenderer.prototype.single = function(game){
     var p=game.players[0],mode=game.mode||"A";
-    this.frame(16,24,64,24);this.text(mode+"-TYPE",24,32);
+    this.frame(16,24,64,24);this.text(mode + (this.chinese ? " 模式" : "-TYPE"),24,32);
     this.frame(88,16,96,24);
-    this.text((mode==="B"?"LEFT-":"LINES-")+number(mode==="B"?Math.max(0,25-p.cleared):p.cleared,3),104,24);
-    this.frame(8,64,80,152);this.smallText("STATISTICS",18,72,"#fcfcfc");
+    this.text((this.chinese ? (mode==="B" ? "剩余 " : "行数 ") : (mode==="B" ? "LEFT-" : "LINES-"))+number(mode==="B"?Math.max(0,25-p.cleared):p.cleared,3),104,24);
+    this.frame(8,64,80,152);this.smallText(this.chinese ? "方块统计" : "STATISTICS",18,72,"#fcfcfc");
     for(var i=0;i<TYPES.length;i++){
       var type=TYPES[i];this.preview(type,20,88+i*17,24,15,p.level,4);
       this.text(number(p.statistics&&p.statistics[type],3),48,92+i*17,"#f83800");
     }
     this.board(p,96,48,game.frame);
-    this.frame(184,16,64,72);this.text("TOP",192,32);
+    this.frame(184,16,64,72);this.text(this.chinese ? "最高分" : "TOP",192,this.chinese ? 28 : 32);
     var top=number(Math.max(game.highScore||0,p.score),6),score=number(p.score,6);
     if(top.length>6)this.smallText(top,192,40);else this.text(top,192,40);
-    this.text("SCORE",192,56);if(score.length>6)this.smallText(score,192,64);else this.text(score,192,64);
-    this.frame(184,96,48,48);this.text("NEXT",192,104);this.preview(p.nextType,190,116,36,20,p.level,8);
-    this.frame(184,152,56,32);this.text("LEVEL",192,160);this.text(number(p.level,2),208,168);
-    if(mode==="B"){this.frame(184,192,64,24);this.smallText("HEIGHT "+game.startHeight,192,200);}
+    this.text(this.chinese ? "得分" : "SCORE",192,this.chinese ? 52 : 56);if(score.length>6)this.smallText(score,192,64);else this.text(score,192,64);
+    this.frame(184,96,48,48);this.text(this.chinese ? "预告" : "NEXT",192,104);this.preview(p.nextType,190,116,36,20,p.level,8);
+    this.frame(184,152,56,32);this.text(this.chinese ? "等级" : "LEVEL",192,this.chinese ? 156 : 160);this.text(number(p.level,2),208,168);
+    if(mode==="B"){this.frame(184,192,64,24);this.smallText((this.chinese ? "高度 " : "HEIGHT ")+game.startHeight,192,200);}
   };
   TetrisRenderer.prototype.dual = function(game){
-    this.frame(12,0,232,44);this.center((game.mode||"A")+"-TYPE  2P CHALLENGE",8);
+    this.frame(12,0,232,44);this.center((game.mode||"A")+(this.chinese ? " 模式 · 双人挑战" : "-TYPE  2P CHALLENGE"),8);
     for(var i=0;i<2;i++){
       var p=game.players[i],x=i?156:20;
-      this.smallText("P"+(i+1),x,24,i?"#fca044":"#3cbcfc");this.smallText(number(p.score,7),x+27,24);
-      this.smallText("L"+number(p.level,2),x,33);this.smallText((game.mode==="B"?"LEFT ":"ROWS ")+number(game.mode==="B"?Math.max(0,25-p.cleared):p.cleared,3),x+30,33);
-      this.board(p,x,52,game.frame);this.frame(x-4,216,88,24);this.smallText("NEXT",x,224);this.preview(p.nextType,x+33,218,42,20,p.level,5);
+      this.smallText((this.chinese ? "玩家" : "P")+(i+1),x,24,i?"#fca044":"#3cbcfc");this.smallText(number(p.score,7),x+27,24);
+      this.smallText((this.chinese ? "级" : "L")+number(p.level,2),x,33);this.smallText((this.chinese ? (game.mode==="B" ? "剩 " : "行 ") : (game.mode==="B" ? "LEFT " : "ROWS "))+number(game.mode==="B"?Math.max(0,25-p.cleared):p.cleared,3),x+30,33);
+      this.board(p,x,52,game.frame);this.frame(x-4,216,88,24);this.smallText(this.chinese ? "预告" : "NEXT",x,224);this.preview(p.nextType,x+33,218,42,20,p.level,5);
     }
-    this.frame(108,80,40,88);this.smallText("SAME",116,96);this.smallText("PIECE",113,109);this.smallText("ORDER",113,122);this.text("VS",120,148);
+    this.frame(108,80,40,88);this.smallText(this.chinese ? "相同" : "SAME",116,96);this.smallText(this.chinese ? "方块" : "PIECE",113,109);this.smallText(this.chinese ? "顺序" : "ORDER",113,122);this.text(this.chinese ? "对决" : "VS",this.chinese ? 117 : 120,148);
   };
   TetrisRenderer.prototype.overlay = function (game) {
     var ctx=this.ctx;
     ctx.fillStyle="rgba(3,7,20,0.84)";ctx.fillRect(12,91,232,59);
     ctx.strokeStyle="#728db5";ctx.lineWidth=1;ctx.strokeRect(12.5,91.5,231,58);
     var cleared = game.players.some(function(p){return p.joined && p.completed;});
-    this.center(game.phase==="paused"?"PAUSED":cleared?"CHALLENGE CLEAR":"GAME OVER",102,"#fcfcfc",cleared?1:2);
+    this.center(this.chinese ? (game.phase==="paused" ? "已暂停" : cleared ? "挑战成功" : "游戏结束") : (game.phase==="paused" ? "PAUSED" : cleared ? "CHALLENGE CLEAR" : "GAME OVER"),102,"#fcfcfc",cleared?1:2);
     var message=game.phase==="paused"?(game.pauseReason==="disconnect"?"RECONNECT CONTROLLERS":"START TO RESUME"):"START FOR TITLE";
+    if (this.chinese) message = game.phase==="paused" ? (game.pauseReason==="disconnect" ? "请重新连接手柄" : "按 START 继续") : "按 START 返回标题画面";
     this.center(message,126,"#a8bbd3");
-    if(game.phase==="paused")this.center("SELECT: MUSIC "+(game.music?"ON":"OFF"),139,"#7a9ac1");
+    if(game.phase==="paused")this.center(this.chinese ? "SELECT 切换音乐：" + (game.music ? "开" : "关") : "SELECT: MUSIC "+(game.music?"ON":"OFF"),139,"#7a9ac1");
   };
   TetrisRenderer.prototype.draw = function (game) {
     this.ctx.imageSmoothingEnabled=false;
