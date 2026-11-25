@@ -1,0 +1,26 @@
+/* Keep the pairing card beside the lobby at both TV sizes. The playfield always fills the window. */
+body[data-screen=menu] #main-menu {left:calc(50% - 91px);width:min(910px,calc(100vw - 224px))}
+body[data-screen=menu] .menu-brand {right:202px}
+body[data-screen=menu] .menu-footer {left:26px;right:199px;text-align:center;font-size:clamp(10px,1vw,14px)}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #ffd674;outline-offset:3px}
+#pointer-resume {display:none!important}
+#puretv-controller-panel[data-playing=true] {top:7px!important}
+.tv-hint {font-weight:650;color:#ffe0a3}
+#hud .match-help {right:20px;bottom:7px}
+@media(max-height:600px) {
+ body[data-screen=menu] #main-menu {max-height:calc(100vh - 89px);top:46%}
+ .artist-card>.portrait {height:76px}
+ .menu-brand{top:10px}
+ body[data-screen=menu] .menu-footer {bottom:7px}
+ .settings-card,.pause-card,.results-card {max-height:calc(100vh - 30px);overflow-y:auto}
+}
+
+body.ready #loading-screen {display:none}
+
+@media(min-width:700px) and (max-height:600px) {
+ body[data-screen=menu] #main-menu {top:53px;max-height:calc(100vh - 83px);transform:translateX(-50%)}
+ .lobby-heading{margin-bottom:9px}.lobby-heading h1{font-size:37px}
+ .faction-options{margin-bottom:9px}.faction-card{min-height:39px;padding:6px 12px}
+ .selection-heading{margin-bottom:7px}.selection-kit{margin-top:8px;padding-top:8px}
+ .rival-preview{margin-top:7px}.kit-play .primary-button{padding:7px 15px}
+}
