@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.time",
+    "gameplay.car.pos",
+    "gameplay.car.vel",
+    "gameplay.speed"
+  ],
+  "steps": [
+    {
+      "name": "Move to the original Controller control from either native initial focus",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 80,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "menu"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Controller"
+        }
+      ]
+    },
+    {
+      "name": "Move down to the original Play button before selecting the campaign",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 220,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "menu"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Play"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Open original campaign",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "campaign"
+        }
+      ]
+    },
+    {
+      "name": "Start first original campaign track and wait natural countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "racing"
+        }
+      ]
+    },
+    {
+      "name": "Accelerate using original car physics",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 3500,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 1
+        },
+        {
+          "path": "gameplay.car.pos",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer left under throttle",
+      "keys": [
+        "UP",
+        "LEFT"
+      ],
+      "holdMs": 900,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.car.pos",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer right with separate A throttle",
+      "keys": [
+        "A",
+        "RIGHT"
+      ],
+      "holdMs": 900,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.car.pos",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Brake with independent DOWN and B controls",
+      "keys": [
+        "DOWN",
+        "B"
+      ],
+      "holdMs": 800,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Cycle original camera",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.camera",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Return to original checkpoint",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "lt",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Pause original simulation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Focus pause option Restart",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Focus pause option Settings",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Focus pause option Quit",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Focus pause option Pure",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Toggle original Pure ghost preference and save settings",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.showGhost",
+          "op": "changed"
+        },
+        {
+          "path": "gameplay.savedSettings",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Deliberately resume with held START without re-pausing",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 1200,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Continue driving after saved preference",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 2000,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 1
+        },
+        {
+          "path": "gameplay.car.pos",
+          "op": "changed"
+        }
+      ]
+    }
+  ]
+}
