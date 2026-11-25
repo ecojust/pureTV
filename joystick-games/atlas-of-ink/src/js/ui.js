@@ -74,7 +74,7 @@ export class UI {
         $('brief-role').textContent = c.client.role;
         $('brief-count').textContent = `Commission ${G.idx + 1} of ${G.commissions.length}`;
         $('brief-heading').textContent = c.title;
-        $('brief-quote').textContent = `“${c.quote}”`;
+        $('brief-quote').textContent = `“${globalThis.PureTVChinese.translate(c.quote)}”`;
         $('brief-text').textContent = c.brief;
         $('brief-judged').textContent = c.judged;
         const r = c.region;

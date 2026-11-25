@@ -100,7 +100,7 @@ export class UI {
     hud(G, ctl) {
         const arc = Math.min(G.arc, 21);
         const after = G.won;
-        const name = G.won ? 'Afterglow' : `${G.mode === 'endless' ? 'Omen ' : ''}${ARCANA[arc].numeral} · ${ARCANA[arc].name}`;
+        const name = G.won ? 'Afterglow' : `${G.mode === 'endless' ? '预兆 ' : ''}${ARCANA[arc].numeral} · ${globalThis.PureTVChinese.translate(ARCANA[arc].name)}`;
         this.set('hud-arc-name', name);
         this.set('hud-light', `${fmt(G.light)} / ${fmt(G.goal)}`);
         const w = `${Math.min(100, (G.light / G.goal) * 100).toFixed(1)}%`;

@@ -181,7 +181,7 @@ export class UI {
             html += `<div class="region"><div class="region-head" style="background:linear-gradient(90deg, ${COLORS[r.c].css}33, transparent)">${esc(r.name)} <small>${stages.filter(({ i }) => G.cleared[i]).length}/${stages.length}</small></div><p>${esc(r.blurb)}</p>`;
             for (const { s, i } of stages) {
                 const open = i <= G.progress, done = G.cleared[i];
-                const foes = [...new Set(s.waves)].map((id) => ENEMIES[id].name).join(', ');
+                const foes = [...new Set(s.waves)].map((id) => globalThis.PureTVChinese.translate(ENEMIES[id].name)).join('、');
                 html += `<button class="stage ${i === G.progress && !done ? 'next' : ''} ${s.boss ? 'boss' : ''}" data-stage="${i}" ${open ? '' : 'disabled'}>
                     <span class="num">${i + 1}</span>
                     <span class="nm">${esc(s.name)}<small>${open ? esc(foes) : '???'}</small></span>
@@ -256,11 +256,11 @@ export class UI {
         this.briefStage = stage;
         const s = STAGES[stage], r = REGIONS[s.region];
         $('brief-name').textContent = s.name + (s.boss ? ' ☠' : '');
-        $('brief-region').textContent = `${r.name} · stage ${stage + 1}${G.cleared[stage] ? ` · won ${G.cleared[stage]}×` : ''}`;
+        $('brief-region').textContent = `${globalThis.PureTVChinese.translate(r.name)} · 第 ${stage + 1} 关${G.cleared[stage] ? ` · 胜利 ${G.cleared[stage]} 次` : ''}`;
         $('brief-foes').innerHTML = s.waves.map((id, k) => {
             const e = ENEMIES[id];
-            const acts = [...new Set(e.pattern.map((p) => p.split(':')[0]))].map((k2) => ABILITY_TEXT[k2]).join(', ');
-            return `<div class="foe-card"><span class="elem" style="color:${COLORS[e.c].css}"></span><div><b>${k + 1}. ${esc(e.name)}</b> <span class="dim">${COLORS[e.c].name}</span><small>Every ${e.cd} turns it ${esc(acts)}.</small></div></div>`;
+            const acts = [...new Set(e.pattern.map((p) => p.split(':')[0]))].map((k2) => globalThis.PureTVChinese.translate(ABILITY_TEXT[k2])).join('、');
+            return `<div class="foe-card"><span class="elem" style="color:${COLORS[e.c].css}"></span><div><b>${k + 1}. ${esc(globalThis.PureTVChinese.translate(e.name))}</b> <span class="dim">${COLORS[e.c].name}</span><small>每 ${e.cd} 回合施展能力：${esc(acts)}。</small></div></div>`;
         }).join('') + `<p class="dim" style="font-size:13px;margin:4px 0 0">${esc(r.blurb)}</p>`;
         $('brief-party').innerHTML = G.party.map((id) => `<button class="card" data-hero="${id}">${this.portraitHtml(id)}<span class="nm">${esc(HERO[id].name)}</span></button>`).join('');
         $('brief-calls').textContent = G.calls.length ? `${G.calls.length} called hero${G.calls.length > 1 ? 'es' : ''} will come to this board, starting with ${HERO[G.calls[0]].name}.` : 'No heroes are waiting in the calling. Summon at camp to call some.';

@@ -399,12 +399,14 @@ function updateHUD() {
   ).join(" ");
   $("lives-label").textContent = `${s.lives ?? 3} TOOLS REMAINING`;
   const mode = s.mode;
-  $("pause-button").disabled = ["title", "gameover"].includes(mode);
-  const pauseLabel =
-    mode === "paused" ? "RESUME <kbd>P</kbd>" : "PAUSE <kbd>P</kbd>";
-  // Keep the pressed child attached between pointerdown and pointerup.
-  if ($("pause-button").innerHTML !== pauseLabel)
-    $("pause-button").innerHTML = pauseLabel;
+  const pauseButton = $("pause-button");
+  pauseButton.disabled = ["title", "gameover"].includes(mode);
+  const pauseAction = mode === "paused" ? "RESUME" : "PAUSE";
+  // Compare the action, since the visible label can be translated between frames.
+  if (pauseButton.dataset.action !== pauseAction) {
+    pauseButton.dataset.action = pauseAction;
+    pauseButton.innerHTML = pauseAction + " <kbd>P</kbd>";
+  }
   $("system-label").textContent =
     {
       title: "SYSTEM STANDBY",

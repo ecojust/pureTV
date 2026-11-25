@@ -66,20 +66,22 @@ try {
   for(let n=0;n<7;n++)await press(['A'],40);
   assert.equal((await snap()).ui.overlay,false);
   const before=await snap();await press(['B']);await page.waitForFunction(()=>JoystickGameQA.snapshot().gameplay.screen==='map');
-  for(let n=0;n<3;n++)await press(['DOWN'],40);assert.match((await snap()).ui.focus,/^The Low Fields/);await page.screenshot({path:path.join(out,`map-${width}.png`)});await press(['A']);
+  for(let n=0;n<3;n++)await press(['DOWN'],40);assert.match((await snap()).ui.focus,/^低地/);await page.screenshot({path:path.join(out,`map-${width}.png`)});await press(['A']);
   await page.waitForFunction(()=>JoystickGameQA.snapshot().gameplay.node==='lowfields');assert.ok((await snap()).gameplay.steps>before.gameplay.steps);
   // Encounters retain the original random draw; explore via its visible button, never set a model/seed.
   for(let attempt=0;attempt<20&&(await snap()).gameplay.screen!=='battle';attempt++){
     if((await snap()).ui.overlay){await press(['A'],40);continue;}
-    await focusMatch(/^Explore/);await press(['A'],40);
+    await focusMatch(/^探索/);await press(['A'],40);
   }
   await page.waitForFunction(()=>JoystickGameQA.snapshot().gameplay.screen==='battle');
   await page.screenshot({path:path.join(out,`battle-${width}.png`)});
-  await focusMatch(/^Guard$/);await press(['A']);await focusMatch(/^Go$/);await press(['A']);
+  await focusMatch(/^防御$/);await press(['A']);await focusMatch(/^执行指令$/);
+  await press(['B']);  // Cancel the chosen order using the controller.
+  await focusMatch(/^防御$/);await press(['A']);await focusMatch(/^执行指令$/);await press(['A']);
   await page.waitForFunction(()=>JoystickGameQA.snapshot().gameplay.battle.round>=1 || JoystickGameQA.snapshot().gameplay.battle.state!=='input');
   // Read the rebuilt battle commands, then return to the enemy card with normal directions.
-  await page.waitForFunction(()=>[...document.querySelectorAll('#commands button')].some(b=>!b.disabled&&b.textContent==='Guard'));
-  await focusMatch(/^Guard$/);
+  await page.waitForFunction(()=>[...document.querySelectorAll('#commands button')].some(b=>!b.disabled&&b.textContent==='防御'));
+  await focusMatch(/^防御$/);
   const commandReading=await page.evaluate(()=>{const a=document.activeElement.getBoundingClientRect(),s=document.getElementById('screen').getBoundingClientRect();return{top:a.top,bottom:a.bottom,screenTop:s.top,screenBottom:s.bottom,scrollTop:document.getElementById('screen').scrollTop};});
   assert.ok(commandReading.top>=commandReading.screenTop&&commandReading.bottom<=commandReading.screenBottom);
   await page.screenshot({path:path.join(out,`commands-${width}.png`)});
