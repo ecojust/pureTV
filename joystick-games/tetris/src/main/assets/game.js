@@ -1,6 +1,6 @@
 /* Native room integration and local high score for the independent puzzle game. */
 startTvGame({
-  title: "TETRIS TV", bridge: "TetrisHost", api: "TetrisTV",
+  chineseTitle: "俄罗斯方块 TV", title: "TETRIS TV", bridge: "TetrisHost", api: "TetrisTV",
   actions: {a: ["顺时针旋转", "ROTATE CW"], b: ["逆时针旋转", "ROTATE CCW"]},
   createGame: () => {
     let highScore = 0;
@@ -9,6 +9,6 @@ startTvGame({
       try { localStorage.setItem("tetris-tv-high-score",String(value)); } catch (_) {}
     }});
   },
-  createRenderer: canvas => new TetrisRenderer(canvas),
+  createRenderer: canvas => new TetrisRenderer(canvas, document.documentElement.lang),
   createAudio: () => new TetrisAudio(),
 });

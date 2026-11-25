@@ -78,7 +78,8 @@ function carParts() {
 }
 
 export class RushRenderer {
-  constructor(canvas) {
+  constructor(canvas, english = false) {
+    this.english = english;
     this.canvas = canvas;
     const attributes = { alpha: false, antialias: false, depth: true, stencil: false, powerPreference: 'high-performance' };
     const context = canvas.getContext('webgl2', attributes) || canvas.getContext('webgl', attributes);
@@ -175,7 +176,7 @@ export class RushRenderer {
     const a = roadPoint(track, 0, -half), b = roadPoint(track, 0, half);
     for (const point of [a, b]) { box(scenery, point.x, point.y + 4.9, point.z, .8, 9.8, .8, '#d5d4ba', p.yaw); box(bright, point.x, point.y + 5, point.z, .95, .2, .95, theme.accent, p.yaw); }
     beam(scenery, a.clone().add(new THREE.Vector3(0, 9, 0)), b.clone().add(new THREE.Vector3(0, 9, 0)), 1.0, 1.0, '#b5c6c7');
-    const sign = new THREE.Mesh(new THREE.PlaneGeometry(12.8, 3.2), new THREE.MeshBasicMaterial({ map: signTexture('NEON RUSH', 'START / FINISH', theme.accent), side: THREE.DoubleSide })); sign.position.set(p.x - Math.sin(p.yaw) * .65, p.y + 8.65, p.z - Math.cos(p.yaw) * .65); sign.rotation.y = p.yaw + Math.PI; this.world.add(sign);
+    const sign = new THREE.Mesh(new THREE.PlaneGeometry(12.8, 3.2), new THREE.MeshBasicMaterial({ map: signTexture(this.english ? 'NEON RUSH' : '霓虹飞车', this.english ? 'START / FINISH' : '起点 / 终点', theme.accent), side: THREE.DoubleSide })); sign.position.set(p.x - Math.sin(p.yaw) * .65, p.y + 8.65, p.z - Math.cos(p.yaw) * .65); sign.rotation.y = p.yaw + Math.PI; this.world.add(sign);
     for (let s = 0; s < 3; s++) for (let j = 0; j < 16; j++) { const left = (j / 16 - .5) * p.width, right = ((j + 1) / 16 - .5) * p.width; const tint = (j + s) % 2 ? '#283642' : '#f4eed8'; bright.quad(roadPoint(track, s * .9, left, .04), roadPoint(track, (s + 1) * .9, left, .04), roadPoint(track, (s + 1) * .9, right, .04), roadPoint(track, s * .9, right, .04), tint); }
     for (let i = 0; i < 6; i++) { const s = -6 - Math.floor(i / 2) * 6.8, lateral = i % 2 ? 3.8 : -3.8; for (const side of [-1, 1]) beam(bright, roadPoint(track, s, lateral + side * 1.6, .04), roadPoint(track, s - 4.7, lateral + side * 1.6, .04), .07, .07, '#f7e3a9'); }
   }
