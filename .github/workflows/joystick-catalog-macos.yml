@@ -99,9 +99,14 @@ jobs:
           tag=games-zh-cn-2026.11.25
           test "$(gh release view "$tag" --json isDraft -q .isDraft)" = true
           flags=()
-          if [[ "$GAME" = cf-transport-ship && "$RUNNER_OS" = macOS && "$FROZEN" != a5c902437c87fe11fd7b1c974251e5f8c108cd5f ]]; then
-            gh release download "$tag" -p cf-transport-ship-macos-verification.json -O "$RUNNER_TEMP/pilot.json"
-            python -c "import json,os,pathlib; assert json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'pilot.json').read_text())['sourceCommit']=='a5c902437c87fe11fd7b1c974251e5f8c108cd5f'"
-            flags+=(--clobber)
+          if [[ "${{ matrix.supersedes }}" != "" ]]; then
+            platform=windows
+            if [[ "$RUNNER_OS" = macOS ]]; then platform=macos; fi
+            previous="$GAME-$platform-verification.json"
+            if gh release view "$tag" --json assets --jq '.assets[].name' > "$RUNNER_TEMP/existing-assets" && grep -Fqx "$previous" "$RUNNER_TEMP/existing-assets"; then
+              gh release download "$tag" -p "$previous" -O "$RUNNER_TEMP/previous.json"
+              python -c "import json,os,pathlib; assert json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'previous.json').read_text())['sourceCommit']=='${{ matrix.supersedes }}'"
+              flags+=(--clobber)
+            fi
           fi
           gh release upload "$tag" "${flags[@]}" "$RUNNER_TEMP"/localized/*
