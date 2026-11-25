@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.5.2">
+
+    <issue
+        id="AppBundleLocaleChanges"
+        severity="Warning"
+        message="Found dynamic locale changes, but did not find corresponding Play Core library calls for downloading languages and splitting by language is not disabled in the `bundle` configuration"
+        category="Correctness"
+        priority="5"
+        summary="App Bundle handling of runtime locale changes"
+        explanation="When changing locales at runtime (e.g. to provide an in-app language switcher), the Android App Bundle must be configured to not split by locale or the Play Core library must be used to download additional locales at runtime."
+        url="https://developer.android.com/guide/app-bundle/configure-base#handling_language_changes"
+        urls="https://developer.android.com/guide/app-bundle/configure-base#handling_language_changes"
+        errorLine1="        config.setLocale(Locale.SIMPLIFIED_CHINESE);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/build/generated/sources/puretv-controller/com/ecojust/controller/GameLanguage.java"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="VectorRaster"
+        severity="Warning"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        category="Correctness"
+        priority="5"
+        summary="Vector Image Generation"
+        explanation="Vector icons require API 21 or API 24 depending on used features, but when `minSdkVersion` is less than 21 or 24 and Android Gradle plugin 1.4 or higher is used, a vector drawable placed in the `drawable` folder is automatically moved to `drawable-anydpi-v21` or `drawable-anydpi-v24` and bitmap images are generated for different screen resolutions for backwards compatibility.&#xA;&#xA;However, there are some limitations to this raster image generation, and this lint check flags elements and attributes that are not fully supported. You should manually check whether the generated output is acceptable for those older devices."
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:width=&quot;320dp&quot; android:height=&quot;180dp&quot; android:viewportWidth=&quot;320&quot; android:viewportHeight=&quot;180&quot;>"
+        errorLine2="                                                                                  ~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/src/main/res/drawable/banner.xml"
+            line="1"
+            column="83"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        severity="Warning"
+        message="Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+        category="Correctness"
+        priority="2"
+        summary="Using discouraged APIs"
+        explanation="Discouraged APIs are allowed and are not deprecated, but they may be unfit for common use (e.g. due to slow performance or subtle behavior)."
+        errorLine1="        &lt;activity android:name=&quot;.MainActivity&quot; android:exported=&quot;true&quot; android:screenOrientation=&quot;landscape&quot;"
+        errorLine2="                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/src/main/AndroidManifest.xml"
+            line="9"
+            column="72"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        severity="Warning"
+        message="Very long vector path (2208 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        category="Performance"
+        priority="5"
+        summary="Long vector paths"
+        explanation="Using long vector paths is bad for performance. There are several ways to make the `pathData` shorter:&#xA;* Using less precision&#xA;* Removing some minor details&#xA;* Using the Android Studio vector conversion tool&#xA;* Rasterizing the image (converting to PNG)"
+        errorLine1="    &lt;path android:fillColor=&quot;#E4AE55&quot; android:pathData=&quot;M158.4 105.1L158.4 108.8Q156.9 108.1 155.6 107.8Q154.2 107.5 153 107.5Q151.4 107.5 150.6 107.9Q149.8 108.3 149.8 109.3Q149.8 110 150.3 110.4Q150.9 110.8 152.2 111.1L154.1 111.4Q157.1 112 158.3 113.2Q159.5 114.4 159.5 116.6Q159.5 119.5 157.8 120.9Q156.1 122.3 152.6 122.3Q150.9 122.3 149.2 122Q147.6 121.7 145.9 121.1L145.9 117.3Q147.6 118.2 149.1 118.6Q150.7 119.1 152.1 119.1Q153.6 119.1 154.4 118.6Q155.2 118.1 155.2 117.2Q155.2 116.4 154.6 115.9Q154.1 115.5 152.5 115.1L150.8 114.7Q148.1 114.2 146.9 112.9Q145.7 111.7 145.7 109.6Q145.7 107 147.4 105.6Q149.1 104.2 152.3 104.2Q153.7 104.2 155.2 104.4Q156.8 104.6 158.4 105.1ZM163.5 104.5L168 104.5L168 111.2L174.7 111.2L174.7 104.5L179.2 104.5L179.2 122L174.7 122L174.7 114.6L168 114.6L168 122L163.5 122L163.5 104.5ZM191.6 107.5Q189.5 107.5 188.4 109Q187.2 110.5 187.2 113.3Q187.2 116 188.4 117.5Q189.5 119.1 191.6 119.1Q193.6 119.1 194.8 117.5Q195.9 116 195.9 113.3Q195.9 110.5 194.8 109Q193.6 107.5 191.6 107.5ZM191.6 104.2Q195.8 104.2 198.2 106.6Q200.6 109 200.6 113.3Q200.6 117.5 198.2 119.9Q195.8 122.3 191.6 122.3Q187.4 122.3 185 119.9Q182.6 117.5 182.6 113.3Q182.6 109 185 106.6Q187.4 104.2 191.6 104.2ZM212 107.5Q209.9 107.5 208.8 109Q207.6 110.5 207.6 113.3Q207.6 116 208.8 117.5Q209.9 119.1 212 119.1Q214 119.1 215.2 117.5Q216.3 116 216.3 113.3Q216.3 110.5 215.2 109Q214 107.5 212 107.5ZM212 104.2Q216.2 104.2 218.6 106.6Q221 109 221 113.3Q221 117.5 218.6 119.9Q216.2 122.3 212 122.3Q207.8 122.3 205.4 119.9Q203 117.5 203 113.3Q203 109 205.4 106.6Q207.8 104.2 212 104.2ZM222.3 104.5L238.4 104.5L238.4 107.9L232.6 107.9L232.6 122L228.1 122L228.1 107.9L222.3 107.9L222.3 104.5ZM240.8 104.5L252.9 104.5L252.9 107.9L245.3 107.9L245.3 111.2L252.5 111.2L252.5 114.6L245.3 114.6L245.3 118.6L253.2 118.6L253.2 122L240.8 122L240.8 104.5ZM263.6 112.3Q265 112.3 265.6 111.7Q266.2 111.2 266.2 110Q266.2 108.8 265.6 108.3Q265 107.8 263.6 107.8L261.7 107.8L261.7 112.3L263.6 112.3ZM261.7 115.4L261.7 122L257.1 122L257.1 104.5L264 104.5Q267.5 104.5 269.1 105.7Q270.7 106.8 270.7 109.3Q270.7 111.1 269.9 112.2Q269 113.3 267.4 113.8Q268.3 114 269 114.8Q269.7 115.5 270.5 117L272.9 122L268.1 122L266 117.7Q265.4 116.3 264.7 115.9Q264 115.4 262.9 115.4L261.7 115.4Z&quot; />"
+        errorLine2="                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/src/main/res/drawable/banner.xml"
+            line="18"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.drawable.banner` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds.&#xA;&#xA;&#xA;The unused resource check can ignore tests. If you want to include resources that are only referenced from tests, consider packaging them in a test source set instead.&#xA;&#xA;You can include test sources in the unused resource check by setting the system property lint.unused-resources.include-tests =true, and to exclude them (usually for performance reasons), use lint.unused-resources.exclude-tests =true.&#xA;,"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:width=&quot;320dp&quot; android:height=&quot;180dp&quot; android:viewportWidth=&quot;320&quot; android:viewportHeight=&quot;180&quot;>"
+        errorLine2="^">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/src/main/res/drawable/banner.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.drawable.ic_alien_shooter` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds.&#xA;&#xA;&#xA;The unused resource check can ignore tests. If you want to include resources that are only referenced from tests, consider packaging them in a test source set instead.&#xA;&#xA;You can include test sources in the unused resource check by setting the system property lint.unused-resources.include-tests =true, and to exclude them (usually for performance reasons), use lint.unused-resources.exclude-tests =true.&#xA;,"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:width=&quot;64dp&quot; android:height=&quot;64dp&quot; android:viewportWidth=&quot;64&quot; android:viewportHeight=&quot;64&quot;>"
+        errorLine2="^">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/src/main/res/drawable/ic_alien_shooter.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="IconLauncherShape"
+        severity="Warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details"
+        category="Usability:Icons"
+        priority="6"
+        summary="The launcher icon shape should use a distinct silhouette"
+        explanation="According to the Android Design Guide (https://d.android.com/r/studio-ui/designer/material/iconography) your launcher icons should &quot;use a distinct silhouette&quot;, a &quot;three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth.&quot;&#xA;&#xA;The unique silhouette implies that your launcher icon should not be a filled square.">
+        <location
+            file="/home/runner/work/pureTV/pureTV/joystick-games/alien-shooter/build/generated/res/gameplay/drawable-nodpi/gameplay_icon.png"/>
+    </issue>
+
+</issues>
