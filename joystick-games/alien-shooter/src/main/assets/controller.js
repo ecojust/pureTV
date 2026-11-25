@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const english = !/^zh\b/i.test(navigator.language || 'zh');
+  const english = new URL(location.href).searchParams.get('lang') === 'en';
   const words = {
   "controller": [
     "手机控制器",

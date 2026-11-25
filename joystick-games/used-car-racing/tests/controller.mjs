@@ -75,7 +75,7 @@ async function fixture({locale='zh-CN',viewport={width:844,height:390},legacy=fa
     else {window.DeviceOrientationEvent=function(){};if(sensor!=='automatic')window.DeviceOrientationEvent.requestPermission=()=>{window.__permissionCalls++;return Promise.resolve(sensor==='denied'?'denied':'granted');};}
   },sensor);
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(origin+'/?room='+room.token);
+  await page.goto(origin+'/?room='+room.token+(locale==='en-US'?'&lang=en':''));
   if(mode==='welcome')await page.waitForFunction(()=>document.getElementById('controller').dataset.connected==='true');
   else await page.locator('#error-actions:not([hidden])').waitFor();
   async function close(){assert.deepEqual(errors,[],'No page errors');await context.close();for(const peer of room.peers)peer.socket.destroy();rooms.delete(room.token);}

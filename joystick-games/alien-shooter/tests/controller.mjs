@@ -17,7 +17,7 @@ const server=http.createServer(async(req,res)=>{const path=new URL(req.url,'http
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH ? {executablePath:process.env.CHROMIUM_PATH} : {}),args:['--no-sandbox']});
 let checks=0;
-async function fixture(locale='zh-CN',size={width:844,height:390},mode='welcome') {
+async function fixture(locale='en-US',size={width:844,height:390},mode='welcome',language='') {
   const context=await browser.newContext({viewport:size,hasTouch:true,locale});
   await context.addInitScript(mode=>{
     window.__sent=[];window.__sockets=[];window.__serverMode=mode;
@@ -38,7 +38,7 @@ async function fixture(locale='zh-CN',size={width:844,height:390},mode='welcome'
   },mode);
   const page=await context.newPage(),errors=[];
   page.on('pageerror',error=>errors.push(String(error)));
-  await page.goto(`http://127.0.0.1:${server.address().port}/?room=0123456789abcdef0123456789abcdef`);
+  await page.goto(`http://127.0.0.1:${server.address().port}/?room=0123456789abcdef0123456789abcdef&lang=${language}`);
   if(mode==='welcome')await page.waitForFunction(()=>document.querySelector('#controller').dataset.connected==='true');
   else await page.waitForFunction(()=>!document.querySelector('#error-actions').hidden);
   return {context,page,errors};
@@ -83,7 +83,7 @@ try{
   await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));await page.waitForFunction(()=>window.__sockets.length===2&&document.querySelector('#controller').dataset.connected==='true');neutral(await last(page));checks++;
   await page.evaluate(()=>window.__sockets.at(-1).receive({type:'state',phase:'gameover',players:[]}));await page.touchscreen.tap(700,100);neutral(await last(page));assert.equal(await page.locator('#button-start').isDisabled(),false);checks++;
   await page.reload();await page.waitForFunction(()=>document.querySelector('#controller').dataset.connected==='true');assert.equal(await page.evaluate(()=>window.__sent[0].session),'test-resume-session');assert.deepEqual(errors,[]);await context.close();checks++;
-  const en=await fixture('en-US');assert.match(await en.page.locator('body').innerText(),/SOLO MISSION/);assert.doesNotMatch(await en.page.locator('body').innerText(),/two players|Player [12]|one \/ two|co-op|P[12]/i);checks++;await en.page.evaluate(()=>window.__sockets.at(-1).receive({type:'state',phase:'playing',stageLabel:'SECTOR 01',players:[{id:1,hp:100,ammo:-1,weapon:'pistol',grenades:3,score:20}]}));assert.equal(await en.page.locator('#ammo').innerText(),'∞');assert.match(await en.page.locator('#a-caption').innerText(),/FIRE.*AIM/);for(const weapon of world.weapons){await en.page.evaluate(weapon=>window.__sockets.at(-1).receive({type:'state',phase:'playing',players:[{id:1,hp:100,ammo:weapon.capacity,weapon:weapon.id,weaponName:'错误服务端语言',grenades:3,score:20}]}),weapon);assert.match(await en.page.locator('#weapon').innerText(),new RegExp('^'+weapon.name[1]));}checks++;await en.page.screenshot({path:resolve(output,'alien-shooter-controller.en.png')});await send(en.page,'joystick-zone','pointerdown',51,160,235);await en.page.waitForTimeout(40);await send(en.page,'joystick-zone','pointermove',51,190,215);await send(en.page,'button-a','pointerdown',52,700,100);await en.page.waitForTimeout(40);await send(en.page,'button-a','pointermove',52,730,70);await en.page.screenshot({path:resolve(output,'alien-shooter-controller-active.en.png')});assert.deepEqual(en.errors,[]);await en.context.close();checks++;
+  const en=await fixture('en-US',undefined,'welcome','en');assert.match(await en.page.locator('body').innerText(),/SOLO MISSION/);assert.doesNotMatch(await en.page.locator('body').innerText(),/two players|Player [12]|one \/ two|co-op|P[12]/i);checks++;await en.page.evaluate(()=>window.__sockets.at(-1).receive({type:'state',phase:'playing',stageLabel:'SECTOR 01',players:[{id:1,hp:100,ammo:-1,weapon:'pistol',grenades:3,score:20}]}));assert.equal(await en.page.locator('#ammo').innerText(),'∞');assert.match(await en.page.locator('#a-caption').innerText(),/FIRE.*AIM/);for(const weapon of world.weapons){await en.page.evaluate(weapon=>window.__sockets.at(-1).receive({type:'state',phase:'playing',players:[{id:1,hp:100,ammo:weapon.capacity,weapon:weapon.id,weaponName:'错误服务端语言',grenades:3,score:20}]}),weapon);assert.match(await en.page.locator('#weapon').innerText(),new RegExp('^'+weapon.name[1]));}checks++;await en.page.screenshot({path:resolve(output,'alien-shooter-controller.en.png')});await send(en.page,'joystick-zone','pointerdown',51,160,235);await en.page.waitForTimeout(40);await send(en.page,'joystick-zone','pointermove',51,190,215);await send(en.page,'button-a','pointerdown',52,700,100);await en.page.waitForTimeout(40);await send(en.page,'button-a','pointermove',52,730,70);await en.page.screenshot({path:resolve(output,'alien-shooter-controller-active.en.png')});assert.deepEqual(en.errors,[]);await en.context.close();checks++;
   for(const mode of ['full','invalid-player']) {
     const rejected=await fixture('zh-CN',{width:844,height:390},mode);
     assert.equal(await rejected.page.locator('#controller').getAttribute('data-connected'),'false');

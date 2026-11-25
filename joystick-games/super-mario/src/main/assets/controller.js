@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const english = !/^zh\b/i.test(navigator.language || 'zh');
+  const english = new URLSearchParams(location.search).get('lang') === 'en';
   const messages = english ? {
     "controller": "PHONE CONTROLLER",
     "status": "Game status",

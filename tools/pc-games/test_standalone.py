@@ -22,7 +22,7 @@ class StandaloneTests(unittest.TestCase):
         host = patch.object(standalone.host, '__file__', str(self.root / 'host.py'))
         host.start()
         self.addCleanup(host.stop)
-        self.game = dict(id='tetris', version='0.5.7', en='Tetris', zh='Tetris')
+        self.game = dict(id='tetris', version='0.5.7', en='Tetris', zh='俄罗斯方块')
         (self.root / 'game.json').write_text(json.dumps(self.game), encoding='utf-8')
 
     def test_starts_only_bundled_game(self):
@@ -40,7 +40,7 @@ class StandaloneTests(unittest.TestCase):
             patch.object(standalone.sys, 'stdout') as console,
         ):
             console.isatty.return_value = True
-            self.assertEqual(standalone.main(['--language', 'zh']), 0)
+            self.assertEqual(standalone.main([]), 0)
             self.assertTrue(any('Ctrl+C' in line.args[0] for line in console.write.call_args_list))
         win32.kernel32.SetConsoleTitleW.assert_called_once_with(self.game['zh'])
 

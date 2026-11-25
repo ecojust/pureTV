@@ -165,7 +165,7 @@ try {
     });
     const phone=await phoneContext.newPage();
     phone.on('pageerror',error=>errors.push(error.message));
-    await phone.goto(base+'/controller.html?room=preview-room-token-for-capture');
+    await phone.goto(base+'/controller.html?room=preview-room-token-for-capture&lang='+language);
     await phone.waitForFunction(()=>document.querySelector('#controller').dataset.connected==='true');
     await tap(phone,'button-select');
     await tv.waitForFunction(({api,kind})=>kind==='tank'?window[api].game.menuIndex===1:window[api].game.selectedPlayers===2,{api,kind});

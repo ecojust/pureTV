@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const english = !/^zh\b/i.test(navigator.language || 'zh');
+  const english = new URLSearchParams(location.search).get('lang') === 'en';
   const messages = english ? {
     controller: 'FIELD CONTROLLER', yourJeep: 'YOUR JEEP', stage: 'STAGE', lives: 'LIVES', score: 'SCORE', cargo: 'ON BOARD', move: 'HOLD AND SLIDE ON THE LEFT',
     actionA: 'GRENADE', actionB: 'MACHINE GUN', hint: 'A: grenade · B: machine gun · START: begin / pause', rotate: 'Turn your phone sideways for a better grip',

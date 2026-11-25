@@ -773,7 +773,7 @@ export class UI {
   showTitle() {
     this.hideTip();
     const card = el('div', 'card glass');
-    card.append(el('div', 'logo', 'LUMENRIFT'), el('div', 'tagline', t('title.tagline')));
+    card.append(el('div', 'logo', lang() === 'zh-CN' ? '光隙守望' : 'LUMENRIFT'), el('div', 'tagline', t('title.tagline')));
     // campaign picker: Night (the Beacon) or Day (the Sanctum)
     const realms = el('div', 'realms');
     for (const r of REALM_ORDER) {

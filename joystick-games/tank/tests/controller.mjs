@@ -19,8 +19,8 @@ const url = `http://127.0.0.1:${server.address().port}/?room=0123456789abcdef012
 const browser = await chromium.launch({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox'] });
 let passed = 0;
 
-async function fixture(options = {}) {
-  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'zh-CN', hasTouch: true, ...options });
+async function fixture(options = {}, language) {
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'en-US', hasTouch: true, ...options });
   await context.addInitScript(() => {
     window.__sockets = [];
     window.__sent = [];
@@ -45,7 +45,7 @@ async function fixture(options = {}) {
     window.WebSocket = FakeSocket;
   });
   const page = await context.newPage();
-  await page.goto(url);
+  await page.goto(language ? url + '&lang=' + language : url);
   await page.waitForFunction(() => document.querySelector('#controller').dataset.connected === 'true');
   return { context, page };
 }
@@ -274,7 +274,7 @@ try {
     await context.close();
   });
   await test('State updates local player stats, fire labels, language and safe text content', async () => {
-    const { context, page } = await fixture({ locale: 'en-US' });
+    const { context, page } = await fixture({ locale: 'en-US' }, 'en');
     await page.evaluate(() => window.__sockets.at(-1).receive({ type: 'state', phase: 'playing', stage: 3, players: [{ id: 1, lives: 2, score: 840, shieldCooldown: 2.6 }, { id: 2, lives: 9, score: 9999 }] }));
     assert.equal(await page.locator('#stage').textContent(), '03');
     assert.equal(await page.locator('#score').textContent(), '0840');

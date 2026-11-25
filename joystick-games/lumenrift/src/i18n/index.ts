@@ -6,31 +6,27 @@ import { hy } from './hy';
 import { it } from './it';
 import { ru } from './ru';
 import { uk } from './uk';
+import { zhCN } from './zh-CN';
 
 export type { StringKey };
-export type Lang = 'en' | 'de' | 'es' | 'fr' | 'it' | 'ru' | 'uk' | 'hy';
+export type Lang = 'zh-CN' | 'en' | 'de' | 'es' | 'fr' | 'it' | 'ru' | 'uk' | 'hy';
 
-export const LANGS: Record<Lang, Dict> = { en, de, es, fr, it, ru, uk, hy };
-export const LANG_ORDER: Lang[] = ['en', 'de', 'es', 'fr', 'it', 'ru', 'uk', 'hy'];
+export const LANGS: Record<Lang, Dict> = { 'zh-CN': zhCN, en, de, es, fr, it, ru, uk, hy };
+export const LANG_ORDER: Lang[] = ['zh-CN', 'en', 'de', 'es', 'fr', 'it', 'ru', 'uk', 'hy'];
 
 const STORE_KEY = 'lumen.lang';
 let current: Lang = detect();
 const listeners = new Set<() => void>();
 
-/** Stored choice first, then the browser/OS language list, then English. */
+/** Keep an explicit language choice across launches. */
 function detect(): Lang {
   try {
     const s = localStorage.getItem(STORE_KEY) as Lang | null;
-    if (s && s in LANGS) return s;
+    if (s && LANG_ORDER.includes(s)) return s;
   } catch {
     /* storage unavailable */
   }
-  const prefs = typeof navigator !== 'undefined' ? (navigator.languages?.length ? navigator.languages : [navigator.language]) : [];
-  for (const p of prefs) {
-    const base = (p || '').toLowerCase().split('-')[0] as Lang;
-    if (base in LANGS) return base;
-  }
-  return 'en';
+  return 'zh-CN';
 }
 
 export function lang(): Lang {
