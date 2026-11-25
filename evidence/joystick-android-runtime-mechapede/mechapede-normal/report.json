@@ -1,0 +1,730 @@
+{
+  "game": "mechapede",
+  "targetPackage": "com.ecojust.joystick.mechapede",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "dff334ffde7501e1dbd6fcce9a4644ccdb70a865",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/mechapede/mechapede-0.1.1.apk",
+    "bytes": 2770257,
+    "sha256": "f4bcde9788dfa61f5758e31b97d72772a60205947d0ea307effd051d7c584776"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/mechapede/observer-mechapede.apk",
+    "bytes": 16783,
+    "sha256": "9da4bd68285621dbe50ea8efe342ee756d091cc7a2d5f3e35257d4c196b18533"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77581,
+      "sha256": "fa5ac4b08a35d2a9ae28bceb5671feba1b4993f1c3adbcfd6ee50afc6274a236"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13566,
+      "sha256": "fd5986c8c462b9fd057424cda32c294cc849fcdb630ab3c9c39cd288428dd218"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/mechapede/qa-plan.json": {
+      "bytes": 1524,
+      "sha256": "67d342b99afd6039c967c958b412af38035b5fa33d0d03b64f91dc5384d7342a"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 13779,
+      "sha256": "78084067d6772d3ad2e7c932e291d68e5f765a6087e376eb3d4e77c9cfac89ef"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.mechapede",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795570180.0039842,
+      "snapshot": {
+        "game": {
+          "game": "mechapede",
+          "ready": true,
+          "stage": "menu",
+          "paused": false,
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "frames": 1,
+          "gameplay": {
+            "frame": 0,
+            "playerX": 120,
+            "playerY": 252,
+            "shots": 0,
+            "score": 0,
+            "lives": 3,
+            "wave": 1
+          },
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:38597/?room=tF1LM_S9NUzddr44OtCN77HRXXysx0uy",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "registering",
+                "serviceName": "机甲蜈蚣",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:38597/?room=tF1LM_S9NUzddr44OtCN77HRXXysx0uy",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "机甲蜈蚣",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 810,
+              "height": 1080,
+              "clientWidth": 405,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 788,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 278
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.mechapede"
+      }
+    }
+  ],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.mechapede",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570175.4490998,
+      "endedAt": 1795570175.5224688,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570175.6433358,
+      "endedAt": 1795570175.668564,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570175.790117,
+      "endedAt": 1795570175.796368,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570175.9191291,
+      "endedAt": 1795570175.9282312,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.048794,
+      "endedAt": 1795570176.0573068,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.1778634,
+      "endedAt": 1795570176.1948807,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.3158872,
+      "endedAt": 1795570176.3282697,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.4540536,
+      "endedAt": 1795570176.4602795,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.5808182,
+      "endedAt": 1795570176.614014,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.7370791,
+      "endedAt": 1795570176.7436476,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.8643353,
+      "endedAt": 1795570176.8745248,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570176.9953313,
+      "endedAt": 1795570176.9979312,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.1186929,
+      "endedAt": 1795570177.1423833,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.2660472,
+      "endedAt": 1795570177.2688282,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.3894866,
+      "endedAt": 1795570177.3913076,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.5121996,
+      "endedAt": 1795570177.5198994,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.640556,
+      "endedAt": 1795570177.6427195,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.766059,
+      "endedAt": 1795570177.7692957,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570177.890303,
+      "endedAt": 1795570177.8923447,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.013081,
+      "endedAt": 1795570178.0416877,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.1660583,
+      "endedAt": 1795570178.169115,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.2899427,
+      "endedAt": 1795570178.291377,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.4121554,
+      "endedAt": 1795570178.4137387,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.5345485,
+      "endedAt": 1795570178.5361812,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 9,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.6570778,
+      "endedAt": 1795570178.6588109,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 9,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.7796016,
+      "endedAt": 1795570178.7817237,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 9,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570178.9025164,
+      "endedAt": 1795570178.9053693,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 10,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570179.026196,
+      "endedAt": 1795570179.0282238,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 10,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 2,
+      "priorTransportFailures": 1,
+      "startedAt": 1795570179.148891,
+      "endedAt": 1795570179.2688935,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 12,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570181.5910487,
+      "endedAt": 1795570196.6061594,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 12,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570196.7347767,
+      "endedAt": 1795570208.3027868,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 12,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795570208.4238083,
+      "endedAt": 1795570208.424123,
+      "errorType": "URLError",
+      "error": "<urlopen error [Errno 111] Connection refused>",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 42789,
+    "controller": 44467
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "机甲蜈蚣",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2721",
+  "error": "Traceback (most recent call last):\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1344, in do_open\n    h.request(req.get_method(), req.selector, req.data, headers,\n  File \"/usr/lib/python3.12/http/client.py\", line 1365, in request\n    self._send_request(method, url, body, headers, encode_chunked)\n  File \"/usr/lib/python3.12/http/client.py\", line 1411, in _send_request\n    self.endheaders(body, encode_chunked=encode_chunked)\n  File \"/usr/lib/python3.12/http/client.py\", line 1360, in endheaders\n    self._send_output(message_body, encode_chunked=encode_chunked)\n  File \"/usr/lib/python3.12/http/client.py\", line 1120, in _send_output\n    self.send(msg)\n  File \"/usr/lib/python3.12/http/client.py\", line 1064, in send\n    self.connect()\n  File \"/usr/lib/python3.12/http/client.py\", line 1030, in connect\n    self.sock = self._create_connection(\n                ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/socket.py\", line 852, in create_connection\n    raise exceptions[0]\n  File \"/usr/lib/python3.12/socket.py\", line 837, in create_connection\n    sock.connect(sa)\nConnectionRefusedError: [Errno 111] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1230, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 632, in setup\n    self.capture('join-before-connection', [])\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 558, in capture\n    before = self.snapshot()\n             ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 384, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 151, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1347, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [Errno 111] Connection refused>\n"
+}
