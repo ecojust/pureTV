@@ -40,8 +40,8 @@ jobs:
           assert workflow in ['joystick-catalog-android.yml','joystick-catalog-android-runtime.yml','joystick-games-android.yml','joystick-games-android-runtime.yml']
           name = ('joystick-android-runtime-' if workflow.endswith('-runtime.yml') else 'joystick-android-report-runtime-') + slug
           jobs=api('actions/runs/'+run+'/jobs?per_page=100')['jobs']
-              completed,=[j for j in jobs if j['name']=='runtime ('+slug+')' and j['status']=='completed' and j['run_attempt']==1 and j['head_sha']==source]
-              artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
+          completed,=[j for j in jobs if j['name']=='runtime ('+slug+')' and j['status']=='completed' and j['run_attempt']==1 and j['head_sha']==source]
+          artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
           matched,=[a for a in artifacts if a['name']==name and not a['expired']]
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('id='+str(matched['id']),file=f)
           Path('origin.json').write_text(json.dumps({'game':slug,'workflow':workflow,'runId':run,'runAttempt':1,'source':source,'artifact':name,'artifactId':matched['id'],'artifactDigest':matched['digest'],'runtimeJob':completed['id'],'runtimeConclusion':completed['conclusion']},indent=2)+'\n')
