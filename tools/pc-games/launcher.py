@@ -3,7 +3,6 @@ import argparse
 import hashlib
 import io
 import json
-import locale
 import os
 import sys
 import tempfile
@@ -124,14 +123,13 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='pureTV desktop game player')
     parser.add_argument('game', nargs='?', choices=[game['id'] for game in games], metavar='GAME')
     parser.add_argument('--list', action='store_true', help='list game IDs')
-    parser.add_argument('--language', choices=['zh', 'en'])
+    parser.add_argument('--language', choices=['zh', 'en'], default='zh')
     parser.add_argument('--cache', type=Path, default=cache_directory())
     parser.add_argument('--no-browser', action='store_true')
     parser.add_argument('--http-port', type=int)
     parser.add_argument('--controller-port', type=int, default=63485)
     args = parser.parse_args(argv)
-    system_language = locale.getlocale()[0] or ''
-    language = args.language or ('zh' if system_language.lower().startswith(('zh', 'chinese')) else 'en')
+    language = args.language
     if args.list:
         for game in games:
             print(f'{game["id"]:<24} {game[language]}')

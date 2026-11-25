@@ -74,6 +74,19 @@ public class MainActivity extends Activity {
     private ConnectivityManager.NetworkCallback networkCallback;
     private List<String> lastAddresses = Collections.emptyList();
 
+    @Override protected void attachBaseContext(Context base) {
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            android.app.LocaleManager manager = base.getSystemService(android.app.LocaleManager.class);
+            if (manager != null && !manager.getApplicationLocales().isEmpty()) {
+                super.attachBaseContext(base);
+                return;
+            }
+        }
+        android.content.res.Configuration config = new android.content.res.Configuration(base.getResources().getConfiguration());
+        config.setLocale(java.util.Locale.SIMPLIFIED_CHINESE);
+        super.attachBaseContext(base.createConfigurationContext(config));
+    }
+
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -339,7 +352,7 @@ public class MainActivity extends Activity {
                 .put("language",getResources().getConfiguration().getLocales().get(0).getLanguage().equals("zh") ? "zh" : "en").toString();
         } catch (Exception failedQr) {
             // A readable URL still allows joining if a QR encoder ever fails.
-            try { return new JSONObject().put("url",url).put("qr","").put("addresses",new JSONArray(addresses)).put("error",error).put("language","en").toString(); }
+            try { return new JSONObject().put("url",url).put("qr","").put("addresses",new JSONArray(addresses)).put("error",error).put("language","zh").toString(); }
             catch (Exception impossible) { return "{}"; }
         }
     }
