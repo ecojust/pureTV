@@ -1,86 +1,24 @@
-name: Stage verified Chinese game APKs
-on:
-  workflow_dispatch:
-    inputs:
-      source_run:
-        description: Android signing workflow producing the signed artifact
-        required: true
-        type: string
-      source_sha:
-        required: true
-        type: string
-      games:
-        description: Comma-separated subset of games to stage
-        required: true
-        type: string
+name: Diagnose bilingual browser acceptance
+on: workflow_dispatch
 permissions:
   actions: read
-  contents: write
+  contents: read
 jobs:
-  transfer:
+  diag:
     runs-on: ubuntu-24.04
     env:
       GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      GAMES: ${{ inputs.games }}
-      GH_REPO: ${{ github.repository }}
-      TAG: games-zh-cn-2026.11.25
     steps:
-      - name: Check signing workflow and destination
+      - name: Read only original Used Car Racing test failure
         run: |
-          set -eu
-          [[ "$SOURCE_RUN" =~ ^[0-9]+$ && "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ && "$GAMES" =~ ^[a-z0-9,-]+$ ]]
-          gh api "repos/$GH_REPO/actions/runs/$SOURCE_RUN" > run.json
-          jq -e --arg sha "$SOURCE_SHA" --arg repo "$GH_REPO" '
-            .head_repository.full_name == $repo and .head_sha == $sha and
-            (.path == ".github/workflows/joystick-games-android.yml" or .path == ".github/workflows/joystick-catalog-android.yml")' run.json
-          gh release view "$TAG" --json isDraft --jq .isDraft | grep -x true
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ github.token }}
-          run-id: ${{ inputs.source_run }}
-          name: joystick-android-signed
-          path: signed
-      - name: Verify package certificate, content and source binding before attaching
-        run: |
-          python3 - <<'PY'
-          import hashlib, json, os, re, subprocess, zipfile
+          gh api repos/ecojust/pureTV/actions/jobs/138913561046/logs > "$RUNNER_TEMP/job.log"
+          python3 - <<'PYRUN'
+          import os,re
           from pathlib import Path
-          def gh(*args):
-              return subprocess.check_output(['gh', *args], text=True)
-          run, sha, tag = [os.environ[k] for k in ('SOURCE_RUN','SOURCE_SHA','TAG')]
-          games = os.environ['GAMES'].split(',')
-          cert = 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
-          apksigner = sorted(Path(os.environ['ANDROID_HOME']).glob('build-tools/*/apksigner'))[-1]
-          records = []
-          paths = []
-          for game in games:
-              assert re.fullmatch('[a-z0-9]+(?:-[a-z0-9]+)*', game)
-              folder = Path('signed/packages') / game
-              r = json.loads((folder/'signing-receipt.json').read_text())
-              assert r['sourceSha'] == sha and str(r['runId']) == run and r['game'] == game
-              assert r['certificateSha256'] == cert and r['signatureVerified']
-              apk = folder / (game+'-'+r['versionName']+'.apk')
-              assert list(folder.glob('*.apk')) == [apk]
-              assert apk.stat().st_size == r['bytes'] and hashlib.sha256(apk.read_bytes()).hexdigest() == r['sha256']
-              signature = subprocess.check_output([apksigner,'verify','--print-certs',apk],text=True)
-              assert 'certificate SHA-256 digest: '+cert in signature
-              with zipfile.ZipFile(apk) as archive:
-                  assert archive.testzip() is None and 'assets/tv.html' in archive.namelist()
-              records.append({k:r[k] for k in ('game','sourceSha','runId','packageName','versionName','versionCode','bytes','sha256','certificateSha256','signatureVerified')})
-              paths.append(apk)
-          report = Path('android-'+run+'-'+str(os.environ['GITHUB_RUN_ID'])+'.json')
-          report.write_text(json.dumps(records,indent=2)+'\n'); paths.append(report)
-          release = json.loads(gh('release','view',tag,'--json','apiUrl,isDraft'))
-          assert release['isDraft']
-          api = release['apiUrl'].split('api.github.com/')[1]
-          pages = json.loads(gh('api','--paginate','--slurp',api+'/assets?per_page=100'))
-          previous = {a['name']:a for page in pages for a in page}
-          for p in paths:
-              old = previous.get(p.name)
-              if old:
-                  assert old['digest'] == 'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
-              else:
-                  gh('release','upload',tag,str(p))
-          PY
+          lines=(Path(os.environ['RUNNER_TEMP'])/'job.log').read_text(errors='replace').splitlines()
+          hits=[i for i,l in enumerate(lines) if re.search(r'AssertionError|Error:|FAILED|ERR_ASSERTION|timed out',l,re.I)]
+          for i in hits[:12]:
+              snippet=' '.join(lines[max(0,i-3):i+6]);snippet=re.sub(r'https?://[^ ]+','remote',snippet)
+              snippet=re.sub(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[^ ]+ ','',snippet)
+              print('::warning::'+snippet[:1700].replace('%','%25'))
+          PYRUN
