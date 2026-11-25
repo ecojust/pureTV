@@ -85,7 +85,7 @@ jobs:
             echo "SSL_CERT_FILE=/etc/ssl/cert.pem" >> "$GITHUB_ENV"
             SKIP_CYTHON=1 "$RUNNER_TEMP/game-venv/bin/python" -m pip install --no-binary=zeroconf -r tools/pc-games/requirements.txt pyinstaller==6.16.0 Pillow==11.3.0
           elif [[ "$BUILD_MODE" = apk ]]; then
-            python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0
+            python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
           elif [[ "$RUNNER_OS" = Windows ]]; then
             python -m pip install pefile==2023.2.7
             if ! test -f '/c/Program Files (x86)/NSIS/makensis.exe'; then choco install nsis --version=3.10 -y --no-progress; fi

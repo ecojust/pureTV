@@ -62,7 +62,7 @@ if mode=='apk':
     source_info=read(inputs/slug/'game.json')
     report.update(version=source_info['version'],apkSha256=sha(inputs/slug/'game.apk'))
     run(sys.executable,pc/f'build_standalone_{system}.py','--inputs',inputs,'--output',out)
-    run(sys.executable,pc/'verify_standalone_packages.py','--platform',system,'--inputs',inputs,'--packages',out,'--report',scratch/'verified.json')
+    run(sys.executable,pc/'verify_standalone_packages.py','--platform',system,'--inputs',inputs,'--packages',out,'--report',scratch/'verified.json', *(['--browser-channel','msedge'] if system=='windows' else []))
     report['installed']=read(scratch/'verified.json')
 elif system=='macos':
     meta=read(game/'game.json')
