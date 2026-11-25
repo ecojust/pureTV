@@ -1,6 +1,10 @@
 // Simplified Chinese strings for the offline game.
 PureTVChinese.install({
   strings: {
+    "NOVA": "新星",
+    "ICE": "冰块",
+    "IRON": "铁块",
+    "ROCK": "岩石",
     "A black hole bends every shot. Aim around it.": "黑洞会弯曲每一次镜头 瞄准它",
     "A long bridge on two towers. What is under it?": "两座塔上建有一座长桥，下面是什么？",
     "A scout outpost. Two robots, four rocks.": "侦察哨 两个机器人 四块石头",
@@ -21,7 +25,7 @@ PureTVChinese.install({
     "Every robot on the station has to go. Pull the sling back, let go, and let physics do the rest.": "站内每个机器人都得走，把吊索拉回来，放手，让物理来做剩下的事情。",
     "FIRE": "发射",
     "Fire or use special": "特别射击或使用",
-    "First Contact": "第一次联系人",
+    "First Contact": "初次接触",
     "Fling asteroids. Wreck stations. Scrap the robots.": "弹射小行星，摧毁空间站，击碎机器人。",
     "Fuel Depot": "燃料锅",
     "Glass House": "玻璃屋",

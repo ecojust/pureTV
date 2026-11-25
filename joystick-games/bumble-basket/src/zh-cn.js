@@ -1,6 +1,10 @@
 // Simplified Chinese strings for the offline game.
 PureTVChinese.install({
   strings: {
+    "🌳 Family": "🌳 类别",
+    "📏 Size": "📏 大小",
+    "🎨 Colour": "🎨 颜色",
+    "🍎 Kind": "🍎 品种",
     "+5 moves": "+5 移动",
     "+5 moves!": "+5 移动！",
     "1 more for golden!": "再来一瓶金色的！",
@@ -14,7 +18,7 @@ PureTVChinese.install({
     "Bee-utiful!": "美人儿，你这混蛋",
     "Berry": "贝瑞",
     "Berry Mix": "贝利混合",
-    "Berry Patch": "莓补丁",
+    "Berry Patch": "浆果园",
     "Berry Set": "莓调制",
     "Berry nice!": "贝里不错！",
     "Big & Small": "大和小块",
