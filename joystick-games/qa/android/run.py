@@ -497,7 +497,7 @@ class Acceptance:
     @staticmethod
     def full_id_text(row):
         identity = row.get('controllerId')
-        return isinstance(identity, str) and bool(identity) and row.get('idText') in (identity, 'ID: ' + identity)
+        return isinstance(identity, str) and bool(identity) and row.get('idText') in (identity, 'ID: ' + identity, 'ID：' + identity)
 
     @staticmethod
     def visible_ids(snapshot):
