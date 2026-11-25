@@ -1,0 +1,2313 @@
+{
+  "game": "last-track",
+  "targetPackage": "com.ecojust.joystick.lasttrack",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "40d67be52e1a6958e035b7c215e4973bed34aacc",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/last-track/last-track-0.1.3.apk",
+    "bytes": 9056038,
+    "sha256": "49d1028fd1b38e3a81e045af6e02f19ed1559ba116daf3f1a808143f9132626b"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/last-track/observer-last-track.apk",
+    "bytes": 16783,
+    "sha256": "e27f920c0d269473ffb819cdad6d7acc8ff526db1a133ab7b7f86c82843806ba"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77581,
+      "sha256": "fa5ac4b08a35d2a9ae28bceb5671feba1b4993f1c3adbcfd6ee50afc6274a236"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13566,
+      "sha256": "fd5986c8c462b9fd057424cda32c294cc849fcdb630ab3c9c39cd288428dd218"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/last-track/qa-plan.json": {
+      "bytes": 6297,
+      "sha256": "d53a92b8d864f25d4a7824a4f1a65a5a44d34a6b75c14608ef2d4a39d4ba67ad"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 13779,
+      "sha256": "78084067d6772d3ad2e7c932e291d68e5f765a6087e376eb3d4e77c9cfac89ef"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.lasttrack",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "original SDK hello and nine sync messages create actual controller ID card",
+      "status": "passed",
+      "details": {
+        "identity": "virtual-e9a410efbca7"
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795569668.4941683,
+      "snapshot": {
+        "game": {
+          "game": "last-track",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "paused": false,
+          "frames": 1,
+          "gameplay": {
+            "screen": "title",
+            "phase": "menu",
+            "time": 0,
+            "tick": 0,
+            "countdown": 0,
+            "x": 0,
+            "y": 0,
+            "heading": 0,
+            "speed": 0,
+            "armor": 0,
+            "lap": 0,
+            "ammo": 0,
+            "activeWeapon": 0,
+            "projectiles": 0,
+            "nitro": 0,
+            "nitroOn": false,
+            "drift": 0,
+            "cash": 5000,
+            "controls": {
+              "throttle": false,
+              "brake": false,
+              "left": false,
+              "right": false,
+              "fire": false,
+              "drift": false,
+              "cycle": false,
+              "nitro": false
+            },
+            "quality": "med",
+            "menuFocus": "\n  \n  \n  \n  1st/8圈数1/30公里/小时装甲0护盾0加速0锁定漂移武器视角刹车开火油门设置画质低中高总音量音乐音效全部静音操作提示显示对手姓名默认视角跟车驾驶舱前保险杠电视转播俯视比赛中按 G 切换画质，按 C 切换视角，按 M 静音。设置会保存在本机。完成v0.10.6战车竞速联赛末路狂飙为了奖金上场，为了生存狂飙。机器先接管了决策，随后接管了世界。如今只剩赛道还凭本事说话，只有最出色的车手才能填饱肚子。继续暂无存档新游戏选择车辆，领取 5,000 美元起步资金设置画面 · 声音 · 操作WASD驾驶SPACE开火E武器1-4选择SHIFT漂移C视角P暂停M静音↑↓←→菜单手柄支持three.js© 2026 Alexander Uspenskiy · MITalexander.uspensky@gmail.comgithub.com/alexander-uspenskiy/LastTrack选择座驾先挑一辆车，再用赢得的奖金添置装备。速度加速抓地力装甲武器槽位喷漆价格：$0。首辆赛车免费。黄蜂重锤壁垒鸥翼犀牛返回选定并继续车库把钱花在车上，免得别人惦记。速度加速抓地力装甲升级主菜单喷漆与贴花武器库车手前往赛道武器库末路狂飙联赛准许的一切装备，这里都有。换句话说，什么都可以买。返回车手参赛车手11 survivors. 4 of them are drawn to race you each time, in any of the 5 cars. Easiest first.萝丝妈妈\"Mama\"慢慢的耐心地跑着 她身后的路总是满是钉子铁蒺藜壁垒SPIKES R1#24部落条纹部落条纹涂装#24部落条纹低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#1塔姆辛高尔特\"The Gravedigger\"以矿井播撒她身后的沥青 静静地等待有人开车过一个地雷壁垒SPIKES R1#13条码之冠涂装#13条码低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#2桑尼·万斯\"Slick\"快速交谈的坑皮工与一罐废旧的引擎油栓在枪械应该放的地方。 永远不要公平,永远不要战斗。油迹黄蜂#77火焰火焰涂装#77星号低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#3娜迪亚·\"格拉斯\"·沃斯\"Glass\"31,飞行测试工程师调制飞机直到天空平静下来,然后调制钢制楔形,用数字说话,对顶端微笑,从未见过恐慌.制导导弹鸥翼#31翼涂装#31星号低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#4尼昂·哈尔沃森\"Neon\"24,从驾驶舱里流出每场比赛,让聊天者挑她的颜料,在她开火前会喝酒,她的聊天从未出错,据她计算.火箭发射器黄蜂SPIKES R1#21翼涂装#21火焰低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#5福斯医生\"The Surgeon\"取消许可的拆弹工程师 排好射线,然后让导弹来说话制导导弹重锤#33辐射涂装#33辐射低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#6罗莎·鲁因·马尔克斯\"Ruin\"28,在边境的死城里 运输队通过泥土 穿过四轮驱动装置的泥浆 笑着每辆残骸,包括她自己 总是为其他司机带一个备用轮胎拉姆板块犀牛SPIKES F1 R1#28部落条纹部落条纹涂装#28黑白方格低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#7瓦克斯·卡罗威\"The Razor\"从未学会举起的前游侠,吐口水引着镜中任何人,笑起来.机枪黄蜂#07骷髅涂装#07骷髅低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#8约拿·辛德\"Brother Cinder\"烧巷教堂的传教士 拿着保险杠,在火中施洗火焰喷射器重锤SPIKES F1#99燃烧的颅骨涂装#99火焰低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#9多洛雷斯·马多克斯\"Wrecking Ball\"钢犁焊在鼻子上,不要刹车,不要道歉拉姆板块壁垒SPIKES F2 R2 W1#88黑白方格星号涂装#88黑白方格低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#10铁爪凯恩\"The Warden\"重击冠军,半机,所有威胁,用终结导弹锁定,然后用撞击完成任务。终结者无人机重锤SPIKES F1 R1 W1#66闪光螺栓闪光螺栓涂装#66闪光螺栓低价竞标DRAWN INTO RANDOM LINE-UPS技巧攻击性#11返回武器库选择赛道任选赛道。保持车辆完好并跻身前三，即可通关。返回比赛设置先决定是否接受委托，再设置比赛。拒绝委托，只参加比赛未接受委托。仅领取比赛奖金和击毁奖励。模式比赛练习圈数−+练习中加入对手返回下一步：比赛设置返回开始比赛载入中已暂停继续重新开始设置退出比赛，返回车库比赛结果比赛排名奖金结算返回车库制胜圈最终统计最终统计每条赛道都经过共计得分生涯Score = prize money + kill bonuses + contract net.返回车库喷漆与贴花换掉或移除任何东西都是免费的返回武器库\n  <div class=\"fatal panel\"><h2>JavaScript required</h2><p>Last Track needs JavaScript and WebGL.</p></div>\n  \n\n\npureTV 手柄同一 Wi-Fi 下用手机扫码手柄未连接无线手柄按 GPIO 23 搜索连接\nLast Track · 末路战车\n10.0.2.15\nTCP 33749方向键：驾驶 / 选择\nA：射击 / 确认\nB：漂移 / 返回\nX：切换武器\nY：氮气\nSTART：暂停 / 继续",
+            "modal": false
+          },
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+              "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAd1SURBVHic7d1BkupGFEVB4/D+t4znDKzA9UuvxMmc09Bq+oQGN0qv9/v9/gsg6O/pDwAwRQCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsv65+w1fr9fdb3mr9/u99Pqr6/P0n39l9f1X7f5+Tl/f093993cHCGQJIJAlgECWAAJZAghkCSCQJYBA1u07wCvTO7Ar0zux6R3Y9Ptf2b1zXLX7803/fldO+/64AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4HeCV6R3equnPP31e3/QObPo8xOmd3vT37zTuAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrcDvDpdu/0nr5zm94JrnraDq7OHSCQJYBAlgACWQIIZAkgkCWAQJYAAll2gIdZ3QmevkObPm9x9/V9+t+nxh0gkCWAQJYAAlkCCGQJIJAlgECWAAJZj9sB/vqO6uk7sunnDl/Zfd7i6ut3//6nf3/u5g4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs43aAT38u7JXp8+Z279BOf+7x6a9f9ev/P3+aO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJu3wE6j+y/Te+4Tt8JTr//NP8/f5Y7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsl7vm4dFu3dWv77zmn7u7vRzbVftvn7T36/p5yqf/vf/5A4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs484DrO+oTrd7R3i6058r/PTnFt+9I3QHCGQJIJAlgECWAAJZAghkCSCQJYBA1u07wOkd0PQOavq5uFemn8t7Zffnm94p1nZ409wBAlkCCGQJIJAlgECWAAJZAghkCSCQdfsOcNX0jun0n796faZ3YNPn7V2Zfv2V6es3/f/5LXeAQJYAAlkCCGQJIJAlgECWAAJZAghkvd6nDXM2mz7vbfpyP/08vV/boX1r9fpO//6n/X3cAQJZAghkCSCQJYBAlgACWQIIZAkgkPW48wCnTZ/Xt/rzV1+/ep7g9Oeb5vOfxR0gkCWAQJYAAlkCCGQJIJAlgECWAAJZjzsPcPo8tN3PTZ326+ftTX9/Tjf9/XYeIMBNBBDIEkAgSwCBLAEEsgQQyBJAIOv28wB374Sufv70eXfTO7LV67P7/a/svv67vz+nPzd5t+nv/yd3gECWAAJZAghkCSCQJYBAlgACWQIIZP3cc4F374xO38ldmX7u8G67//7TO9Cnnbf36bSdrDtAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsBTu+kruw+T273++/29N9v9fv36zu7089D/JY7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsl7v6eHSh9N2Qn/a7p3U9M5r1ek7wul/l1/f+TkPEOAmAghkCSCQJYBAlgACWQIIZAkgkHXceYBXpp/LemX6vLrV3396R3Zl9+tXz3Oc/n5Of/+vTL//J3eAQJYAAlkCCGQJIJAlgECWAAJZAghk3b4DfPpObvrzr75+eqe3ev1OPy/y9M837bSdojtAIEsAgSwBBLIEEMgSQCBLAIEsAQSybt8B7j7vbPX9p3dK0zvF6d9/1dN3nE83ff2/5Q4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs484DdB7drNN3kk//+Vd271xX/dr33x0gkCWAQJYAAlkCCGQJIJAlgECWAAJZr/f08OnD6Tuj088z3P3+V6Y/3+73P31nt3sHe/pO9FvuAIEsAQSyBBDIEkAgSwCBLAEEsgQQyLp9B7h7JzT9869M78hO//2ftiP71uk71ytPv/6f3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB1+3OBn/5c19N3dKdb3fmdvqPb/VzrVbuv39O+3+4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIun0HePqOa9X0juvXz1O8Mn3e4PTObvcO8df+f90BAlkCCGQJIJAlgECWAAJZAghkCSCQdfsO8Mrp592dvmNb3YlNX//V67v7vMHp6/P0nelp3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB13A7wyvQO73Sn79xOP29u+jy9p//+09+vb7kDBLIEEMgSQCBLAIEsAQSyBBDIEkAg63E7wKfbvdM7/Ty93X59Bzl9/X/tvEV3gECWAAJZAghkCSCQJYBAlgACWQIIZNkB3mz3Tm/V03dqV6bPuzv977f685/GHSCQJYBAlgACWQIIZAkgkCWAQJYAAlmP2wH+2g7p0/QO7/Sd2vTrdzt9p/i08/6uuAMEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3g9A7r6XbvsFZ3hKftwL61+/PvPq9v+v/rtO+HO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJe76cPswD+J3eAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGT9C1Wg9Zg2qR/fAAAAAElFTkSuQmCC",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Last Track · 末路战车",
+                "port": 33749,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Last Track · 末路战车",
+            "port": 33749,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 180,
+              "height": 180,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 420,
+              "height": 168,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 387
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.lasttrack"
+      }
+    },
+    {
+      "label": "before-plan-Focus settings from original New Game focus",
+      "wallTime": 1795569698.5411105,
+      "snapshot": {
+        "game": {
+          "game": "last-track",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "paused": false,
+          "frames": 39,
+          "gameplay": {
+            "screen": "title",
+            "phase": "menu",
+            "time": 0,
+            "tick": 0,
+            "countdown": 0,
+            "x": 0,
+            "y": 0,
+            "heading": 0,
+            "speed": 0,
+            "armor": 0,
+            "lap": 0,
+            "ammo": 0,
+            "activeWeapon": 0,
+            "projectiles": 0,
+            "nitro": 0,
+            "nitroOn": false,
+            "drift": 0,
+            "cash": 5000,
+            "controls": {
+              "throttle": false,
+              "brake": false,
+              "left": false,
+              "right": false,
+              "fire": false,
+              "drift": false,
+              "cycle": false,
+              "nitro": false
+            },
+            "quality": "med",
+            "menuFocus": "新游戏选择车辆，领取 5,000 美元起步资金",
+            "modal": false
+          },
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "transport": "wifi",
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-e9a410efbca7",
+                "session": "wifi-86991576-6b8a-4e37-80f5-0054994602b1-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-e9a410efbca7\",\"wifi-86991576-6b8a-4e37-80f5-0054994602b1-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+              "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAd1SURBVHic7d1BkupGFEVB4/D+t4znDKzA9UuvxMmc09Bq+oQGN0qv9/v9/gsg6O/pDwAwRQCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsv65+w1fr9fdb3mr9/u99Pqr6/P0n39l9f1X7f5+Tl/f093993cHCGQJIJAlgECWAAJZAghkCSCQJYBA1u07wCvTO7Ar0zux6R3Y9Ptf2b1zXLX7803/fldO+/64AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4HeCV6R3equnPP31e3/QObPo8xOmd3vT37zTuAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrcDvDpdu/0nr5zm94JrnraDq7OHSCQJYBAlgACWQIIZAkgkCWAQJYAAll2gIdZ3QmevkObPm9x9/V9+t+nxh0gkCWAQJYAAlkCCGQJIJAlgECWAAJZj9sB/vqO6uk7sunnDl/Zfd7i6ut3//6nf3/u5g4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs43aAT38u7JXp8+Z279BOf+7x6a9f9ev/P3+aO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJu3wE6j+y/Te+4Tt8JTr//NP8/f5Y7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsl7vm4dFu3dWv77zmn7u7vRzbVftvn7T36/p5yqf/vf/5A4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs484DrO+oTrd7R3i6058r/PTnFt+9I3QHCGQJIJAlgECWAAJZAghkCSCQJYBA1u07wOkd0PQOavq5uFemn8t7Zffnm94p1nZ409wBAlkCCGQJIJAlgECWAAJZAghkCSCQdfsOcNX0jun0n796faZ3YNPn7V2Zfv2V6es3/f/5LXeAQJYAAlkCCGQJIJAlgECWAAJZAghkvd6nDXM2mz7vbfpyP/08vV/boX1r9fpO//6n/X3cAQJZAghkCSCQJYBAlgACWQIIZAkgkPW48wCnTZ/Xt/rzV1+/ep7g9Oeb5vOfxR0gkCWAQJYAAlkCCGQJIJAlgECWAAJZjzsPcPo8tN3PTZ326+ftTX9/Tjf9/XYeIMBNBBDIEkAgSwCBLAEEsgQQyBJAIOv28wB374Sufv70eXfTO7LV67P7/a/svv67vz+nPzd5t+nv/yd3gECWAAJZAghkCSCQJYBAlgACWQIIZP3cc4F374xO38ldmX7u8G67//7TO9Cnnbf36bSdrDtAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsBTu+kruw+T273++/29N9v9fv36zu7089D/JY7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsl7v6eHSh9N2Qn/a7p3U9M5r1ek7wul/l1/f+TkPEOAmAghkCSCQJYBAlgACWQIIZAkgkHXceYBXpp/LemX6vLrV3396R3Zl9+tXz3Oc/n5Of/+vTL//J3eAQJYAAlkCCGQJIJAlgECWAAJZAghk3b4DfPpObvrzr75+eqe3ev1OPy/y9M837bSdojtAIEsAgSwBBLIEEMgSQCBLAIEsAQSybt8B7j7vbPX9p3dK0zvF6d9/1dN3nE83ff2/5Q4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs484DdB7drNN3kk//+Vd271xX/dr33x0gkCWAQJYAAlkCCGQJIJAlgECWAAJZr/f08OnD6Tuj088z3P3+V6Y/3+73P31nt3sHe/pO9FvuAIEsAQSyBBDIEkAgSwCBLAEEsgQQyLp9B7h7JzT9869M78hO//2ftiP71uk71ytPv/6f3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB1+3OBn/5c19N3dKdb3fmdvqPb/VzrVbuv39O+3+4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIun0HePqOa9X0juvXz1O8Mn3e4PTObvcO8df+f90BAlkCCGQJIJAlgECWAAJZAghkCSCQdfsO8Mrp592dvmNb3YlNX//V67v7vMHp6/P0nelp3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB13A7wyvQO73Sn79xOP29u+jy9p//+09+vb7kDBLIEEMgSQCBLAIEsAQSyBBDIEkAg63E7wKfbvdM7/Ty93X59Bzl9/X/tvEV3gECWAAJZAghkCSCQJYBAlgACWQIIZNkB3mz3Tm/V03dqV6bPuzv977f685/GHSCQJYBAlgACWQIIZAkgkCWAQJYAAlmP2wH+2g7p0/QO7/Sd2vTrdzt9p/i08/6uuAMEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3g9A7r6XbvsFZ3hKftwL61+/PvPq9v+v/rtO+HO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJe76cPswD+J3eAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGT9C1Wg9Zg2qR/fAAAAAElFTkSuQmCC",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Last Track · 末路战车",
+                "port": 33749,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 39,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Last Track · 末路战车",
+            "port": 33749,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 180,
+              "height": 180,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 420,
+              "height": 168,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 775,
+                  "top": 47.5,
+                  "right": 937,
+                  "bottom": 113.4921875,
+                  "width": 162,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 328
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-e9a410efbca7",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-e9a410efbca7",
+                    "idText": "ID: virtual-e9a410efbca7",
+                    "visible": true,
+                    "rect": {
+                      "left": 775,
+                      "top": 47.5,
+                      "right": 937,
+                      "bottom": 113.4921875,
+                      "width": 162,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 765,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 328
+                    },
+                    "idRect": {
+                      "left": 816,
+                      "top": 74.6953125,
+                      "right": 928,
+                      "bottom": 105.4921875,
+                      "width": 112,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 765,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 328
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 816,
+                        "top": 75.6953125,
+                        "right": 921.6171875,
+                        "bottom": 88.1953125,
+                        "width": 105.6171875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 816,
+                        "top": 91.09375,
+                        "right": 868.8125,
+                        "bottom": 103.59375,
+                        "width": 52.8125,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 112,
+                    "idScrollWidth": 112,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 784,
+                      "top": 55.5,
+                      "right": 808,
+                      "bottom": 79.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.lasttrack"
+      }
+    }
+  ],
+  "captures": [
+    {
+      "path": "join-before-connection.png",
+      "bytes": 2086611,
+      "sha256": "ddfacc1eaded5756dee271d3775bef105dc95560326841c93c4ef5a0c5611bd8",
+      "startedAt": 1795569671.6315022,
+      "endedAt": 1795569677.5327332,
+      "before": {
+        "game": {
+          "game": "last-track",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "paused": false,
+          "frames": 2,
+          "gameplay": {
+            "screen": "title",
+            "phase": "menu",
+            "time": 0,
+            "tick": 0,
+            "countdown": 0,
+            "x": 0,
+            "y": 0,
+            "heading": 0,
+            "speed": 0,
+            "armor": 0,
+            "lap": 0,
+            "ammo": 0,
+            "activeWeapon": 0,
+            "projectiles": 0,
+            "nitro": 0,
+            "nitroOn": false,
+            "drift": 0,
+            "cash": 5000,
+            "controls": {
+              "throttle": false,
+              "brake": false,
+              "left": false,
+              "right": false,
+              "fire": false,
+              "drift": false,
+              "cycle": false,
+              "nitro": false
+            },
+            "quality": "med",
+            "menuFocus": "新游戏选择车辆，领取 5,000 美元起步资金",
+            "modal": false
+          },
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Last Track · 末路战车",
+                "port": 33749,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 2,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Last Track · 末路战车",
+            "port": 33749,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 180,
+              "height": 180,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 420,
+              "height": 168,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 387
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.lasttrack"
+      },
+      "after": {
+        "game": {
+          "game": "last-track",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "paused": false,
+          "frames": 8,
+          "gameplay": {
+            "screen": "title",
+            "phase": "menu",
+            "time": 0,
+            "tick": 0,
+            "countdown": 0,
+            "x": 0,
+            "y": 0,
+            "heading": 0,
+            "speed": 0,
+            "armor": 0,
+            "lap": 0,
+            "ammo": 0,
+            "activeWeapon": 0,
+            "projectiles": 0,
+            "nitro": 0,
+            "nitroOn": false,
+            "drift": 0,
+            "cash": 5000,
+            "controls": {
+              "throttle": false,
+              "brake": false,
+              "left": false,
+              "right": false,
+              "fire": false,
+              "drift": false,
+              "cycle": false,
+              "nitro": false
+            },
+            "quality": "med",
+            "menuFocus": "新游戏选择车辆，领取 5,000 美元起步资金",
+            "modal": false
+          },
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Last Track · 末路战车",
+                "port": 33749,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 8,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Last Track · 末路战车",
+            "port": 33749,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 180,
+              "height": 180,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 420,
+              "height": 168,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 387
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.lasttrack"
+      },
+      "manualPixelReviewRequired": true
+    },
+    {
+      "path": "connected.png",
+      "bytes": 2156042,
+      "sha256": "4c0cb81fd544dab9d07ec56afcb6f8fd578be76d10ba668c37e194aa4c45c251",
+      "startedAt": 1795569683.0888734,
+      "endedAt": 1795569688.7326956,
+      "before": {
+        "game": {
+          "game": "last-track",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "paused": false,
+          "frames": 18,
+          "gameplay": {
+            "screen": "title",
+            "phase": "menu",
+            "time": 0,
+            "tick": 0,
+            "countdown": 0,
+            "x": 0,
+            "y": 0,
+            "heading": 0,
+            "speed": 0,
+            "armor": 0,
+            "lap": 0,
+            "ammo": 0,
+            "activeWeapon": 0,
+            "projectiles": 0,
+            "nitro": 0,
+            "nitroOn": false,
+            "drift": 0,
+            "cash": 5000,
+            "controls": {
+              "throttle": false,
+              "brake": false,
+              "left": false,
+              "right": false,
+              "fire": false,
+              "drift": false,
+              "cycle": false,
+              "nitro": false
+            },
+            "quality": "med",
+            "menuFocus": "新游戏选择车辆，领取 5,000 美元起步资金",
+            "modal": false
+          },
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "transport": "wifi",
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-e9a410efbca7",
+                "session": "wifi-86991576-6b8a-4e37-80f5-0054994602b1-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-e9a410efbca7\",\"wifi-86991576-6b8a-4e37-80f5-0054994602b1-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Last Track · 末路战车",
+                "port": 33749,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 18,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Last Track · 末路战车",
+            "port": 33749,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 180,
+              "height": 180,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 420,
+              "height": 168,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 775,
+                  "top": 47.5,
+                  "right": 937,
+                  "bottom": 113.4921875,
+                  "width": 162,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 328
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-e9a410efbca7",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-e9a410efbca7",
+                    "idText": "ID: virtual-e9a410efbca7",
+                    "visible": true,
+                    "rect": {
+                      "left": 775,
+                      "top": 47.5,
+                      "right": 937,
+                      "bottom": 113.4921875,
+                      "width": 162,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 765,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 328
+                    },
+                    "idRect": {
+                      "left": 816,
+                      "top": 74.6953125,
+                      "right": 928,
+                      "bottom": 105.4921875,
+                      "width": 112,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 765,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 328
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 816,
+                        "top": 75.6953125,
+                        "right": 921.6171875,
+                        "bottom": 88.1953125,
+                        "width": 105.6171875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 816,
+                        "top": 91.09375,
+                        "right": 868.8125,
+                        "bottom": 103.59375,
+                        "width": 52.8125,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 112,
+                    "idScrollWidth": 112,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 784,
+                      "top": 55.5,
+                      "right": 808,
+                      "bottom": 79.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.lasttrack"
+      },
+      "after": {
+        "game": {
+          "game": "last-track",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "paused": false,
+          "frames": 25,
+          "gameplay": {
+            "screen": "title",
+            "phase": "menu",
+            "time": 0,
+            "tick": 0,
+            "countdown": 0,
+            "x": 0,
+            "y": 0,
+            "heading": 0,
+            "speed": 0,
+            "armor": 0,
+            "lap": 0,
+            "ammo": 0,
+            "activeWeapon": 0,
+            "projectiles": 0,
+            "nitro": 0,
+            "nitroOn": false,
+            "drift": 0,
+            "cash": 5000,
+            "controls": {
+              "throttle": false,
+              "brake": false,
+              "left": false,
+              "right": false,
+              "fire": false,
+              "drift": false,
+              "cycle": false,
+              "nitro": false
+            },
+            "quality": "med",
+            "menuFocus": "新游戏选择车辆，领取 5,000 美元起步资金",
+            "modal": false
+          },
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "transport": "wifi",
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-e9a410efbca7",
+                "session": "wifi-86991576-6b8a-4e37-80f5-0054994602b1-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-e9a410efbca7\",\"wifi-86991576-6b8a-4e37-80f5-0054994602b1-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Last Track · 末路战车",
+                "port": 33749,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 25,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:36513/?room=rOo4TIyxRjP9CrSRPtz7y2zVZaGksY7f",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Last Track · 末路战车",
+            "port": 33749,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 180,
+              "height": 180,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 420,
+              "height": 168,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 224,
+              "height": 224,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 775,
+                  "top": 47.5,
+                  "right": 937,
+                  "bottom": 113.4921875,
+                  "width": 162,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 328
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-e9a410efbca7",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-e9a410efbca7",
+                    "idText": "ID: virtual-e9a410efbca7",
+                    "visible": true,
+                    "rect": {
+                      "left": 775,
+                      "top": 47.5,
+                      "right": 937,
+                      "bottom": 113.4921875,
+                      "width": 162,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 765,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 328
+                    },
+                    "idRect": {
+                      "left": 816,
+                      "top": 74.6953125,
+                      "right": 928,
+                      "bottom": 105.4921875,
+                      "width": 112,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 765,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 328
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 816,
+                        "top": 75.6953125,
+                        "right": 921.6171875,
+                        "bottom": 88.1953125,
+                        "width": 105.6171875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 816,
+                        "top": 91.09375,
+                        "right": 868.8125,
+                        "bottom": 103.59375,
+                        "width": 52.8125,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 112,
+                    "idScrollWidth": 112,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 784,
+                      "top": 55.5,
+                      "right": 808,
+                      "bottom": 79.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.lasttrack"
+      },
+      "manualPixelReviewRequired": true
+    }
+  ],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.lasttrack",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569649.6389115,
+      "endedAt": 1795569649.6889274,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569649.8094702,
+      "endedAt": 1795569649.8349504,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569649.9577467,
+      "endedAt": 1795569649.9762783,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.0975957,
+      "endedAt": 1795569650.1049488,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.2255673,
+      "endedAt": 1795569650.2393303,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.3599422,
+      "endedAt": 1795569650.3659742,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.488745,
+      "endedAt": 1795569650.4957805,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.6167483,
+      "endedAt": 1795569650.619179,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.7396588,
+      "endedAt": 1795569650.7429056,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.8636398,
+      "endedAt": 1795569650.868113,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569650.9886353,
+      "endedAt": 1795569650.9929712,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 3,
+      "priorTransportFailures": 2,
+      "startedAt": 1795569651.1136374,
+      "endedAt": 1795569651.1243997,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569651.3718288,
+      "endedAt": 1795569661.3747826,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 2,
+      "priorTransportFailures": 1,
+      "startedAt": 1795569661.4954689,
+      "endedAt": 1795569668.4935296,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 17,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569699.324478,
+      "endedAt": 1795569714.339862,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 17,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569714.4812722,
+      "endedAt": 1795569729.4968286,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 17,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 14.70552823800017,
+      "startedAt": 1795569729.618949,
+      "endedAt": 1795569740.716989,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 38085,
+    "controller": 36643
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "Last Track · 末路战车",
+    "port": 33749,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "4173",
+  "freshnessChecks": [
+    {
+      "label": "all-released",
+      "startedAt": 1795569694.1983697,
+      "endedAt": 1795569696.3084507,
+      "beforePollCount": 33,
+      "afterPollCount": 36,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Focus settings from original New Game focus",
+      "startedAt": 1795569698.541168,
+      "endedAt": 1795569699.3083704,
+      "beforePollCount": 39,
+      "afterPollCount": 42,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 984, in finish_catalog_hold\n    observed = self.snapshot()\n               ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 384, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 151, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1231, in main\n    acceptance.scenarios()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 644, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1047, in catalog_scenarios\n    after = self.finish_catalog_hold(step, before, held)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 988, in finish_catalog_hold\n    self.send_releases()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 458, in send_releases\n    self.button(key, False)\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 438, in button\n    (client or self.clients[0]).button(key, 'down' if down else 'tap', duration=0 if down else 180)\n  File \"/home/runner/work/pureTV/pureTV/puretv-joystick/joystick_sdk.py\", line 35, in button\n    self.send(\"button\", key=key, action=action,\n  File \"/home/runner/work/pureTV/pureTV/puretv-joystick/joystick_sdk.py\", line 22, in send\n    raise ConnectionError(\"Game TCP is not connected\")\nConnectionError: Game TCP is not connected\n"
+}
