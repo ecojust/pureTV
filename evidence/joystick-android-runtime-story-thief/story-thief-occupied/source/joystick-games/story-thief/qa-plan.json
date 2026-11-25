@@ -1,0 +1,694 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.scene",
+    "gameplay.position",
+    "gameplay.score",
+    "gameplay.inventory",
+    "gameplay.tick"
+  ],
+  "storageRestartRequired": false,
+  "steps": [
+    {
+      "name": "Begin the original illustrated tale",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "pages"
+        }
+      ]
+    },
+    {
+      "name": "Read the second prologue page",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.page",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Read the final prologue page",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.page",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Enter Gran’s cottage and hear the narrator",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.scene",
+          "op": "eq",
+          "value": "cottage"
+        },
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "msg"
+        }
+      ]
+    },
+    {
+      "name": "Read Gran’s first line",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.speaker",
+          "op": "eq",
+          "value": "奶奶"
+        }
+      ]
+    },
+    {
+      "name": "Finish the opening conversation",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "world"
+        },
+        {
+          "path": "gameplay.busy",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Select Button the cat",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.target",
+          "op": "eq",
+          "value": "cat"
+        }
+      ]
+    },
+    {
+      "name": "Select the honey cake on the table",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.target",
+          "op": "eq",
+          "value": "cake"
+        }
+      ]
+    },
+    {
+      "name": "Choose the Look verb",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.verb",
+          "op": "eq",
+          "value": "look"
+        }
+      ]
+    },
+    {
+      "name": "Choose the Use verb",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.verb",
+          "op": "eq",
+          "value": "use"
+        }
+      ]
+    },
+    {
+      "name": "Walk to the table and collect the original cake",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.hasCake",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "path": "gameplay.score",
+          "op": "increased"
+        },
+        {
+          "path": "gameplay.position",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Close the pickup narration",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "world"
+        }
+      ]
+    },
+    {
+      "name": "Inspect the original satchel",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.satchel",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Return to the interactive scene",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.satchel",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Choose the Talk verb while facing Gran",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.verb",
+          "op": "eq",
+          "value": "talk"
+        },
+        {
+          "path": "gameplay.target",
+          "op": "eq",
+          "value": "mab"
+        }
+      ]
+    },
+    {
+      "name": "Walk over to Gran and discuss the empty Book",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.speaker",
+          "op": "eq",
+          "value": "奶奶"
+        },
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "msg"
+        }
+      ]
+    },
+    {
+      "name": "Read the blank pages",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Hear how Gran lost her stories",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Open the original four dialogue choices",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.choices",
+          "op": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "name": "Select the second question",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.choiceIndex",
+          "op": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Select the promise to travel up the mountain",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.choiceIndex",
+          "op": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Promise Gran to recover the stories",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.choices",
+          "op": "eq",
+          "value": 0
+        },
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "msg"
+        }
+      ]
+    },
+    {
+      "name": "Hear Gran’s hesitation",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Hear Gran reply to Rowan",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Learn about the Book of Tales",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Receive Gran’s Book",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Accept her lucky penny",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Read Gran’s farewell",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Hear Gran’s final words",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Read the final narration",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Finish the original quest conversation",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "world"
+        },
+        {
+          "path": "gameplay.talkedMab",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Open the Book of Tales",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "book"
+        }
+      ]
+    },
+    {
+      "name": "Close the Book of Tales",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "world"
+        }
+      ]
+    },
+    {
+      "name": "Open the original game menu",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "menu"
+        }
+      ]
+    },
+    {
+      "name": "Return from the original game menu",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "world"
+        }
+      ]
+    },
+    {
+      "name": "Select walking for the village exit",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.verb",
+          "op": "eq",
+          "value": "walk"
+        }
+      ]
+    },
+    {
+      "name": "Select Rowan",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.target",
+          "op": "eq",
+          "value": "self"
+        }
+      ]
+    },
+    {
+      "name": "Select the village exit",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.target",
+          "op": "eq",
+          "value": "door"
+        }
+      ]
+    },
+    {
+      "name": "Walk through the door to Brackenford Green",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.scene",
+          "op": "eq",
+          "value": "green"
+        },
+        {
+          "path": "gameplay.visited",
+          "op": "increased"
+        },
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "msg"
+        }
+      ]
+    },
+    {
+      "name": "Finish the first village narration",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "world"
+        },
+        {
+          "path": "gameplay.busy",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Pause the original story in the village",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Explicitly resume the story",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "timeoutSeconds": 18,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ]
+}
