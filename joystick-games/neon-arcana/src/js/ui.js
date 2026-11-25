@@ -136,7 +136,7 @@ export class UI {
             b.disabled = !usable && ctl.target !== p;
             const P = POWERS[p];
             b.querySelector('.cost').textContent = owned ? `✦${P.cost}` : ARCANA[P.from].numeral;
-            b.title = owned ? `${P.name} (✦${P.cost}): ${P.text}` : `Rekindle ${ARCANA[P.from].name} to awaken ${P.name}`;
+            b.title = owned ? `${globalThis.PureTVChinese.translate(P.name)}（✦${P.cost}）：${globalThis.PureTVChinese.translate(P.text)}` : `Rekindle ${ARCANA[P.from].name} to awaken ${P.name}`;
             b.setAttribute('aria-label', b.title);
         }
         $('stuck').hidden = !G.stuck || G.over;
@@ -229,7 +229,7 @@ export class UI {
         const grid = $('deck-grid');
         this.deckCards = ARCANA.map((a, i) => {
             const b = document.createElement('button');
-            b.setAttribute('aria-label', `${a.numeral} ${a.name}`);
+            b.setAttribute('aria-label', `${a.numeral} ${globalThis.PureTVChinese.translate(a.name)}`);
             b.setAttribute('aria-pressed', 'false');
             const cv = document.createElement('canvas');
             cv.width = 120; cv.height = 200;
@@ -257,19 +257,20 @@ export class UI {
     }
     deckDetail(i) {
         const a = ARCANA[i];
+        const translate = globalThis.PureTVChinese.translate;
         const lit = this.deckRestored?.has(i);
         this.deckCards.forEach((d, k) => d.b.setAttribute('aria-pressed', String(k === i)));
         const P = a.power ? POWERS[a.power] : null;
         const o = omensFor(i);
-        const omen = [o.sigils && `${o.sigils} sigil${o.sigils > 1 ? 's' : ''}`, o.blight && `${o.blight} blight (${o.blightHp} hits)`, o.creep && 'the creeping Void', o.harmony && 'harmony bonus'].filter(Boolean).join(', ');
+        const omen = [o.sigils && `${o.sigils} sigil${o.sigils > 1 ? 's' : ''}`, o.blight && `${o.blight} blight (${o.blightHp} hits)`, o.creep && 'the creeping Void', o.harmony && 'harmony bonus'].filter(Boolean).map(value => translate(value)).join('、');
         $('deck-detail').innerHTML = '';
         const head = document.createElement('div');
-        head.innerHTML = `<b>${a.numeral} · ${a.name}</b> — ${lit ? 'rekindled' : 'still dark'}`;
+        head.innerHTML = `<b>${a.numeral} · ${translate(a.name)}</b> · ${lit ? '已重燃' : '尚未重燃'}`;
         const line = document.createElement('div');
         line.textContent = a.line;
         const extra = document.createElement('div');
         extra.className = 'dim';
-        extra.textContent = `Light to rekindle: ${fmt(goalFor(i))}.${omen ? ` Omens: ${omen}.` : ''}${P ? ` Grants ${P.name}: ${P.text}` : ''}`;
+        extra.textContent = `重燃所需光芒：${fmt(goalFor(i))}。${omen ? `预兆：${omen}。` : ''}${P ? `解锁${translate(P.name)}：${translate(P.text)}` : ''}`;
         $('deck-detail').append(head, line, extra);
     }
 }

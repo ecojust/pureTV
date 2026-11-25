@@ -108,7 +108,7 @@ export class UI {
         G.commissions.forEach((c, i) => {
             const li = document.createElement('li');
             const r = G.results[i];
-            li.textContent = `${c.client.name}: ${'★'.repeat(r ? r.stars : 0)}${'☆'.repeat(3 - (r ? r.stars : 0))} ${c.title}`;
+            li.textContent = `${globalThis.PureTVChinese.translate(c.client.name)}：${'★'.repeat(r ? r.stars : 0)}${'☆'.repeat(3 - (r ? r.stars : 0))} ${globalThis.PureTVChinese.translate(c.title)}`;
             ol.appendChild(li);
         });
     }
