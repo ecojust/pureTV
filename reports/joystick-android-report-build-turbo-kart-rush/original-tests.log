@@ -1,0 +1,71 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-turbo-kart-rush@0.1.2 test
+> node tests/run.mjs
+
+▲ [WARNING] The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+
+    ../shared/web/controller-clients.js:125:55:
+      125 │ ...defined' && module.exports) module.exports = root.PureTVContro...
+          ╵                                ~~~~~~
+
+  This file is considered to be an ECMAScript module because the enclosing "package.json" file sets the type of this file to "module":
+
+    ../shared/web/package.json:1:23:
+      1 │ {"private":true,"type":"module"}
+        ╵                        ~~~~~~~~
+
+  Node's package format requires that CommonJS files in a "type": "module" package use the ".cjs" file extension.
+
+TAP version 13
+# Subtest: physical movement, drift, item, look, help and START are separate
+ok 1 - physical movement, drift, item, look, help and START are separate
+  ---
+  duration_ms: 1.244157
+  type: 'test'
+  ...
+# Subtest: menus confirm with A/START, return with Y; held confirmation cannot drift
+ok 2 - menus confirm with A/START, return with Y; held confirmation cannot drift
+  ---
+  duration_ms: 0.367983
+  type: 'test'
+  ...
+# Subtest: disconnect and reconnection quarantine cannot trigger stale item or charged drift release
+ok 3 - disconnect and reconnection quarantine cannot trigger stale item or charged drift release
+  ---
+  duration_ms: 1.463391
+  type: 'test'
+  ...
+# Subtest: keyboard cancel clears edges and quarantines held keys until physical release
+ok 4 - keyboard cancel clears edges and quarantines held keys until physical release
+  ---
+  duration_ms: 0.281345
+  type: 'test'
+  ...
+# Subtest: holding START after resume cannot create a second pause edge
+ok 5 - holding START after resume cannot create a second pause edge
+  ---
+  duration_ms: 0.573877
+  type: 'test'
+  ...
+# Subtest: cancel through original endDrift(false) preserves earned boost and inventory
+ok 6 - cancel through original endDrift(false) preserves earned boost and inventory
+  ---
+  duration_ms: 0.633946
+  type: 'test'
+  ...
+# Subtest: selects a render path the WebGL driver can draw
+ok 7 - selects a render path the WebGL driver can draw
+  ---
+  duration_ms: 0.370006
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 69.82386

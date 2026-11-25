@@ -1,0 +1,75 @@
+// ui-icons.js: inline SVG icons for the menus (no image files, no emoji: those render differently on every OS).
+// icon(name, cls) -> SVG markup. Sized by CSS (default 1em, colour = currentColor unless the icon has its own palette).
+// In HTML, <i data-icon="gear"></i> is filled at boot by fillIcons().
+
+const P = {
+  // ---- Track biomes ----
+  pine: `<path d="M12 2 L18 10 H15 L20 16 H16 L21 21 H3 L8 16 H4 L9 10 H6 Z" fill="#3fae4f" stroke="#1d5e2a" stroke-width="1.2" stroke-linejoin="round"/>
+    <rect x="10.5" y="20" width="3" height="3" rx="0.6" fill="#7a4a24"/>`,
+  cactus: `<path d="M10 22 V5 a2 2 0 0 1 4 0 V22 Z M5 14 V9 a1.6 1.6 0 0 1 3.2 0 V12.5 H10 V15.5 H6.5 A1.5 1.5 0 0 1 5 14 Z
+    M19 11 V7 a1.6 1.6 0 0 0 -3.2 0 V9.5 H14 V12.5 H17.5 A1.5 1.5 0 0 0 19 11 Z" fill="#4caf50" stroke="#24692b" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M7 22.5 H17" stroke="#c9884a" stroke-width="2" stroke-linecap="round"/>`,
+  snowflake: `<g stroke="#7fd0ff" stroke-width="2" stroke-linecap="round" fill="none">
+    <path d="M12 2 V22 M3.3 7 L20.7 17 M3.3 17 L20.7 7"/>
+    <path d="M9.5 3.8 L12 6 L14.5 3.8 M9.5 20.2 L12 18 L14.5 20.2 M3.6 10 L6.8 9.3 L5.8 6.2 M20.4 14 L17.2 14.7 L18.2 17.8 M3.6 14 L6.8 14.7 L5.8 17.8 M20.4 10 L17.2 9.3 L18.2 6.2"/></g>`,
+
+  // ---- Lobby / settings (currentColor) ----
+  joystick: `<rect x="3" y="15" width="18" height="6" rx="2.5" fill="currentColor" opacity="0.85"/>
+    <rect x="10.8" y="8" width="2.4" height="8" rx="1" fill="currentColor"/>
+    <circle cx="12" cy="6.5" r="4" fill="#e8322f" stroke="currentColor" stroke-width="1"/>
+    <circle cx="17.5" cy="18" r="1.3" fill="#ffe14a"/>`,
+  arrows: `<path d="M10 5 L2 12 L10 19 Z M14 5 L22 12 L14 19 Z" fill="currentColor"/>`,
+  speaker: `<path d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z" fill="currentColor"/>
+    <path d="M15.5 8.5 A5 5 0 0 1 15.5 15.5 M18 6 A8.5 8.5 0 0 1 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`,
+  muted: `<path d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z" fill="currentColor"/>
+    <path d="M15.5 9 L21.5 15 M21.5 9 L15.5 15" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`,
+  anchor: `<g stroke="#2f6bb0" stroke-width="2.4" stroke-linecap="round" fill="none"><circle cx="12" cy="5" r="2.4"/><path d="M12 7.4 V21 M7.5 11 H16.5 M4 14 C4.5 18.5 8 21 12 21 C16 21 19.5 18.5 20 14"/></g>`,
+  volcano: `<path d="M2 21 L9 8 H15 L22 21 Z" fill="#5a4a48" stroke="#2c2422" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 8 H15 L13.4 13 L12 11 L10.4 14 Z" fill="#ff7a1f"/><path d="M9.5 5 C9 3 11 3 10.6 1.5 M14 5 C13.6 3.4 15 3 14.6 1.5" stroke="#9a9a9a" stroke-width="1.5" stroke-linecap="round" fill="none"/>`,
+  moon: `<path d="M15 2.5 A9.8 9.8 0 1 0 21.5 16 A8 8 0 0 1 15 2.5 Z" fill="#d8dae0" stroke="#3a3f4a" stroke-width="1.2" stroke-linejoin="round"/><circle cx="9" cy="14" r="1.5" fill="#9a9ca2"/><circle cx="12.5" cy="18" r="1" fill="#9a9ca2"/><circle cx="8" cy="8.5" r="0.9" fill="#9a9ca2"/>`, // Moon Base
+  pick: `<path d="M4 7 C8 3 16 3 20 7 C16 5.5 8 5.5 4 7 Z" fill="#9aa3a6" stroke="#3a3f44" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 6 L12 21" stroke="#8a5a34" stroke-width="2.6" stroke-linecap="round"/>`, // the mine
+  temple: `<path d="M2 21 H22 V18 H19 V15 H16.5 V12 H14 V8 H10 V12 H7.5 V15 H5 V18 H2 Z" fill="#b7aa8e" stroke="#5c5240" stroke-width="1.1" stroke-linejoin="round"/><path d="M10 21 V17 a2 2 0 0 1 4 0 V21 Z" fill="#3a3428"/><path d="M11 8 V5 H13 V8" fill="#e2b72e"/>`,
+  close: `<path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>`,
+  gear: `<path fill="currentColor" fill-rule="evenodd" d="M10.3 2 h3.4 l.5 2.6 a7.6 7.6 0 0 1 1.9 1.1 l2.5-.9 1.7 2.9 -2 1.7 a7.6 7.6 0 0 1 0 2.2 l2 1.7 -1.7 2.9 -2.5-.9 a7.6 7.6 0 0 1 -1.9 1.1 l-.5 2.6 h-3.4 l-.5-2.6 a7.6 7.6 0 0 1 -1.9-1.1 l-2.5.9 -1.7-2.9 2-1.7 a7.6 7.6 0 0 1 0-2.2 l-2-1.7 1.7-2.9 2.5.9 a7.6 7.6 0 0 1 1.9-1.1 Z M12 8.6 a3.4 3.4 0 1 0 0 6.8 a3.4 3.4 0 1 0 0-6.8 Z"/>`,
+  go: `<path d="M4 12 H19 M13 5.5 L19.5 12 L13 18.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`, // hello screen: let's race
+  back: `<path d="M8.5 5 H20 a1.5 1.5 0 0 1 1.5 1.5 V17.5 a1.5 1.5 0 0 1 -1.5 1.5 H8.5 L2 12 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M11 9 L17 15 M17 9 L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`, // keyboard delete
+  pencil: `<path d="M4 20 L5 15.5 L15.5 5 L19 8.5 L8.5 19 Z" fill="currentColor"/>
+    <path d="M14 6.5 L17.5 10" stroke="#1b1f3a" stroke-width="1.3"/>
+    <path d="M4 20 L5 15.5 L8.5 19 Z" fill="#ffd9a0"/>`,
+
+  // ---- Items (in-race item button; the pucks and the jet are drawn in CSS). Keys are the internal names:
+  // mushroom = Nitro, banana = Goo, star = Super (build 79) ----
+  mushroom: `<rect x="7" y="6.5" width="10" height="14.5" rx="2.5" fill="#2a7bff" stroke="#fff" stroke-width="1.2"/>
+    <rect x="9.5" y="2.8" width="5" height="3.4" rx="1" fill="#cfd3dc" stroke="#fff" stroke-width="1"/>
+    <path d="M13.2 8.6 L9.6 14.2 H12 L10.9 18.8 L14.6 12.8 H12.2 Z" fill="#ffd23a"/>`,
+  banana: `<path d="M3 16 C3 12.6 6.4 12 8 12.6 C9 10.2 13 9.6 14.6 11.6 C17 10.6 21 12 21 15 C21 18.4 17 19.6 12 19.6 C6.6 19.6 3 18.8 3 16 Z"
+    fill="#7fe03a" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>
+    <circle cx="8.6" cy="15.6" r="1.4" fill="#c8ff9a"/><circle cx="12.4" cy="15.2" r="0.8" fill="#c8ff9a"/><circle cx="15.5" cy="6.8" r="1.7" fill="#7fe03a" stroke="#fff" stroke-width="1"/>`,
+  shield: `<path d="M12 2.5 L20 5.5 V11.5 C20 16.5 16.5 20 12 21.5 C7.5 20 4 16.5 4 11.5 V5.5 Z" fill="#5cc8ff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M12 5 L17.5 7.2 V11.5 C17.5 15 15.3 17.6 12 18.9 Z" fill="#2f8fe0"/>
+    <path d="M7 7.5 C7.5 6.8 8.4 6.4 9.2 6.1" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>`,
+  star: `<path d="M14.5 2 L5 13.6 H11 L9.4 22 L19 9.6 H13 Z" fill="#ffd23a" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/>`,
+
+  // ---- Driver roles (AI personalities; not shown on the player's driver: a pick is looks only) ----
+  'all-rounder': `<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M12 6.5 L13.6 10.4 L17.6 10.6 L14.5 13.2 L15.5 17.2 L12 15 L8.5 17.2 L9.5 13.2 L6.4 10.6 L10.4 10.4 Z" fill="currentColor"/>`,
+  ace: `<path d="M3 8 L7.5 12 L12 5 L16.5 12 L21 8 L19 18 H5 Z" fill="currentColor"/><rect x="5" y="19" width="14" height="2.2" rx="1" fill="currentColor"/>`,
+  defender: `<path d="M12 2.5 L20 5.5 V11.5 C20 16.5 16.5 20 12 21.5 C7.5 20 4 16.5 4 11.5 V5.5 Z" fill="currentColor"/>
+    <path d="M12 5.5 V18.5" stroke="#1b1f3a" stroke-width="1.4" opacity="0.5"/>`,
+  wild: `<path d="M13.5 2 L5 13.5 H11 L9.5 22 L19 9.5 H13 Z" fill="currentColor"/>`,
+  bully: `<circle cx="11" cy="14" r="7" fill="currentColor"/><path d="M15 8.5 L17.5 6" stroke="currentColor" stroke-width="2.2"/>
+    <path d="M17.5 6 L19 4.5 M19.5 7 L21.5 6.5 M18.5 3 L18.8 1.5" stroke="#ffa21f" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="8.5" cy="11.5" r="1.6" fill="#1b1f3a" opacity="0.35"/>`,
+  steady: `<path d="M6 2.5 H18 M6 21.5 H18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M7.5 3 C7.5 8 11 9.5 11 12 C11 14.5 7.5 16 7.5 21 H16.5 C16.5 16 13 14.5 13 12 C13 9.5 16.5 8 16.5 3 Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M9 19.5 C9 17.5 12 16 12 16 C12 16 15 17.5 15 19.5 Z" fill="currentColor"/>`,
+};
+
+export function icon(name, cls = '') {
+  return `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true">${P[name] ?? ''}</svg>`;
+}
+
+/** Fills every <i data-icon="name"> under root with its SVG. */
+export function fillIcons(root = document) {
+  for (const el of root.querySelectorAll('[data-icon]')) el.innerHTML = icon(el.dataset.icon);
+}
