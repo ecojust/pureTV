@@ -98,4 +98,10 @@ jobs:
         run: |
           tag=games-zh-cn-2026.11.25
           test "$(gh release view "$tag" --json isDraft -q .isDraft)" = true
-          gh release upload "$tag" "$RUNNER_TEMP"/localized/*
+          flags=()
+          if [[ "$GAME" = cf-transport-ship && "$RUNNER_OS" = macOS && "$FROZEN" != a5c902437c87fe11fd7b1c974251e5f8c108cd5f ]]; then
+            gh release download "$tag" -p cf-transport-ship-macos-verification.json -O "$RUNNER_TEMP/pilot.json"
+            python -c "import json,os,pathlib; assert json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'pilot.json').read_text())['sourceCommit']=='a5c902437c87fe11fd7b1c974251e5f8c108cd5f'"
+            flags+=(--clobber)
+          fi
+          gh release upload "$tag" "${flags[@]}" "$RUNNER_TEMP"/localized/*
