@@ -1,0 +1,1672 @@
+{
+  "game": "glup",
+  "targetPackage": "com.ecojust.joystick.glup",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "056f922ec1bae4540b8af0afc21c4f0e44984f20",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/glup/glup-0.1.3.apk",
+    "bytes": 836681,
+    "sha256": "835efc6a78e8f61cef8c8b01133813cd5ae663b7478c9f61a96f41635109b79b"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/glup/observer-glup.apk",
+    "bytes": 16783,
+    "sha256": "65426e990071187bb5cb44d557eea89324ee080cd8adf6c7f2bdcf3a8bbe8977"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77581,
+      "sha256": "fa5ac4b08a35d2a9ae28bceb5671feba1b4993f1c3adbcfd6ee50afc6274a236"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13566,
+      "sha256": "fd5986c8c462b9fd057424cda32c294cc849fcdb630ab3c9c39cd288428dd218"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/glup/qa-plan.json": {
+      "bytes": 4611,
+      "sha256": "2d4594a9dc2f3e81e391ba031c67a8b978434b222ab363952c672e16915693ee"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 13779,
+      "sha256": "78084067d6772d3ad2e7c932e291d68e5f765a6087e376eb3d4e77c9cfac89ef"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.glup",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795569756.2666826,
+      "snapshot": {
+        "game": {
+          "game": "glup",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "stage": "menu",
+          "paused": false,
+          "frames": 1,
+          "gameplay": {
+            "screen": "gate",
+            "introTick": 0,
+            "titleTick": 0,
+            "tick": 0,
+            "worldTick": 0,
+            "level": 0,
+            "selection": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "velocityX": 0,
+            "velocityY": 0,
+            "hp": 3,
+            "sucking": false,
+            "suckTicks": 0,
+            "charge": 0,
+            "holding": null,
+            "pearls": 0,
+            "projectiles": 0,
+            "arrival": false,
+            "learning": false,
+            "talking": false,
+            "muted": false
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "registering",
+                "serviceName": "GLUP · 沼泽猫鱼",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "registering",
+            "serviceName": "GLUP · 沼泽猫鱼",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 960,
+              "height": 540,
+              "clientWidth": 744,
+              "clientHeight": 418,
+              "visible": true
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 128,
+              "height": 14,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 64,
+              "height": 60,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 130,
+              "height": 200,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 112,
+              "height": 40,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 200,
+              "height": 260,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 104,
+              "height": 18,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 66,
+              "height": 66,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 56,
+              "height": 20,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 757,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 260
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.glup"
+      }
+    },
+    {
+      "label": "timeout-single-controller",
+      "snapshot": {
+        "game": {
+          "game": "glup",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "stage": "menu",
+          "paused": false,
+          "frames": 288,
+          "gameplay": {
+            "screen": "gate",
+            "introTick": 0,
+            "titleTick": 0,
+            "tick": 0,
+            "worldTick": 959,
+            "level": 0,
+            "selection": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "velocityX": 0,
+            "velocityY": 0,
+            "hp": 3,
+            "sucking": false,
+            "suckTicks": 0,
+            "charge": 0,
+            "holding": null,
+            "pearls": 0,
+            "projectiles": 0,
+            "arrival": false,
+            "learning": false,
+            "talking": false,
+            "muted": false
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "transport": "wifi",
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-90baef27c80b",
+                "session": "wifi-5929cb81-8fc8-4ab8-baa0-65d4ba2ada3e-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-90baef27c80b\",\"wifi-5929cb81-8fc8-4ab8-baa0-65d4ba2ada3e-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "GLUP · 沼泽猫鱼",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 288,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "GLUP · 沼泽猫鱼",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 960,
+              "height": 540,
+              "clientWidth": 744,
+              "clientHeight": 418,
+              "visible": true
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 128,
+              "height": 14,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 64,
+              "height": 60,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 130,
+              "height": 200,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 112,
+              "height": 40,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 480,
+              "height": 270,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 200,
+              "height": 260,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 104,
+              "height": 18,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 66,
+              "height": 66,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 56,
+              "height": 20,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 767,
+                  "top": 47.5,
+                  "right": 937,
+                  "bottom": 113.4921875,
+                  "width": 170,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 757,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 201
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-90baef27c80b",
+                    "playerId": 1,
+                    "text": "1P已连接ID：virtual-90baef27c80b",
+                    "idText": "ID：virtual-90baef27c80b",
+                    "visible": true,
+                    "rect": {
+                      "left": 767,
+                      "top": 47.5,
+                      "right": 937,
+                      "bottom": 113.4921875,
+                      "width": 170,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 757,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 201
+                    },
+                    "idRect": {
+                      "left": 808,
+                      "top": 74.6953125,
+                      "right": 928,
+                      "bottom": 105.4921875,
+                      "width": 120,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 757,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 201
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 808,
+                        "top": 75.6953125,
+                        "right": 924.625,
+                        "bottom": 88.1953125,
+                        "width": 116.625,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 808,
+                        "top": 91.09375,
+                        "right": 847.609375,
+                        "bottom": 103.59375,
+                        "width": 39.609375,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 120,
+                    "idScrollWidth": 120,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 776,
+                      "top": 55.5,
+                      "right": 800,
+                      "bottom": 79.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.glup"
+      },
+      "error": null
+    }
+  ],
+  "captures": [
+    {
+      "path": "join-before-connection.png",
+      "bytes": 88143,
+      "sha256": "3ebcd651961f070907b3af786484a1a701b3a53e9ff96485fe9cfb6221ffada1",
+      "startedAt": 1795569758.6393185,
+      "endedAt": 1795569760.0927718,
+      "before": {
+        "game": {
+          "game": "glup",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "stage": "menu",
+          "paused": false,
+          "frames": 7,
+          "gameplay": {
+            "screen": "gate",
+            "introTick": 0,
+            "titleTick": 0,
+            "tick": 0,
+            "worldTick": 11,
+            "level": 0,
+            "selection": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "velocityX": 0,
+            "velocityY": 0,
+            "hp": 3,
+            "sucking": false,
+            "suckTicks": 0,
+            "charge": 0,
+            "holding": null,
+            "pearls": 0,
+            "projectiles": 0,
+            "arrival": false,
+            "learning": false,
+            "talking": false,
+            "muted": false
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "GLUP · 沼泽猫鱼",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 7,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "GLUP · 沼泽猫鱼",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 960,
+              "height": 540,
+              "clientWidth": 744,
+              "clientHeight": 418,
+              "visible": true
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 128,
+              "height": 14,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 64,
+              "height": 60,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 130,
+              "height": 200,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 112,
+              "height": 40,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 480,
+              "height": 270,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 200,
+              "height": 260,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 104,
+              "height": 18,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 66,
+              "height": 66,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 56,
+              "height": 20,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 757,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 260
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.glup"
+      },
+      "after": {
+        "game": {
+          "game": "glup",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "stage": "menu",
+          "paused": false,
+          "frames": 30,
+          "gameplay": {
+            "screen": "gate",
+            "introTick": 0,
+            "titleTick": 0,
+            "tick": 0,
+            "worldTick": 82,
+            "level": 0,
+            "selection": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "velocityX": 0,
+            "velocityY": 0,
+            "hp": 3,
+            "sucking": false,
+            "suckTicks": 0,
+            "charge": 0,
+            "holding": null,
+            "pearls": 0,
+            "projectiles": 0,
+            "arrival": false,
+            "learning": false,
+            "talking": false,
+            "muted": false
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "zh",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "GLUP · 沼泽猫鱼",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 30,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:41817/?room=oavHtVJeEkkZo33vjq-CVD44cgaKZ3GI",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "zh",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "GLUP · 沼泽猫鱼",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 960,
+              "height": 540,
+              "clientWidth": 744,
+              "clientHeight": 418,
+              "visible": true
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 16,
+              "height": 16,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 128,
+              "height": 14,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 64,
+              "height": 60,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 130,
+              "height": 200,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 112,
+              "height": 40,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 480,
+              "height": 270,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 200,
+              "height": 260,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 104,
+              "height": 18,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 66,
+              "height": 66,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 56,
+              "height": 20,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 31,
+              "height": 31,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 42,
+              "height": 42,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 757,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 260
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.glup"
+      },
+      "manualPixelReviewRequired": true
+    }
+  ],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.glup",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569753.255202,
+      "endedAt": 1795569753.3089578,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569753.429527,
+      "endedAt": 1795569753.4322605,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569753.553049,
+      "endedAt": 1795569753.559033,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569753.6805212,
+      "endedAt": 1795569753.6908336,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569753.8117611,
+      "endedAt": 1795569753.8138597,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569753.9347186,
+      "endedAt": 1795569753.937363,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.0582325,
+      "endedAt": 1795569754.134048,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.2559707,
+      "endedAt": 1795569754.259752,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.382777,
+      "endedAt": 1795569754.3863041,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.507339,
+      "endedAt": 1795569754.5160542,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.6368787,
+      "endedAt": 1795569754.6392682,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.760198,
+      "endedAt": 1795569754.7621808,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569754.8832922,
+      "endedAt": 1795569754.8862329,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569755.0072634,
+      "endedAt": 1795569755.0089245,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569755.1300077,
+      "endedAt": 1795569755.1316283,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569755.2537847,
+      "endedAt": 1795569755.25786,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795569755.3797617,
+      "endedAt": 1795569755.3812706,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 3,
+      "priorTransportFailures": 2,
+      "startedAt": 1795569755.5757942,
+      "endedAt": 1795569755.760142,
+      "responseFromNewGet": true
+    }
+  ],
+  "adbForwards": {
+    "observer": 43775,
+    "controller": 35777
+  },
+  "controllerService": {
+    "state": "registering",
+    "serviceName": "GLUP · 沼泽猫鱼",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2772",
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1230, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 638, in setup\n    self.wait(lambda s: self.visible_ids(s) == [client.identity], label='single-controller')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 400, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: single-controller timed out; last snapshot retained\n",
+  "wire": {
+    "sdkMessages": 20,
+    "acceptedSdkMessages": 20,
+    "rejectedSdkMessages": 0,
+    "hostReplies": 19,
+    "matchingAcks": 19,
+    "missingAcks": [
+      {
+        "connection": 1,
+        "seq": 20
+      }
+    ],
+    "expectedBusyIds": [],
+    "rejectedConnections": [],
+    "unexpectedReplies": [],
+    "duplicateAcks": [],
+    "keysSent": [
+      "A",
+      "B",
+      "DOWN",
+      "LEFT",
+      "RIGHT",
+      "START",
+      "UP",
+      "X",
+      "Y"
+    ],
+    "errors": []
+  },
+  "video": {
+    "path": "controller-gameplay.mp4",
+    "bytes": 472498,
+    "sha256": "2e00a7aeb5bb98f6f47a1abb19dc09c2e12f495e9d39bb4302f810b68137b841",
+    "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes"
+  },
+  "finishedAt": 1795569782.3248603
+}
