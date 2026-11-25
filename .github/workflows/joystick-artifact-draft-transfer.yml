@@ -62,7 +62,7 @@ jobs:
           hashes={}
           for f in sorted(root.rglob('*')):
               if not f.is_file():continue
-              if f.name not in {'report.json','input-verification.log','emulator-version.txt','executed-source.json','android-environment-diagnostic.json'}:continue
+              if f.name not in {'report.json',slug+'-outcomes.json','input-verification.json','input-verification.log','emulator-version.txt','executed-source.json','android-environment-diagnostic.json'}:continue
               if f.name=='report.json' and f.parent.name not in {slug+'-normal',slug+'-occupied'}:continue
               assert not f.is_symlink() and f.stat().st_size < 5_000_000
               target=output/f.relative_to(root);target.parent.mkdir(parents=True,exist_ok=True)
