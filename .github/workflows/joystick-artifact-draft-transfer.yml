@@ -1,68 +1,87 @@
-name: Copy original desktop catalog artifact to existing draft
+name: Transfer the eight verified Chinese-default Android APKs to the release draft
 on:
   workflow_dispatch:
     inputs:
-      source_run:
-        description: Original macOS or Windows catalog run ID
+      group:
+        type: choice
+        options: [neon, legacy]
         required: true
+      export_commit:
+        description: Exact commit of the signing workflow export
         type: string
-      source_attempt:
-        description: Original run attempt
         required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
-        required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
 permissions:
-  actions: read
   contents: write
 concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
+  group: zh-default-legacy-transfer-${{ inputs.group }}
   cancel-in-progress: false
 jobs:
   transfer:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
-    env:
-      GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ref: ${{ inputs.export_commit }}
+          sparse-checkout-cone-mode: false
           sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+            /neon-rush/
+            /packages/
+          persist-credentials: false
+      - name: Verify the export against the signing run and stage its exact APK files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GROUP: ${{ inputs.group }}
+          EXPORT_COMMIT: ${{ inputs.export_commit }}
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
-        run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          python3 - <<'PY'
+          import hashlib, json, os, re, subprocess
+          from pathlib import Path
+
+          repository = 'ecojust/pureTV'
+          tag = 'games-zh-cn-2026.11.25'
+          assert os.environ['GITHUB_REPOSITORY'] == repository
+          commit = os.environ['EXPORT_COMMIT']
+          assert re.fullmatch('[0-9a-f]{40}', commit)
+          def gh(*args):
+              return subprocess.check_output(['gh', *args], text=True)
+          def api(path):
+              return json.loads(gh('api', 'repos/' + repository + '/' + path))
+          if os.environ['GROUP'] == 'neon':
+              run = 45517541294
+              ref = 'build-assets/game-kit-signed-' + str(run)
+              workflow = '.github/workflows/sign-game-kit.yml'
+              source = 'd10ca52376989f3779112bec315f0417ba905254'
+              games, base = ['neon-rush'], Path('.')
+          else:
+              run = 45517698127
+              ref = 'build-assets/controller-games-' + str(run) + '-attempt-1'
+              workflow = '.github/workflows/controller-games.yml'
+              source = '14f060ceb63baf82ca219c6c89d9a99cf6c3ad87'
+              games, base = ['alien-shooter','jackal','jewel','super-mario','tank','tetris','used-car-racing'], Path('packages')
+          result = api('actions/runs/' + str(run))
+          assert result['conclusion'] == 'success' and result['path'] == workflow
+          assert api('git/ref/heads/' + ref)['object']['sha'] == commit
+          release = api('releases/457489608')
+          assert release['draft'] and release['tag_name'] == tag
+          def inventory():
+              pages = json.loads(gh('api', '--paginate', '--slurp', 'repos/'+repository+'/releases/457489608/assets?per_page=100'))
+              return {a['name']:a for page in pages for a in page}
+          previous = inventory()
+          for game in games:
+              receipt = json.loads((base/game/'signing-receipt.json').read_bytes())
+              assert receipt['signatureVerified'] and receipt['sourceSha'] == source and receipt['slug'] == game
+              assert int(receipt.get('runId', receipt.get('workflowRun'))) == run
+              assert receipt['certificateSha256'] == 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+              version = receipt.get('versionName',receipt.get('version'))
+              assert re.fullmatch(r'\d+\.\d+\.\d+',version)
+              filename = f'{game}-{version}.apk'
+              apk = base/game/filename
+              count, digest = apk.stat().st_size, hashlib.sha256(apk.read_bytes()).hexdigest()
+              assert count == receipt['bytes'] and digest == receipt['sha256']
+              if filename not in previous:
+                  subprocess.run(['gh','release','upload',tag,str(apk),'--repo',repository],check=True)
+              staged = inventory()[filename]
+              assert staged['state']=='uploaded' and staged['size']==count and staged['digest']=='sha256:'+digest
+              print(filename,digest)
+          PY
