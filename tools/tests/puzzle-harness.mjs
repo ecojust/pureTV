@@ -26,8 +26,8 @@ const url = `http://127.0.0.1:${server.address().port}/?room=0123456789abcdef012
 const browser = await chromium.launch({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox'] });
 let passed = 0;
 
-async function fixture(options = {}) {
-  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'zh-CN', hasTouch: true, ...options });
+async function fixture(options = {}, language) {
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'en-US', hasTouch: true, ...options });
   await context.addInitScript(() => {
     window.__sockets = [];
     window.__sent = [];
@@ -52,7 +52,7 @@ async function fixture(options = {}) {
     window.WebSocket = FakeSocket;
   });
   const page = await context.newPage();
-  await page.goto(url);
+  await page.goto(language ? url + '&lang=' + language : url);
   await page.waitForFunction(() => document.querySelector('#controller').dataset.connected === 'true');
   return { context, page };
 }
@@ -282,7 +282,7 @@ try {
     await context.close();
   });
   await test('Player level/cleared/score, game-specific A/B semantics, English and safe text', async () => {
-    const { context, page } = await fixture({ locale: 'en-US' });
+    const { context, page } = await fixture({ locale: 'en-US' }, 'en');
     if(kind==='jewel'){
       await page.evaluate(()=>window.__sockets.at(-1).receive({type:'state',phase:'playing',players:[{id:1,level:0,cleared:0,score:0}]}));
       assert.equal(Number(await page.locator('#level').textContent()),0,'Initial Magic Jewelry level is zero on both TV and phone');
@@ -308,7 +308,7 @@ try {
   });
   await test('Portrait and small landscape controls remain in viewport without overlap or scrolling', async () => {
     for (const locale of ['zh-CN','en-US']) {
-    const { context, page } = await fixture({locale});
+    const { context, page } = await fixture({locale},locale === 'en-US' ? 'en' : 'zh');
     for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:1366,height:768}]) {
       await page.setViewportSize(viewport);
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -454,7 +454,7 @@ async function addPhone(browser,tv,base,language,id,errors) {
   },{id});
   const page=await context.newPage();
   page.on('pageerror',error=>errors.push(error.message));
-  await page.goto(base+'/controller.html?room=puzzle-preview-room-token');
+  await page.goto(base+'/controller.html?room=puzzle-preview-room-token&lang='+language.split('-')[0]);
   await page.waitForFunction(()=>document.querySelector('#controller').dataset.connected==='true');
   return {context,page};
 }

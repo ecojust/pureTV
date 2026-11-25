@@ -12,7 +12,224 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="preload" as="image" href="machine-interior.png" />
     <link rel="stylesheet" href="./style.css" />
-  </head>
+  <script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "/ CLICK": "/ 鼠标点击",
+    "3 TOOLS REMAINING": "剩余 3 台切割器",
+    "3 TOOLS · EXTRA AT 12,000": "初始 3 台切割器 · 12,000 分奖励一台",
+    "ALL CUTTING TOOLS LOST": "切割器已全部损毁",
+    "Also move": "也可移动",
+    "Amber leads. Every unit can take over.": "琥珀色机节领头，每一节都能接替它。",
+    "Arcade game": "街机游戏",
+    "Audio unavailable in this browser": "此浏览器无法播放音频",
+    "Break the chain.": "斩断履带。",
+    "CONNECTED SIDES · KEEP MOVING": "两侧相通 · 保持移动",
+    "CONNECTING TRACKBALL…": "正在连接轨迹球…",
+    "CONNECTING…": "连接中…",
+    "CYLINDER / MECHANICAL ARCADE": "环形机舱 / 机械街机",
+    "Capture denied. Try this game in an active Chrome window.": "无法锁定指针。请切到当前 Chrome 窗口重试。",
+    "Continuous motion. Escape releases & pauses.": "可连续移动。按 Esc 释放指针并暂停。",
+    "DRIVE": "驱动",
+    "DRIVE ENGAGED": "机器已启动",
+    "Dodge the marked column. Shoot to interrupt.": "避开标记列，射击可打断攻击。",
+    "ENABLE TRACKBALL": "启用轨迹球",
+    "ENABLE TRACKBALL ↗": "启用轨迹球 ↗",
+    "ENGAGE DRIVE": "启动机器",
+    "ENTER": "回车",
+    "ESC": "Esc",
+    "Escape cancels": "按 Esc 取消",
+    "FAST": "快速",
+    "Fire · hold": "按住射击",
+    "Flick to spin the trackball and travel farther. Move gently to brake and aim. Escape pauses and releases the pointer.": "快速拨动轨迹球可以滑得更远。轻推可减速瞄准。按 Esc 暂停并释放指针。",
+    "Four pulses clear the way.": "命中四发脉冲即可清除。",
+    "Fullscreen": "全屏",
+    "Fullscreen (F)": "全屏（F）",
+    "Fullscreen unavailable in this browser.": "此浏览器无法进入全屏。",
+    "KNOW YOUR MACHINE": "认识这台机器",
+    "Keep cutting.": "持续切割。",
+    "Keep moving.": "保持移动。",
+    "Keep the machine from breaking you.": "别让机器把你碾碎。",
+    "MAINTENANCE GANTRY": "检修龙门架",
+    "MECHA": "机甲",
+    "MECHAPEDE": "机甲蜈蚣",
+    "MOUNTED GEAR": "固定齿轮",
+    "Mechapede game. Move pointer or use arrow keys. Hold Space to fire. Enter to start. P to pause.": "机甲蜈蚣。移动指针或按方向键移动，按住空格射击，回车开始，P 暂停。",
+    "Mechapede home": "机甲蜈蚣首页",
+    "Mechapede — Mechanical Arcade": "机甲蜈蚣 · 机械街机",
+    "Move": "移动",
+    "Mute sound": "静音",
+    "Mute sound (M)": "静音（M）",
+    "NEXT CYCLE": "下一轮",
+    "NO UPGRADES. JUST SURVIVAL.": "坚持到最后，没有升级。",
+    "OFFLINE": "离线",
+    "OPERATOR'S PANEL": "操控面板",
+    "PAUSE": "暂停",
+    "PAUSED · CONNECTING": "已暂停 · 正在连接",
+    "PAUSED · POINTER RELEASED": "已暂停 · 指针已释放",
+    "PEDE": "蜈蚣",
+    "PERSONAL BEST": "个人最高分",
+    "PERSONAL BEST RECORDED": "刷新个人纪录",
+    "POINTER SENSITIVITY": "指针灵敏度",
+    "PRECISE": "精确",
+    "Pause": "暂停",
+    "Pointer capture is unsupported.": "不支持指针锁定。",
+    "Pointer capture was declined. Retry in an active Chrome window, or use window controls below.": "无法锁定指针。请切到当前 Chrome 窗口重试，或使用下方的窗口控制。",
+    "Pointer sensitivity": "指针灵敏度",
+    "Press Enter to retry": "按回车重试",
+    "REPLACING TOOL": "正在更换切割器",
+    "RESTART DRIVE": "重启机器",
+    "RESUME": "继续",
+    "RETRY": "重试",
+    "RETRY TRACKBALL ↗": "重连轨迹球 ↗",
+    "RUNAWAY FLYWHEEL": "失控飞轮",
+    "Ricochets knock gears loose. Dodge or shoot the falling debris.": "飞轮弹射会撞落齿轮。避开或击碎坠落的零件。",
+    "SCORE": "得分",
+    "SOUND LEVEL": "音量",
+    "SOUND OFF": "声音关闭",
+    "SOUND ON": "声音开启",
+    "SPACE": "空格",
+    "SYSTEM OFFLINE": "系统离线",
+    "SYSTEM PAUSED": "系统已暂停",
+    "SYSTEM STANDBY": "系统待机",
+    "Sound volume": "音量",
+    "Space": "空格",
+    "Start captures the pointer. Escape releases & pauses.": "开始后锁定指针。按 Esc 释放并暂停。",
+    "THE MACHINE HAS GONE ROGUE": "机械失控了",
+    "TOOL DESTROYED": "切割器已损毁",
+    "TOOL OFFLINE": "切割器离线",
+    "TRACKBALL CONNECTED": "轨迹球已连接",
+    "TRACKED CONVOY": "履带车队",
+    "TRACKPAD": "触控板",
+    "The browser declined pointer capture.": "浏览器拒绝锁定指针。",
+    "The machine is ready for another round.": "机器就绪，再来一局。",
+    "USE TRACKBALL CONTROLS": "使用轨迹球操作",
+    "USE WINDOW / KEYBOARD CONTROLS": "使用窗口或键盘控制",
+    "Unmute sound": "取消静音",
+    "Use your browser’s fullscreen command.": "请使用浏览器的全屏命令。",
+    "WASD / ↑↓←→": "WASD / 方向键",
+    "WAVE": "波次",
+    "Window controls stop at screen edges. P pauses.": "指针移动到窗口边缘会停止。按 P 暂停。",
+    "Your game stays frozen until pointer control is ready.": "指针控制就绪后方可继续。",
+    "captures motion ·": "锁定指针 ·",
+    "or press": "或按",
+    "releases": "释放指针",
+    "to resume": "继续游戏",
+  },
+  patterns: [
+    [/^SCORE (.*?) · WAVE (.*?)$/, "得分 $1 · 第 $2 波"],
+    [/^(.*?) TOOLS REMAINING$/, "剩余 $1 台切割器"],
+    [/^WAVE (.*?)$/, "第 $1 波"],
+  ],
+});
+
+</script>
+</head>
   <body>
     <main class="machine" id="machine">
       <div class="console-layout">

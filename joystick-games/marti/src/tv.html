@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="tr">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Martı · Seagull Run</title>
+<title>马尔蒂 · 博斯普鲁斯海鸥</title>
 <meta name="arena-game" content="marti">
 <meta name="description" content="Fly a seagull over the Istanbul strait: snatch simit, dodge bridges and ships. · Boğaz üzerinde bir martı: simit kap, köprü ve gemilerden kaç.">
-<meta property="og:title" content="Martı · Seagull Run">
+<meta property="og:title" content="马尔蒂 · 博斯普鲁斯海鸥">
 <meta property="og:description" content="An endless 3D seagull run over the Istanbul strait: snatch simit from ferries, dodge bridge cables and kites, fly from sunset into a night of fireworks.">
 <meta property="og:image" content="https://furkiozknn.github.io/marti/docs/card.jpg">
 <meta property="og:image:width" content="960">
 <meta property="og:image:height" content="540">
 <meta property="og:url" content="https://furkiozknn.github.io/marti/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Martı · Seagull Run">
+<meta name="twitter:title" content="马尔蒂 · 博斯普鲁斯海鸥">
 <meta name="twitter:description" content="Boğaz üzerinde sonsuz bir martı koşusu: simit kap, köprü ve gemilerden kaç. · An endless seagull run over the Istanbul strait.">
 <meta name="twitter:image" content="https://furkiozknn.github.io/marti/docs/card.jpg">
 <meta name="theme-color" content="#0a192f">
@@ -197,6 +197,7 @@
 
   /* ---------- language ---------- */
   var STR = {
+    zh: { again: '再玩一次', another: '试试其他游戏', close: '关闭', settings: '辅助功能', textSize: '字号', contrast: '高对比度', motion: '减少动态效果', vibration: '震动', autoPause: '切换标签页时暂停', copied: '已复制到剪贴板', streak: '连续挑战', days: '天', share: '分享', fbAsk: '喜欢这款游戏吗？', like: '喜欢', dislike: '不喜欢', thanks: '谢谢！', freezeUsed: '❄️ 已使用保护机会，连续记录得以保留', freezeEarned: '❄️ 获得一次保护机会，错过一天也能保留连续记录' },
     tr: { again: 'Bir daha', another: 'Başka bir oyun dene', close: 'Kapat', settings: 'Erişilebilirlik',
       textSize: 'Yazı boyutu', contrast: 'Yüksek karşıtlık', motion: 'Hareketi azalt', vibration: 'Titreşim',
       autoPause: 'Sekme değişince duraklat', copied: 'Panoya kopyalandı', streak: 'Seri', days: 'gün', share: 'Paylaş',
@@ -208,8 +209,7 @@
       fbAsk: 'Did you enjoy it?', like: 'I liked it', dislike: 'I did not like it', thanks: 'Thanks!',
       freezeUsed: '❄️ A streak freeze saved the day you missed', freezeEarned: '❄️ Streak freeze earned: miss a day and your streak survives' },
   };
-  var lang = 'en';
-  try { lang = /^tr/i.test((hasDOM && document.documentElement.lang) || (root.navigator && navigator.language) || '') ? 'tr' : 'en'; } catch (e) {}
+  var lang = 'zh';
   function t(k) { return (STR[lang] && STR[lang][k]) || STR.en[k] || k; }
 
   /* ---------- game id + passport ---------- */
@@ -628,7 +628,7 @@
   })();
 
   root.Arena = {
-    version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (l) lang = l === 'tr' ? 'tr' : 'en'; return lang; },
+    version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (Object.prototype.hasOwnProperty.call(STR, l)) lang = l; return lang; },
     perf: perf, hint: hint, toast: toast, endCard: endCard, daily: daily, share: share, shareCard: shareCard,
     profile: profile, award: award, settings: settings, openSettings: openSettings, mountSettingsButton: mountSettingsButton,
     track: track, complete: complete, portal: portal,
@@ -1762,10 +1762,10 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
       </svg>
       <img class="crest-s" src="assets/ui/logo.png" alt="" onerror="this.remove()">Martı<i>.</i>
     </div>
-    <div class="stat score-stat"><small data-i18n="score">Skor</small><b id="sScore">0</b></div>
-    <div class="stat combo"><small data-i18n="combo">Kombo</small><b id="sCombo">x1</b></div>
-    <div class="stat" id="dist-stat"><small data-i18n="dist">Mesafe</small><b id="sDist">0 m</b></div>
-    <div class="stat" id="best-stat"><small data-i18n="best">En iyi</small><b id="sBest">0</b></div>
+    <div class="stat score-stat"><small data-i18n="score">得分</small><b id="sScore">0</b></div>
+    <div class="stat combo"><small data-i18n="combo">连击</small><b id="sCombo">x1</b></div>
+    <div class="stat" id="dist-stat"><small data-i18n="dist">距离</small><b id="sDist">0 m</b></div>
+    <div class="stat" id="best-stat"><small data-i18n="best">最高分</small><b id="sBest">0</b></div>
     <div class="grow"></div>
     <div id="lives"></div>
     <div class="icons">
@@ -1777,7 +1777,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
       <button class="ibtn" id="bSet" data-icon="gear"></button>
     </div>
   </div>
-  <div id="stamina" class="glass"><span id="stLabel" data-i18n="stamina">Enerji</span><span id="carry"></span><div id="stBar"></div></div>
+  <div id="stamina" class="glass"><span id="stLabel" data-i18n="stamina">体力</span><span id="carry"></span><div id="stBar"></div></div>
   <div id="chips"></div>
   <div id="toasts" role="status" aria-live="polite"></div>
   <div id="combo" aria-live="polite"></div>
@@ -1785,7 +1785,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
     <svg viewBox="0 0 24 24" class="dive-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 3v13m0 0l-5-5m5 5l5-5M5 20c3.5-1.5 6.5 1.5 10 0s3.5-1.5 4 0"/>
     </svg>
-    <span class="dive-lbl" data-i18n="diveAction">Dalış</span>
+    <span class="dive-lbl" data-i18n="diveAction">俯冲</span>
   </button>
 </div>
 
@@ -1809,98 +1809,98 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !importan
     </div>
     <img class="crest" src="assets/ui/logo.png" alt="" onerror="this.remove()">
     <div class="logo">Martı<i>.</i></div>
-    <p class="tag" data-i18n="tagline"></p>
+    <p class="tag" data-i18n="tagline">飞越博斯普鲁斯海峡，寻找热腾腾的芝麻面包圈</p>
     <div class="nestcard" id="nestCard"></div>
     <ul class="how" id="how"></ul>
     <div class="row">
-      <button class="btn" id="bStart" disabled>Loading…</button>
-      <button class="btn ghost" id="bSetT" data-i18n="settings">Ayarlar</button>
+      <button class="btn" id="bStart" disabled>正在加载…</button>
+      <button class="btn ghost" id="bSetT" data-i18n="settings">设置</button>
       <button class="btn ghost pill" id="bLangT">EN</button>
     </div>
-    <div class="row"><button class="btn ghost" id="bDaily" data-i18n="daily">Günün Meydan Okuması</button></div>
+    <div class="row"><button class="btn ghost" id="bDaily" data-i18n="daily">每日挑战</button></div>
     <p class="bestline" id="dailyLine"></p>
     <p class="bestline" id="bestLine"></p>
     <div class="two">
-      <div><h4 data-i18n="missions">Görevler</h4><ul id="missList"></ul></div>
-      <div><h4 data-i18n="highs">Yüksek skorlar</h4><ol id="highList"></ol></div>
+      <div><h4 data-i18n="missions">每日任务</h4><ul id="missList"></ul></div>
+      <div><h4 data-i18n="highs">高分榜</h4><ol id="highList"></ol></div>
     </div>
-    <p class="fact"><b data-i18n="didYou">Biliyor muydun?</b> <span id="titleFact"></span></p>
-    <p class="hint" data-i18n="hint"></p>
+    <p class="fact"><b data-i18n="didYou">你知道吗？</b> <span id="titleFact"></span></p>
+    <p class="hint" data-i18n="hint">START 暂停 · A 俯冲 · X 音乐 · Y 静音</p>
     <p class="foot">
-      <button class="linkb" id="bNews" type="button"><span id="verTag"></span> · <span data-i18n="news">Yenilikler</span></button>
-      <a class="linkb" id="titleHub" href="https://furkiozknn.github.io/" data-i18n="otherGames">Diğer oyunlar</a>
+      <button class="linkb" id="bNews" type="button"><span id="verTag"></span> · <span data-i18n="news">更新</span></button>
+      <a class="linkb" id="titleHub" href="https://furkiozknn.github.io/" data-i18n="otherGames">更多游戏</a>
     </p>
-    <p class="foot"><a href="https://github.com/Furkiozknn" target="_blank" rel="noopener" data-i18n="footer">Claude Game Arena · built by Claude Haiku 5.5 · assets remastered</a></p>
+    <p class="foot"><a href="https://github.com/Furkiozknn" target="_blank" rel="noopener" data-i18n="footer">Claude Game Arena · Claude Haiku 5.5 制作 · 素材重制</a></p>
   </div>
 </div>
 
 <div id="pause" class="overlay hidden">
   <div class="card">
     <img class="fig3d fig-pause" src="assets/3d/poz-marti.webp" alt="" onerror="this.remove()">
-    <div class="logo" style="font-size:40px" data-i18n="paused">Duraklatıldı</div>
-    <p class="tag" data-i18n="hint"></p>
+    <div class="logo" style="font-size:40px" data-i18n="paused">已暂停</div>
+    <p class="tag" data-i18n="hint">START 暂停 · A 俯冲 · X 音乐 · Y 静音</p>
     <div class="col">
-      <button class="btn" id="bResume" data-i18n="resume">Devam et</button>
-      <button class="btn ghost" id="bRestart" data-i18n="restart">Yeniden başla</button>
-      <button class="btn ghost" id="bSetP" data-i18n="settings">Ayarlar</button>
-      <button class="btn ghost" id="bMenuP" data-i18n="menu">Ana menü</button>
+      <button class="btn" id="bResume" data-i18n="resume">继续</button>
+      <button class="btn ghost" id="bRestart" data-i18n="restart">重新开始</button>
+      <button class="btn ghost" id="bSetP" data-i18n="settings">设置</button>
+      <button class="btn ghost" id="bMenuP" data-i18n="menu">主菜单</button>
     </div>
   </div>
 </div>
 
 <div id="settings" class="overlay hidden">
   <div class="card">
-    <div class="logo" style="font-size:36px" data-i18n="settings">Ayarlar</div>
+    <div class="logo" style="font-size:36px" data-i18n="settings">设置</div>
     <div class="setgrid">
-      <label for="vMaster" data-i18n="master">Genel ses</label><input type="range" id="vMaster" min="0" max="100" step="5">
-      <label for="vMusic" data-i18n="music">Müzik</label><input type="range" id="vMusic" min="0" max="100" step="5">
-      <label for="vSfx" data-i18n="sfx">Efektler</label><input type="range" id="vSfx" min="0" max="100" step="5">
-      <span data-i18n="language">Dil</span><div class="seg"><button class="segb" id="sTR">Türkçe</button><button class="segb" id="sEN">English</button></div>
-      <span data-i18n="quality">Kalite</span><div class="seg"><button class="segb" id="sLow" data-i18n="low">Düşük</button><button class="segb" id="sHigh" data-i18n="high">Yüksek</button></div>
-      <span data-i18n="fullscreen">Tam ekran</span><div class="seg"><button class="segb" id="sFull" data-i18n="toggleFs">Aç / kapat</button></div>
+      <label for="vMaster" data-i18n="master">主音量</label><input type="range" id="vMaster" min="0" max="100" step="5">
+      <label for="vMusic" data-i18n="music">音乐</label><input type="range" id="vMusic" min="0" max="100" step="5">
+      <label for="vSfx" data-i18n="sfx">音效</label><input type="range" id="vSfx" min="0" max="100" step="5">
+      <span data-i18n="language">语言</span><div class="seg"><button class="segb" id="sZH">简体中文</button><button class="segb" id="sTR">Türkçe</button><button class="segb" id="sEN">English</button></div>
+      <span data-i18n="quality">画质</span><div class="seg"><button class="segb" id="sLow" data-i18n="low">低</button><button class="segb" id="sHigh" data-i18n="high">高</button></div>
+      <span data-i18n="fullscreen">全屏</span><div class="seg"><button class="segb" id="sFull" data-i18n="toggleFs">开 / 关</button></div>
     </div>
     <p class="hint" id="setVer"></p>
-    <div class="row"><button class="btn" id="bSetBack" data-i18n="back">Geri</button></div>
+    <div class="row"><button class="btn" id="bSetBack" data-i18n="back">返回</button></div>
   </div>
 </div>
 
 <div id="news" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="newsT">
   <div class="card">
-    <h3 id="newsT" data-i18n="newsTitle">Neler yeni?</h3>
+    <h3 id="newsT" data-i18n="newsTitle">更新内容</h3>
     <p class="ver" id="newsVer"></p>
     <ul class="nl" id="newsList"></ul>
-    <h4><span data-i18n="achTitle">Başarımlar</span> <span id="achCount"></span></h4>
+    <h4><span data-i18n="achTitle">成就</span> <span id="achCount"></span></h4>
     <ul class="achgrid" id="achList"></ul>
-    <div class="row"><button class="btn" id="bNewsBack" type="button" data-i18n="back">Geri</button></div>
+    <div class="row"><button class="btn" id="bNewsBack" type="button" data-i18n="back">返回</button></div>
   </div>
 </div>
 
 <div id="over" class="overlay hidden">
   <div class="card">
     <img class="fig3d fig-over" src="assets/3d/poz-yavru.webp" alt="" onerror="this.remove()">
-    <div class="logo" style="font-size:40px" data-i18n="over">Koşu bitti</div>
+    <div class="logo" style="font-size:40px" data-i18n="over">飞行结束</div>
     <p class="tag" id="overReason"></p>
-    <div id="overTip" class="hidden"><span class="tip-badge" data-i18n="tipBadge">İpucu</span><span class="tip-text" id="oTip"></span></div>
+    <div id="overTip" class="hidden"><span class="tip-badge" data-i18n="tipBadge">提示</span><span class="tip-text" id="oTip"></span></div>
     <div class="newbest" id="newBest"></div>
     <p class="newach" id="oAch"></p>
     <div class="grid">
-      <div><small data-i18n="score">Skor</small><b id="oScore">0</b></div>
-      <div><small data-i18n="best">En iyi</small><b id="oBest">0</b></div>
-      <div><small data-i18n="dist">Mesafe</small><b id="oDist">0</b></div>
-      <div><small data-i18n="simit">Simit</small><b id="oSimit">0</b></div>
+      <div><small data-i18n="score">得分</small><b id="oScore">0</b></div>
+      <div><small data-i18n="best">最高分</small><b id="oBest">0</b></div>
+      <div><small data-i18n="dist">距离</small><b id="oDist">0</b></div>
+      <div><small data-i18n="simit">芝麻圈</small><b id="oSimit">0</b></div>
     </div>
     <div class="row">
-      <button class="btn hidden" id="bCont" data-i18n="cont">Reklam izle, devam et</button>
-      <button class="btn" id="bRetry" data-i18n="retry">Tekrar dene</button>
-      <button class="btn ghost" id="bMenuO" data-i18n="menu">Ana menü</button>
+      <button class="btn hidden" id="bCont" data-i18n="cont">观看广告后继续</button>
+      <button class="btn" id="bRetry" data-i18n="retry">再玩一次</button>
+      <button class="btn ghost" id="bMenuO" data-i18n="menu">主菜单</button>
     </div>
     <div class="row">
-      <button class="btn ghost" id="bShare" data-i18n="share">Paylaş</button>
-      <button class="btn ghost" id="bOther" data-i18n="anotherGame">Başka oyun</button>
+      <button class="btn ghost" id="bShare" data-i18n="share">分享</button>
+      <button class="btn ghost" id="bOther" data-i18n="anotherGame">其他游戏</button>
     </div>
     <p class="bestline" id="oDaily"></p>
     <p class="hint" id="overMissions"></p>
-    <p class="fact"><b data-i18n="didYou">Biliyor muydun?</b> <span id="oFact"></span></p>
+    <p class="fact"><b data-i18n="didYou">你知道吗？</b> <span id="oFact"></span></p>
   </div>
 </div>
 
@@ -1913,7 +1913,7 @@ setTimeout(function () {
   if (window.martiBoot) return;
   var f = document.getElementById('fatal');
   f.style.display = 'flex';
-  f.textContent = 'Could not load the game (network or blocked CDN). Check your connection and reload. · Oyun yüklenemedi (ağ ya da engellenen CDN). Bağlantını kontrol edip sayfayı yenile.';
+  f.textContent = '游戏未能加载，请重新打开。';
 }, 10000);
 </script>
 

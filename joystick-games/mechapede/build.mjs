@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import { build } from 'esbuild';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,7 +7,7 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const read = name => fs.readFileSync(path.join(root, name));
 const { outputFiles } = await build({ absWorkingDir: root, entryPoints: ['src/main.js'], bundle: true, write: false,
   minify: true, format: 'iife', target: 'es2020', legalComments: 'eof' });
-const files = { 'tv.html': read('src/index.html'), 'mechapede.js': Buffer.from(outputFiles[0].contents),
+const files = { 'tv.html': Buffer.from(await localizeHtml(read('src/index.html').toString('utf8'), root)), 'mechapede.js': Buffer.from(outputFiles[0].contents),
   'style.css': read('src/style.css'), 'machine-interior.png': read('src/assets/machine-interior.png'), 'favicon.svg': read('src/favicon.svg'),
   'THIRD-PARTY-NOTICES.txt': Buffer.from(['NOTICE.md', 'LICENSE', 'docs/puretv-LICENSE.txt'].map(read).join('\n\n')) };
 const dist = path.join(root, 'dist');

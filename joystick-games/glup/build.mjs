@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -13,6 +14,7 @@ const inline=s=>s.replace(/<\/script/gi,'<\\/script');
 let html=original.replace(/<link[^>]+(?:manifest|icon|stylesheet)[^>]*>/g,'').replace(/<script>[\s\S]*?<\/script>/g,'');
 html=html.replace('</head>',()=>'<style>'+fs.readFileSync(path.join(root,'src/style.css'))+'\n'+fs.readFileSync(path.join(root,'src/tv.css'))+'</style></head>');
 html=html.replace('</body>',()=>'<script>'+inline(controller)+'</script>'+scripts.map(file=>'<script>'+inline(fs.readFileSync(path.join(root,'src',file),'utf8'))+'</script>').join('\n')+'<script>'+inline(fs.readFileSync(path.join(root,'src/tv-adapter.js'),'utf8'))+'</script></body>');
+html = await localizeHtml(html, root);
 // Compile the exact packed scripts: replacement-string $ tokens in upstream code must stay literal.
 for (const [index, script] of [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].entries()) new vm.Script(script[1], { filename: 'tv-inline-' + index + '.js' });
 const files={'tv.html':Buffer.from(html),'THIRD-PARTY-NOTICES.txt':fs.readFileSync(path.join(root,'NOTICE.md'))};

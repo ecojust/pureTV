@@ -4,6 +4,9 @@
 // Y la letra GLUP (Glup, ART.glup): las mayúsculas del logotipo, gordas, blandas y goteando, para
 // las palabras grandes de celebración; cada letra se puede aplastar, mover y hacer gotear por separado.
 'use strict';
+function glupText(value) {
+  return globalThis.PureTVChinese?.translate(String(value)) ?? String(value);
+}
 const Letra = (() => {
   // 9 rows: 0-6 up to the baseline (capitals are 7 tall, lowercase x-height rows 2-6), 7-8 descenders.
   // Each glyph: rows separated by '|', starting at `top` (default 0). '#' is ink.
@@ -55,17 +58,44 @@ const Letra = (() => {
       }
       r = { w, px };
     }
+    // Sample the system CJK font into the same pixel grid as the original letters.
+    if (!r && /[\u3000-\u30ff\u3400-\u9fff\uff00-\uffef]/u.test(ch)) {
+      const canvas = ART.canvas(12, 12), ctx = canvas.getContext('2d');
+      ctx.font = '12px sans-serif';
+      ctx.textBaseline = 'top';
+      ctx.fillText(ch, 0, 0);
+      const bitmap = ctx.getImageData(0, 0, 12, 12).data, px = [];
+      for (let y = 0; y < 12; y++) for (let x = 0; x < 12; x++) {
+        if (bitmap[(12 * y + x) * 4 + 3] > 64) px.push([x, y - 1]);
+      }
+      r = { w: 12, px };
+    }
     cache.set(ch, r); return r;
   }
   const SPACE = 3, GAP = 1, LINE = 12;
-  function width(str) { let w = 0; for (const ch of str) { if (ch === ' ') { w += SPACE; continue; } const gl = glyph(ch); w += (gl ? gl.w : 3) + GAP; } return Math.max(0, w - GAP); }
+  function width(str) { str = glupText(str); let w = 0; for (const ch of str) { if (ch === ' ') { w += SPACE; continue; } const gl = glyph(ch); w += (gl ? gl.w : 3) + GAP; } return Math.max(0, w - GAP); }
   function wrap(str, max) {
+    str = glupText(str);
+    if (/[\u3400-\u9fff]/u.test(str)) {
+      const lines = [];
+      let line = '', used = 0;
+      for (const ch of str) {
+        const size = ch === ' ' ? SPACE : (glyph(ch)?.w ?? 3) + GAP;
+        if (line && (used + size - GAP > max || ch === '\n')) {
+          lines.push(line); line = ''; used = 0;
+        }
+        if (ch !== '\n') { line += ch; used += size; }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
     const out = []; let line = '';
     for (const word of str.split(' ')) { const t = line ? line + ' ' + word : word; if (width(t) > max && line) { out.push(line); line = word; } else line = t; }
     if (line) out.push(line); return out;
   }
   // Draw a string. o: { color, light (top rows), shadow, outline, shown (typed chars), bounce (frame counter for the pop), wave }.
   function text(g, str, x, y, o = {}) {
+    str = glupText(str);
     const col = o.color || '#2a1e2e', light = o.light || null, out = o.outline === undefined ? null : o.outline, sh = o.shadow || null;
     let cx = x; const shown = o.shown === undefined ? Infinity : o.shown, t = o.t || 0; let i = 0;
     for (const ch of str) {
@@ -85,9 +115,9 @@ const Letra = (() => {
   }
   // Letra Gorda: the display letters for shouts, titles and announcements. Capitals only, each stroke
   // doubled sideways, a dark rim, a drop shadow and a lighter top.
-  function boldWidth(str) { let w = 0; for (const ch of String(str).toUpperCase()) { if (ch === ' ') { w += 4; continue; } const gl = glyph(ch); w += (gl ? gl.w + 1 : 4) + 1; } return Math.max(0, w - 1); }
+  function boldWidth(str) { let w = 0; for (const ch of glupText(str).toUpperCase()) { if (ch === ' ') { w += 4; continue; } const gl = glyph(ch); w += (gl ? gl.w + 1 : 4) + 1; } return Math.max(0, w - 1); }
   function bold(g, str, x, y, o = {}) {
-    str = String(str).toUpperCase(); const col = o.color || '#fff6d6', light = o.light || '#ffffff', out = o.outline || '#1b1420', sh = o.shadow || '#0a0610';
+    str = glupText(str).toUpperCase(); const col = o.color || '#fff6d6', light = o.light || '#ffffff', out = o.outline || '#1b1420', sh = o.shadow || '#0a0610';
     const w = boldWidth(str); if (o.align === 'center') x -= w >> 1; else if (o.align === 'right') x -= w; x = Math.round(x); y = Math.round(y);
     const pass = (dx, dy, c, top) => { let cx = x; for (const ch of str) { if (ch === ' ') { cx += 4; continue; } const gl = glyph(ch); if (!gl) { cx += 5; continue; } for (const [px, py] of gl.px) { g.fillStyle = top ? (py <= 2 ? light : col) : c; g.fillRect(cx + px + dx, y + py + dy, 2, 1); } cx += gl.w + 2; } };
     pass(0, 2, sh); pass(-1, 0, out); pass(1, 0, out); pass(0, -1, out); pass(0, 1, out); pass(0, 0, null, true);
@@ -212,7 +242,7 @@ const Glup = (() => {
   }
   function layout(str, size = 'big', pal = 'musgo', gap) {
     const Z = SIZES[size] || SIZES.big, items = [], gp = gap === undefined ? Z.gap : gap; let x = 0, i = 0;
-    for (const ch of String(str).toUpperCase()) {
+    for (const ch of glupText(str).toUpperCase()) {
       if (ch === ' ') { x += Z.S * 2 + Z.gap; continue; }
       const gl = glyph(ch, size, pal); if (!gl) { x += Z.S * 3; continue; }
       items.push({ ch, gl, x: x - gl.inkL, cx: x + gl.inkW / 2, i: i++ }); x += gl.inkW + gp;

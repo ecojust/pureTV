@@ -2557,7 +2557,7 @@ const Game = {
   signText(idx, rawText) {
     const def = L.def; const raw = rawText !== undefined && rawText !== null ? rawText : (def.signs[idx] || ''); const m = Input.mode;
     const map = m === 'puretv' ? { move: 'Flechas', jump: 'A', fish: 'B', puff: 'X', up: 'arriba', down: 'abajo' } : m === 'touch' ? { move: 'El nenúfar', jump: '«salta»', fish: '«sorbe»', puff: 'el soplo', up: '▲', down: '▼' } : m === 'pad' ? { move: 'El stick', jump: 'A', fish: 'X', puff: 'B', up: 'arriba', down: 'abajo' } : { move: 'Flechas', jump: 'Z o espacio', fish: 'X', puff: 'C', up: '↑', down: '↓' };
-    return raw.replace(/\{(\w+)\}/g, (_, k) => map[k] || k).replace('▲', '↑').replace('▼', '↓');
+    return glupText(raw).replace(/\{(\w+)\}/g, (_, k) => glupText(map[k] || k)).replace('▲', '↑').replace('▼', '↓');
   },
   // ---------------------------------------------------------------- Dibujo
   draw(g) {

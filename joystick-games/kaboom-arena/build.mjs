@@ -1,5 +1,6 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import {build} from 'esbuild';
-import {cp, mkdtemp, readFile, readdir, rm} from 'node:fs/promises';
+import {cp, mkdtemp, readFile, readdir, rm, writeFile} from 'node:fs/promises';
 import {join, resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import assert from 'node:assert/strict';
@@ -18,7 +19,7 @@ try {
   await build({entryPoints:['src/game/main.js'], outfile:join(output,'arena.js'),
     bundle:true, minify:true, target:'es2020', charset:'utf8',
     alias:{three:resolve('src/game/vendor/three.module.min.js'), 'three/addons':resolve('src/game/vendor/three-addons')}});
-  await cp('src/tv.html', join(output,'tv.html'));
+  await writeFile(join(output,'tv.html'), await localizeHtml(await readFile('src/tv.html', 'utf8'), resolve('.')));
   await cp('src/portraits', join(output,'portraits'), {recursive:true});
   await cp('src/game/vendor/press-start-2p.woff2', join(output,'press-start-2p.woff2'));
   await cp('LICENSE', join(output,'LICENSE.txt'));
