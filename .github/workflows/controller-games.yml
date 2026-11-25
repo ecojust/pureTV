@@ -55,6 +55,8 @@ jobs:
       - name: Verify release artifact rejection boundaries
         run: python3 -m unittest discover -s tools/tests -p 'test_controller_*.py' -v
       - name: Test and lint the shared Android controller host
+        env:
+          JAVA_TOOL_OPTIONS: -Drobolectric.dependency.repo.url=https://maven-central.storage-download.googleapis.com/maven2
         run: |
           set -euo pipefail
           resource/launcher/puretv/gradlew --no-daemon --project-dir resource/game-kit/android testDebugUnitTest lintDebug 2>&1 | tee "$RUNNER_TEMP/shared-host.log"
