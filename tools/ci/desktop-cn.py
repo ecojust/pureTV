@@ -141,6 +141,10 @@ else:
     for path,digest in frozen_paths().items():assert sha(dest/'Web'/path)==digest,path
     assert read(dest/'game.json')==meta and sha(dest/'PureTVGame.exe')==report['hostSha256']
     report['nativeLaunch']=windows.smoke_native(dest/'PureTVGame.exe',scratch)
+    state=read(scratch/'diagnostic/state.json')
+    document=state.get('document',{})
+    assert document.get('language','').startswith('zh'),document
+    report['nativeLaunch'].update(lang=document['language'],title=document.get('title'))
     remove=scratch/'remove.exe';shutil.copy2(dest/'Uninstall.exe',remove);run(remove,'/S','_?='+str(dest))
     assert not (dest/'PureTVGame.exe').exists()
 assert target.is_file() and target.stat().st_size>0
