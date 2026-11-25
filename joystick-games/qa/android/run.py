@@ -792,16 +792,20 @@ class Acceptance:
     def signed_reload_source(self, slug):
         """Bind a later signed edition to its exact production APK and navigation sources."""
         editions = {
-            'backroad-rally': ('0.1.7', 8, BACKROAD_MENU_SOURCES),
-            'night-racer': ('0.1.1', 2, {
+            'backroad-rally': ({'0.1.7': 8, '0.1.9': 10}, BACKROAD_MENU_SOURCES),
+            'night-racer': ({'0.1.1': 2, '0.1.3': 4}, {
                 'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
                 'joystick-games/night-racer/src/src/tv-adapter.js': '7b271ee970ae78da66ae5bf128c2116e3107a41473b116f8c820b6b49be349ec',
             }),
         }
-        version, code, sources = editions[slug]
+        versions, sources = editions[slug]
         apk = getattr(self.args, 'apk', None)
-        if apk is None or apk.name != f'{slug}-{version}.apk':
+        if apk is None:
             return None
+        version = apk.name.removeprefix(slug + '-').removesuffix('.apk')
+        if apk.name != f'{slug}-{version}.apk' or version not in versions:
+            return None
+        code = versions[version]
         receipt = json.loads((apk.parent / 'signing-receipt.json').read_bytes())
         identity = self.report['apk']
         assert receipt['game'] == slug and receipt['packageName'] == PACKAGES[slug]
