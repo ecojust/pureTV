@@ -148,3 +148,28 @@ test('Independent scene palettes change at the completed magic stage and cycle a
  const sky=level=>{colors.length=0;renderer.background(0,level);return colors[0];};
  assert.equal(sky(0),sky(8));assert.equal(new Set(Array.from({length:8},(_,level)=>sky(level))).size,8);
 });
+
+test('Canvas title uses Chinese glyphs by default and pixel lettering in English', () => {
+  const {JewelRenderer} = require('../src/main/assets/renderer.js');
+  const labels = [];
+  let pixels = 0;
+  const context = {
+    save() {}, restore() {},
+    fillRect() { pixels++; },
+    fillText(label) { labels.push(label); }
+  };
+  const canvas = {getContext: () => context};
+  const drawTitle = language => {
+    const renderer = new JewelRenderer(canvas, language);
+    renderer.panel = renderer.gem = () => {};
+    renderer.title({selectedPlayers: 1, titleLevel: 0, frame: 0});
+  };
+  drawTitle();
+  assert.ok(labels.includes('方块'));
+  assert.ok(labels.includes('按 START 开始'));
+  pixels = 0;
+  labels.length = 0;
+  drawTitle('en-US');
+  assert.equal(labels.length, 0);
+  assert.ok(pixels > 20);
+});
