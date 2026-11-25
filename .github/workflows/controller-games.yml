@@ -143,6 +143,7 @@ jobs:
           PY
       - name: Build unsigned release APKs, native tests and lint
         env:
+          JAVA_TOOL_OPTIONS: -Drobolectric.dependency.repo.url=https://maven-central.storage-download.googleapis.com/maven2
           CONTROLLER_GROUP: ${{ matrix.group }}
         run: |
           set -euo pipefail
