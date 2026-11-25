@@ -1,68 +1,84 @@
-name: Copy original desktop catalog artifact to existing draft
+name: Export small original Android runtime reports for the Chinese games
 on:
   workflow_dispatch:
     inputs:
-      source_run:
-        description: Original macOS or Windows catalog run ID
+      run:
+        description: Source Actions run ID
         required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
+      game:
+        description: Game ID
         required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
+      source:
+        description: Source run commit
         required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
 permissions:
   actions: read
   contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
 jobs:
-  transfer:
+  evidence:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
     env:
+      RUN: ${{ inputs.run }}
+      GAME: ${{ inputs.game }}
+      SOURCE: ${{ inputs.source }}
       GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+      - id: origin
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          from pathlib import Path
+          repo = os.environ['GITHUB_REPOSITORY']
+          run, slug, source = (os.environ[key] for key in ('RUN','GAME','SOURCE'))
+          assert repo == 'ecojust/pureTV' and re.fullmatch(r'[1-9][0-9]+',run)
+          assert re.fullmatch(r'[a-z][a-z0-9-]{1,50}',slug) and re.fullmatch('[0-9a-f]{40}',source)
+          def api(p):
+              return json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/'+p]))
+          info = api('actions/runs/'+run)
+          assert info['head_sha'] == source and info['run_attempt'] == 1 and info['status'] == 'completed'
+          workflow = Path(info['path']).name
+          assert workflow in ['joystick-catalog-android.yml','joystick-catalog-android-runtime.yml','joystick-games-android.yml','joystick-games-android-runtime.yml']
+          name = ('joystick-android-runtime-' if workflow.endswith('-runtime.yml') else 'joystick-android-report-runtime-') + slug
+          artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
+          matched,=[a for a in artifacts if a['name']==name and not a['expired']]
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('id='+str(matched['id']),file=f)
+          Path('origin.json').write_text(json.dumps({'game':slug,'workflow':workflow,'runId':run,'runAttempt':1,'source':source,'artifact':name,'artifactId':matched['id'],'artifactDigest':matched['digest']},indent=2)+'\n')
+          PY
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.run }}
+          artifact-ids: ${{ steps.origin.outputs.id }}
+          path: input
+      - name: Keep exact reports and their source metadata
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os, shutil, hashlib, json
+          slug=os.environ['GAME']
+          root=Path('input')
+          output=Path('report-export');output.mkdir()
+          hashes={}
+          for f in sorted(root.rglob('*')):
+              if not f.is_file():continue
+              if f.name not in {'report.json','input-verification.log','emulator-version.txt','executed-source.json','android-environment-diagnostic.json'}:continue
+              if f.name=='report.json' and f.parent.name not in {slug+'-normal',slug+'-occupied'}:continue
+              assert not f.is_symlink() and f.stat().st_size < 5_000_000
+              target=output/f.relative_to(root);target.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(f,target);hashes[str(f.relative_to(root))]=hashlib.sha256(f.read_bytes()).hexdigest()
+          assert hashes
+          origin=json.loads(Path('origin.json').read_text())
+          origin['files']=hashes
+          (output/'evidence-origin.json').write_text(json.dumps(origin,indent=2)+'\n')
+          PY
+          cd report-export
+          ref="build-assets/zh-android-runtime-evidence-${RUN}-${GAME}-${GITHUB_RUN_ID}"
+          git init --initial-branch "$ref"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -qm "Original runtime evidence for $GAME from $RUN"
+          gh auth setup-git
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git push origin "HEAD:refs/heads/$ref"
