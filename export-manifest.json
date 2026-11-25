@@ -1,0 +1,735 @@
+{
+  "qaSourceSha": "87e373ccb647c82d4217f7da88e461329eab49d4",
+  "runId": "45527389246",
+  "runtimeResult": "success",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "acceptanceMode": "complete",
+    "acceptanceScope": "complete controller acceptance",
+    "fullGameplayAcceptance": true,
+    "driverFlags": [],
+    "requestedBatches": [
+      "retry-used-car-mesa",
+      "retry-alien"
+    ],
+    "selectedBatches": [
+      "retry-used-car-mesa",
+      "retry-alien"
+    ],
+    "plannedSlugs": [
+      "used-car-racing",
+      "alien-shooter"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "worlds",
+          "batch": "retry-used-car-mesa",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "host",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu host -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "worlds",
+          "batch": "retry-alien",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": false,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "rendererComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "previousRenderer": "swiftshader_indirect",
+        "requestedRenderer": "swiftshader",
+        "previousRendererDeprecatedSince": "36.4.9",
+        "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+      },
+      "hostVersionComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "requested": {
+          "version": "35.6.11",
+          "build": "13610412",
+          "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+          "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+          "bytes": 319086252,
+          "officialArchive": "https://developer.android.com/studio/emulator_archive"
+        },
+        "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+      },
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "87e373ccb647c82d4217f7da88e461329eab49d4"
+  },
+  "files": {
+    "evidence/controller-runtime-retry-alien/bundle-manifest.json": {
+      "bytes": 231,
+      "sha256": "d682ab6c1fcab5d34aef48c4cc6a8d3d0742605d8b603130dca29ba33efbb8ba"
+    },
+    "evidence/controller-runtime-retry-alien/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-alien/continuous-logcat.txt": {
+      "bytes": 4336409,
+      "sha256": "cbc713bfe19cee2fea299e631ed08d4d6eab7b9a756273e6116720edf31fc309"
+    },
+    "evidence/controller-runtime-retry-alien/runtime-selection.json": {
+      "bytes": 3034,
+      "sha256": "bf20e85f30340205949c6520b74b5a05731e55211f1104d48c274e3e3f8091ea"
+    },
+    "evidence/controller-runtime-retry-alien/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "0f4e3910ef15be1e7f1aefc5e68bd6653f367a1fb319f32f5a8ec19eb1a2225e"
+    },
+    "evidence/controller-runtime-retry-alien/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-alien/report.json": {
+      "bytes": 25771,
+      "sha256": "79dc0910b84c8c7ebe918fc17cad71d1ba3fc7b90ab534b1c30fdc87767bc582"
+    },
+    "evidence/controller-runtime-retry-alien/input-verification.json": {
+      "bytes": 1680,
+      "sha256": "6266dd1f8d896ce97df271310fb35dbdad63bdbeefb55cb6324fcf4eb5acf037"
+    },
+    "evidence/controller-runtime-retry-alien/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-retry-alien/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/bundle-manifest.json": {
+      "bytes": 231,
+      "sha256": "d682ab6c1fcab5d34aef48c4cc6a8d3d0742605d8b603130dca29ba33efbb8ba"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/continuous-logcat.txt": {
+      "bytes": 3994362,
+      "sha256": "7d0b24beb307e8e21ec00645859041f391cb4411b58b7b398286dc3dfa0ef92f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/runtime-selection.json": {
+      "bytes": 3034,
+      "sha256": "bf20e85f30340205949c6520b74b5a05731e55211f1104d48c274e3e3f8091ea"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "0f4e3910ef15be1e7f1aefc5e68bd6653f367a1fb319f32f5a8ec19eb1a2225e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/report.json": {
+      "bytes": 25782,
+      "sha256": "18d16da548782976c3d728a02b9baa5d35d5f16bde6751093e9767fea8c8f954"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/input-verification.json": {
+      "bytes": 1680,
+      "sha256": "6266dd1f8d896ce97df271310fb35dbdad63bdbeefb55cb6324fcf4eb5acf037"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-before.txt": {
+      "bytes": 59772,
+      "sha256": "68445ff579cc415ad584d3d336c804c69bae2b83493529dad5254790ddcb4890"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/host-samples.jsonl": {
+      "bytes": 227914,
+      "sha256": "87560ea6ae8e9bf0c994a4b1aa825d549048c03afe07a97458f4b8e0858ee7d2"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "5a68a1635981eb4b9fb136d4696decac2e044149e7baefb2937b4002774723ba"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-after.txt": {
+      "bytes": 59896,
+      "sha256": "c1afa1d7c616b2b0b3ef406ba8ef91a6d9e654f9fd01d91c1f6e21a4d3a841b8"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "265a81c6000f05b4c79e142006513e35760b9b769dd1824c1e8197cc003ae5da"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "ea37febbcc2130f3befbcf2db20667756686d9ff7d08ae46f5b217c1f8abdd67"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "86b37f401fb7d537db4f1b8406130b3ce35f71f29c4c6e608875d0d951c13e3c"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "339713941561afb190e164071fe94d048ad86d14aa3c0d38146b827cf490fb5c"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/baseline-release.json": {
+      "bytes": 431,
+      "sha256": "653d545b30d900b604ada88a966ea5ca5b276eda3c7807e33c7edaa23bfd5a90"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/commands.json": {
+      "bytes": 1054,
+      "sha256": "fe0a203d73d0b76d321c78aab264c858597222a50fe3642f33c3558f740b723f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/initial-snapshot.json": {
+      "bytes": 8796,
+      "sha256": "2f815391b271ecc2a929069d92aab326f154a8188d2579018544ffc9ac2559c3"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/case.json": {
+      "bytes": 923,
+      "sha256": "5e461993d9fca7adc832eda9088e45705eb4e6b30c6b75d7ad33bf83211f3f4f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay.mp4": {
+      "bytes": 624153,
+      "sha256": "6ff9c3774b924c8b2419d37c324a86c24d3dfc9c42bc093bab0e45fe6e3c0371"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/logcat.txt": {
+      "bytes": 2167815,
+      "sha256": "8cc18bdfa1e40114dea13602a210145bb0d81c38a3ede9bdcde7a7da69dc411e"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/recording-probe.json": {
+      "bytes": 4356,
+      "sha256": "24c134f60ad6d862afd544ab663c063ec7c2ae7061e906a338612d70d6dae068"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/driver.log": {
+      "bytes": 665,
+      "sha256": "0c118df5426ed5a3f08935a44789eab45b31a53f68588432c654f4141e26d3df"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-release.py": {
+      "bytes": 19925,
+      "sha256": "7d38c54008c22a52a825d85a6dbdcc5b2e0fe63f0d449a307f0e67924de936da"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 9005,
+      "sha256": "ea9bba54ed7e91b9509e70c12cb5bdaba724a02681bc8efaa2522f8a0e945a7c"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23887,
+      "sha256": "ffc9910ba1f6bff2662abaf66ceaf03f27b4d0e88edd9dbc6735fe8e42609369"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/resource_catalog.py": {
+      "bytes": 14298,
+      "sha256": "c4eced688811272f9ca61a0a81b528eab2ce3b7cc4a95e6233733aa009b82f17"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12471,
+      "sha256": "ffcb570bc2b191129382a58fd7b08649b261665f3d545eb539b73b4b5a935b3b"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 27535,
+      "sha256": "8db40be77ea100395388d660c851c8bd4581a986c2584d772d160ceccf5a7242"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1341,
+      "sha256": "8e3522e2cab64aa13f89b674ca732b4f5788735441e152139f0ca685de216686"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11964,
+      "sha256": "95f57a1e668b15b8e3456d57fe5ff6f08ffbf2c626fe1d6a648f46cea67fe1ef"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3070,
+      "sha256": "71eb0f3feda1196f105d8ffe713a0e708b55ba665e7b58856f41022bf72fa46a"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 15589,
+      "sha256": "9050cca64125197ae1a89ad5cffc3607754201d0cbddcff91f50861f69a3d64b"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "2e29fb8097b55c3ad207785a00cce140fc1657079175df1bd8b116a2e1f1a919"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/gameplay.png": {
+      "bytes": 1090090,
+      "sha256": "bd010c54ae2b81e57488f0e82dd702e72bc4116971480e8b6966057f2300f004"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-run.mjs": {
+      "bytes": 27535,
+      "sha256": "8db40be77ea100395388d660c851c8bd4581a986c2584d772d160ceccf5a7242"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/menu-android.png": {
+      "bytes": 1237983,
+      "sha256": "a232a835c3b4c35231fc3e5c84230c31536038084de176460893d9f4ecac1176"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/paused.png": {
+      "bytes": 265920,
+      "sha256": "554ea073bfd289429701f4a58cf801c3b1ad16e47fb6ff87976df2d0d53c0c5c"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/report.json": {
+      "bytes": 253507,
+      "sha256": "0427953d575b6fe6bb86f82d639330511c7d919f19900bb60a322dcbe8bec2d0"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-cases.mjs": {
+      "bytes": 11964,
+      "sha256": "95f57a1e668b15b8e3456d57fe5ff6f08ffbf2c626fe1d6a648f46cea67fe1ef"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/reconnected.png": {
+      "bytes": 1100295,
+      "sha256": "dc75c05728618b99091a1c973d531607277e0e1ff5364a71c784e8e073dad883"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/bridge-stderr.txt": {
+      "bytes": 3628,
+      "sha256": "2577ef1c61ffe927899b91f1f88dae125b109747566c88edc222fdea12a9b118"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 710,
+      "sha256": "c6fb082e7f039120f3677394ecfb81cb309cba851482ff30e0e0f27f5031ab03"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "a2204d86d5f81f5d6b04072eeb679bae3f80e4c5db12da315b37b85a1861d82c"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/joystick-games/alien-shooter/build.gradle": {
+      "bytes": 1476,
+      "sha256": "12db65c4c48e84fbb69618202793bb7d39659056961846420338e0cff8421138"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3070,
+      "sha256": "71eb0f3feda1196f105d8ffe713a0e708b55ba665e7b58856f41022bf72fa46a"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/joystick-games/used-car-racing/build.gradle": {
+      "bytes": 1663,
+      "sha256": "9cfa0de442e8b14ea2af8c30f9f4b43a4c904c7422d9513d50abe4ebb0b08182"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3070,
+      "sha256": "71eb0f3feda1196f105d8ffe713a0e708b55ba665e7b58856f41022bf72fa46a"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/mesa-icd.json": {
+      "bytes": 135,
+      "sha256": "70d49f7fd41a7593a4e283543ed4855c139c700e5c1b31792f56e9576ede2398"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/packages.txt": {
+      "bytes": 126,
+      "sha256": "a157e738ef06e669fc314f1e7edba181b618af5a7c6309427190d39c25b184d8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/host-gl.txt": {
+      "bytes": 1722,
+      "sha256": "ffb3cd029fd3938d8f52307f9f68e7a430b7abe3ae33274ecf62919d0c6f654e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/host-vulkan.txt": {
+      "bytes": 2069,
+      "sha256": "f306f5602bdf7bd71615fa8fa129d5e03d544e4d615bd6c5b111ebb57e4002d2"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/display-number": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/xvfb.log": {
+      "bytes": 12914,
+      "sha256": "94b277b248f39621dd02badbbd9a351f23973240a57450cc8269c601fea238b9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-before.txt": {
+      "bytes": 56624,
+      "sha256": "c6d934a585aa665f7ff9f28aee2833cbd2b8036ce65a8d929a2e5098e64fe082"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/host-samples.jsonl": {
+      "bytes": 253851,
+      "sha256": "ef5edff78f32e37a3d5afda7e29272f62a8119194339caa1b86cbeafdc4031a7"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "f6974e52dbb13c50539b4b6185a87e186335e696c0226c31e00734a0fc74e508"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-after.txt": {
+      "bytes": 56742,
+      "sha256": "93ce4df403de30a27e15874e94efbfbedec089d726370ef540361358be3dbf41"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "0b23e5184e64d05839b00ffb55c2c9cd73e70e1af29dfce27973da39e23f6d1d"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "d3267a3c533a30c82c659d20cdefd785c4f2d87c295843eddc3dfc61fb9c7ae8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "5d997f8c7ea694431e9c2d1d683a950393a1c033c1e20eefcd3539c3e75ff442"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "d3b80ac521dc5535094073e5dedef4b42f90694a71fd22203190ea3f51b759b6"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/baseline-release.json": {
+      "bytes": 428,
+      "sha256": "0355da68fb16fa88b4ef51b077796c89860f418ac9219b9030fcba24b0b179d7"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/commands.json": {
+      "bytes": 1061,
+      "sha256": "4b65ddfd10febb1a77df916255bce23760209f419c06d6b51f30380073feecc9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/initial-snapshot.json": {
+      "bytes": 16446,
+      "sha256": "1cc5c2bbfddc8b30212eb1d87a34d1360cace2498be86f5563ad2ba7a4fc7212"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/case.json": {
+      "bytes": 925,
+      "sha256": "4da5f34a7fcbdfbfab30a76e7302a4ab5cd662d040cc5151e98e554b7abebae5"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay.mp4": {
+      "bytes": 992359,
+      "sha256": "6ab21c1e1546e802b3602ef99ec42a3abb720f55417683838ade8e0c42fb0293"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/logcat.txt": {
+      "bytes": 2127860,
+      "sha256": "7dae45672678047430cd90f37632b0806e27017d3588a7a869620ed2a2d8ffe9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/recording-probe.json": {
+      "bytes": 4359,
+      "sha256": "3b3d11eaa000c377ea6a0bb860a4a607d5e590454ce83bae08bce5363d5d12d1"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/driver.log": {
+      "bytes": 778,
+      "sha256": "f2c74304ee57bdf7e8d3976c5c9a4b079efb9aa8718452fa815387bd6416b2e0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-release.py": {
+      "bytes": 19925,
+      "sha256": "7d38c54008c22a52a825d85a6dbdcc5b2e0fe63f0d449a307f0e67924de936da"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 9005,
+      "sha256": "ea9bba54ed7e91b9509e70c12cb5bdaba724a02681bc8efaa2522f8a0e945a7c"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23887,
+      "sha256": "ffc9910ba1f6bff2662abaf66ceaf03f27b4d0e88edd9dbc6735fe8e42609369"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/resource_catalog.py": {
+      "bytes": 14298,
+      "sha256": "c4eced688811272f9ca61a0a81b528eab2ce3b7cc4a95e6233733aa009b82f17"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12471,
+      "sha256": "ffcb570bc2b191129382a58fd7b08649b261665f3d545eb539b73b4b5a935b3b"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 27535,
+      "sha256": "8db40be77ea100395388d660c851c8bd4581a986c2584d772d160ceccf5a7242"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1341,
+      "sha256": "8e3522e2cab64aa13f89b674ca732b4f5788735441e152139f0ca685de216686"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11964,
+      "sha256": "95f57a1e668b15b8e3456d57fe5ff6f08ffbf2c626fe1d6a648f46cea67fe1ef"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3070,
+      "sha256": "71eb0f3feda1196f105d8ffe713a0e708b55ba665e7b58856f41022bf72fa46a"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 15589,
+      "sha256": "9050cca64125197ae1a89ad5cffc3607754201d0cbddcff91f50861f69a3d64b"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "63f863b1bc2bad30350b0676200d9193fd81d4c3b08def9978c9f3f312bdfc12"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 710,
+      "sha256": "c6fb082e7f039120f3677394ecfb81cb309cba851482ff30e0e0f27f5031ab03"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "a2204d86d5f81f5d6b04072eeb679bae3f80e4c5db12da315b37b85a1861d82c"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/alien-shooter/joystick-games/alien-shooter/build.gradle": {
+      "bytes": 1476,
+      "sha256": "12db65c4c48e84fbb69618202793bb7d39659056961846420338e0cff8421138"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3070,
+      "sha256": "71eb0f3feda1196f105d8ffe713a0e708b55ba665e7b58856f41022bf72fa46a"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/joystick-games/used-car-racing/build.gradle": {
+      "bytes": 1663,
+      "sha256": "9cfa0de442e8b14ea2af8c30f9f4b43a4c904c7422d9513d50abe4ebb0b08182"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3070,
+      "sha256": "71eb0f3feda1196f105d8ffe713a0e708b55ba665e7b58856f41022bf72fa46a"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/gameplay.png": {
+      "bytes": 840024,
+      "sha256": "63f09a0b7e1cd3561bcb3299a26092ef3f2174b299bc8620b2bd968fb8db8394"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-run.mjs": {
+      "bytes": 27535,
+      "sha256": "8db40be77ea100395388d660c851c8bd4581a986c2584d772d160ceccf5a7242"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/menu-android.png": {
+      "bytes": 624636,
+      "sha256": "e53aa26922ca76ad2c11a2dddb6563b1b807273ab93c3a107fa5409c1ec9c7a8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/paused.png": {
+      "bytes": 434396,
+      "sha256": "b83a6a52945b77ba6aa100fd24b6b838c27f1d88a22972b548a29816148fbdef"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/report.json": {
+      "bytes": 468212,
+      "sha256": "778cc69beb62e90aa4fddab521f225d2f7e9ba9dd18c642fc17d294054b5e424"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-cases.mjs": {
+      "bytes": 11964,
+      "sha256": "95f57a1e668b15b8e3456d57fe5ff6f08ffbf2c626fe1d6a648f46cea67fe1ef"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/reconnected.png": {
+      "bytes": 838589,
+      "sha256": "760b0f31fea7c61cfafb00a705551a84c78aa6d3851d0cd0d3ff75fcba6dfa55"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/bridge-stderr.txt": {
+      "bytes": 4816,
+      "sha256": "ac98fd022655472a15f9b83d282077c97240e0f4987c870df7a706eb3c0cd54a"
+    }
+  }
+}
