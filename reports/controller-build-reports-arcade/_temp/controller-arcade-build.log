@@ -1,0 +1,167 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Task :tank:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :tank:preparePuretvControllerSources
+> Task :jackal:prepareJackalPreviewAssets
+
+> Task :jackal:verifyJackalPreviewArtwork
+Jackal local preview: verified 367 artwork files from /home/runner/work/_temp/jackal-art
+
+> Task :jackal:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :jackal:preparePuretvControllerSources
+
+> Task :jewel:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :jewel:preparePuretvControllerSources
+
+> Task :tetris:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :tetris:preparePuretvControllerSources
+
+> Task :super-mario:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :super-mario:preparePuretvControllerSources
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_4-1795565748952.json
+
+FAILURE: Build completed with 5 failures.
+
+1: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':tank:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':jackal:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+3: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':jewel:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+4: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':tetris:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+5: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':super-mario:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 46s
+12 actionable tasks: 12 executed

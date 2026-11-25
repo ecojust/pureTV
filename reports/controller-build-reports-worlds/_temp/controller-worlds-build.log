@@ -1,0 +1,70 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Task :used-car-racing:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :used-car-racing:preparePuretvControllerSources
+
+> Task :alien-shooter:generateGameplayLauncherArt FAILED
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 129, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 125, in main
+    save_png(args.game, args.output, args.size)
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 94, in save_png
+    _artwork(game, (size, size), True).save(output, format='PNG')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/tools/game_icons.py", line 75, in _artwork
+    from PIL import Image, ImageOps
+ModuleNotFoundError: No module named 'PIL'
+
+> Task :alien-shooter:preparePuretvControllerSources
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_4-1795565739764.json
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':used-car-racing:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* Where:
+Script '/home/runner/work/pureTV/pureTV/resource/game-kit/legacy-controller-native/integration.gradle' line: 35
+
+* What went wrong:
+Execution failed for task ':alien-shooter:generateGameplayLauncherArt'.
+> Process 'command 'python3'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 17s
+4 actionable tasks: 4 executed
