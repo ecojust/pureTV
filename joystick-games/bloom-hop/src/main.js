@@ -860,10 +860,12 @@ function text(str, x, y, size, { color = C.ink, align = 'center', weight = 600, 
 }
 function wrap(str, maxW, size, weight = 500) {
   ctx.font = `${weight} ${size}px ${FONT}`;
-  const words = str.split(' '), lines = [];
+  const localized = globalThis.PureTVChinese?.translate(str) ?? str;
+  const chinese = /[\u3400-\u9fff]/.test(localized);
+  const words = chinese ? Array.from(localized) : localized.split(' '), lines = [];
   let line = '';
   for (const w of words) {
-    const test = line ? line + ' ' + w : w;
+    const test = line && !chinese ? line + ' ' + w : line + w;
     if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test;
   }
   if (line) lines.push(line);

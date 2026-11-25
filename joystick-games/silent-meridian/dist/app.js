@@ -1280,7 +1280,7 @@ void main(){float d=length(gl_PointCoord-.5)*2.;float alpha=exp(-d*d*4.)*(1.-smo
   } catch {
     storage = null;
   }
-  var loaded = loadState(storage, navigator.language.startsWith("zh") ? "zh" : "en");
+  var loaded = loadState(storage);
   var state = loaded.state;
   var saveAvailable = loaded.available;
   var screen = "title";

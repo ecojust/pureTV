@@ -35,6 +35,7 @@ function esc(s) {
 
 /** *italic* and paragraph breaks; tolerant of an unclosed * mid-typewriter. */
 function format(text) {
+    text = globalThis.PureTVChinese?.translate(text) ?? text;
     let out = '', italic = false;
     for (const para of esc(text).split('\n\n')) {
         let p = '';
@@ -61,6 +62,7 @@ export function currentLine() { return spokenLine; }
 
 export function say({ who = null, text }) {
     spokenLine = text;
+    text = globalThis.PureTVChinese?.translate(text) ?? text;
     return new Promise((resolve) => {
         const box = $('msg');
         box.hidden = false;

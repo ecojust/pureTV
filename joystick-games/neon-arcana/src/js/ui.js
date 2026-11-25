@@ -206,8 +206,10 @@ export class UI {
         const quest = G.mode === 'quest';
         $('over-head').textContent = G.won ? 'The Afterglow Fades' : 'The Reading Ends';
         const n = G.restored.length;
-        $('over-text').textContent = `${fmt(G.score)} light gathered in ${G.moves} moves, ${G.lines} ${G.lines === 1 ? 'line' : 'lines'} cleared, best resonance ×${(1 + 0.5 * G.bestResonance).toFixed(1)}.` +
-            (quest ? (n ? ` You rekindled ${n} ${n === 1 ? 'arcanum' : 'arcana'}.` : '') : ` Best free reading: ${fmt(meta.bestFree)}.`);
+        const summary = `共用 ${G.moves} 步收集了 ${fmt(G.score)} 点光芒，消除了 ${G.lines} 行，最高共鸣 ×${(1 + 0.5 * G.bestResonance).toFixed(1)}。`;
+        $('over-text').textContent = summary + (quest
+            ? (n ? `你重燃了 ${n} 张秘仪牌。` : '')
+            : `自由占卜最高分：${fmt(meta.bestFree)}。`);
         const box = $('over-cards');
         box.innerHTML = '';
         for (const i of G.restored) {

@@ -169,6 +169,194 @@ body[data-puretv-playing="true"] #puretv-controller-panel[data-playing=true] {
   top: auto !important; bottom: 6px; right: 6px;
 }
 </style>
+<script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+// Simplified Chinese strings for the offline game.
+PureTVChinese.install({
+  strings: {
+    ": both vanish for a big bonus. Merges in quick succession make a chain and score extra.": ": 两者都因为巨额奖金而消失。 快速的合并会形成链条并获得额外分数。",
+    "A Christmas candy merge puzzle": "圣诞糖果合成游戏",
+    "Aim": "目标",
+    "Best": "最佳成绩",
+    "Best 0": "最高分 0",
+    "Christmas Miracle": "圣诞奇迹",
+    "Continue": "继续游戏",
+    "Delete saved game": "删除存档",
+    "Done": "完成",
+    "Drag anywhere to aim, lift to drop": "拖动到任何地方瞄准，升起到下降",
+    "Drop": "落落",
+    "Drop treats into the jar. When two of the": "滴药会打进罐子里 当两个",
+    "Enter": "回车键",
+    "Falling snow": "飘雪",
+    "Gamepad": "手柄",
+    "Gingerbread House": "姜饼店",
+    "Gingerbread Man": "姜饼人",
+    "Got it": "知道了",
+    "Gumdrop": "口水滴",
+    "Holly Wreath": "冬青花环",
+    "How to Play": "玩法说明",
+    "INPUT": "输入",
+    "Jingle Bell": "叮当铃",
+    "Lollipop": "棒棒糖",
+    "Mouse": "鼠标",
+    "Move to aim, click to drop": "移动到瞄准点，单击到下降",
+    "Music": "音乐",
+    "New Game": "新游戏",
+    "New best score!": "新的最好成绩！",
+    "Next": "下一步",
+    "Next treat": "下一个",
+    "Off": "关",
+    "On": "开",
+    "Ornament": "质谱",
+    "P / Esc": "专业人员/埃斯科",
+    "Pause": "暂停",
+    "Paused": "已暂停",
+    "Peppermint": "薄荷",
+    "Play Again": "再玩一次",
+    "Present": "现",
+    "Resume": "继续游戏",
+    "SELECT": "自我检查",
+    "Save & Quit to Title": "保存并返回标题画面",
+    "Saved game deleted.": "已保存的游戏已删除。",
+    "Score": "得分",
+    "Settings": "设置",
+    "Snow Globe": "环球雪",
+    "Sound": "音效",
+    "Space": "空格键",
+    "Space / ↓ / S": "空间 / + / S",
+    "Stick or d-pad, A drops, Start pauses": "粘贴或 d- 粘贴，滴滴，开始暂停",
+    "Sugarplum": "糖梅",
+    "Sugarplum Drop": "糖梅落落",
+    "Sugarplum Drop game view": "糖浆滴弃游戏视图",
+    "TEXTAREA": "特 施塔雷亚",
+    "That save could not be read.": "无法读取此保存。",
+    "The jar is full!": "糖果罐已满！",
+    "Title": "标题画面",
+    "Touch": "触屏",
+    "Truffle": "扭动",
+    "Two golden Jingle Bells make a": "双金色的金色金铃",
+    "button, select, input": "按钮，选择，输入",
+    "malformed body": "身体畸形",
+    "malformed save": "格式错误的保存",
+    "same": "相同",
+    "treat touch, they merge into the next one up, and the new one can merge again. Fill the jar past the striped line for too long and the game is over.": "处理触摸，它们会合并到下一个触摸上，新的触摸可以再次合并。在条纹线上填满罐头过长，游戏结束。",
+    "unknown save version": "未知保存版本"
+  },
+  patterns: [
+    [/^Best: (.{0,240}?) · biggest treat: (.*?)$/, (_, v1, v2) => "最高分 " + PureTVChinese.translate(v1) + " · 最大糖果：" + PureTVChinese.translate(v2)],
+    [/^Christmas Miracle! \+(.*?)$/, (_, v1) => "圣诞奇迹！＋" + PureTVChinese.translate(v1)],
+    [/^Biggest treat: (.*?)$/, (_, v1) => "最大糖果：" + PureTVChinese.translate(v1)],
+    [/^New treat: (.*?)!$/, (_, v1) => "新糖果：" + PureTVChinese.translate(v1) + "！"],
+    [/^Chain ×(.*?)$/, (_, v1) => "连锁 ×" + PureTVChinese.translate(v1)],
+    [/^Best (.*?)$/, (_, v1) => "最高分 " + PureTVChinese.translate(v1)]
+  ]
+});
+
+</script>
 </head>
 <body>
     <span id="back-link" hidden></span>
@@ -216,7 +404,7 @@ body[data-puretv-playing="true"] #puretv-controller-panel[data-playing=true] {
                 <tr><td>Mouse</td><td>Move to aim, click to drop</td></tr>
                 <tr><td>Touch</td><td>Drag anywhere to aim, lift to drop</td></tr>
                 <tr><td>← → / A D</td><td>Aim</td></tr>
-                <tr><td>Space / ↓ / S</td><td>Drop</td></tr>
+                <tr><td>Space / ↓ / S</td><td>投下糖果</td></tr>
                 <tr><td>P / Esc</td><td>Pause</td></tr>
                 <tr><td>Gamepad</td><td>Stick or d-pad, A drops, Start pauses</td></tr>
             </table>
