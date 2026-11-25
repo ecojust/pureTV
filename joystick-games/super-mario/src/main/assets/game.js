@@ -1,6 +1,7 @@
 /* Local room integration for the independent classic platform game. */
 startTvGame({
   title: "SUPER MARIO TV",
+  titleZh: "超级马里奥",
   bridge: "MarioHost",
   api: "MarioTV",
   actions: { a: ["跳跃", "JUMP"], b: ["加速 / 火球", "RUN / FIRE"] },
@@ -27,6 +28,6 @@ startTvGame({
       },
     });
   },
-  createRenderer: (canvas) => new MarioRenderer(canvas),
+  createRenderer: (canvas) => new MarioRenderer(canvas, document.documentElement.lang),
   createAudio: () => new MarioAudio(),
 });

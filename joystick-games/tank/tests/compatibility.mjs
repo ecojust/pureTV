@@ -131,6 +131,34 @@ async function pixels(page, minimum) {
   assert.ok(painted.width > 200 && painted.height > 200, 'The rendered canvas has visible layout bounds');
 }
 
+async function assertCanvasLanguage(page, language, chinese, english) {
+  const painted = await page.evaluate(() => {
+    const { renderer, game } = window.TankTV;
+    const labels = [];
+    const context = renderer.ctx;
+    const text = renderer.text;
+    const fillText = context.fillText;
+    renderer.text = function (value, ...args) {
+      labels.push(String(value));
+      return text.call(this, value, ...args);
+    };
+    context.fillText = function (value, ...args) {
+      labels.push(String(value));
+      return fillText.call(this, value, ...args);
+    };
+    try {
+      renderer.draw(game);
+      return labels;
+    } finally {
+      renderer.text = text;
+      context.fillText = fillText;
+    }
+  });
+  const isEnglish = language.startsWith('en');
+  assert.ok(painted.includes(isEnglish ? english : chinese), 'Localized canvas label: ' + painted.join(', '));
+  assert.ok(!painted.includes(isEnglish ? chinese : english), 'Only the configured canvas language appears');
+}
+
 async function cleanupStopsPolling(page) {
   await page.evaluate(() => window.dispatchEvent(new PageTransitionEvent('pagehide')));
   const calls = await page.evaluate(() => window.__snapshotCalls);
@@ -145,17 +173,20 @@ try {
       await page.waitForFunction(() => window.TankTV && window.TankTV.game && window.__published);
       assert.equal(await page.locator('#game-loading').isHidden(), true);
       await pixels(page, 500);
+      await assertCanvasLanguage(page, language, '自建地图', 'CONSTRUCTION');
       assert.equal(await page.locator('#room-qr').isVisible(), true);
       await connection(page, 1, true);
       await connection(page, 2, true);
       await press(page, 'select', () => window.TankTV.game.menuIndex === 1);
       await press(page, 'start', () => window.TankTV.game.phase === 'stageintro');
+      await assertCanvasLanguage(page, language, '第 1 关', 'STAGE  1');
       await press(page, 'start', () => !window.TankTV.game.stageSelect);
       await page.waitForFunction(() => window.TankTV.game.phase === 'playing' && window.TankTV.game.players.every(p => p.joined && p.alive));
       await pixels(page, 1000);
       await connection(page, 2, false);
       await connection(page, 1, false);
       await page.waitForFunction(() => window.TankTV.game.phase === 'paused');
+      await assertCanvasLanguage(page, language, '暂停', 'PAUSE');
       await connection(page, 1, true);
       await page.waitForFunction(() => window.TankTV.game.phase === 'playing');
       assert.deepEqual(errors, [], 'Game must start, draw, and update players without unavailable APIs');

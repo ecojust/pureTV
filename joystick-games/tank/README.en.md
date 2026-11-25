@@ -36,7 +36,7 @@ Version **0.5.4** independently reimplements the 1985 NES Battle City rules, 35 
 
 The rewrite retains QR pairing and two phone controllers over the local network, with a native 256×240 display and 208×208 battlefield. It does not load or execute a ROM. The 35 maps, 20-enemy stage sequences, four enemy classes, six power-ups, upgrades, co-op tallies and Construction mode have source references. AI, some collisions and animation timings still need frame-by-frame comparison. See [rules and maps](docs/reference.md) and [artwork and audio](docs/reference-art-audio.md) for evidence and limitations.
 
-Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and phone controllers support Chinese and English. In-game menus retain the original English labels.
+Requires Android 8.0 or later; package `com.ecojust.tanktv`. New installations default to Simplified Chinese. The TV room, phone controllers, in-game menus, stage announcements and results screens support Chinese and English.
 
 <!-- visual-release:start -->
 ## Historical: 0.5.2 visual update and verification

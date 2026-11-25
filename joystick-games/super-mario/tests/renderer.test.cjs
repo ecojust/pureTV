@@ -50,3 +50,38 @@ test("SMB HUD uses 8px character cells and fits the rightmost TIME counter",()=>
   const first=calls.filter(c=>c.x<8).map(c=>[c.x,c.y]);const second=calls.filter(c=>c.x>=8).map(c=>[c.x-8,c.y]);
   assert.deepEqual(first,second);
 });
+
+test("the title, HUD, pause and end screens follow the chosen game language", () => {
+  const Game = require("../src/main/assets/game-model.js");
+  const { MarioRenderer } = require("../src/main/assets/renderer.js");
+  for (const language of [undefined, "en-US"]) {
+    const labels = [];
+    const ctx = {
+      fillRect() {}, save() {}, restore() {}, scale() {}, translate() {},
+      beginPath() {}, moveTo() {}, lineTo() {}, fill() {}, arc() {},
+      fillText(label) { labels.push(label); },
+    };
+    const renderer = new MarioRenderer({style: {}, getContext: () => ctx}, language);
+    for (const method of ["text", "hudText", "center"]) {
+      const original = renderer[method];
+      renderer[method] = function (label, ...rest) {
+        labels.push(String(label));
+        return original.call(this, label, ...rest);
+      };
+    }
+    const game = new Game();
+    for (const [phase, chinese, english] of [
+      ["title", "按 START 开始", "START TO PLAY"],
+      ["playing", "世界", "WORLD"],
+      ["paused", "按 START 继续", "START TO CONTINUE"],
+      ["gameover", "游戏结束", "GAME OVER"],
+      ["ending", "八个世界全部通关", "ALL 8 WORLDS CLEARED"],
+    ]) {
+      labels.length = 0;
+      game.phase = phase;
+      renderer.draw(game);
+      assert.ok(labels.includes(language ? english : chinese), phase);
+      assert.ok(!labels.includes(language ? chinese : english), phase);
+    }
+  }
+});
