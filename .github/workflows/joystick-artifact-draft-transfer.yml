@@ -1,68 +1,86 @@
-name: Copy original desktop catalog artifact to existing draft
+name: Stage verified Chinese game APKs
 on:
   workflow_dispatch:
     inputs:
       source_run:
-        description: Original macOS or Windows catalog run ID
+        description: Android signing workflow producing the signed artifact
         required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
-        required: true
-        default: '1'
         type: string
       source_sha:
-        description: Exact original 40-character source commit
         required: true
         type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
+      games:
+        description: Comma-separated subset of games to stage
         required: true
         type: string
 permissions:
   actions: read
   contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
 jobs:
   transfer:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
       SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
+      GAMES: ${{ inputs.games }}
+      GH_REPO: ${{ github.repository }}
+      TAG: games-zh-cn-2026.11.25
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+      - name: Check signing workflow and destination
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
+          set -eu
+          [[ "$SOURCE_RUN" =~ ^[0-9]+$ && "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ && "$GAMES" =~ ^[a-z0-9,-]+$ ]]
+          gh api "repos/$GH_REPO/actions/runs/$SOURCE_RUN" > run.json
+          jq -e --arg sha "$SOURCE_SHA" --arg repo "$GH_REPO" '
+            .head_repository.full_name == $repo and .head_sha == $sha and
+            (.path == ".github/workflows/joystick-games-android.yml" or .path == ".github/workflows/joystick-catalog-android.yml")' run.json
+          gh release view "$TAG" --json isDraft --jq .isDraft | grep -x true
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: joystick-android-signed
+          path: signed
+      - name: Verify package certificate, content and source binding before attaching
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          python3 - <<'PY'
+          import hashlib, json, os, re, subprocess, zipfile
+          from pathlib import Path
+          def gh(*args):
+              return subprocess.check_output(['gh', *args], text=True)
+          run, sha, tag = [os.environ[k] for k in ('SOURCE_RUN','SOURCE_SHA','TAG')]
+          games = os.environ['GAMES'].split(',')
+          cert = 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+          apksigner = sorted(Path(os.environ['ANDROID_HOME']).glob('build-tools/*/apksigner'))[-1]
+          records = []
+          paths = []
+          for game in games:
+              assert re.fullmatch('[a-z0-9]+(?:-[a-z0-9]+)*', game)
+              folder = Path('signed/packages') / game
+              r = json.loads((folder/'signing-receipt.json').read_text())
+              assert r['sourceSha'] == sha and str(r['runId']) == run and r['game'] == game
+              assert r['certificateSha256'] == cert and r['signatureVerified']
+              apk = folder / (game+'-'+r['versionName']+'.apk')
+              assert list(folder.glob('*.apk')) == [apk]
+              assert apk.stat().st_size == r['bytes'] and hashlib.sha256(apk.read_bytes()).hexdigest() == r['sha256']
+              signature = subprocess.check_output([apksigner,'verify','--print-certs',apk],text=True)
+              assert 'certificate SHA-256 digest: '+cert in signature
+              with zipfile.ZipFile(apk) as archive:
+                  assert archive.testzip() is None and 'assets/tv.html' in archive.namelist()
+              records.append({k:r[k] for k in ('game','sourceSha','runId','packageName','versionName','versionCode','bytes','sha256','certificateSha256','signatureVerified')})
+              paths.append(apk)
+          report = Path('android-'+run+'-'+str(os.environ['GITHUB_RUN_ID'])+'.json')
+          report.write_text(json.dumps(records,indent=2)+'\n'); paths.append(report)
+          release = json.loads(gh('release','view',tag,'--json','apiUrl,isDraft'))
+          assert release['isDraft']
+          api = release['apiUrl'].split('api.github.com/')[1]
+          pages = json.loads(gh('api','--paginate','--slurp',api+'/assets?per_page=100'))
+          previous = {a['name']:a for page in pages for a in page}
+          for p in paths:
+              old = previous.get(p.name)
+              if old:
+                  assert old['digest'] == 'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
+              else:
+                  gh('release','upload',tag,str(p))
+          PY
