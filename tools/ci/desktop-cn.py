@@ -44,40 +44,39 @@ def sparse(*patterns):
 def frozen_paths():
     return {p.relative_to(game/'dist').as_posix():sha(p) for p in (game/'dist').rglob('*') if p.is_file()}
 def windows_launch(exe):
-    from playwright.sync_api import sync_playwright
-    import socket
-    from urllib.request import urlopen
-    with socket.socket() as sock:
-        sock.bind(('127.0.0.1',0))
-        port=sock.getsockname()[1]
-    flags=f'--remote-debugging-port={port} --enable-unsafe-swiftshader --use-angle=swiftshader'
-    env={**os.environ,'WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS':flags}
-    proc=subprocess.Popen([str(exe),'--profile',str(scratch/'verify-profile')],env=env)
-    addr=f'http://127.0.0.1:{port}'
+    # The native host has a documented read-only --diagnostics interface.
+    # Use a dedicated probe on the installed scratch copy, leaving every game asset intact.
+    # Some historical versions of diagnostics.js omit the document language.
+    probe=exe.parent/'Web/diagnostics.js'
+    original=probe.read_bytes()
+    script='''(() => {
+        const game = window.JoystickGameQA?.snapshot() || {};
+        return {game, document:{language:document.documentElement.lang, title:document.title,
+                 text:document.body.innerText.slice(0,180)}};
+    })()'''
+    diag=scratch/'probe'
+    env={**os.environ,'WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS':'--enable-unsafe-swiftshader --use-angle=swiftshader'}
     try:
-        deadline=time.monotonic()+180;observed={}
-        while proc.poll() is None and time.monotonic()<deadline:
-            try:
-                with urlopen(addr+'/json/version',timeout=2) as response:
-                    if response.status==200: break
-            except OSError: time.sleep(.5)
-        else: raise RuntimeError('Installed WebView2 startup failed')
-        with sync_playwright() as pw:
-            browser=pw.chromium.connect_over_cdp(addr,timeout=30000)
+        probe.write_text(script,encoding='utf-8')
+        proc=subprocess.Popen([str(exe),'--diagnostics',str(diag),'--profile',str(scratch/'verify-profile')],env=env)
+        try:
+            deadline=time.monotonic()+150;state={}
             while proc.poll() is None and time.monotonic()<deadline:
-                for ctx in browser.contexts:
-                    for page in ctx.pages:
-                        if page.url.split('?')[0].endswith('/tv.html'):
-                            observed=page.evaluate("""() => {const q=window.JoystickGameQA?.snapshot() || {};return {lang:document.documentElement.lang,title:document.title,stage:q.stage || q.phase,renderer:q.renderer,error:q.error || q.webglError}}""")
-                            if observed.get('error') or observed.get('stage')=='error':
-                                raise RuntimeError('Rendering failed: '+str(observed))
-                            if observed.get('lang','').startswith('zh') and observed.get('stage') not in (None,'loading'):
-                                return observed
-                time.sleep(.5)
-            raise RuntimeError('Installed game failed to render Chinese: '+str(observed))
+                try: state=read(diag/'state.json')
+                except (OSError,ValueError): time.sleep(.4);continue
+                d=state.get('document',{});g=state.get('game') or {}
+                stage=g.get('stage') or g.get('phase')
+                if g.get('error') or g.get('webglError') or stage=='error':
+                    raise RuntimeError('Rendering failed: '+str(g)[:1200])
+                if state.get('ready') and stage not in (None,'loading') and d.get('language','').startswith('zh'):
+                    return {'lang':d['language'],'title':d['title'],'stage':stage,'renderer':g.get('renderer')}
+                time.sleep(.4)
+            raise RuntimeError('Installed game failed to render Chinese: '+json.dumps({'ready':state.get('ready'),'document':state.get('document'),'game':state.get('game'),'exit':proc.poll()},ensure_ascii=False)[:1800])
+        finally:
+            if proc.poll() is None: proc.terminate()
+            proc.wait(timeout=20)
     finally:
-        if proc.poll() is None: proc.terminate()
-        proc.wait(timeout=20)
+        probe.write_bytes(original)
 
 assert run('git','rev-parse','HEAD',capture_output=True,text=True).stdout.strip()==source
 
