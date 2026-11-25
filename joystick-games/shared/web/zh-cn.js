@@ -40,21 +40,34 @@
       }
     }
 
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
     function textNode(node) {
+      if (lastText.get(node) === node.data) return;
       const parent = node.parentElement;
       if (!parent || parent.closest(ignored)) return;
       const result = translate(node.data);
       if (result === node.data) return;
       // With no value attribute an option uses its label as the submitted value.
       if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
       node.data = result;
     }
 
     function attribute(el, name) {
       const old = el.getAttribute(name);
-      if (!old) return;
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
       const next = translate(old);
-      if (old !== next) el.setAttribute(name, next);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
     }
 
     function visit(node) {

@@ -18,8 +18,9 @@ REPO = GAME.parents[1]
 sys.path.insert(0, str(REPO / 'tools'))
 from macos_game_icons import committed_inputs, write_icns
 
-VERSION = '0.1.4'
-BUILD_VERSION = '4'
+METADATA = json.loads((GAME / 'game.json').read_text(encoding='utf-8'))
+VERSION = METADATA['version']
+BUILD_VERSION = str(METADATA['versionCode'])
 NAME = 'Neon Rush'
 EXECUTABLE = 'NeonRush'
 ARCHITECTURES = ('arm64', 'x86_64')

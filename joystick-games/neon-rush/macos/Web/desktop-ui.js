@@ -34,8 +34,8 @@
     document.body.classList.toggle('rush-phone-open', panelRequested);
     $('rush-phone-button').textContent = text('手柄与操作', 'Controllers');
     $('rush-phone-button').setAttribute('aria-expanded', String(panelRequested));
-    document.querySelector('.side-heading .eyebrow').textContent = 'PURETV CONTROLLER';
-    $('room-status').textContent = background && wifi.port ? 'PAUSED' : ctx.phoneConnected ? 'CONNECTED' : wifi.state === 'available' ? 'READY' : 'OFFLINE';
+    document.querySelector('.side-heading .eyebrow').textContent = text('pureTV 手柄', 'PURETV CONTROLLER');
+    $('room-status').textContent = background && wifi.port ? text('已暂停', 'PAUSED') : ctx.phoneConnected ? text('已连接', 'CONNECTED') : wifi.state === 'available' ? text('就绪', 'READY') : text('离线', 'OFFLINE');
     $('rush-wifi-help').hidden = false;
     $('rush-wifi-help').querySelector('strong').textContent = text('连接 pureTV 手柄', 'CONNECT YOUR CONTROLLER');
     const addresses = Array.isArray(wifi.addresses) ? wifi.addresses.filter(v => typeof v === 'string') : [];

@@ -34,8 +34,7 @@ final class NeonApplication: NSObject, NSApplicationDelegate, NSWindowDelegate, 
 
     private var foreground: Bool { NSApp.isActive && window != nil && window.isKeyWindow && !window.isMiniaturized && window.isVisible && !terminating && !sleeping }
     private var english: Bool {
-        if let saved = preferences.string(forKey: "neon-rush.language") { return saved == "en" }
-        return !(Locale.preferredLanguages.first ?? "zh").lowercased().hasPrefix("zh")
+        preferences.string(forKey: "neon-rush.language") == "en"
     }
     private func text(_ zh: String, _ en: String) -> String { english ? en : zh }
 
