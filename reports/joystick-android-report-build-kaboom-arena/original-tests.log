@@ -1,0 +1,1572 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> kaboom-arena@0.1.0 test
+> node --test src/game/*.test.mjs
+
+TAP version 13
+# hard/easy 42 5 normal/easy 41 6 hard/normal 20 21
+# Subtest: 4 bots play to completion without throwing
+ok 1 - 4 bots play to completion without throwing
+  ---
+  duration_ms: 90.515319
+  type: 'test'
+  ...
+# Subtest: bot flees from a bomb about to blow
+ok 2 - bot flees from a bomb about to blow
+  ---
+  duration_ms: 0.537482
+  type: 'test'
+  ...
+# Subtest: bot steps off a tile the sudden-death ring is about to close
+ok 3 - bot steps off a tile the sudden-death ring is about to close
+  ---
+  duration_ms: 0.526451
+  type: 'test'
+  ...
+# Subtest: 4 bots survive into sudden death more often than they stall
+ok 4 - 4 bots survive into sudden death more often than they stall
+  ---
+  duration_ms: 675.106643
+  type: 'test'
+  ...
+# Subtest: bot walks to a nearby bonus
+ok 5 - bot walks to a nearby bonus
+  ---
+  duration_ms: 1.131132
+  type: 'test'
+  ...
+# Subtest: bot walks to a shield but never to kick, remote or skull
+ok 6 - bot walks to a shield but never to kick, remote or skull
+  ---
+  duration_ms: 3.190511
+  type: 'test'
+  ...
+# Subtest: default level is normal; every level returns a legal input
+ok 7 - default level is normal; every level returns a legal input
+  ---
+  duration_ms: 1.588711
+  type: 'test'
+  ...
+# Subtest: tournament: hard and normal beat easy by a clear margin, hard at least holds against normal
+ok 8 - tournament: hard and normal beat easy by a clear margin, hard at least holds against normal
+  ---
+  duration_ms: 2131.280893
+  type: 'test'
+  ...
+# Subtest: teams: a bot does not treat its teammate as a target
+ok 9 - teams: a bot does not treat its teammate as a target
+  ---
+  duration_ms: 0.923104
+  type: 'test'
+  ...
+# Subtest: roster: 9 fighters, distinct hex colours, stages use known layouts and themes
+ok 10 - roster: 9 fighters, distinct hex colours, stages use known layouts and themes
+  ---
+  duration_ms: 1.282884
+  type: 'test'
+  ...
+# Subtest: ladders: valid for every fighter, no self fight, Gunpowder last (and absent from his own run)
+ok 11 - ladders: valid for every fighter, no self fight, Gunpowder last (and absent from his own run)
+  ---
+  duration_ms: 0.305417
+  type: 'test'
+  ...
+# Subtest: fightOf: level ramp, boss twist and sim-compatible options for every step
+ok 12 - fightOf: level ramp, boss twist and sim-compatible options for every step
+  ---
+  duration_ms: 12.457035
+  type: 'test'
+  ...
+# Subtest: relations: valid graph, symmetric lookup with swapped roles
+ok 13 - relations: valid graph, symmetric lookup with swapped roles
+  ---
+  duration_ms: 0.476912
+  type: 'test'
+  ...
+# Subtest: banter: every ordered pair has two lines, deterministic, special pairs and templates used
+ok 14 - banter: every ordered pair has two lines, deterministic, special pairs and templates used
+  ---
+  duration_ms: 1.60122
+  type: 'test'
+  ...
+# Subtest: progress: injected storage round trip, junk is rejected
+ok 15 - progress: injected storage round trip, junk is rejected
+  ---
+  duration_ms: 0.780074
+  type: 'test'
+  ...
+# Subtest: run and unlock: Gunpowder unlocks once, after the first completed run
+ok 16 - run and unlock: Gunpowder unlocks once, after the first completed run
+  ---
+  duration_ms: 0.488007
+  type: 'test'
+  ...
+# Subtest: fighter suits: custom palette is stable, dark shades derived, colour-blind keeps priority
+ok 17 - fighter suits: custom palette is stable, dark shades derived, colour-blind keeps priority
+  ---
+  duration_ms: 0.290812
+  type: 'test'
+  ...
+# Subtest: every fighter has a short in-fight line per event that fits a two-line bubble
+ok 18 - every fighter has a short in-fight line per event that fits a two-line bubble
+  ---
+  duration_ms: 0.598102
+  type: 'test'
+  ...
+# Subtest: choices: 6-10 well formed, each with matching text and sim-compatible effects
+ok 19 - choices: 6-10 well formed, each with matching text and sim-compatible effects
+  ---
+  duration_ms: 0.693339
+  type: 'test'
+  ...
+# Subtest: choices change only the fight they precede: level, density, detours, extras
+ok 20 - choices change only the fight they precede: level, density, detours, extras
+  ---
+  duration_ms: 4.056192
+  type: 'test'
+  ...
+# Subtest: pendingChoice asks each choice once, at its fight
+ok 21 - pendingChoice asks each choice once, at its fight
+  ---
+  duration_ms: 0.183588
+  type: 'test'
+  ...
+# Subtest: endings: Flawless, Peacemaker and Tycoon come from hidden counters and are recorded once
+ok 22 - endings: Flawless, Peacemaker and Tycoon come from hidden counters and are recorded once
+  ---
+  duration_ms: 0.664476
+  type: 'test'
+  ...
+# Subtest: co-op fights: team layout, partner bots, level floor, friendly fire off by default
+ok 23 - co-op fights: team layout, partner bots, level floor, friendly fire off by default
+  ---
+  duration_ms: 7.181735
+  type: 'test'
+  ...
+# Subtest: co-op rounds: a team wins when its opponents are all dead, a lone survivor keeps the round going
+ok 24 - co-op rounds: a team wins when its opponents are all dead, a lone survivor keeps the round going
+  ---
+  duration_ms: 4.721589
+  type: 'test'
+  ...
+# Subtest: co-op replays: recorder keeps the team layout and the co-op marker
+ok 25 - co-op replays: recorder keeps the team layout and the co-op marker
+  ---
+  duration_ms: 0.796815
+  type: 'test'
+  ...
+# Subtest: save migration: an old-format save loads silently with every new field defaulted
+ok 26 - save migration: an old-format save loads silently with every new field defaulted
+  ---
+  duration_ms: 0.373158
+  type: 'test'
+  ...
+# Subtest: save sanitising: choices, counters, co-op and endings are validated
+ok 27 - save sanitising: choices, counters, co-op and endings are validated
+  ---
+  duration_ms: 0.284496
+  type: 'test'
+  ...
+# Subtest: co-op progress is the same save: a co-op win flags the fighter, a solo win does not
+ok 28 - co-op progress is the same save: a co-op win flags the fighter, a solo win does not
+  ---
+  duration_ms: 0.129706
+  type: 'test'
+  ...
+# Subtest: co-op and ending text: reactions for every fighter, short sidekick lines
+ok 29 - co-op and ending text: reactions for every fighter, short sidekick lines
+  ---
+  duration_ms: 0.155548
+  type: 'test'
+  ...
+# Subtest: story art: rectangles stay inside their canvas and render to a static SVG
+ok 30 - story art: rectangles stay inside their canvas and render to a static SVG
+  ---
+  duration_ms: 2.505668
+  type: 'test'
+  ...
+# Subtest: day key is the UTC date and seeds are stable
+ok 31 - day key is the UTC date and seeds are stable
+  ---
+  duration_ms: 3.032881
+  type: 'test'
+  ...
+# Subtest: the ruleset rotates daily through every rule without repeating back to back
+ok 32 - the ruleset rotates daily through every rule without repeating back to back
+  ---
+  duration_ms: 0.325534
+  type: 'test'
+  ...
+# Subtest: every rule builds a valid match for the sim and survives replay sanitising
+ok 33 - every rule builds a valid match for the sim and survives replay sanitising
+  ---
+  duration_ms: 21.648021
+  type: 'test'
+  ...
+# Subtest: score formula: wins beat losses, speed and kills help, waves and points dominate their modes
+ok 34 - score formula: wins beat losses, speed and kills help, waves and points dominate their modes
+  ---
+  duration_ms: 0.382506
+  type: 'test'
+  ...
+# Subtest: streak counts consecutive UTC days with a finished attempt and resets after a gap
+ok 35 - streak counts consecutive UTC days with a finished attempt and resets after a gap
+  ---
+  duration_ms: 0.392344
+  type: 'test'
+  ...
+# Subtest: storage is sanitised and capped
+ok 36 - storage is sanitised and capped
+  ---
+  duration_ms: 2.251874
+  type: 'test'
+  ...
+# Subtest: classic sim and bots reproduce the pre-extras games bit for bit
+ok 37 - classic sim and bots reproduce the pre-extras games bit for bit
+  ---
+  duration_ms: 1437.937913
+  type: 'test'
+  ...
+# Subtest: own bomb: Darwin death, blast and bomb stats
+ok 38 - own bomb: Darwin death, blast and bomb stats
+  ---
+  duration_ms: 4.220221
+  type: 'test'
+  ...
+# Subtest: a kill is credited to the bomb owner, including walking into a lingering flame
+ok 39 - a kill is credited to the bomb owner, including walking into a lingering flame
+  ---
+  duration_ms: 2.406741
+  type: 'test'
+  ...
+# Subtest: double kill gives two die events in one step; chain counts bombs; close call; walls
+ok 40 - double kill gives two die events in one step; chain counts bombs; close call; walls
+  ---
+  duration_ms: 1.640463
+  type: 'test'
+  ...
+# Subtest: bombs, pickups, sudden death, decide and done; ghost bombs vanishing are not blasts
+ok 41 - bombs, pickups, sudden death, decide and done; ghost bombs vanishing are not blasts
+  ---
+  duration_ms: 0.95463
+  type: 'test'
+  ...
+# Subtest: awards need a strict, non-trivial maximum and cap at 3
+ok 42 - awards need a strict, non-trivial maximum and cap at 3
+  ---
+  duration_ms: 0.398745
+  type: 'test'
+  ...
+# Subtest: announcer: cooldown, priority preempts, queue cap, stale queue entries dropped
+ok 43 - announcer: cooldown, priority preempts, queue cap, stale queue entries dropped
+  ---
+  duration_ms: 0.389033
+  type: 'test'
+  ...
+# Subtest: director: banners, hit-stop, slow-mo only when allowed; bubbles are rate limited
+ok 44 - director: banners, hit-stop, slow-mo only when allowed; bubbles are rate limited
+  ---
+  duration_ms: 1.939393
+  type: 'test'
+  ...
+# Subtest: bubble helpers: wrap in two lines, placement avoids the centre hole
+ok 45 - bubble helpers: wrap in two lines, placement avoids the centre hole
+  ---
+  duration_ms: 0.258754
+  type: 'test'
+  ...
+# Subtest: panel sanitize keeps valid values and falls back on junk
+ok 46 - panel sanitize keeps valid values and falls back on junk
+  ---
+  duration_ms: 2.927162
+  type: 'test'
+  ...
+# Subtest: panel persistence round trips and survives broken storage
+ok 47 - panel persistence round trips and survives broken storage
+  ---
+  duration_ms: 0.467405
+  type: 'test'
+  ...
+# Subtest: panel labels and strengths
+ok 48 - panel labels and strengths
+  ---
+  duration_ms: 0.234291
+  type: 'test'
+  ...
+# Subtest: fake numbers are exaggerated, finite and formatted
+ok 49 - fake numbers are exaggerated, finite and formatted
+  ---
+  duration_ms: 371.668873
+  type: 'test'
+  ...
+# Subtest: toasts fill their placeholders and the disclaimer wording is stable
+ok 50 - toasts fill their placeholders and the disclaimer wording is stable
+  ---
+  duration_ms: 0.568515
+  type: 'test'
+  ...
+# Subtest: boot sequence is monotonic, stalls at 99% and ends inside 3 s
+ok 51 - boot sequence is monotonic, stalls at 99% and ends inside 3 s
+  ---
+  duration_ms: 0.394347
+  type: 'test'
+  ...
+# Subtest: cadence respects ranges and never fires two gags back to back
+ok 52 - cadence respects ranges and never fires two gags back to back
+  ---
+  duration_ms: 0.315799
+  type: 'test'
+  ...
+# Subtest: cadence randomness stays inside the range
+ok 53 - cadence randomness stays inside the range
+  ---
+  duration_ms: 0.259561
+  type: 'test'
+  ...
+# Subtest: governor drops effects one level at a time, then recovers slowly
+ok 54 - governor drops effects one level at a time, then recovers slowly
+  ---
+  duration_ms: 0.477554
+  type: 'test'
+  ...
+# Subtest: governor does not recover while the scale is still reduced, and backs off after flapping
+ok 55 - governor does not recover while the scale is still reduced, and backs off after flapping
+  ---
+  duration_ms: 0.474381
+  type: 'test'
+  ...
+# Subtest: flare dots: hot spot at the explosion, ghosts through the centre, fading out
+ok 56 - flare dots: hot spot at the explosion, ghosts through the centre, fading out
+  ---
+  duration_ms: 0.299158
+  type: 'test'
+  ...
+# Subtest: eight emotes, ids validated as plain integers
+ok 57 - eight emotes, ids validated as plain integers
+  ---
+  duration_ms: 0.964969
+  type: 'test'
+  ...
+# Subtest: cooldown starts at send and lasts COOLDOWN_MS
+ok 58 - cooldown starts at send and lasts COOLDOWN_MS
+  ---
+  duration_ms: 0.224585
+  type: 'test'
+  ...
+# Subtest: shown emotes expire, ignore bad input and hide others' on request
+ok 59 - shown emotes expire, ignore bad input and hide others' on request
+  ---
+  duration_ms: 0.83271
+  type: 'test'
+  ...
+# Subtest: look: pop-in and fade, static with reduced motion
+ok 60 - look: pop-in and fade, static with reduced motion
+  ---
+  duration_ms: 0.306045
+  type: 'test'
+  ...
+# spike deaths 1 of 27
+# 3600 ticks with 4 bots, everything on: 156 ms
+# Subtest: defaults: explicit off options produce the very same game
+ok 61 - defaults: explicit off options produce the very same game
+  ---
+  duration_ms: 4.408574
+  type: 'test'
+  ...
+# Subtest: tiles: grid unchanged, spawns clear, pairs complete, connectivity kept over many seeds
+ok 62 - tiles: grid unchanged, spawns clear, pairs complete, connectivity kept over many seeds
+  ---
+  duration_ms: 71.521865
+  type: 'test'
+  ...
+# Subtest: ice: keeps sliding after release until leaving the ice, can be steered, stops at walls
+ok 63 - ice: keeps sliding after release until leaving the ice, can be steered, stops at walls
+  ---
+  duration_ms: 2.137759
+  type: 'test'
+  ...
+# Subtest: conveyor carries players (who can fight it), bombs and items
+ok 64 - conveyor carries players (who can fight it), bombs and items
+  ---
+  duration_ms: 2.058856
+  type: 'test'
+  ...
+# Subtest: prediction parity: movePlayer on a copy replays ice and conveyor exactly
+ok 65 - prediction parity: movePlayer on a copy replays ice and conveyor exactly
+  ---
+  duration_ms: 3.133321
+  type: 'test'
+  ...
+# Subtest: teleporter: arms, jumps to the partner, cooldown prevents ping-pong, bombs stay
+ok 66 - teleporter: arms, jumps to the partner, cooldown prevents ping-pong, bombs stay
+  ---
+  duration_ms: 4.98613
+  type: 'test'
+  ...
+# Subtest: spikes: retracted -> telegraph -> deadly, shield absorbs, flames rules untouched
+ok 67 - spikes: retracted -> telegraph -> deadly, shield absorbs, flames rules untouched
+  ---
+  duration_ms: 3.620875
+  type: 'test'
+  ...
+# Subtest: spikes are environmental: no friendly-fire dependency
+ok 68 - spikes are environmental: no friendly-fire dependency
+  ---
+  duration_ms: 5.098906
+  type: 'test'
+  ...
+# Subtest: chaos: never before 10 s, 90 tick telegraph, 12-20 s apart, deterministic, all types appear
+ok 69 - chaos: never before 10 s, 90 tick telegraph, 12-20 s apart, deterministic, all types appear
+  ---
+  duration_ms: 388.595711
+  type: 'test'
+  ...
+# Subtest: chaos bombrain: lit bombs (owner -1) on empty tiles only after the telegraph, never on players
+ok 70 - chaos bombrain: lit bombs (owner -1) on empty tiles only after the telegraph, never on players
+  ---
+  duration_ms: 2.284743
+  type: 'test'
+  ...
+# Subtest: chaos itemrain / quake
+ok 71 - chaos itemrain / quake
+  ---
+  duration_ms: 1.219161
+  type: 'test'
+  ...
+# Subtest: chaos frenzy: +50% speed for 10 s then back to normal
+ok 72 - chaos frenzy: +50% speed for 10 s then back to normal
+  ---
+  duration_ms: 2.790875
+  type: 'test'
+  ...
+# Subtest: chaos swap: positions exchange after the telegraph, cancelled inside a blast
+ok 73 - chaos swap: positions exchange after the telegraph, cancelled inside a blast
+  ---
+  duration_ms: 1.00865
+  type: 'test'
+  ...
+# Subtest: hill: lone occupant scores 1/s, contested scores nothing, first to 30 wins, zone relocates with telegraph
+ok 74 - hill: lone occupant scores 1/s, contested scores nothing, first to 30 wins, zone relocates with telegraph
+  ---
+  duration_ms: 19.475648
+  type: 'test'
+  ...
+# Subtest: hill: timeout gives the highest score, a tie is a draw; zone is never centred on a hard block
+ok 75 - hill: timeout gives the highest score, a tie is a draw; zone is never centred on a hard block
+  ---
+  duration_ms: 21.90537
+  type: 'test'
+  ...
+# Subtest: potato: passes on touch with a cooldown, explodes the holder, last survivor wins
+ok 76 - potato: passes on touch with a cooldown, explodes the holder, last survivor wins
+  ---
+  duration_ms: 1.145442
+  type: 'test'
+  ...
+# Subtest: potato: a shielded holder still explodes; normal bombs still work
+ok 77 - potato: a shielded holder still explodes; normal bombs still work
+  ---
+  duration_ms: 0.469514
+  type: 'test'
+  ...
+# Subtest: survival: dormant slots, waves activate shielded enemies up to the cap, round ends when humans die
+ok 78 - survival: dormant slots, waves activate shielded enemies up to the cap, round ends when humans die
+  ---
+  duration_ms: 114.097232
+  type: 'test'
+  ...
+# Subtest: survival: a new wave comes early when no enemy is left; enemy slots are reused
+ok 79 - survival: a new wave comes early when no enemy is left; enemy slots are reused
+  ---
+  duration_ms: 0.415275
+  type: 'test'
+  ...
+# Subtest: survival: arena spawn spots stay connected over many seeds, with tiles
+ok 80 - survival: arena spawn spots stay connected over many seeds, with tiles
+  ---
+  duration_ms: 30.879572
+  type: 'test'
+  ...
+# Subtest: AI: short tournament with spikes everywhere, bots rarely die on spikes
+ok 81 - AI: short tournament with spikes everywhere, bots rarely die on spikes
+  ---
+  duration_ms: 862.107311
+  type: 'test'
+  ...
+# Subtest: AI: modes run to completion and the hill is contested, potato holder chases, survival bots hunt
+ok 82 - AI: modes run to completion and the hill is contested, potato holder chases, survival bots hunt
+  ---
+  duration_ms: 314.59182
+  type: 'test'
+  ...
+# Subtest: AI: avoids a telegraphed spike tile and teleporters when pathing
+ok 83 - AI: avoids a telegraphed spike tile and teleporters when pathing
+  ---
+  duration_ms: 0.246719
+  type: 'test'
+  ...
+# Subtest: AI: runs from bombrain bombs
+ok 84 - AI: runs from bombrain bombs
+  ---
+  duration_ms: 0.346872
+  type: 'test'
+  ...
+# Subtest: performance: 60 s of play with every extra enabled
+ok 85 - performance: 60 s of play with every extra enabled
+  ---
+  duration_ms: 164.00259
+  type: 'test'
+  ...
+# Subtest: look: spike phases follow spikeIn, event and mode lines, unknown values are ignored
+ok 86 - look: spike phases follow spikeIn, event and mode lines, unknown values are ignored
+  ---
+  duration_ms: 1.413049
+  type: 'test'
+  ...
+# Subtest: survival: HUD rows, teams, recap and tracker only know the humans; owner -1 bombs are ignored
+ok 87 - survival: HUD rows, teams, recap and tracker only know the humans; owner -1 bombs are ignored
+  ---
+  duration_ms: 5.000186
+  type: 'test'
+  ...
+# Subtest: forward / back follow the facing axis for all four facings
+ok 88 - forward / back follow the facing axis for all four facings
+  ---
+  duration_ms: 2.587897
+  type: 'test'
+  ...
+# Subtest: no -0 and the bomb flag is untouched
+ok 89 - no -0 and the bomb flag is untouched
+  ---
+  duration_ms: 0.318944
+  type: 'test'
+  ...
+# Subtest: a tap turns exactly once and never moves
+ok 90 - a tap turns exactly once and never moves
+  ---
+  duration_ms: 0.203005
+  type: 'test'
+  ...
+# Subtest: holding repeats after the delay, then every REPEAT_EVERY steps
+ok 91 - holding repeats after the delay, then every REPEAT_EVERY steps
+  ---
+  duration_ms: 0.27039
+  type: 'test'
+  ...
+# Subtest: releasing resets the repeat timer
+ok 92 - releasing resets the repeat timer
+  ---
+  duration_ms: 0.161775
+  type: 'test'
+  ...
+# Subtest: direct left-to-right switch turns immediately (simultaneous keys resolve to the newest)
+ok 93 - direct left-to-right switch turns immediately (simultaneous keys resolve to the newest)
+  ---
+  duration_ms: 0.121956
+  type: 'test'
+  ...
+# Subtest: diagonal (d-pad up+right) turns then walks along the new facing
+ok 94 - diagonal (d-pad up+right) turns then walks along the new facing
+  ---
+  duration_ms: 0.234874
+  type: 'test'
+  ...
+# Subtest: back-walking keeps the facing
+ok 95 - back-walking keeps the facing
+  ---
+  duration_ms: 0.204452
+  type: 'test'
+  ...
+# Subtest: tick going backwards (new round) or reset() restores the spawn facing
+ok 96 - tick going backwards (new round) or reset() restores the spawn facing
+  ---
+  duration_ms: 0.32331
+  type: 'test'
+  ...
+# Subtest: strafe: shoulders move sideways relative to the facing, forward wins
+ok 97 - strafe: shoulders move sideways relative to the facing, forward wins
+  ---
+  duration_ms: 0.533135
+  type: 'test'
+  ...
+# Subtest: strafe keys: the latest held wins, release falls back
+ok 98 - strafe keys: the latest held wins, release falls back
+  ---
+  duration_ms: 0.346769
+  type: 'test'
+  ...
+# Subtest: first state and unchanged state emit nothing
+ok 99 - first state and unchanged state emit nothing
+  ---
+  duration_ms: 3.421838
+  type: 'test'
+  ...
+# Subtest: wall, bomb, death and pickup are detected once
+ok 100 - wall, bomb, death and pickup are detected once
+  ---
+  duration_ms: 1.19356
+  type: 'test'
+  ...
+# Subtest: burned item without a player on it is not a pickup; sliding bombs are not drops
+ok 101 - burned item without a player on it is not a pickup; sliding bombs are not drops
+  ---
+  duration_ms: 0.548714
+  type: 'test'
+  ...
+# Subtest: a new round resets
+ok 102 - a new round resets
+  ---
+  duration_ms: 2.26611
+  type: 'test'
+  ...
+# Subtest: fire: phone and each targeted pad, nothing for others
+ok 103 - fire: phone and each targeted pad, nothing for others
+  ---
+  duration_ms: 1.992865
+  type: 'test'
+  ...
+# Subtest: throttle: per kind and per target
+ok 104 - throttle: per kind and per target
+  ---
+  duration_ms: 0.194437
+  type: 'test'
+  ...
+# Subtest: settings: off means no call, intensity scales
+ok 105 - settings: off means no call, intensity scales
+  ---
+  duration_ms: 0.263007
+  type: 'test'
+  ...
+# Subtest: backends never throw without APIs
+ok 106 - backends never throw without APIs
+  ---
+  duration_ms: 0.479628
+  type: 'test'
+  ...
+# Subtest: observe: bomb, item, curse, blast distance, death, win from successive states
+ok 107 - observe: bomb, item, curse, blast distance, death, win from successive states
+  ---
+  duration_ms: 1.230601
+  type: 'test'
+  ...
+# Subtest: observe: new round (tick going back) emits nothing
+ok 108 - observe: new round (tick going back) emits nothing
+  ---
+  duration_ms: 1.600492
+  type: 'test'
+  ...
+# Subtest: phone pulses are never shorter than what Android motors can render, and the report explains each case
+ok 109 - phone pulses are never shorter than what Android motors can render, and the report explains each case
+  ---
+  duration_ms: 0.345958
+  type: 'test'
+  ...
+# Subtest: cleanName caps, strips control chars, rejects non-strings
+ok 110 - cleanName caps, strips control chars, rejects non-strings
+  ---
+  duration_ms: 1.413513
+  type: 'test'
+  ...
+# Subtest: esc neutralises markup
+ok 111 - esc neutralises markup
+  ---
+  duration_ms: 0.196885
+  type: 'test'
+  ...
+# Subtest: displayNames: fallbacks and bot numbering
+ok 112 - displayNames: fallbacks and bot numbering
+  ---
+  duration_ms: 0.533555
+  type: 'test'
+  ...
+# Subtest: roomFromSearch / inviteUrl
+ok 113 - roomFromSearch / inviteUrl
+  ---
+  duration_ms: 1.022231
+  type: 'test'
+  ...
+# Subtest: slot reservation and rejoin
+ok 114 - slot reservation and rejoin
+  ---
+  duration_ms: 0.241577
+  type: 'test'
+  ...
+# Subtest: cleanRooms rebuilds every field and drops malformed rows
+ok 115 - cleanRooms rebuilds every field and drops malformed rows
+  ---
+  duration_ms: 0.577079
+  type: 'test'
+  ...
+# Subtest: default newGame is unchanged: classic grid and original item roll
+ok 116 - default newGame is unchanged: classic grid and original item roll
+  ---
+  duration_ms: 4.607663
+  type: 'test'
+  ...
+# Subtest: every layout is valid and spawns are connected, over many seeds
+ok 117 - every layout is valid and spawns are connected, over many seeds
+  ---
+  duration_ms: 74.103515
+  type: 'test'
+  ...
+# Subtest: new items only appear when powerups are enabled
+ok 118 - new items only appear when powerups are enabled
+  ---
+  duration_ms: 4.647414
+  type: 'test'
+  ...
+# Subtest: kick: bomb slides 1 tile per 6 ticks and stops before a wall
+ok 119 - kick: bomb slides 1 tile per 6 ticks and stops before a wall
+  ---
+  duration_ms: 1.84634
+  type: 'test'
+  ...
+# Subtest: kick: no kick without the item, stops before bombs and players, explodes in flames
+ok 120 - kick: no kick without the item, stops before bombs and players, explodes in flames
+  ---
+  duration_ms: 2.43792
+  type: 'test'
+  ...
+# Subtest: kicked bomb is destroyed by the closing wall ring
+ok 121 - kicked bomb is destroyed by the closing wall ring
+  ---
+  duration_ms: 0.622076
+  type: 'test'
+  ...
+# Subtest: remote: long fuse, button detonates the oldest bomb when none can be placed
+ok 122 - remote: long fuse, button detonates the oldest bomb when none can be placed
+  ---
+  duration_ms: 0.767901
+  type: 'test'
+  ...
+# Subtest: without the remote, the bomb button on a full limit does nothing
+ok 123 - without the remote, the bomb button on a full limit does nothing
+  ---
+  duration_ms: 0.888003
+  type: 'test'
+  ...
+# Subtest: pass: walks through bombs, others do not
+ok 124 - pass: walks through bombs, others do not
+  ---
+  duration_ms: 1.260562
+  type: 'test'
+  ...
+# Subtest: shield: set on pickup, counts down, blocks flames until it expires
+ok 125 - shield: set on pickup, counts down, blocks flames until it expires
+  ---
+  duration_ms: 1.831892
+  type: 'test'
+  ...
+# Subtest: shield does not stop the sudden-death wall; death clears shield and curse
+ok 126 - shield does not stop the sudden-death wall; death clears shield and curse
+  ---
+  duration_ms: 0.233804
+  type: 'test'
+  ...
+# Subtest: curses: slow, fast, reverse, nobomb, auto-bomb, expiry
+ok 127 - curses: slow, fast, reverse, nobomb, auto-bomb, expiry
+  ---
+  duration_ms: 0.892623
+  type: 'test'
+  ...
+# Subtest: skull pickup gives a random curse, deterministic per seed
+ok 128 - skull pickup gives a random curse, deterministic per seed
+  ---
+  duration_ms: 1.621475
+  type: 'test'
+  ...
+# Subtest: teams: round ends when one team is left; friendly fire off spares teammates
+ok 129 - teams: round ends when one team is left; friendly fire off spares teammates
+  ---
+  duration_ms: 0.498533
+  type: 'test'
+  ...
+# Subtest: friendly fire off: teammate's flames still chain bombs and burn walls
+ok 130 - friendly fire off: teammate's flames still chain bombs and burn walls
+  ---
+  duration_ms: 0.22131
+  type: 'test'
+  ...
+# Subtest: suddenDeath: false disables the closing ring
+ok 131 - suddenDeath: false disables the closing ring
+  ---
+  duration_ms: 35.352396
+  type: 'test'
+  ...
+# Subtest: determinism with opts + snapshot stays JSON-serialisable
+ok 132 - determinism with opts + snapshot stays JSON-serialisable
+  ---
+  duration_ms: 12.156486
+  type: 'test'
+  ...
+# Subtest: item type ids
+ok 133 - item type ids
+  ---
+  duration_ms: 0.19825
+  type: 'test'
+  ...
+# Subtest: rng and hash are deterministic
+ok 134 - rng and hash are deterministic
+  ---
+  duration_ms: 1.00472
+  type: 'test'
+  ...
+# Subtest: bars are deterministic, loop every 8 bars and differ between seeds
+ok 135 - bars are deterministic, loop every 8 bars and differ between seeds
+  ---
+  duration_ms: 26.131739
+  type: 'test'
+  ...
+# Subtest: every style, scale, level and bar stays in range with sane timing
+ok 136 - every style, scale, level and bar stays in range with sane timing
+  ---
+  duration_ms: 38.509569
+  type: 'test'
+  ...
+# Subtest: intensity adds layers, never removes them; menu stays simple; mobile drops the arp
+ok 137 - intensity adds layers, never removes them; menu stays simple; mobile drops the arp
+  ---
+  duration_ms: 0.720845
+  type: 'test'
+  ...
+# Subtest: Auto follows theme and mode; explicit styles ignore the theme; Silence is null
+ok 138 - Auto follows theme and mode; explicit styles ignore the theme; Silence is null
+  ---
+  duration_ms: 0.610588
+  type: 'test'
+  ...
+# Subtest: opening a screen pushes one entry and closing it goes back once, silently
+ok 139 - opening a screen pushes one entry and closing it goes back once, silently
+  ---
+  duration_ms: 7.570851
+  type: 'test'
+  ...
+# Subtest: user Back closes the top layer and reports it
+ok 140 - user Back closes the top layer and reports it
+  ---
+  duration_ms: 1.258364
+  type: 'test'
+  ...
+# Subtest: close then open in the same tick leaves the history alone
+ok 141 - close then open in the same tick leaves the history alone
+  ---
+  duration_ms: 2.3249
+  type: 'test'
+  ...
+# Subtest: open then close in the same tick does nothing
+ok 142 - open then close in the same tick does nothing
+  ---
+  duration_ms: 0.964415
+  type: 'test'
+  ...
+# Subtest: closing two layers programmatically is one traversal
+ok 143 - closing two layers programmatically is one traversal
+  ---
+  duration_ms: 3.341719
+  type: 'test'
+  ...
+# Subtest: a layer re-opened from onBack (e.g. pausing instead of leaving) is pushed again
+ok 144 - a layer re-opened from onBack (e.g. pausing instead of leaving) is pushed again
+  ---
+  duration_ms: 2.210394
+  type: 'test'
+  ...
+# Subtest: a pop with nothing open (leaving the site) is ignored
+ok 145 - a pop with nothing open (leaving the site) is ignored
+  ---
+  duration_ms: 0.200404
+  type: 'test'
+  ...
+# jitter40 seed 3 maxErr 0.00 meanErr 0.000
+# jitter40 seed 4 maxErr 0.00 meanErr 0.000
+# jitter40 seed 5 maxErr 0.00 meanErr 0.000
+# jitter40 seed 6 maxErr 0.00 meanErr 0.000
+# loss5 2.00 0.022
+# snapshot bytes old/full/lean 1302 1095 770
+# Subtest: prediction: zero corrections at 100 ms RTT without jitter
+ok 146 - prediction: zero corrections at 100 ms RTT without jitter
+  ---
+  duration_ms: 52.248105
+  type: 'test'
+  ...
+# Subtest: prediction: small corrections at 100 ms RTT with 40 ms jitter, converges exactly
+ok 147 - prediction: small corrections at 100 ms RTT with 40 ms jitter, converges exactly
+  ---
+  duration_ms: 164.968257
+  type: 'test'
+  ...
+# Subtest: prediction: 5% loss + reordered inputs still converge, no snaps
+ok 148 - prediction: 5% loss + reordered inputs still converge, no snaps
+  ---
+  duration_ms: 37.722638
+  type: 'test'
+  ...
+# Subtest: prediction: ghost bombs and replayed bomb collisions stay in sync
+ok 149 - prediction: ghost bombs and replayed bomb collisions stay in sync
+  ---
+  duration_ms: 28.265394
+  type: 'test'
+  ...
+# Subtest: inbox: late bomb is kept, hostile data is sanitised, dropped guest goes idle
+ok 150 - inbox: late bomb is kept, hostile data is sanitised, dropped guest goes idle
+  ---
+  duration_ms: 0.486221
+  type: 'test'
+  ...
+# Subtest: snapshots: packed form round-trips and is lighter
+ok 151 - snapshots: packed form round-trips and is lighter
+  ---
+  duration_ms: 2.833123
+  type: 'test'
+  ...
+# Subtest: interpolation: remote player moves smoothly between 30 Hz snapshots under jitter
+ok 152 - interpolation: remote player moves smoothly between 30 Hz snapshots under jitter
+  ---
+  duration_ms: 8.026889
+  type: 'test'
+  ...
+# Subtest: new round (tick regression) resets interpolation without sliding
+ok 153 - new round (tick regression) resets interpolation without sliding
+  ---
+  duration_ms: 0.669703
+  type: 'test'
+  ...
+# Subtest: prediction: reverse curse stays in sync with the host
+ok 154 - prediction: reverse curse stays in sync with the host
+  ---
+  duration_ms: 45.093839
+  type: 'test'
+  ...
+# Subtest: prediction: slow curse stays in sync with the host
+ok 155 - prediction: slow curse stays in sync with the host
+  ---
+  duration_ms: 48.550433
+  type: 'test'
+  ...
+# Subtest: prediction: fast curse stays in sync with the host
+ok 156 - prediction: fast curse stays in sync with the host
+  ---
+  duration_ms: 24.661495
+  type: 'test'
+  ...
+# Subtest: prediction: kicking a bomb is corrected by snapshots, no teleport, converges
+ok 157 - prediction: kicking a bomb is corrected by snapshots, no teleport, converges
+  ---
+  duration_ms: 25.708604
+  type: 'test'
+  ...
+# Subtest: pass: guest walks through its own bomb like the host
+ok 158 - pass: guest walks through its own bomb like the host
+  ---
+  duration_ms: 9.577758
+  type: 'test'
+  ...
+# Subtest: snapshots: shield, curse, sliding bombs, teams and theme survive the wire
+ok 159 - snapshots: shield, curse, sliding bombs, teams and theme survive the wire
+  ---
+  duration_ms: 0.627899
+  type: 'test'
+  ...
+# Subtest: interpolation: a sliding bomb advances smoothly between snapshots
+ok 160 - interpolation: a sliding bomb advances smoothly between snapshots
+  ---
+  duration_ms: 0.410408
+  type: 'test'
+  ...
+# Subtest: prediction: ice, conveyors and permanent frenzy stay in step with the host
+ok 161 - prediction: ice, conveyors and permanent frenzy stay in step with the host
+  ---
+  duration_ms: 94.364352
+  type: 'test'
+  ...
+# Subtest: snapshots: floor, tiles, events, hill, potato and survival survive the wire; a tile-less round clears the floor
+ok 162 - snapshots: floor, tiles, events, hill, potato and survival survive the wire; a tile-less round clears the floor
+  ---
+  duration_ms: 9.685992
+  type: 'test'
+  ...
+# Subtest: spectator net (me = -1): interpolates the host state, never predicts or sends inputs
+ok 163 - spectator net (me = -1): interpolates the host state, never predicts or sends inputs
+  ---
+  duration_ms: 0.783048
+  type: 'test'
+  ...
+# Subtest: matches a brute-force marcher on random grids and angles
+ok 164 - matches a brute-force marcher on random grids and angles
+  ---
+  duration_ms: 236.303278
+  type: 'test'
+  ...
+# Subtest: axis-aligned rays, boundary and inside-wall origin
+ok 165 - axis-aligned rays, boundary and inside-wall origin
+  ---
+  duration_ms: 1.090443
+  type: 'test'
+  ...
+# Subtest: perpendicular distance: a flat wall has the same z for every column (no fisheye)
+ok 166 - perpendicular distance: a flat wall has the same z for every column (no fisheye)
+  ---
+  duration_ms: 0.295916
+  type: 'test'
+  ...
+# Subtest: texture mirroring keeps the texture readable from every side
+ok 167 - texture mirroring keeps the texture readable from every side
+  ---
+  duration_ms: 0.185783
+  type: 'test'
+  ...
+# Subtest: planeOf is on the right of the facing direction
+ok 168 - planeOf is on the right of the facing direction
+  ---
+  duration_ms: 0.191388
+  type: 'test'
+  ...
+# Subtest: project: depth and lateral agree with the ray through the sprite
+ok 169 - project: depth and lateral agree with the ray through the sprite
+  ---
+  duration_ms: 0.642481
+  type: 'test'
+  ...
+# Subtest: angDiff takes the short way round
+ok 170 - angDiff takes the short way round
+  ---
+  duration_ms: 0.332045
+  type: 'test'
+  ...
+# Subtest: floor overlays: every kind is a 32x32 texture with ground showing through where expected
+ok 171 - floor overlays: every kind is a 32x32 texture with ground showing through where expected
+  ---
+  duration_ms: 19.736198
+  type: 'test'
+  ...
+# Subtest: replay re-simulates every recorded match to the same state hash
+ok 172 - replay re-simulates every recorded match to the same state hash
+  ---
+  duration_ms: 2367.709284
+  type: 'test'
+  ...
+# Subtest: a replay of the same match is deterministic in full state, not just the hash
+ok 173 - a replay of the same match is deterministic in full state, not just the hash
+  ---
+  duration_ms: 494.513183
+  type: 'test'
+  ...
+# Subtest: seeking to tick T equals playing straight to T
+ok 174 - seeking to tick T equals playing straight to T
+  ---
+  duration_ms: 324.443499
+  type: 'test'
+  ...
+# Subtest: input codes round-trip
+ok 175 - input codes round-trip
+  ---
+  duration_ms: 0.286911
+  type: 'test'
+  ...
+# Subtest: dead players are stored as idle and survival revivals keep their input
+ok 176 - dead players are stored as idle and survival revivals keep their input
+  ---
+  duration_ms: 24.797575
+  type: 'test'
+  ...
+# Subtest: old sim version is refused, garbage never throws
+ok 177 - old sim version is refused, garbage never throws
+  ---
+  duration_ms: 47.83159
+  type: 'test'
+  ...
+# Subtest: hostile headers are rejected or sanitised
+ok 178 - hostile headers are rejected or sanitised
+  ---
+  duration_ms: 56.597425
+  type: 'test'
+  ...
+# Subtest: run totals must match the tick count exactly
+ok 179 - run totals must match the tick count exactly
+  ---
+  duration_ms: 29.497876
+  type: 'test'
+  ...
+# Subtest: links and files round-trip, oversize matches are trimmed or refused
+ok 180 - links and files round-trip, oversize matches are trimmed or refused
+  ---
+  duration_ms: 356.192403
+  type: 'test'
+  ...
+# Subtest: a long match that does not fit a link falls back to its last round or to a file
+ok 181 - a long match that does not fit a link falls back to its last round or to a file
+  ---
+  duration_ms: 8.331921
+  type: 'test'
+  ...
+# Subtest: the stored list is capped and sanitised
+ok 182 - the stored list is capped and sanitised
+  ---
+  duration_ms: 88.765673
+  type: 'test'
+  ...
+# Subtest: sanitize: defaults, junk and prototype keys are rejected
+ok 183 - sanitize: defaults, junk and prototype keys are rejected
+  ---
+  duration_ms: 1.744428
+  type: 'test'
+  ...
+# Subtest: roundOpts: teams only with 4 players, random layout/theme come from the tables
+ok 184 - roundOpts: teams only with 4 players, random layout/theme come from the tables
+  ---
+  duration_ms: 7.121487
+  type: 'test'
+  ...
+# Subtest: look: unknown theme falls back to grass; sliding bombs interpolate and stop at walls
+ok 185 - look: unknown theme falls back to grass; sliding bombs interpolate and stop at walls
+  ---
+  duration_ms: 0.292284
+  type: 'test'
+  ...
+# Subtest: accessibility settings: defaults, validation, reduce follows the system only on auto
+ok 186 - accessibility settings: defaults, validation, reduce follows the system only on auto
+  ---
+  duration_ms: 0.261547
+  type: 'test'
+  ...
+# Subtest: game feel settings: on by default, validated, listed in their own group
+ok 187 - game feel settings: on by default, validated, listed in their own group
+  ---
+  duration_ms: 0.283959
+  type: 'test'
+  ...
+# Subtest: extras settings: mode, tiles and chaos are validated and reach newGame
+ok 188 - extras settings: mode, tiles and chaos are validated and reach newGame
+  ---
+  duration_ms: 7.774501
+  type: 'test'
+  ...
+# Subtest: sound settings: defaults, validation, grouped in the Sound section
+ok 189 - sound settings: defaults, validation, grouped in the Sound section
+  ---
+  duration_ms: 0.310586
+  type: 'test'
+  ...
+# Subtest: wrap splits on words and caps lines
+ok 190 - wrap splits on words and caps lines
+  ---
+  duration_ms: 1.642531
+  type: 'test'
+  ...
+# Subtest: every drawn text and image stays inside the 1200x630 card, even for hostile lengths
+ok 191 - every drawn text and image stays inside the 1200x630 card, even for hostile lengths
+  ---
+  duration_ms: 2.37646
+  type: 'test'
+  ...
+# Subtest: the portrait is optional
+ok 192 - the portrait is optional
+  ---
+  duration_ms: 0.25668
+  type: 'test'
+  ...
+# Subtest: same seed + inputs => same state
+ok 193 - same seed + inputs => same state
+  ---
+  duration_ms: 13.897319
+  type: 'test'
+  ...
+# Subtest: spawn corners are clear
+ok 194 - spawn corners are clear
+  ---
+  duration_ms: 0.530309
+  type: 'test'
+  ...
+# Subtest: player cannot walk through hard blocks
+ok 195 - player cannot walk through hard blocks
+  ---
+  duration_ms: 3.502386
+  type: 'test'
+  ...
+# Subtest: bomb explodes, kills owner standing on it, ends round
+ok 196 - bomb explodes, kills owner standing on it, ends round
+  ---
+  duration_ms: 5.236779
+  type: 'test'
+  ...
+# Subtest: player leaves own bomb tile, then bomb blocks
+ok 197 - player leaves own bomb tile, then bomb blocks
+  ---
+  duration_ms: 0.831343
+  type: 'test'
+  ...
+# Subtest: chain reaction
+ok 198 - chain reaction
+  ---
+  duration_ms: 1.122802
+  type: 'test'
+  ...
+# Subtest: soft wall destroyed, hidden item revealed, blast stops at wall
+ok 199 - soft wall destroyed, hidden item revealed, blast stops at wall
+  ---
+  duration_ms: 0.407559
+  type: 'test'
+  ...
+# Subtest: sudden death closes in, kills an idle player, ends the round
+ok 200 - sudden death closes in, kills an idle player, ends the round
+  ---
+  duration_ms: 16.985745
+  type: 'test'
+  ...
+# Subtest: player slides around a block corner into an open lane
+ok 201 - player slides around a block corner into an open lane
+  ---
+  duration_ms: 1.364027
+  type: 'test'
+  ...
+# Subtest: player straddling a tile when a bomb lands there is not trapped inside it
+ok 202 - player straddling a tile when a bomb lands there is not trapped inside it
+  ---
+  duration_ms: 1.432183
+  type: 'test'
+  ...
+# Subtest: every sound has a recipe and every recipe a priority
+ok 203 - every sound has a recipe and every recipe a priority
+  ---
+  duration_ms: 1.6857
+  type: 'test'
+  ...
+# Subtest: voice limiter: fills up, steals the lowest priority, drops weaker sounds
+ok 204 - voice limiter: fills up, steals the lowest priority, drops weaker sounds
+  ---
+  duration_ms: 0.33896
+  type: 'test'
+  ...
+# Subtest: a real bomb: place, fuse ticks, boom, wall and death are heard once each
+ok 205 - a real bomb: place, fuse ticks, boom, wall and death are heard once each
+  ---
+  duration_ms: 18.216085
+  type: 'test'
+  ...
+# Subtest: start jingle fires on a new round, not when joining mid-round
+ok 206 - start jingle fires on a new round, not when joining mid-round
+  ---
+  duration_ms: 0.382252
+  type: 'test'
+  ...
+# Subtest: pickups are distinct per kind and louder for the local player
+ok 207 - pickups are distinct per kind and louder for the local player
+  ---
+  duration_ms: 8.022724
+  type: 'test'
+  ...
+# Subtest: extras: teleport, ice, spikes, chaos, hill, potato, survival, sudden death
+ok 208 - extras: teleport, ice, spikes, chaos, hill, potato, survival, sudden death
+  ---
+  duration_ms: 5.342997
+  type: 'test'
+  ...
+# Subtest: hill, potato (accelerating fuse beeps), survival
+ok 209 - hill, potato (accelerating fuse beeps), survival
+  ---
+  duration_ms: 48.323572
+  type: 'test'
+  ...
+# Subtest: kick: a resting bomb that starts sliding is heard
+ok 210 - kick: a resting bomb that starts sliding is heard
+  ---
+  duration_ms: 2.600535
+  type: 'test'
+  ...
+# Subtest: round and match outcomes follow the local human, teams and survival
+ok 211 - round and match outcomes follow the local human, teams and survival
+  ---
+  duration_ms: 1.105797
+  type: 'test'
+  ...
+# Subtest: round end stinger comes from state only (works for guests)
+ok 212 - round end stinger comes from state only (works for guests)
+  ---
+  duration_ms: 0.990424
+  type: 'test'
+  ...
+# Subtest: intensity: calm, few players left, sudden death, survival waves
+ok 213 - intensity: calm, few players left, sudden death, survival waves
+  ---
+  duration_ms: 3.846192
+  type: 'test'
+  ...
+# Subtest: blip pitch is stable per speaker and in a sane range
+ok 214 - blip pitch is stable per speaker and in a sane range
+  ---
+  duration_ms: 0.239644
+  type: 'test'
+  ...
+# Subtest: controller: nothing is created before a gesture, with sound off, or while muted
+ok 215 - controller: nothing is created before a gesture, with sound off, or while muted
+  ---
+  duration_ms: 4.726631
+  type: 'test'
+  ...
+# Subtest: controller: music follows scene, pause/hidden suspend, mute stops everything
+ok 216 - controller: music follows scene, pause/hidden suspend, mute stops everything
+  ---
+  duration_ms: 1.962066
+  type: 'test'
+  ...
+# Subtest: controller: Silence music keeps effects; menu clicks wake then re-suspend the engine
+ok 217 - controller: Silence music keeps effects; menu clicks wake then re-suspend the engine
+  ---
+  duration_ms: 0.305388
+  type: 'test'
+  ...
+# Subtest: controller: gameplay events play, gaps are respected, match fanfare fires once
+ok 218 - controller: gameplay events play, gaps are respected, match fanfare fires once
+  ---
+  duration_ms: 0.610825
+  type: 'test'
+  ...
+# Subtest: controller: voice reads banners once, lower-cased, rate limited, only when enabled
+ok 219 - controller: voice reads banners once, lower-cased, rate limited, only when enabled
+  ---
+  duration_ms: 2.72945
+  type: 'test'
+  ...
+# Subtest: controller: with music on Silence the jingles stay quiet but gameplay sounds play
+ok 220 - controller: with music on Silence the jingles stay quiet but gameplay sounds play
+  ---
+  duration_ms: 0.315279
+  type: 'test'
+  ...
+# Subtest: options are cfg flags; players and bombs only carry the extras when on
+ok 221 - options are cfg flags; players and bombs only carry the extras when on
+  ---
+  duration_ms: 5.236245
+  type: 'test'
+  ...
+# Subtest: item table: special items appear only with bombs on, base items keep their order
+ok 222 - item table: special items appear only with bombs on, base items keep their order
+  ---
+  duration_ms: 17.29418
+  type: 'test'
+  ...
+# Subtest: pickups load the next bombs; one type at a time
+ok 223 - pickups load the next bombs; one type at a time
+  ---
+  duration_ms: 1.625699
+  type: 'test'
+  ...
+# Subtest: cluster: the blast is normal, then a ring of mini-blasts drops with a telegraph
+ok 224 - cluster: the blast is normal, then a ring of mini-blasts drops with a telegraph
+  ---
+  duration_ms: 1.279553
+  type: 'test'
+  ...
+# Subtest: cluster ring skips walls; minis do not block and do not use bomb slots
+ok 225 - cluster ring skips walls; minis do not block and do not use bomb slots
+  ---
+  duration_ms: 0.940987
+  type: 'test'
+  ...
+# Subtest: mine: invisible blocker-free trap, armed by enemies only, owner and allies are safe
+ok 226 - mine: invisible blocker-free trap, armed by enemies only, owner and allies are safe
+  ---
+  duration_ms: 0.649277
+  type: 'test'
+  ...
+# Subtest: mine: goes off by itself after the long timeout, can be set off by flames, cannot be kicked
+ok 227 - mine: goes off by itself after the long timeout, can be set off by flames, cannot be kicked
+  ---
+  duration_ms: 0.796246
+  type: 'test'
+  ...
+# Subtest: ice: freezes instead of killing; a frozen player cannot move but a normal blast kills; shields resist
+ok 228 - ice: freezes instead of killing; a frozen player cannot move but a normal blast kills; shields resist
+  ---
+  duration_ms: 1.160997
+  type: 'test'
+  ...
+# Subtest: ice: team rules apply (no friendly freeze when friendly fire is off) and the owner can freeze itself
+ok 229 - ice: team rules apply (no friendly freeze when friendly fire is off) and the owner can freeze itself
+  ---
+  duration_ms: 0.529476
+  type: 'test'
+  ...
+# Subtest: glove: bomb key on a bomb throws it THROW_TILES ahead over walls, the fuse keeps running
+ok 230 - glove: bomb key on a bomb throws it THROW_TILES ahead over walls, the fuse keeps running
+  ---
+  duration_ms: 1.448556
+  type: 'test'
+  ...
+# Subtest: glove: lands on the farthest free tile, nothing happens when there is none
+ok 231 - glove: lands on the farthest free tile, nothing happens when there is none
+  ---
+  duration_ms: 0.480114
+  type: 'test'
+  ...
+# Subtest: punch: the bomb key hits the bomb right ahead PUNCH_TILES away; without a bomb ahead it places one
+ok 232 - punch: the bomb key hits the bomb right ahead PUNCH_TILES away; without a bomb ahead it places one
+  ---
+  duration_ms: 0.279979
+  type: 'test'
+  ...
+# Subtest: glove/punch never grab mines or minis; remote still detonates away from a bomb
+ok 233 - glove/punch never grab mines or minis; remote still detonates away from a bomb
+  ---
+  duration_ms: 0.317154
+  type: 'test'
+  ...
+# Subtest: abilities: cooldowns count down in movePlayer, a failed use costs nothing
+ok 234 - abilities: cooldowns count down in movePlayer, a failed use costs nothing
+  ---
+  duration_ms: 0.589563
+  type: 'test'
+  ...
+# Subtest: ability dash: 3 tiles forward at DASH_SPEED, stops at walls, ignores steering
+ok 235 - ability dash: 3 tiles forward at DASH_SPEED, stops at walls, ignores steering
+  ---
+  duration_ms: 0.255416
+  type: 'test'
+  ...
+# Subtest: ability blink: lands up to 3 tiles ahead over bombs and walls, refuses solid targets
+ok 236 - ability blink: lands up to 3 tiles ahead over bombs and walls, refuses solid targets
+  ---
+  duration_ms: 0.325067
+  type: 'test'
+  ...
+# Subtest: ability aegis: shield and thaw; veil; overload; rise
+ok 237 - ability aegis: shield and thaw; veil; overload; rise
+  ---
+  duration_ms: 1.528593
+  type: 'test'
+  ...
+# Subtest: ability swap and sweep act on the world, only on the host
+ok 238 - ability swap and sweep act on the world, only on the host
+  ---
+  duration_ms: 0.857087
+  type: 'test'
+  ...
+# Subtest: ability crack opens the first brick and reveals its item; frozen players can only use aegis
+ok 239 - ability crack opens the first brick and reveals its item; frozen players can only use aegis
+  ---
+  duration_ms: 0.247351
+  type: 'test'
+  ...
+# Subtest: classic items and the default story-less options leave abilities off for bots
+ok 240 - classic items and the default story-less options leave abilities off for bots
+  ---
+  duration_ms: 51.087848
+  type: 'test'
+  ...
+# Subtest: input codes: act is +18, old codes unchanged, inbox keeps a late act
+ok 241 - input codes: act is +18, old codes unchanged, inbox keeps a late act
+  ---
+  duration_ms: 0.603499
+  type: 'test'
+  ...
+# Subtest: snapshots: ice flames, special bombs, throw arcs and extra player fields survive the wire
+ok 242 - snapshots: ice flames, special bombs, throw arcs and extra player fields survive the wire
+  ---
+  duration_ms: 0.921337
+  type: 'test'
+  ...
+# Subtest: prediction: the dash ability stays exact on the guest
+ok 243 - prediction: the dash ability stays exact on the guest
+  ---
+  duration_ms: 64.385894
+  type: 'test'
+  ...
+# Subtest: prediction: the blink ability stays exact on the guest
+ok 244 - prediction: the blink ability stays exact on the guest
+  ---
+  duration_ms: 80.688478
+  type: 'test'
+  ...
+# Subtest: prediction: the aegis ability stays exact on the guest
+ok 245 - prediction: the aegis ability stays exact on the guest
+  ---
+  duration_ms: 64.665698
+  type: 'test'
+  ...
+# Subtest: prediction: the veil ability stays exact on the guest
+ok 246 - prediction: the veil ability stays exact on the guest
+  ---
+  duration_ms: 60.653758
+  type: 'test'
+  ...
+# Subtest: prediction: a frozen guest stays put exactly like the host and thaws on time
+ok 247 - prediction: a frozen guest stays put exactly like the host and thaws on time
+  ---
+  duration_ms: 14.749037
+  type: 'test'
+  ...
+# Subtest: prediction: special bombs, punch and glove presses stay in sync (host-only moves are corrected)
+ok 248 - prediction: special bombs, punch and glove presses stay in sync (host-only moves are corrected)
+  ---
+  duration_ms: 30.994398
+  type: 'test'
+  ...
+# Subtest: AI danger map: ice is harmless, cluster adds its ring late, mines matter only when seen or triggered
+ok 249 - AI danger map: ice is harmless, cluster adds its ring late, mines matter only when seen or triggered
+  ---
+  duration_ms: 4.734576
+  type: 'test'
+  ...
+# Subtest: AI: a bot never walks into a visible rival mine and bots do not wait on their own mines
+ok 250 - AI: a bot never walks into a visible rival mine and bots do not wait on their own mines
+  ---
+  duration_ms: 40.705207
+  type: 'test'
+  ...
+# Subtest: AI abilities: aegis when the blast is imminent, dash along the escape, blink when boxed in, veil near rivals
+ok 251 - AI abilities: aegis when the blast is imminent, dash along the escape, blink when boxed in, veil near rivals
+  ---
+  duration_ms: 1.247093
+  type: 'test'
+  ...
+# Subtest: AI: frozen bots wait, aegis bots thaw; bots do not target a vanished rival unless adjacent
+ok 252 - AI: frozen bots wait, aegis bots thaw; bots do not target a vanished rival unless adjacent
+  ---
+  duration_ms: 0.205701
+  type: 'test'
+  ...
+# Subtest: AI: soak with every option, all nine abilities and teams ends without errors or stuck bots
+ok 253 - AI: soak with every option, all nine abilities and teams ends without errors or stuck bots
+  ---
+  duration_ms: 1744.626661
+  type: 'test'
+  ...
+# Subtest: settings: the two options default to off, are validated, reach newGame and keep classic games identical
+ok 254 - settings: the two options default to off, are validated, reach newGame and keep classic games identical
+  ---
+  duration_ms: 1.085438
+  type: 'test'
+  ...
+# Subtest: story: every fighter has a signature ability that exists, and abilities by player index reach the sim
+ok 255 - story: every fighter has a signature ability that exists, and abilities by player index reach the sim
+  ---
+  duration_ms: 0.491252
+  type: 'test'
+  ...
+# Subtest: sound: new events have sounds and the observer reports them once
+ok 256 - sound: new events have sounds and the observer reports them once
+  ---
+  duration_ms: 2.50686
+  type: 'test'
+  ...
+# Subtest: haptics: being frozen buzzes the frozen player
+ok 257 - haptics: being frozen buzzes the frozen player
+  ---
+  duration_ms: 0.491941
+  type: 'test'
+  ...
+# Subtest: director: kills by a mine and by a blast on a frozen player get their own calls; stats ignore minis and thrown bombs
+ok 258 - director: kills by a mine and by a blast on a frozen player get their own calls; stats ignore minis and thrown bombs
+  ---
+  duration_ms: 18.47294
+  type: 'test'
+  ...
+1..258
+# tests 258
+# suites 0
+# pass 258
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6847.567397
