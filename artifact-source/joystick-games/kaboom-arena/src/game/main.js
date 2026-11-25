@@ -1,0 +1,1201 @@
+import { connectTV } from "../puretv.js";
+import { newGame, step, W, T, ABILITIES } from "./sim.js";
+import { think } from "./ai.js";
+import { draw, CW, CH } from "./render.js";
+import { createInput, merge, sources, clearBombs, labelOf, pads } from "./input.js";
+import { joinRoom, newCode, cid, listRooms } from "./net.js";
+import { cleanName, displayNames, roomFromSearch, inviteUrl, admit, release, cleanRooms, quickPick } from "./lobby.js";
+import { EMOTES, createEmotes, validEmote } from "./emote.js";
+import { createInbox, createGuestNet, packSnap, unpackSnap } from "./netcode.js";
+import { view, setSuits, palette, humansOf, MODE_INFO, EVENT_INFO } from "./look.js";
+import { FIELDS, DEFAULTS, load as loadSettings, save as saveSettings, sanitize, roundOpts, reduced } from "./settings.js";
+import { createHaptics, browserVibrate, browserRumble, observe, vibrationReport } from "./haptics.js";
+import { setStill } from "./home.js";
+import { initHelp } from "./ux.js";
+import { createNav } from "./nav.js";
+import { createStoryUI } from "./storyui.js";
+import { BY_ID, actor } from "./campaign.js";
+import { createRecorder, createPlayback, settle, fragmentOf, unpack, rulesOf, titleOf } from "./replay.js";
+import { createReplayList, createPlaybar, shareReplay, notify, readFile, ERR } from "./replayui.js";
+import { createDailyUi } from "./dailyui.js";
+import { shareCard } from "./sharecard.js";
+import { FACES } from "./raycast.js";
+import { fightLine } from "./story.js";
+import { createDirector, timeScale, recapView } from "./director.js";
+import { fps } from "./fpsinput.js";
+import { createSound, browserSpeech } from "./sound.js";
+import { browserEngine } from "./audio.js";
+
+const $ = (id) => document.getElementById(id);
+const canvas = $("c"), ctx = canvas.getContext("2d");
+canvas.width = CW;
+canvas.height = CH;
+
+const SNAP_EVERY = 2, SEND_EVERY = 2, GRID_EVERY = 60, THINK_EVERY = 6;
+let mode = null, game = null, room = null, slots = [], inboxes = {}, botMem = {};
+let frame = 0, lastSnap = 0, joinTimer = 0, humans = [];
+let spec = false, hostCid = "", pub = false, allowSpec = true, specN = 0, tries = [];
+const emo = createEmotes();
+let names = [], pnames = [], joined = false, lostAt = 0, subOk = false, resub = false, rmShown = false;
+const RECONNECT_MS = 30000;
+const PNUM = [1, 2, 3, 4].map((i) => `P${i}`);
+const multi = () => mode === "local" || (mode === "story" && humans.length > 1);
+let settings = loadSettings();
+const motion = matchMedia("(prefers-reduced-motion: reduce)");
+let vibSent = null;
+const haptics = createHaptics({ vibrate: (p) => (vibSent = browserVibrate(p)), rumble: browserRumble, settings: () => settings });
+const snd = createSound({ settings: () => settings, makeEngine: () => browserEngine({ mobile: matchMedia("(pointer: coarse)").matches }), speech: browserSpeech() });
+let sndGame = false;
+try { snd.setMuted(localStorage.getItem("mute") === "1"); } catch {}
+let feel = {};
+const fd = createDirector();
+let clock = 0, ts = 1, still = false, recapOn = false, recapOff = false;
+const fx = {
+  human: (i) => (multi() || (mode === "replay" && game?.me < 0) ? i < humans.length : i === (game?.me ?? 0)),
+  announce: true, timeFx: false, punch: false, chat: false, still: false, rand: Math.random,
+  line: (i, ev) => fightLine(game?.story?.[i ? "foe" : "id"], ev),
+};
+
+function applyLook() {
+  feel = {};
+  view.cb = settings.cb;
+  still = reduced(settings, motion.matches);
+  view.still = still;
+  setStill(still);
+  r3?.setStill(still);
+  rf?.setStill(still);
+  const m = settings.mode;
+  $("soloLabel").textContent = m === "classic" ? "Solo vs bots" : m === "survival" ? "Solo · Survival vs waves" : `Solo · ${MODE_INFO[m].name}`;
+  dirty = true;
+  snd.sync();
+}
+motion.addEventListener?.("change", applyLook);
+let gnet = null, lastGrid = null, lastCfg = null, lastFloor, hostRules = DEFAULTS, sentGrid = "", snapCount = 0, rtt = 0, pingTimer = 0;
+const GFX = ["classic", "3d", "dlss", "fps"];
+let gfx = "classic", r3 = null, rf = null;
+try { gfx = localStorage.getItem("gfx") || "classic"; } catch {}
+if (!GFX.includes(gfx)) gfx = "classic";
+
+const nick = $("nick");
+try { nick.value = cleanName(localStorage.getItem("name")); } catch {}
+nick.oninput = () => { try { localStorage.setItem("name", cleanName(nick.value)); } catch {} };
+const myName = () => cleanName(nick.value);
+
+function markGfx() {
+  for (const b of $("gfx").children) b.setAttribute("aria-checked", b.dataset.gfx === gfx);
+}
+
+const is3 = () => (gfx === "3d" || gfx === "dlss") && !!r3;
+const fpsOn = () => gfx === "fps" && !!rf;
+
+async function applyGfx() {
+  markGfx();
+  try { localStorage.setItem("gfx", gfx); } catch {}
+  if (gfx === "fps" && !rf) {
+    try {
+      const { createRendererFps } = await import("./renderfps.js");
+      rf = createRendererFps($("cf"));
+      rf.setStill(reduced(settings, motion.matches));
+      fps.bind();
+    } catch (err) {
+      console.error(err);
+      gfx = "classic";
+      markGfx();
+      $("msg").textContent = "Bomber Shooter unavailable.";
+    }
+  }
+  if ((gfx === "3d" || gfx === "dlss") && !r3) {
+    try {
+      const { createRenderer3D } = await import("./render3d.js");
+      r3 = createRenderer3D($("c3"), $("game"), { onPanel: () => dlssUi().then((u) => u.toggle()) });
+      r3.setStill(reduced(settings, motion.matches));
+    } catch (err) {
+      console.error(err);
+      gfx = "classic";
+      markGfx();
+      $("msg").textContent = "3D graphics unavailable (WebGL or offline).";
+    }
+  }
+  const three = is3(), first = fpsOn();
+  canvas.hidden = three || first;
+  $("c3").hidden = !three;
+  $("cf").hidden = !first;
+  if (first) rf.resize();
+  if (r3) { r3.hud.style.display = three ? "" : "none"; if (three) r3.setDlss(gfx === "dlss"); r3.resize(); }
+  if (gfx !== "dlss" || !three) { ui6?.destroy(); ui6 = null; }
+}
+
+let ui6 = null;
+async function dlssUi() {
+  if (!ui6) {
+    const { createDlssUi } = await import("./dlss6ui.js");
+    ui6 ??= createDlssUi({
+      api: r3,
+      reduced: () => reduced(settings, motion.matches),
+      layer: { open: () => nav.open("dlss"), close: () => nav.close("dlss") },
+      busy: () => mode === "host" || mode === "guest",
+      holdPause() {
+        if (paused || !$("game").classList.contains("on") || (mode !== "solo" && mode !== "local" && mode !== "story")) return null;
+        setPause(true);
+        return () => setPause(false);
+      },
+    });
+  }
+  return ui6;
+}
+
+for (const b of $("gfx").children) {
+  b.onclick = () => {
+    const was = gfx;
+    gfx = b.dataset.gfx;
+    applyGfx().then(() => gfx === "dlss" && was !== "dlss" && is3() && dlssUi().then((u) => u.splash()));
+  };
+}
+applyGfx();
+
+// Browser Back closes the top layer (help overlay, or the current screen) instead of leaving the site.
+let cur = "menu", help = null;
+const nav = createNav({ history, onBack: (kind) => goBack(kind) });
+addEventListener("popstate", () => nav.pop());
+
+function goBack(kind) {
+  if (kind === "help") return help?.close();
+  if (kind === "dlss") return ui6?.close();
+  if (mode === "replay") return exitReplay();
+  const offline = mode === "solo" || mode === "local" || mode === "story";
+  if (cur === "game" && !game?.rematch) {
+    if (!offline) return nav.open("screen");
+    if (!paused) { setPause(true); return nav.open("screen"); }
+  }
+  if (cur === "settings" || cur === "daily" || cur === "replays" || cur === "rooms") return show("menu");
+  if (mode === "story" || cur === "story") return leave();
+  if (mode === "host") return endMatch();
+  toMenu();
+}
+
+function show(id) {
+  for (const el of document.querySelectorAll(".screen")) el.classList.toggle("on", el.id === id);
+  cur = id;
+  if (id === "menu") nav.close("screen");
+  else nav.open("screen");
+}
+
+function toMenu(msg = "") {
+  setPause(false);
+  clearTimeout(joinTimer);
+  room?.leave();
+  room = mode = game = rec = rp = rpKeep = null;
+  rpSpeed = 1;
+  document.body.classList.remove("replaying");
+  playbar.show(false);
+  $("rpEnd").classList.remove("on");
+  slots = [];
+  inboxes = {};
+  botMem = {};
+  humans = [];
+  feel = {};
+  resetFeel();
+  setSuits(null);
+  sndGame = false;
+  snd.setScene({ kind: "menu" });
+  snd.cancelSpeech();
+  gnet = lastGrid = lastCfg = lastFloor = null;
+  hostRules = DEFAULTS;
+  names = pnames = [];
+  joined = subOk = resub = false;
+  spec = pub = false;
+  allowSpec = true;
+  hostCid = "";
+  specN = 0;
+  tries = [];
+  emo.reset();
+  document.body.classList.remove("spectating");
+  syncWatch();
+  lostAt = 0;
+  $("reconn").classList.remove("on");
+  syncRematch();
+  clearInterval(pingTimer);
+  rtt = 0;
+  $("ping").textContent = "";
+  $("msg").textContent = msg;
+  show("menu");
+}
+
+const pickFlag = new URLSearchParams(location.search).get("pick");
+const storyUi = createStoryUI({
+  root: $("story"), show: () => show("story"), fight: startStory, home: () => toMenu(), reduced: () => reduced(settings, motion.matches), blip: (id) => snd.blip(id), sfx: (n) => snd.ui(n),
+  coopOk: () => !matchMedia("(pointer: coarse)").matches || [...(navigator.getGamepads?.() || [])].some((g) => g?.connected), label: labelOf,
+  auto: new URLSearchParams(location.search).get("story") && pickFlag !== null && Number.isInteger(+pickFlag) ? Math.max(0, +pickFlag) : null,
+});
+$("storyBtn").onclick = () => storyUi.open();
+const faceIn = (inp, id) => fps.map(inp, game.s.tick, (game.s.players[id]?.x ?? 0) < (W * T) / 2 ? 1 : 3);
+const allInputs = () => (fpsOn() && game ? faceIn(merge(Object.keys(sources)), Math.max(game.me, 0)) : merge(Object.keys(sources)));
+
+const input = createInput(
+  $("pad"),
+  $("bombBtn"),
+  $("actBtn"),
+  (name) => (mode === "local-lobby" ? joinLocal(name) : storyUi.claim(name) || dismissRecap() || (name.startsWith("pad") && storyUi.press())),
+  () => {
+    for (const [n, src] of Object.entries(sources)) if (n.startsWith("pad") && (src.dx || src.dy)) storyUi.nav(src.dx, src.dy);
+  },
+  () => setPause(!paused),
+  () => tv.ownsStandardPad,
+);
+
+let paused = false, dirty = true;
+
+let emoOn = false;
+function syncEmoUi() {
+  const on = (mode === "host" || mode === "guest") && !!game && cur === "game";
+  if (on === emoOn) return;
+  emoOn = on;
+  $("emoBtn").hidden = !on;
+  if (!on) closeWheel();
+}
+function closeWheel() {
+  $("emoWheel").hidden = true;
+  $("emoBtn").setAttribute("aria-expanded", "false");
+}
+EMOTES.forEach((t, i) => {
+  const b = Object.assign(document.createElement("button"), { textContent: t });
+  b.setAttribute("aria-label", `Emote ${i + 1}`);
+  b.onclick = () => { sendEmote(i); closeWheel(); };
+  $("emoWheel").append(b);
+});
+$("emoBtn").onclick = () => {
+  const open = $("emoWheel").hidden;
+  $("emoWheel").hidden = !open;
+  $("emoBtn").setAttribute("aria-expanded", open);
+};
+addEventListener("keydown", (e) => {
+  const n = /^Digit([1-8])$/.exec(e.code);
+  if (n && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey && e.target.tagName !== "INPUT") sendEmote(+n[1] - 1);
+});
+let rec = null, rp = null, rpSpeed = 1, rpBack = "menu", rpKeep = null;
+
+function setPause(on) {
+  if (on && mode !== "solo" && mode !== "local" && mode !== "story" && mode !== "replay") return;
+  paused = on;
+  snd.setPaused(on);
+  $("pause").classList.toggle("on", on && mode !== "replay");
+  if (mode === "replay") dirty = true;
+}
+
+addEventListener("keydown", (e) => {
+  if (e.code === "Escape" && !e.repeat && $("game").classList.contains("on")) setPause(!paused);
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) setPause(true);
+  snd.setHidden(document.hidden);
+});
+addEventListener("resize", () => (dirty = true));
+$("pauseBtn").onclick = () => setPause(true);
+$("resume").onclick = () => setPause(false);
+$("pauseQuit").onclick = () => leave();
+
+function joinLocal(name) {
+  if (humans.includes(name) || humans.length >= 4) return;
+  humans.push(name);
+  renderLocalLobby();
+}
+
+function renderLocalLobby() {
+  $("localList").innerHTML = humans.map((n, i) => `<li>P${i + 1}: ${labelOf(n)}</li>`).join("") || "<li>—</li>";
+  $("localStart").disabled = humans.length < 2;
+}
+
+const FAST = new URLSearchParams(location.search).get("story");
+
+function makeGame(n, spec, round = 1) {
+  const { opts, theme } = spec ?? roundOpts(settings, n);
+  const seed = spec?.seed ? spec.seed(round - 1) : Date.now();
+  const s = newGame(n, seed, opts);
+  s.cfg.theme = theme;
+  const kill = spec?.fighter || !spec || !FAST ? [] : FAST === "lose" ? spec.heroes ?? [0] : spec.foes ?? [1];
+  for (const id of kill) s.players[id].alive = false;
+  rec?.begin(s, seed, opts, theme, kill);
+  return s;
+}
+
+const INTRO = 80;
+const roundBanner = (g) => `ROUND ${g.round} — FIGHT!`;
+const rulesText = (r) => [MODE_INFO[r.mode].name, r.tiles !== "off" && `${r.tiles} floor tiles`, r.chaos && "chaos events", r.bombs && "special bombs", r.abilities && "abilities"].filter(Boolean).join(" · ");
+
+// Non-classic modes announce themselves with a short freeze; the banner reaches guests through the snapshot.
+function modeIntro(g) {
+  const m = g.s.cfg.mode;
+  if (g.story || !m) return;
+  g.banner = MODE_INFO[m].banner;
+  g.intro = INTRO;
+}
+
+function startStory(spec) {
+  const cast = spec.cast.map(actor);
+  mode = "story";
+  humans = spec.co ? spec.humans : [];
+  clearBombs();
+  setSuits(cast.map((c) => c.color));
+  const extra = {};
+  if (settings.bombs) extra.bombs = true;
+  if (settings.abilities) extra.abilities = cast.map((c) => c.ability);
+  startMatch(cast.length, Object.keys(extra).length ? { ...spec, opts: { ...spec.opts, ...extra } } : spec, cast.map((c) => c.name));
+}
+
+function startMatch(n, story, storyNames, daily) {
+  const labels = mode === "local" || settings.cb ? PNUM : undefined;
+  const who = multi() ? humans.map(() => true) : mode === "host" ? slots.map(Boolean) : [true];
+  const spec = daily ?? story;
+  const kind = story ? "story" : daily ? "daily" : mode === "local" ? "local" : mode === "host" ? "host" : "solo";
+  const hm = who.reduce((m, h, i) => (h ? m | (1 << i) : m), 0) & 0xffff;
+  rec = createRecorder({ k: kind, n, hm, w: spec ? spec.win : settings.rounds, lv: spec?.level ?? settings.bot, st: story ? { id: story.id, i: story.i, ...(story.co ? { co: 1, al: story.ally } : {}) } : null, dl: daily?.key ?? null, fg: daily?.fighter.id ?? null, ts: Date.now() });
+  game = {
+    s: makeGame(n, spec), n, scores: Array(n).fill(0), banner: "", wait: 0, over: false, me: multi() ? -1 : 0, win: spec ? spec.win : settings.rounds,
+    names: storyNames ?? displayNames(n, who, mode === "host" ? names : [myName()], labels),
+    story, spec, daily, nr: 1, retro: !!story, round: 1, intro: story ? INTRO : 0,
+  };
+  if (story) game.banner = roundBanner(game);
+  else modeIntro(game);
+  botMem = {};
+  feel = {};
+  resetFeel();
+  fps.reset();
+  sentGrid = "";
+  $("pauseBtn").hidden = mode !== "solo" && mode !== "local" && mode !== "story";
+  enterGame(game);
+  show("game");
+}
+
+function enterGame(g) {
+  const c = g.s.cfg;
+  sndGame = true;
+  snd.setScene({ kind: "game", theme: c?.theme, mode: c?.mode, boss: !!g.story?.boss, who: g.story?.foe });
+}
+
+function isBot(id) {
+  if (multi()) return id >= humans.length;
+  return id !== 0 && !(mode === "host" && slots[id] && inboxes[id]);
+}
+
+function tick() {
+  if (paused || !game || game.rematch || (mode !== "solo" && mode !== "host" && mode !== "local" && mode !== "story" && mode !== "replay")) return;
+  const g = game, s = g.s, replaying = mode === "replay";
+  if (replaying && rp.ended) return;
+  if (g.wait > 0) {
+    // Hold on the recap until the player dismisses it (capped so a host never stalls the guests for long).
+    if (g.wait === 1 && recapOn && (g.hold = (g.hold || 0) + 1) < (mode === "host" ? 900 : 5400)) return;
+    if (--g.wait === 0) {
+      g.hold = 0;
+      if (g.over && replaying) { rp.ended = true; return; }
+      if (g.over && g.story) {
+        const foe = g.story.foes[0], ok = g.scores[0] > g.scores[foe];
+        toMenu();
+        return storyUi.result(ok, g.scores[foe]);
+      }
+      if (g.over) { g.rematch = true; return; }
+      g.banner = "";
+      g.s = replaying ? replayRound(g, rp.r + 1) : makeGame(g.n, g.spec, ++g.nr);
+      sentGrid = "";
+      if (g.story) { g.round++; g.banner = roundBanner(g); g.intro = INTRO; }
+      else modeIntro(g);
+    }
+    return;
+  }
+  if (g.intro > 0) {
+    if (--g.intro === 0) g.banner = "";
+    return;
+  }
+  if (replaying && !s.done && s.tick >= rp.rounds[rp.r].tk) { rp.ended = true; return; }
+  const allOut = replaying ? false : multi() ? s.players.every((p) => p.id >= humans.length || !p.alive) : mode === "solo" || mode === "story" ? !s.players[0].alive : false;
+  for (let k = 0; k < (allOut ? 3 : 1) && !s.done; k++) {
+    let inputs = {};
+    if (replaying) {
+      inputs = rp.inputs(s);
+      const q = inputs[Math.max(g.me, 0)], k = q && (q.dx || q.dy) ? FACES.findIndex(([x, y]) => x === q.dx && y === q.dy) : -1;
+      if (k >= 0) fps.face = k;
+      rp.note(s);
+      step(s, inputs);
+      continue;
+    }
+    if (multi()) humans.forEach((n, i) => (inputs[i] = i || !fpsOn() ? merge([n]) : faceIn(merge([n]), 0)));
+    else inputs[0] = allInputs();
+    for (const p of s.players) {
+      if (multi() ? p.id < humans.length : p.id === 0) continue;
+      if (isBot(p.id)) {
+        if ((s.tick + p.id) % THINK_EVERY === 0) botMem[p.id] = think(s, p.id, Math.random, g.spec ? g.spec.level : settings.bot);
+        inputs[p.id] = { ...botMem[p.id] };
+        if (botMem[p.id]) botMem[p.id].bomb = botMem[p.id].act = false;
+      } else inputs[p.id] = inboxes[p.id].next();
+    }
+    rec ? rec.step(s, inputs) : step(s, inputs);
+    clearBombs();
+  }
+  if (!s.done) return;
+  if (replaying) rp.check(s);
+  else rec?.end(s);
+  if (settle(g) && rec) g.pending = true;
+}
+
+function endMatch() {
+  room?.send({ t: "end" });
+  toMenu();
+}
+
+function sendSnap() {
+  const { s, scores, banner } = game;
+  const grid = s.grid.join("");
+  const withGrid = grid !== sentGrid || snapCount++ % GRID_EVERY === 0;
+  sentGrid = grid;
+  const a = slots.map((_, i) => inboxes[i]?.ack ?? null);
+  room.send({ t: "snap", g: { s: packSnap(s, withGrid), a, scores, banner, r: !!game.rematch, w: settings.rounds } });
+}
+
+const pushLobby = () => room.send({ t: "lobby", slots, names, pub: pub ? 1 : 0, sp: allowSpec ? 1 : 0, rules: { mode: settings.mode, tiles: settings.tiles, chaos: settings.chaos, bombs: settings.bombs, abilities: settings.abilities } });
+
+function renderLobby() {
+  const list = displayNames(slots.length, slots.map(Boolean), names);
+  $("lobbyList").replaceChildren(...list.map((n) => Object.assign(document.createElement("li"), { textContent: n })));
+  if (mode === "host") $("lobbyInfo").textContent = `${slots.length} player(s)${pub ? " · public" : ""}${specN ? ` · ${specN} watching` : ""} – ${settings.mode === "survival" ? "humans vs waves, no bots" : "free slots will be bots"} · ${rulesText(settings)}`;
+}
+
+const sendJoin = () => !spec && room?.send({ t: "join", name: myName() });
+let feedTimer = 0;
+
+function syncWatch() {
+  const text = spec ? `Spectating${specN > 1 ? ` · ${specN} watching` : ""}` : specN ? `👁 ${specN} watching` : "";
+  $("watch").textContent = text;
+  $("watch").hidden = !text;
+  $("watch").classList.toggle("spec", spec);
+}
+
+function onEmote(m) {
+  if (!game || (mode !== "host" && mode !== "guest") || m.from === cid || typeof m.from !== "string" || !validEmote(m.e) || !settings.emotes) return;
+  const pid = slots.indexOf(m.from);
+  if (pid >= 0) emo.show(pid, m.e, clock, false);
+  else feed(m.e);
+  snd.ui("emote", 0.9 + m.e * 0.04);
+}
+
+function feed(e) {
+  $("emoFeed").textContent = `👁 ${EMOTES[e]}`;
+  clearTimeout(feedTimer);
+  feedTimer = setTimeout(() => ($("emoFeed").textContent = ""), 2000);
+}
+
+function sendEmote(i) {
+  if (!room || !game || (mode !== "host" && mode !== "guest") || !validEmote(i) || !emo.ready(clock)) return;
+  emo.sent(clock);
+  room.send({ t: "emote", e: i });
+  const me = mode === "host" ? 0 : game.me;
+  if (me >= 0) emo.show(me, i, clock, true);
+  else feed(i);
+  snd.ui("emote", 0.9 + i * 0.04);
+  $("emoBtn").classList.add("cool");
+  setTimeout(() => $("emoBtn").classList.remove("cool"), 2000);
+}
+
+function onMsg(m) {
+  if (m.t === "emote") return onEmote(m);
+  if (m.t === "spec") {
+    if (!Number.isInteger(m.n)) return;
+    const more = m.n > specN;
+    specN = Math.min(Math.max(m.n, 0), 6);
+    syncWatch();
+    if (mode === "host") {
+      renderLobby();
+      if (more) { sentGrid = ""; pushLobby(); }
+    }
+    return;
+  }
+  if (m.t === "role" && mode === "guest") {
+    spec = m.r === "s";
+    hostCid = typeof m.host === "string" ? m.host.slice(0, 32) : "";
+    document.body.classList.toggle("spectating", spec);
+    syncWatch();
+    if (!spec) return sendJoin();
+    joined = true;
+    clearTimeout(joinTimer);
+    $("lobbyInfo").textContent = "Spectating: waiting for the host…";
+    show("lobby");
+    return;
+  }
+  if (m.t === "left") {
+    if (mode === "host") {
+      const pid = release(slots, names, m.from, !!game);
+      if (pid > 0) delete inboxes[pid];
+      if (pid > 0 && !game) { pushLobby(); renderLobby(); }
+    } else if (mode === "guest" && m.from === (hostCid || slots[0])) toMenu("The host left the game.");
+    return;
+  }
+  if (mode === "host") {
+    if (m.t === "join") {
+      const r = admit(slots, m.from, !!game);
+      if (r === "full") return room.send({ t: "full", to: m.from });
+      if (r === "new") slots.push(m.from);
+      const pid = slots.indexOf(m.from);
+      if (!game) names[pid] = cleanName(m.name);
+      else if (!inboxes[pid]) inboxes[pid] = createInbox();
+      pushLobby();
+      renderLobby();
+    } else if (m.t === "in") {
+      inboxes[slots.indexOf(m.from)]?.push(m.n, m.d);
+    } else if (m.t === "ping") room.send({ t: "pong", to: m.from, ts: +m.ts || 0 });
+    return;
+  }
+  if (mode !== "guest") return;
+  if (m.t === "full" && m.to === cid) toMenu("Room full or game in progress.");
+  else if (m.t === "lobby") {
+    if (!Array.isArray(m.slots) || (!spec && !m.slots.includes(cid))) return;
+    clearTimeout(joinTimer);
+    joined = true;
+    clearLost();
+    slots = m.slots.slice(0, 4).map((c) => (typeof c === "string" ? c : null));
+    names = Array.isArray(m.names) ? m.names.slice(0, 4).map(cleanName) : [];
+    pnames = displayNames(4, [0, 1, 2, 3].map((i) => !!slots[i]), names, settings.cb ? PNUM : undefined);
+    hostRules = sanitize(m.rules);
+    renderLobby();
+    $("lobbyInfo").textContent = `${spec ? "Spectating: waiting" : "Waiting"} for the host to start… · ${rulesText(hostRules)}`;
+    if (!game) show("lobby");
+  } else if (m.t === "pong" && m.to === cid && typeof m.ts === "number") {
+    const now = performance.now() - m.ts;
+    rtt = rtt ? rtt * 0.7 + now * 0.3 : now;
+    $("ping").textContent = `${Math.round(rtt)} ms`;
+  } else if (m.t === "snap") {
+    const s = unpackSnap(m.g?.s, lastGrid, lastCfg, lastFloor);
+    const me = spec ? -1 : slots.indexOf(cid);
+    if (!s || (!spec && me < 0) || (spec && !pnames.length)) return;
+    lastGrid = s.grid;
+    lastCfg = s.cfg;
+    lastFloor = s.floor;
+    lastSnap = performance.now();
+    clearLost();
+    gnet ||= createGuestNet(me);
+    gnet.onSnap(s, spec ? undefined : m.g.a?.[me], lastSnap);
+    if (!game) show("game");
+    game = { s, n: humansOf(s), scores: m.g.scores, banner: m.g.banner, me, names: pnames, rematch: !!m.g.r, win: Math.min(3, m.g.w | 0) };
+  } else if (m.t === "end") toMenu();
+}
+
+function clearLost() {
+  lostAt = 0;
+  $("reconn").classList.remove("on");
+}
+
+function lose() {
+  lostAt ||= performance.now();
+  $("reconn").classList.add("on");
+}
+
+function syncRematch() {
+  const on = !!game?.rematch;
+  if (on === rmShown) return;
+  rmShown = on;
+  $("rematch").classList.toggle("on", on);
+  if (!on) return $("rematchRecap").replaceChildren();
+  $("rematchTitle").textContent = game.banner;
+  if (settings.recap) fillRecap($("rematchRecap"), game, true);
+  $("again").hidden = $("rematchWait").hidden = false;
+  if (mode === "guest") $("again").hidden = true;
+  else $("rematchWait").hidden = true;
+  paintRematch();
+}
+
+function showHostLobby() {
+  const url = inviteUrl(location.origin, $("code").textContent);
+  $("inviteLink").value = url;
+  $("shareLink").hidden = !navigator.share;
+  $("invite").hidden = false;
+  import("./vendor/qrcode.mjs").then(({ default: qrcode }) => {
+    const q = qrcode(0, "M"), px = 6, pad = 4;
+    q.addData(url);
+    q.make();
+    const n = q.getModuleCount(), cv = $("qr"), c = cv.getContext("2d");
+    cv.width = cv.height = (n + 2 * pad) * px;
+    c.fillStyle = "#fff";
+    c.fillRect(0, 0, cv.width, cv.height);
+    c.fillStyle = "#000";
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (q.isDark(y, x)) c.fillRect((x + pad) * px, (y + pad) * px, px, px);
+  }).catch(console.error);
+  show("lobby");
+}
+
+function openRoom(code, host, isPub = false) {
+  clearTimeout(joinTimer);
+  mode = host ? "host" : "guest";
+  spec = false;
+  hostCid = "";
+  specN = 0;
+  pub = isPub;
+  allowSpec = true;
+  document.body.classList.remove("spectating");
+  syncWatch();
+  $("pubRoom").checked = pub;
+  $("allowSpec").checked = true;
+  $("hostOpts").hidden = !host;
+  slots = host ? [cid] : [];
+  names = host ? [myName()] : [];
+  joined = false;
+  $("code").textContent = code;
+  $("start").style.display = host ? "" : "none";
+  $("invite").hidden = true;
+  room = joinRoom(code, host, {
+    onMsg,
+    onConnected: () => {
+      subOk = true;
+      if (host) { showHostLobby(); return pushLobby(); }
+      if (!joined) joinTimer = setTimeout(() => toMenu("Room not found."), 3000);
+      lastSnap = performance.now();
+      clearInterval(pingTimer);
+      pingTimer = setInterval(() => {
+        if (lostAt && resub) { resub = false; room.retry(); }
+        else if (lostAt && subOk) sendJoin();
+        room.send({ t: "ping", ts: performance.now() });
+      }, 1000);
+    },
+    onLost: () => {
+      subOk = false;
+      if (mode === "guest" && joined) lose();
+      else if (mode) toMenu("Connection lost.");
+    },
+    onRejected: () => {
+      subOk = false;
+      if (mode === "guest" && joined) { resub = true; lose(); }
+      else if (!host && tries.length) {
+        const next = tries.shift(), keep = tries;
+        room?.leave();
+        openRoom(next, false);
+        tries = keep;
+      } else toMenu(host ? "Could not create the room, try again." : "Room not found or full.");
+    },
+  });
+  renderLobby();
+}
+
+for (const b of document.querySelectorAll("[data-solo]")) {
+  b.onclick = () => { mode = "solo"; startMatch(settings.mode === "survival" ? 1 : 1 + +b.dataset.solo); };
+}
+$("local").onclick = () => {
+  mode = "local-lobby";
+  humans = ["puretv"];
+  renderLocalLobby();
+  show("localLobby");
+};
+$("localStart").onclick = () => {
+  mode = "local";
+  startMatch($("localBots").checked && settings.mode !== "survival" ? 4 : humans.length);
+};
+$("localBack").onclick = () => toMenu();
+$("create").onclick = () => openRoom(newCode(), true);
+$("pubRoom").onchange = () => { pub = $("pubRoom").checked; renderLobby(); room && pushLobby(); };
+$("allowSpec").onchange = () => { allowSpec = $("allowSpec").checked; room && pushLobby(); };
+
+let listing = false;
+async function fetchRooms(note) {
+  if (listing) return null;
+  listing = true;
+  note.textContent = "Looking for public rooms…";
+  try {
+    const list = cleanRooms(await listRooms());
+    note.textContent = "";
+    return list;
+  } catch {
+    note.textContent = "Could not reach the server.";
+    return null;
+  } finally {
+    listing = false;
+  }
+}
+
+function showRooms(list, note = "") {
+  $("roomsNote").textContent = note || (list.length ? "" : "No public room is open right now.");
+  $("roomList").replaceChildren(...list.map((r) => {
+    const li = document.createElement("li"), txt = document.createElement("span"), b = document.createElement("button");
+    const watch = r.live || r.open === 0;
+    txt.textContent = `${r.host || "Host"} · ${rulesText(r)} · ${r.live ? "playing" : `${4 - r.open}/4 players`}${r.specs ? ` · ${r.specs} watching` : ""}`;
+    b.className = "chip";
+    b.textContent = watch ? "Watch" : "Join";
+    b.onclick = () => { tries = []; openRoom(r.code, false); };
+    li.append(txt, b);
+    return li;
+  }));
+  show("rooms");
+}
+
+$("quick").onclick = async () => {
+  const list = await fetchRooms($("msg"));
+  if (!list || mode) return;
+  const pick = quickPick(list);
+  if (!pick.length) return showRooms(list, "No public room to join. Host one and others can find it with Quick play.");
+  tries = pick.slice(1).map((r) => r.code);
+  openRoom(pick[0].code, false);
+};
+$("roomsBtn").onclick = async () => {
+  const list = await fetchRooms($("msg"));
+  if (list && !mode) showRooms(list);
+};
+$("roomsRefresh").onclick = async () => {
+  const list = await fetchRooms($("roomsNote"));
+  if (list) showRooms(list);
+};
+$("roomsHost").onclick = () => openRoom(newCode(), true, true);
+$("roomsBack").onclick = () => show("menu");
+$("join").onclick = () => {
+  const code = $("joinCode").value.trim().toUpperCase();
+  if (code.length === 4) openRoom(code, false);
+};
+$("start").onclick = () => {
+  inboxes = {};
+  slots.forEach((_, i) => i && (inboxes[i] = createInbox()));
+  sentGrid = "";
+  room.send({ t: "start" });
+  startMatch(settings.mode === "survival" ? slots.length : 4);
+};
+const leave = () => {
+  const inStory = mode === "story";
+  toMenu();
+  if (inStory) storyUi.open();
+};
+$("quit").onclick = () => (mode === "replay" ? exitReplay() : mode === "story" ? leave() : mode === "host" ? endMatch() : toMenu());
+$("lobbyBack").onclick = $("rematchMenu").onclick = () => (mode === "host" ? endMatch() : toMenu());
+$("again").onclick = () => game?.rematch && mode !== "guest" && (game.daily ? startDaily(game.daily) : startMatch(game.n));
+$("copyLink").onclick = async () => {
+  const link = $("inviteLink");
+  try {
+    await navigator.clipboard.writeText(link.value);
+  } catch {
+    link.select();
+    try { document.execCommand("copy"); } catch {}
+  }
+  $("copyLink").textContent = "Copied!";
+  setTimeout(() => ($("copyLink").textContent = "Copy link"), 1500);
+};
+$("shareLink").onclick = () => navigator.share({ title: "Kaboom Arena", text: "Join my Kaboom Arena room", url: $("inviteLink").value }).catch(() => {});
+
+function online() {
+  const ok = false;
+  $("create").disabled = $("join").disabled = $("quick").disabled = $("roomsBtn").disabled = !ok;
+
+}
+addEventListener("online", online);
+addEventListener("offline", online);
+online();
+
+function fit() {
+  const k = Math.min(innerWidth / CW, innerHeight / CH);
+  const scale = k >= 2 ? Math.floor(k) : k;
+  canvas.style.width = `${CW * scale}px`;
+  canvas.style.height = `${CH * scale}px`;
+}
+addEventListener("resize", fit);
+fit();
+
+function guestTick() {
+  gnet.tick(allInputs());
+  clearBombs();
+  const m = frame % SEND_EVERY === 0 && gnet.take();
+  if (m) room.send({ t: "in", ...m });
+}
+
+function rumble(g) {
+  if (!settings.vibrate && !settings.rumble) return;
+  const pads = Object.keys(sources).filter((n) => n.startsWith("pad"));
+  for (const { id, kind, scale } of observe(feel, g.s)) {
+    if (multi()) {
+      const src = humans[id];
+      if (src) haptics.fire(kind, { phone: src === "touch", pads: src.startsWith("pad") ? [src] : [] }, scale);
+    } else if (id === g.me) haptics.fire(kind, { phone: true, pads }, scale);
+  }
+}
+
+let seenTick = -1, seenWave = -1, seenEv = null;
+
+function extraCalls(s) {
+  if (s.tick < seenTick) { seenWave = -1; seenEv = null; }
+  seenTick = s.tick;
+  const wave = s.survival ? s.survival.wave : -1, ev = s.event?.type ?? null;
+  const call = (key, text) => settings.announcer && fd.announcer.push(key, text, { prio: 2, still }, clock);
+  if (wave > 0 && seenWave >= 0 && wave > seenWave) call("wave", `WAVE ${wave}!`);
+  seenWave = wave;
+  if (ev && ev !== seenEv && EVENT_INFO[ev]) call("event", `${EVENT_INFO[ev].name}!`);
+  seenEv = ev;
+}
+
+function resetFeel() {
+  seenTick = seenWave = -1;
+  seenEv = null;
+  fd.restart();
+  ts = 1;
+  hideRecap();
+}
+
+function hideRecap() {
+  recapOn = recapOff = false;
+  $("recap").classList.remove("on");
+}
+
+function dismissRecap() {
+  if (!recapOn) return false;
+  recapOff = true;
+  clearBombs();
+  syncRecap(game);
+  return true;
+}
+
+function fillRecap(el, g, over) {
+  const v = recapView(over ? fd.tracker.total() : fd.tracker.round(), g.n, g.names);
+  const head = Object.assign(document.createElement("h3"), { textContent: over ? "Match recap" : "Round recap" });
+  const table = document.createElement("table");
+  const row = (cells, tag, c) => {
+    const tr = document.createElement("tr");
+    if (c) tr.style.setProperty("--c", c);
+    for (const t of cells) tr.append(Object.assign(document.createElement(tag), { textContent: t }));
+    table.append(tr);
+  };
+  row(["", "Bombs", "Kills", "Items", "Walls"], "th");
+  const suit = palette().suit;
+  for (const r of v.rows) row([r.name, ...r.cells], "td", suit[r.id]);
+  const list = document.createElement("ul");
+  for (const a of v.awards) {
+    const li = document.createElement("li");
+    li.append(Object.assign(document.createElement("b"), { textContent: a.title }), Object.assign(document.createElement("span"), { textContent: ` ${v.rows[a.who].name}: ${a.desc}` }));
+    list.append(li);
+  }
+  el.classList.toggle("retro", !!g.retro);
+  el.replaceChildren(head, table, list);
+}
+
+function syncRecap(g) {
+  if (!g.s.done) recapOff = false;
+  const want = settings.recap && g.s.done && !g.rematch && !recapOff && mode !== "replay";
+  if (want === recapOn) return;
+  recapOn = want;
+  const el = $("recap");
+  el.classList.toggle("on", want);
+  if (!want) return;
+  fillRecap(el, g, !!g.s.survival || (g.win > 0 && g.scores.some((x) => x >= g.win)));
+  el.append(Object.assign(document.createElement("small"), { textContent: "Tap or press a key to continue" }));
+}
+
+function punch({ x, y }) {
+  if (gfx === "fps") return;
+  if (is3()) return r3.punch(x, y);
+  canvas.style.transformOrigin = `${(x / W) * 100}% ${((y * T + 16) / CH) * 100}%`;
+  canvas.animate([{ transform: "scale(1)" }, { transform: "scale(1.07)", offset: 0.25 }, { transform: "scale(1)" }], { duration: 600, easing: "ease-out" });
+}
+
+function feelStep(g) {
+  const fxOn = settings.slowmo && !still;
+  fx.announce = settings.announcer;
+  fx.still = still;
+  fx.timeFx = fxOn && (mode === "solo" || mode === "local" || mode === "story");
+  fx.punch = fxOn;
+  fx.chat = settings.announcer && !still && !g.story?.co && (mode === "story" || (mode === "replay" && !!g.story));
+  g.call = fd.update(g.s, clock, fx);
+  extraCalls(g.s);
+  g.bub = fd.bub;
+  g.clock = clock;
+  g.emo = emo.view(clock, settings.emotes);
+  const slow = fx.timeFx ? timeScale(fd, clock) : 1;
+  ts = mode === "replay" ? rpSpeed : slow;
+  g.ts = mode === "replay" ? 1 : slow;
+  if (fd.punch) { punch(fd.punch); fd.punch = null; }
+  syncRecap(g);
+  if (g.pending) { g.pending = false; commit(g).catch(console.error); }
+}
+
+// Second touch button and the pad's X key exist only in games with abilities; the button fills while the cooldown runs.
+let actFill = -1;
+function syncAct() {
+  const s = game?.s, on = !!s?.cfg?.abilities, btn = $("actBtn");
+  pads.act = on;
+  if (btn.hidden === on) btn.hidden = !on;
+  if (!on) return;
+  const p = s.players[multi() ? Math.max(0, humans.indexOf("touch")) : Math.max(0, game.me)];
+  const fill = p?.ab ? Math.round((1 - (p.cd | 0) / ABILITIES[p.ab][2]) * 20) * 5 : 100;
+  if (fill !== actFill) { actFill = fill; btn.style.setProperty("--f", `${fill}%`); btn.classList.toggle("rdy", fill === 100); }
+}
+
+let last = performance.now(), acc = 0, lastErr = "";
+function loop(now) {
+  tv.poll();
+  const raw = Math.min(now - last, 100);
+  last = now;
+  if (!paused) clock += raw;
+  acc += raw * ts;
+  while (acc >= 1000 / 60) {
+    acc -= 1000 / 60;
+    frame++;
+    input.poll();
+    tick();
+    if (mode === "host" && game && frame % SNAP_EVERY === 0) sendSnap();
+    if (mode === "guest" && gnet && !spec) guestTick();
+  }
+  if (mode === "guest" && game && !lostAt && now - lastSnap > 4000) lose();
+  if (lostAt && performance.now() - lostAt > RECONNECT_MS) toMenu("Connection lost.");
+  if (mode === "guest" && game && gnet) game.s = gnet.frame(performance.now());
+  if (game && !paused) feelStep(game);
+  syncAct();
+  syncEmoUi();
+  syncRematch();
+  if (mode === "replay") syncReplay();
+  if (game && !paused && mode !== "replay") rumble(game);
+  if (game && !paused) {
+    if (!sndGame) enterGame(game);
+    snd.ctx.me = multi() ? -1 : game.me;
+    snd.ctx.human = fx.human;
+    snd.feed(game);
+  }
+  if (game && (!paused || dirty)) {
+    dirty = false;
+    try {
+      is3() ? r3.draw(game) : fpsOn() ? rf.draw(game) : draw(ctx, game);
+    } catch (err) {
+      if (String(err) !== lastErr) console.error((lastErr = String(err)), err);
+    }
+  }
+  requestAnimationFrame(loop);
+}
+const tv = connectTV({
+  get screen() { return cur; },
+  get paused() { return paused; },
+  get rematch() { return game?.rematch || false; },
+  sources, joinLocal, pause: setPause, back: () => goBack("screen"),
+  snapshot() {
+    const player = game?.s.players[0];
+    return {stage: cur === "game" ? (paused ? "paused" : game?.rematch ? "results" : "playing") : cur,
+      gameplay: {x: player?.x ?? 0, y: player?.y ?? 0, tick: game?.s.tick ?? 0,
+        bombs: game?.s.bombs.length ?? 0, ownBombs: game?.s.bombs.filter(b => b.owner === 0).length ?? 0,
+        positions: game?.s.players.map(p => ({x: p.x, y: p.y, alive: p.alive})) ?? [],
+        players: game?.n ?? 0, humans: multi() ? humans.length : game ? 1 : 0, mode, renderer: is3() ? "3d" : fpsOn() ? "fps" : "classic"}};
+  }
+});
+requestAnimationFrame(loop);
+
+applyLook();
+help = initHelp([$("helpBtn"), $("pauseHelp")], { open: () => nav.open("help"), close: () => nav.close("help") });
+
+$("recap").onclick = dismissRecap;
+addEventListener("keydown", (e) => e.code !== "Escape" && e.code !== "KeyP" && !e.metaKey && !e.ctrlKey && dismissRecap());
+
+document.addEventListener("click", (e) => {
+  const b = e.target.closest?.("button");
+  if (b && !b.closest("#settings, #story")) b.blur();
+  if (b && b.id !== "bombBtn" && b.id !== "muteBtn") snd.ui("click");
+});
+let kbdAt = 0;
+addEventListener("keydown", () => (kbdAt = performance.now()), true);
+document.addEventListener("focusin", (e) => e.target.tagName === "BUTTON" && performance.now() - kbdAt < 150 && snd.ui("nav"));
+for (const ev of ["pointerdown", "keydown", "touchend"]) addEventListener(ev, snd.gesture, true);
+
+function markMute() {
+  const m = snd.muted;
+  $("muteBtn").textContent = m ? "🔇" : "🔊";
+  $("muteBtn").setAttribute("aria-pressed", m);
+  $("muteBtn").setAttribute("aria-label", m ? "Unmute sound" : "Mute sound");
+  $("sndMute").textContent = m ? "Unmute (N)" : "Mute (N)";
+}
+function toggleMute() {
+  snd.setMuted(!snd.muted);
+  try { localStorage.setItem("mute", snd.muted ? "1" : "0"); } catch {}
+  markMute();
+}
+$("muteBtn").onclick = $("sndMute").onclick = toggleMute;
+addEventListener("keydown", (e) => e.code === "KeyN" && !e.repeat && e.target.tagName !== "INPUT" && !e.metaKey && !e.ctrlKey && !e.altKey && toggleMute());
+markMute();
+snd.setScene({ kind: "menu" });
+$("sndTest").onclick = () => {
+  snd.gesture();
+  const ok = snd.ui("test", 1, true);
+  $("sndStatus").textContent = snd.muted ? "Sound is muted: press N or the speaker button." : ok ? "Played. If you hear nothing, check the volume and the silent switch of your phone." : "This browser has no Web Audio.";
+};
+
+function markSettings() {
+  for (const seg of document.querySelectorAll("#settings .seg")) {
+    for (const b of seg.children) b.setAttribute("aria-checked", b.dataset.v === JSON.stringify(settings[seg.dataset.key]));
+  }
+}
+
+for (const f of FIELDS) {
+  const label = Object.assign(document.createElement("div"), { className: "label", id: `set-${f.key}`, textContent: f.label });
+  const seg = Object.assign(document.createElement("div"), { className: "seg wrap" });
+  seg.dataset.key = f.key;
+  seg.setAttribute("role", "radiogroup");
+  seg.setAttribute("aria-labelledby", label.id);
+  seg.style.setProperty("--n", Math.min(f.opts.length, 3));
+  for (const [v, text] of f.opts) {
+    const b = Object.assign(document.createElement("button"), { textContent: text });
+    b.setAttribute("role", "radio");
+    b.dataset.v = JSON.stringify(v);
+    b.onclick = () => { settings[f.key] = v; saveSettings(settings); if (f.key === "offline") { $("offStatus").textContent = v ? "Saving files..." : ""; $("offStatus").textContent = "Included in the offline TV package."; } markSettings(); applyLook(); };
+    seg.append(b);
+  }
+  $(f.sound ? "soundList" : f.a11y ? "a11yList" : f.feel ? "feelList" : f.store ? "offList" : "setList").append(label, seg);
+}
+$("settingsBtn").onclick = () => { markSettings(); show("settings"); $("setBack").focus(); };
+$("setBack").onclick = () => show("menu");
+$("setReset").onclick = () => { settings = { ...DEFAULTS }; saveSettings(settings); markSettings(); applyLook(); };
+$("vibTest").onclick = () => {
+  vibSent = null;
+  haptics.fire("test", { phone: true, pads: Object.keys(sources).filter((n) => n.startsWith("pad")) });
+  $("vibStatus").textContent = vibrationReport(vibSent);
+};
+addEventListener("keydown", (e) => e.code === "Escape" && document.querySelector("#settings.on, #daily.on, #replays.on, #rooms.on") && show("menu"));
+
+// ---- replays, daily challenge ------------------------------------------------------------------------------------------
+
+const store = (() => { try { return localStorage; } catch { return { getItem: () => null, setItem() { throw new Error("no storage"); } }; } })();
+const replays = createReplayList({ storage: store, watch: (m, back) => startReplay(m, back) });
+const daily = createDailyUi({ storage: store, play: (spec) => { toMenu(); startDaily(spec); }, watch: (m, back) => startReplay(m, back) });
+const playbar = createPlaybar({
+  state: () => ({ pb: rp, g: game, paused, speed: rpSpeed }),
+  pause: setPause,
+  speed: (x) => (rpSpeed = x),
+  seek: (T) => seekReplay(T),
+  restart: () => startReplay(rp.match, rpBack, rp, rpKeep),
+  next: () => rp.r + 1 < rp.rounds.length && seekReplay(rp.off[rp.r + 1]),
+});
+
+function openDaily() { daily.render(); show("daily"); }
+function openReplays() { replays.render(); show("replays"); }
+
+function startDaily(spec) {
+  mode = "solo";
+  clearBombs();
+  setSuits([spec.fighter.color]);
+  startMatch(spec.n, null, displayNames(spec.n, [true], [myName() || spec.fighter.name], settings.cb ? PNUM : undefined), spec);
+}
+
+async function commit(g) {
+  const m = rec.finish({ nm: g.names.map(String), rs: g.banner });
+  rec = null;
+  g.replay = m;
+  const s = g.s;
+  const res = { won: !s.survival && g.scores[0] >= g.win, ticks: m.r.reduce((a, x) => a + x.tk, 0), kills: fd.tracker.total().kills[0] | 0, waves: s.survival?.wave | 0, points: s.hill?.score[0] | 0 };
+  replays.add(m).catch(console.error);
+  if (!g.daily) return;
+  g.dailyRes = await daily.submit(g.daily, res, m);
+  if (game === g) paintRematch();
+}
+
+function paintRematch() {
+  const g = game;
+  if (!g?.rematch) return;
+  $("rmShare").hidden = !g.replay;
+  const d = g.dailyRes;
+  $("rmDaily").textContent = d ? `Score ${d.value}${d.better ? " (new best!)" : ` (best ${d.best})`}\n${d.line}\nStreak ${d.streak} day${d.streak === 1 ? "" : "s"} · ${d.tries} ${d.tries === 1 ? "try" : "tries"}` : g.daily ? "Saving your score…" : "";
+  $("again").textContent = g.daily ? "Try again" : "Play again";
+}
+
+const faceReset = (s) => { const p = s.players[Math.max(game?.me ?? 0, 0)]; fps.face = p && p.x < (W * T) / 2 ? 1 : 3; };
+
+function replayRound(g, r) {
+  if (r >= rp.rounds.length) { rp.ended = true; return g.s; }
+  const s = rp.make(r);
+  faceReset(s);
+  return s;
+}
+
+function startReplay(match, back = "menu", pb = createPlayback(match), keepable = false) {
+  toMenu();
+  const st = pb.story;
+  rp = pb;
+  rp.ended = false;
+  rpBack = back;
+  rpKeep = keepable;
+  mode = "replay";
+  clearBombs();
+  if (st) setSuits(st.cast.map((c) => actor(c).color));
+  else if (match.fg) setSuits([BY_ID[match.fg].color]);
+  if (st?.co) humans = ["kb1", "kb2"];
+  if (match.k === "local") humans = Array.from({ length: (match.hm.toString(2).match(/1/g) || []).length }, () => "kb1");
+  const s = rp.make(0);
+  game = {
+    s, n: match.n, scores: Array(match.n).fill(0), banner: "", wait: 0, over: false, me: match.k === "local" || st?.co ? -1 : 0, win: match.w,
+    names: Array.from({ length: match.n }, (_, i) => match.nm[i] || PNUM[i]), story: st, spec: null, nr: 1, retro: !!st, round: 1, intro: st ? INTRO : 0,
+  };
+  if (st) game.banner = roundBanner(game);
+  else modeIntro(game);
+  rpSpeed = 1;
+  ts = 1;
+  fps.reset();
+  faceReset(s);
+  $("pauseBtn").hidden = true;
+  document.body.classList.add("replaying");
+  playbar.show(true);
+  enterGame(game);
+  show("game");
+}
+
+function seekReplay(T) {
+  const { r, s, scores } = rp.seek(T);
+  Object.assign(game, { s, scores, banner: "", wait: 0, intro: 0, over: false, hold: 0, rematch: false });
+  if (game.story) game.round = r + 1;
+  rp.ended = false;
+  resetFeel();
+  faceReset(s);
+  enterGame(game);
+  dirty = true;
+}
+
+let endShown = false;
+function syncReplay() {
+  playbar.sync();
+  if (rp.ended === endShown) return;
+  endShown = rp.ended;
+  $("rpEnd").classList.toggle("on", endShown);
+  if (!endShown) return;
+  $("rpKeep").hidden = !rpKeep;
+  $("rpNote").textContent = rp.drift ? "This replay no longer matches the game (made with another version or browser): the end may differ." : "";
+  $("rpAgain").focus();
+}
+
+function exitReplay() {
+  const back = rpBack;
+  toMenu();
+  if (back === "replays") openReplays();
+  else if (back === "daily") openDaily();
+}
+
+$("dailyBtn").onclick = openDaily;
+$("replaysBtn").onclick = openReplays;
+$("dailyBack").onclick = $("repBack").onclick = () => show("menu");
+$("repOpen").onclick = () => $("repFile").click();
+$("repFile").onchange = async (e) => {
+  const f = e.target.files[0];
+  e.target.value = "";
+  const r = await readFile(f);
+  if (r.match) startReplay(r.match, "replays", undefined, true);
+  else notify(ERR[r.error]);
+};
+$("rpAgain").onclick = () => startReplay(rp.match, rpBack, rp, rpKeep);
+$("rpBack").onclick = exitReplay;
+$("rpLink").onclick = () => shareReplay(rp.match);
+$("rpKeep").onclick = () => { replays.add(rp.match).then(() => notify("Kept in your replays.")).catch(console.error); rpKeep = false; $("rpKeep").hidden = true; };
+$("rmWatch").onclick = () => game?.replay && startReplay(game.replay, "menu");
+$("rmLink").onclick = () => game?.replay && shareReplay(game.replay);
+$("rmCard").onclick = async () => {
+  const g = game;
+  if (!g?.replay) return;
+  const text = `${g.banner} on Kaboom Arena`;
+  const r = g.dailyRes
+    ? await daily.card(g.daily, g.dailyRes)
+    : await shareCard({ head: titleOf(g.replay), title: g.banner, rules: rulesOf(g.replay.r[0].o), bigLabel: g.s.survival ? "WAVES" : "ROUNDS", big: g.s.survival ? String(g.s.survival.wave) : g.scores.slice(0, g.n).join("-"), line: g.names.slice(0, g.n).join(" · "), host: location.host }, { text, url: location.origin });
+  if (r === "saved") notify("Score card saved as a PNG.");
+};
+addEventListener("keydown", (e) => {
+  if (mode !== "replay" || e.repeat || e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|BUTTON)$/.test(e.target.tagName)) return;
+  if (e.code === "Space") { e.preventDefault(); setPause(!paused); }
+  else if (e.code === "ArrowLeft" || e.code === "ArrowRight") seekReplay(Math.max(0, rp.at(game.s) + (e.code === "ArrowLeft" ? -300 : 300)));
+});
+
+async function openFragment() {
+  const frag = fragmentOf(location.hash);
+  if (frag === null) return;
+  history.replaceState(null, "", location.pathname + location.search);
+  const r = await unpack(frag);
+  if (r.match) startReplay(r.match, "menu", undefined, true);
+  else toMenu(ERR[r.error]);
+}
+openFragment();
+addEventListener("hashchange", openFragment);
+
