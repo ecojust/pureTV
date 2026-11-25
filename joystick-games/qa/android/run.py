@@ -1242,6 +1242,22 @@ def main():
         acceptance.report['status'] = 'passed'
     except Exception:
         acceptance.report['status'] = 'failed'; acceptance.report['error'] = traceback.format_exc()
+        # The observer shares the target's instrumentation process. Record what
+        # Android actually knows about its death before the normal test cleanup.
+        diagnostics = {}
+        for name, args in [
+            ('recentProcessExits', ['shell', 'dumpsys', 'activity', 'exit-info', acceptance.package]),
+            ('crashBuffer', ['logcat', '-b', 'crash', '-d', '-v', 'brief', '-t', '180']),
+            ('processId', ['shell', 'pidof', acceptance.package]),
+            ('currentMemory', ['shell', 'dumpsys', 'meminfo', acceptance.package]),
+        ]:
+            try:
+                output = subprocess.run(acceptance.adb + args, capture_output=True, timeout=4, check=False)
+                diagnostics[name] = {'exit': output.returncode, 'output': output.stdout[-24576:].decode(errors='replace'),
+                                     'error': output.stderr[-1024:].decode(errors='replace')}
+            except (OSError, subprocess.SubprocessError) as diagnostic_error:
+                diagnostics[name] = {'unavailable': type(diagnostic_error).__name__}
+        acceptance.report['processFailureDiagnostics'] = diagnostics
         acceptance.save(); raise
     finally:
         acceptance.cleanup()
