@@ -26,7 +26,7 @@ const url = `http://127.0.0.1:${server.address().port}/?room=0123456789abcdef012
 const browser = await chromium.launch({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox'] });
 let passed = 0;
 
-async function fixture(options = {}) {
+async function fixture(options = {}, language) {
   const context = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'zh-CN', hasTouch: true, ...options });
   await context.addInitScript(() => {
     window.__sockets = [];
@@ -52,7 +52,7 @@ async function fixture(options = {}) {
     window.WebSocket = FakeSocket;
   });
   const page = await context.newPage();
-  await page.goto(url);
+  await page.goto(language === 'en' ? url + '&lang=en' : url);
   await page.waitForFunction(() => document.querySelector('#controller').dataset.connected === 'true');
   return { context, page };
 }
@@ -102,7 +102,8 @@ async function test(name, run) {
 
 try {
   await test('Handshake, authenticated URL, remembered resume token and neutral heartbeat', async () => {
-    const { context, page } = await fixture();
+    const { context, page } = await fixture(kind === 'super-mario' ? {locale:'en-US'} : {});
+    if (kind === 'super-mario') assert.equal(await page.locator('html').getAttribute('lang'), 'zh-CN');
     const hello = await page.evaluate(controllerKey => ({ url: window.__sockets[0].url, first: window.__sent[0], saved: sessionStorage.getItem(controllerKey) }), kind + '-controller:0123456789abcdef0123456789abcdef');
     assert.match(hello.url, /\/ws\?room=0123456789abcdef0123456789abcdef$/);
     assert.deepEqual(hello.first, { type: 'hello' });
@@ -290,7 +291,7 @@ try {
     await context.close();
   });
   await test('Own stage label/lives/score, correct A/B actions, English and safe text', async () => {
-    const { context, page } = await fixture({ locale: 'en-US' });
+    const { context, page } = await fixture({ locale: 'en-US' }, 'en');
     await page.evaluate(() => window.__sockets.at(-1).receive({ type:'state',phase:'playing',activePlayer:1,stageLabel:'9-9',players:[{id:1,active:true,stageLabel:'1-2',lives:3,score:840},{id:2,stageLabel:'4-4',lives:9,score:9999}] }));
     assert.equal(await page.locator('#stage').textContent(), '1-2');
     assert.equal(Number(await page.locator('#score').textContent()),840);
@@ -314,7 +315,7 @@ try {
     await context.close();
   });
   await test('Turn handoff releases held inputs, waiting disables actions, and new turn starts neutral', async () => {
-    const {context,page}=await fixture({locale:'en-US'});
+    const {context,page}=await fixture({locale:'en-US'}, 'en');
     const state=async activePlayer=>page.evaluate(activePlayer=>window.__sockets.at(-1).receive({type:'state',phase:'playing',activePlayer,players:[{id:1,active:activePlayer===1,lives:3,score:0,stageLabel:'1-1'},{id:2,active:activePlayer===2,lives:3,score:0,stageLabel:'1-1'}]}),activePlayer);
     await state(1);assert.match(await page.locator('#turn-status').innerText(),/YOUR TURN/);
     await dragStick(page,201,150,0);await press(page,'button-a',202);await press(page,'button-b',203);
@@ -335,7 +336,7 @@ try {
   });
   await test('Portrait and small landscape controls remain in viewport without overlap or scrolling', async () => {
     for (const locale of ['zh-CN','en-US']) {
-    const { context, page } = await fixture({locale});
+    const { context, page } = await fixture({locale}, locale === 'en-US' ? 'en' : undefined);
     for (const viewport of [{ width: 844, height: 390 }, { width: 667, height: 375 }, { width: 390, height: 844 }, { width: 320, height: 568 }, {width:568,height:320}, {width:1366,height:768}]) {
       await page.setViewportSize(viewport);
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -499,7 +500,7 @@ async function addPhone(browser,tv,base,language,id,errors) {
   },{id});
   const page=await context.newPage();
   page.on('pageerror',error=>errors.push(error.message));
-  await page.goto(base+'/controller.html?room=platform-preview-room-token');
+  await page.goto(base+'/controller.html?room=platform-preview-room-token'+(language.startsWith('en')?'&lang=en':''));
   await page.waitForFunction(()=>document.querySelector('#controller').dataset.connected==='true');
   return {context,page};
 }
