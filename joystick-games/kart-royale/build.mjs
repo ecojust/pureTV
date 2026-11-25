@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -14,7 +15,7 @@ const files=new Map(result.outputFiles.map(f=>[path.basename(f.path),f.contents]
 let html=fs.readFileSync(path.join(root,'src/index.html'),'utf8').replace('<script type="module" src="/src/main.ts"></script>','<script defer src="kart-royale.js"></script>').replace('</head>','<link rel="stylesheet" href="kart-royale.css"></head>').replace('href="/manifest.webmanifest"','href="manifest.webmanifest"');
 // Platform analytics are not part of the offline game.
 html=html.replace(/\s*<!-- Vercel Web Analytics[\s\S]*?<\/script>/,'');
-files.set('tv.html',Buffer.from(html));files.set('manifest.webmanifest',fs.readFileSync(path.join(root,'src/public/manifest.webmanifest')));
+files.set('tv.html',Buffer.from(await localizeHtml(html,root)));files.set('manifest.webmanifest',fs.readFileSync(path.join(root,'src/public/manifest.webmanifest')));
 const licenses=[fs.readFileSync(path.join(root,'NOTICE.md'),'utf8'),fs.readFileSync(path.join(root,'LICENSE'),'utf8')];
 for(const name of runtimePackages){
  const base=path.join(root,'node_modules',name);const candidate=fs.readdirSync(base).find(x=>/^license(?:\.|$)/i.test(x));if(!candidate)throw new Error('Missing license '+name);licenses.push('\n'+name+'\n'+fs.readFileSync(path.join(base,candidate),'utf8'));

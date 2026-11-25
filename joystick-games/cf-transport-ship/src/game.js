@@ -17,8 +17,7 @@ import { TouchControls } from './touch.js';
 import { ControllerIntegration } from './controller.js';
 
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
-const MULTI = ['', '', 'DOUBLE KILL', 'TRIPLE KILL', 'MULTI KILL', 'ULTRA KILL', 'RAMPAGE', 'UNSTOPPABLE', 'GODLIKE'];
-const MULTI_CN = ['', '', '双杀', '三杀', '四杀', '五杀', '六杀！', '无人能挡', '超神'];
+const MULTI = ['', '', '双杀', '三杀', '四杀', '五杀', '六杀！', '无人能挡', '超神'];
 const _v = new THREE.Vector3(), _v2 = new THREE.Vector3(), _d = new THREE.Vector3();
 
 export class Game {
@@ -161,7 +160,7 @@ export class Game {
     this.playing = true; this.paused = false; this.ended = false; this.inLoadout = false;
     this.hud.show(null);
     this.lock();
-    setTimeout(() => audio.announce('Go go go!'), 400);
+    setTimeout(() => audio.announce('出发！'), 400);
     this.hud.toast(`团队竞技 · 率先达到 <b style="color:#f5b321">${this.goal}</b> 击杀的队伍获胜`, 3.5);
   }
   addTag(b) {
@@ -278,7 +277,7 @@ export class Game {
     const win = this.score[my] === this.score[other] ? null : this.score[my] > this.score[other];
     this.hud.endScreen(win, this.score, this.actors, this.player.id);
     audio.playUI('roundEnd'); audio.setLowHealth(false);
-    audio.announce(win ? 'Mission accomplished' : win === null ? 'Draw' : 'Mission failed');
+    audio.announce(win ? '任务完成' : win === null ? '平局' : '任务失败');
     if (document.pointerLockElement) document.exitPointerLock();
     this.vm.setVisible(false);
   }
@@ -419,7 +418,7 @@ export class Game {
     mesh.position.copy(pos); this.renderer.scene.add(mesh);
     this.nades.push({ mesh, pos, vel, fuse: WEAPONS.he.fuse, owner: a, spin: new THREE.Vector3(Math.random() * 10, Math.random() * 10, 0) });
     audio.playGrenadeThrow();
-    if (a.isPlayer) audio.announce('Fire in the hole!');
+    if (a.isPlayer) audio.announce('小心手雷！');
     for (const b of this.actors) if (b.hear && b.team !== a.team && b.pos.distanceTo(pos) < 20) b.hear(pos, false);
   }
   updateNades(dt) {
@@ -512,13 +511,14 @@ export class Game {
     this.hud.killFeed(att && att !== v ? att : null, v, wid, hs, wall, att === p || v === p);
     if (att === p && v !== p) {
       const m = Math.min(att.multi, 8);
-      let text, sub = `击杀 ${v.name}`;
-      if (m >= 2) { text = MULTI[m]; sub = MULTI_CN[m] + ' · ' + sub; setTimeout(() => audio.announce(MULTI[m].toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + '!'), 150); }
-      else if (hs) { text = 'HEADSHOT'; sub = '爆头 · ' + sub; setTimeout(() => audio.announce('Headshot!'), 150); }
-      else if (wid === 'knife') { text = 'KNIFE KILL'; sub = '刀杀 · ' + sub; }
-      else if (wid === 'he') { text = 'GRENADE KILL'; sub = '手雷击杀 · ' + sub; }
-      else if (wall) { text = 'WALLBANG'; sub = '穿墙击杀 · ' + sub; }
-      else { text = 'KILL'; }
+      let text;
+      const sub = `击杀 ${v.name}`;
+      if (m >= 2) { text = MULTI[m]; setTimeout(() => audio.announce(MULTI[m]), 150); }
+      else if (hs) { text = '爆头'; setTimeout(() => audio.announce('爆头！'), 150); }
+      else if (wid === 'knife') { text = '刀杀'; }
+      else if (wid === 'he') { text = '手雷击杀'; }
+      else if (wall) { text = '穿墙击杀'; }
+      else { text = '击杀'; }
       this.hud.badge(text, sub, hs);
       audio.playKillConfirm(hs);
     }

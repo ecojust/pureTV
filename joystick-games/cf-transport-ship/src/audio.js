@@ -1593,7 +1593,7 @@ export class AudioSystem {
   // 播报前的徽章音：短促上扬的合成器和弦（连杀越高音越高）
   _badge(text) {
     const s = text.toLowerCase();
-    const lvl = /multi|ultra|mega|monster/.test(s) ? 3 : /triple/.test(s) ? 2 : /double|headshot/.test(s) ? 1 : 0;
+    const lvl = /multi|ultra|mega|monster|四杀|五杀/.test(s) ? 3 : /triple|三杀/.test(s) ? 2 : /double|headshot|双杀|爆头/.test(s) ? 1 : 0;
     const v = this._voice(null, { bus: 'voice', g: 1.1, wet: 0.12 });
     const t = this._now(), base = 392 * Math.pow(2, (lvl * 2) / 12);
     for (const [h, det] of [[1, -6], [1.26, 5], [1.5, -3], [2, 4]]) {
@@ -1617,30 +1617,16 @@ export class AudioSystem {
     } catch (_) { /* 忽略 */ }
   }
 
-  // 优先英文男声
+  // 优先使用普通话语音。
   _pickVoice() {
     const ss = globalThis.speechSynthesis;
     if (!ss || !ss.getVoices) return null;
     if (this._sv) return this._sv;
-    const en = (ss.getVoices() || []).filter((x) => /^en([-_]|$)/i.test(x.lang || ''));
-    if (!en.length) return null;
-    const male = /\bmale\b|david|daniel|alex|fred|george|james|mark|guy|ryan|thomas|arthur|oliver|aaron|rishi|eddy|reed|ralph|bruce|christopher|eric|roger|steffan|brian|matthew|joey|justin/i;
-    const female = /female|zira|samantha|victoria|karen|moira|tessa|fiona|susan|hazel|serena|kate|veena|allison|ava|joanna|salli|kendra|kimberly|ivy|jenny|aria|libby|sonia|natasha|emma|amy|google us english$/i;
-    let best = null, bs = -1e9;
-    for (const x of en) {
-      const n = x.name || '';
-      let s = 0;
-      if (female.test(n)) s -= 3;
-      else if (male.test(n)) s += 3;
-      if (/^en[-_](us|gb)/i.test(x.lang)) s += 1;
-      if (x.localService) s += 0.5;
-      if (s > bs) {
-        bs = s;
-        best = x;
-      }
-    }
-    this._sv = best;
-    return best;
+    const voices = ss.getVoices() || [];
+    const chinese = voices.filter(voice => /^(zh|cmn)(?:[-_]|$)/i.test(voice.lang));
+    const mandarin = chinese.filter(voice => /(?:[-_](?:CN|Hans|SG)(?:[-_]|$))|^cmn/i.test(voice.lang));
+    this._sv = mandarin.find(voice => voice.localService) || mandarin[0] || chinese[0] || null;
+    return this._sv;
   }
 
   _speak(text) {
@@ -1648,7 +1634,7 @@ export class AudioSystem {
       const G = globalThis, ss = G.speechSynthesis, U = G.SpeechSynthesisUtterance;
       if (!ss || !U) return; // 不可用时静默
       const u = new U(text);
-      u.lang = 'en-US';
+      u.lang = 'zh-CN';
       u.rate = 1.05;
       u.pitch = 0.8;
       u.volume = clamp(this._vol.master * this._vol.voice, 0, 1);

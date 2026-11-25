@@ -61,7 +61,8 @@ export class MainMenu {
     // ---------------------------------------------------------------- title
     const title = el('section', 'panel-title-screen', undefined, this.rootNode);
     const logoWrap = el('div', 'logo', undefined, title);
-    const words = GAME_TITLE.split(' ');
+    const language = (globalThis as typeof globalThis & { PureTVChinese?: { translate(text: string): string } }).PureTVChinese;
+    const words = GAME_TITLE.split(' ').map(word => language?.translate(word) ?? word);
     words.forEach((w, i) => {
       const line = el('span', `logo-word logo-word-${i}`, undefined, logoWrap);
       line.dataset.text = w;

@@ -79,7 +79,7 @@ export class Menu {
   // ------------------------------------------------------------------ build
   _buildTitle() {
     const t = this.titleEl = el('div', 'screen title-screen', this.uiRoot);
-    const words = GAME_TITLE.toUpperCase().split(' ');
+    const words = GAME_TITLE.toUpperCase().split(' ').map(word => globalThis.PureTVChinese?.translate(word) ?? word);
     const first = words.shift();
     t.innerHTML = `
       <div class="title-vignette"></div>

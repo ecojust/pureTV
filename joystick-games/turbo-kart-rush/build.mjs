@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +12,7 @@ const result = await esbuild.build({
   define: { 'import.meta.env.DEV': 'false', 'import.meta.env.PROD': 'true' },
 });
 const files = Object.fromEntries(result.outputFiles.map(f => [path.basename(f.path), Buffer.from(f.contents)]));
-files['tv.html'] = fs.readFileSync(path.join(root, 'src/tv.html'));
+files['tv.html'] = Buffer.from(await localizeHtml(fs.readFileSync(path.join(root, 'src/tv.html'), 'utf8'), root));
 const notices = ['NOTICE.md', 'LICENSE', 'node_modules/three/LICENSE'];
 files['THIRD-PARTY-NOTICES.txt'] = Buffer.from(notices.map(p => p + '\n\n' + fs.readFileSync(path.join(root, p), 'utf8')).join('\n\n'));
 const out = path.join(root, 'dist');
