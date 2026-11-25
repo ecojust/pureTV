@@ -27,7 +27,7 @@ system = 'macos' if sys.platform == 'darwin' else 'windows'
 name = slug + ('-macos.dmg' if system == 'macos' else '-windows-x64-setup.exe')
 target = out / name
 report = {'id':slug,'sourceCommit':source,'platform':system,'workflowRun':os.environ['GITHUB_RUN_ID']}
-assert re.fullmatch('[a-f0-9]{40}',source) and re.fullmatch('[a-z0-9-]+',slug) and mode in ('apk','native','neon')
+assert re.fullmatch('[a-f0-9]{40}',source) and re.fullmatch('[a-z0-9-]+',slug) and mode in ('apk','native','neon','audit')
 def run(*args,**kwargs):
     return subprocess.run([str(a) for a in args],check=True,**kwargs)
 def read(p):
@@ -80,7 +80,23 @@ def windows_launch(exe):
 
 assert run('git','rev-parse','HEAD',capture_output=True,text=True).stdout.strip()==source
 
-if mode=='apk':
+if mode=='audit':
+    assert system=='windows'
+    release='games-zh-cn-2026.11.25'
+    target=scratch/name
+    for filename in (name, f'{slug}-{system}-verification.json'):
+        run('gh','release','download',release,'-p',filename,'-O',scratch/filename)
+    report=read(scratch/f'{slug}-{system}-verification.json')
+    assert report['sourceCommit']==source and report['sha256']==sha(target) and report['bytes']==target.stat().st_size
+    dest=scratch/'verify';run(target,'/S','/D='+str(dest),timeout=180)
+    for path,digest in frozen_paths().items():assert sha(dest/'Web'/path)==digest,path
+    assert read(dest/'game.json')==read(game/'game.json') and sha(dest/'PureTVGame.exe')==report['hostSha256']
+    report['buildWorkflowRun']=report['workflowRun']
+    report['workflowRun']=os.environ['GITHUB_RUN_ID']
+    report['nativeLaunch']=windows_launch(dest/'PureTVGame.exe')
+    remove=scratch/'remove.exe';shutil.copy2(dest/'Uninstall.exe',remove);run(remove,'/S','_?='+str(dest))
+    assert not (dest/'PureTVGame.exe').exists()
+elif mode=='apk':
     import prepare_standalone as prep
     selected=next(x for x in read(pc/'catalog.json') if x['id']==slug)
     apk_name=selected['url'].split('/')[-1]
