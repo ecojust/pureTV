@@ -87,7 +87,7 @@ jobs:
           elif [[ "$BUILD_MODE" = apk ]]; then
             python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
           elif [[ "$RUNNER_OS" = Windows ]]; then
-            python -m pip install pefile==2023.2.7
+            python -m pip install pefile==2023.2.7 playwright==1.56.0
             if ! test -f '/c/Program Files (x86)/NSIS/makensis.exe'; then choco install nsis --version=3.10 -y --no-progress; fi
           fi
       - name: Assemble, install and verify the frozen game

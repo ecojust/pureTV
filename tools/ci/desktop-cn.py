@@ -43,6 +43,42 @@ def sparse(*patterns):
     run('git','sparse-checkout','add','--stdin',input='\n'.join(patterns)+'\n',text=True)
 def frozen_paths():
     return {p.relative_to(game/'dist').as_posix():sha(p) for p in (game/'dist').rglob('*') if p.is_file()}
+def windows_launch(exe):
+    from playwright.sync_api import sync_playwright
+    import socket
+    from urllib.request import urlopen
+    with socket.socket() as sock:
+        sock.bind(('127.0.0.1',0))
+        port=sock.getsockname()[1]
+    flags=f'--remote-debugging-port={port} --enable-unsafe-swiftshader --use-angle=swiftshader'
+    env={**os.environ,'WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS':flags}
+    proc=subprocess.Popen([str(exe),'--profile',str(scratch/'verify-profile')],env=env)
+    addr=f'http://127.0.0.1:{port}'
+    try:
+        deadline=time.monotonic()+180;observed={}
+        while proc.poll() is None and time.monotonic()<deadline:
+            try:
+                with urlopen(addr+'/json/version',timeout=2) as response:
+                    if response.status==200: break
+            except OSError: time.sleep(.5)
+        else: raise RuntimeError('Installed WebView2 startup failed')
+        with sync_playwright() as pw:
+            browser=pw.chromium.connect_over_cdp(addr,timeout=30000)
+            while proc.poll() is None and time.monotonic()<deadline:
+                for ctx in browser.contexts:
+                    for page in ctx.pages:
+                        if page.url.split('?')[0].endswith('/tv.html'):
+                            observed=page.evaluate("""() => {const q=window.JoystickGameQA?.snapshot() || {};return {lang:document.documentElement.lang,title:document.title,stage:q.stage || q.phase,renderer:q.renderer,error:q.error || q.webglError}}""")
+                            if observed.get('error') or observed.get('stage')=='error':
+                                raise RuntimeError('Rendering failed: '+str(observed))
+                            if observed.get('lang','').startswith('zh') and observed.get('stage') not in (None,'loading'):
+                                return observed
+                time.sleep(.5)
+            raise RuntimeError('Installed game failed to render Chinese: '+str(observed))
+    finally:
+        if proc.poll() is None: proc.terminate()
+        proc.wait(timeout=20)
+
 assert run('git','rev-parse','HEAD',capture_output=True,text=True).stdout.strip()==source
 
 if mode=='apk':
@@ -140,11 +176,7 @@ else:
     dest=scratch/'verify';run(target,'/S','/D='+str(dest),timeout=180)
     for path,digest in frozen_paths().items():assert sha(dest/'Web'/path)==digest,path
     assert read(dest/'game.json')==meta and sha(dest/'PureTVGame.exe')==report['hostSha256']
-    report['nativeLaunch']=windows.smoke_native(dest/'PureTVGame.exe',scratch)
-    state=read(scratch/'diagnostic/state.json')
-    document=state.get('document',{})
-    assert document.get('language','').startswith('zh'),document
-    report['nativeLaunch'].update(lang=document['language'],title=document.get('title'))
+    report['nativeLaunch']=windows_launch(dest/'PureTVGame.exe')
     remove=scratch/'remove.exe';shutil.copy2(dest/'Uninstall.exe',remove);run(remove,'/S','_?='+str(dest))
     assert not (dest/'PureTVGame.exe').exists()
 assert target.is_file() and target.stat().st_size>0
