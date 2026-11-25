@@ -1,3 +1,4 @@
+import { translated } from "./localize.js";
 import { W, H, T, blast, B_MINE, B_MINI } from "./sim.js";
 
 // Pure game-feel layer: diffs successive states (solo, host or guest alike) into events and per-player stats,
@@ -219,8 +220,10 @@ export function createDirector() {
     if (ctx.rand() >= (CHAT_ODDS[ev] ?? 1)) return;
     const text = ctx.line(id, ev);
     if (!text) return;
-    const lines = wrap(text);
-    d.bub[id] = { text, lines, cols: Math.max(...lines.map((l) => l.length)), at: now, until: now + SAY_MS };
+    const label = translated(text);
+    const chinese = /[\u3400-\u9fff]/.test(label);
+    const lines = chinese ? [label.slice(0, 8), label.slice(8)].filter(Boolean) : wrap(label);
+    d.bub[id] = { text, lines, cols: Math.max(...lines.map((l) => l.length * (chinese ? 2 : 1))), at: now, until: now + SAY_MS };
     d.nextSay[id] = now + SAY_EVERY;
   };
   const call = (key, text, prio, cd = 0) => ctx.announce && ann.push(key, text, { prio, cd, still: ctx.still }, now);

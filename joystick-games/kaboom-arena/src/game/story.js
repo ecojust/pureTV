@@ -1,3 +1,4 @@
+import { translated } from "./localize.js";
 // Story mode text. banter(a, b) is deterministic: hand-written pair > relation template > personal taunts.
 import { relation, BY_ID } from "./campaign.js";
 
@@ -195,7 +196,7 @@ const FIGHT = {
 export const fightLine = (id, ev) => FIGHT[id]?.[ev] ?? null;
 
 const hash = (s) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
-const fill = (t, o) => t.replace("{o}", o);
+const fill = (t, o) => translated(t).replace("{o}", translated(o));
 
 // [a's line, b's line]
 export function banter(a, b) {
@@ -304,4 +305,4 @@ export const ENDING_TEXT = {
   },
 };
 
-export const fillText = (t, v) => t.replace(/\{(foe|prev|me)\}/g, (_, k) => v[k] ?? "");
+export const fillText = (t, v) => translated(t).replace(/\{(foe|prev|me)\}/g, (_, k) => translated(v[k] ?? ""));
