@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.quillX",
+    "gameplay.quillY",
+    "gameplay.casts",
+    "gameplay.timeLeft"
+  ],
+  "steps": [
+    {
+      "name": "Accept the opening commission",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "brief"
+        }
+      ]
+    },
+    {
+      "name": "Begin charting the client map",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ]
+    },
+    {
+      "name": "Move the original quill horizontally",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 540,
+      "expect": [
+        {
+          "path": "gameplay.quillX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Channel and release a scry onto the parchment",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 570,
+      "expect": [
+        {
+          "path": "gameplay.casts",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Read the client’s commission again",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "brief"
+        }
+      ]
+    },
+    {
+      "name": "Return to the parchment",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ]
+    },
+    {
+      "name": "Open the original chart delivery confirmation",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "confirm"
+        }
+      ]
+    },
+    {
+      "name": "Keep working on the map",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ]
+    },
+    {
+      "name": "Pause using the controller",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume using START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 210,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
