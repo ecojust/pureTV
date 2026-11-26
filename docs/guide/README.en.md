@@ -2,11 +2,11 @@
 
 [简体中文](README.md) · **English** · [Home](../../README.en.md) · [Developer guide](development.en.md)
 
-pureTV Manager runs on your computer and manages Android TV and Google TV devices over ADB. To browse, install or check for apps directly on your TV, install putrtv Store. To play a controller game, install the game on the TV or computer and connect the controller to the game. [putrtv Store 0.1.3 APK](../../resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1) · [Browse games by genre](../../README.en.md#games)
+pureTV Manager runs on your computer and manages Android TV and Google TV devices over ADB. To browse, install or check for apps directly on your TV, install putrtv Store. On your computer, open **Games** in the manager or play directly in a browser. On a TV, install the game and connect the controller. [putrtv Store 0.1.3 APK](../../resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1) · [Browse games by genre](../../README.en.md#games)
 
 ## Install or upgrade the desktop manager
 
-Download **pureTV Manager 0.5.9** for your computer. The release lists file sizes and SHA256 checksums. [Download 0.5.9](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9)
+Download **pureTV Manager 0.6.0** for your computer. The release lists file sizes and SHA256 checksums. [Download 0.6.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0)
 
 | Platform | Installation |
 | --- | --- |
@@ -14,7 +14,7 @@ Download **pureTV Manager 0.5.9** for your computer. The release lists file size
 | macOS 11 or later | Choose the Apple Silicon ARM64 or Intel x86_64 DMG. Drag `pureTV Manager.app` to Applications and open it there. The manager uses an ad-hoc signature and has no Apple notarization. [First launch and file verification (Chinese)](../../desktop/README.md#macos-安装与首次打开) |
 | Linux x64 | Download the DEB. The in-app updater uses the system's `pkexec` and `dpkg`. |
 
-**When upgrading from 0.5.7 or earlier, install 0.5.9 manually first.** Quit the old manager and replace it. You can keep its settings and the apps on your TV. The older client retains its original download address. Version 0.5.9 uses `apps.b14f.com` for the APK market and client updates. It checks once after startup or when you choose **Check for updates** next to the version in the sidebar. **Download and install** downloads and verifies the selected package before handing it to the installer and restarting the manager. In-app availability depends on which packages the update server provides for your platform. [Client directory](https://apps.b14f.com/client/) · [Update behavior and troubleshooting](../../desktop/docs/client-updates.md#update-behavior-english)
+**When upgrading from 0.5.7 or earlier, install 0.6.0 manually.** Quit the old manager and replace it. You can keep its settings and the apps on your TV. The older client retains its original download address. Version 0.5.9 uses `apps.b14f.com` for the APK market and client updates. It checks once after startup or when you choose **Check for updates** next to the version in the sidebar. **Download and install** downloads and verifies the selected package before handing it to the installer and restarting the manager. In-app availability depends on which packages the update server provides for your platform. [Client directory](https://apps.b14f.com/client/) · [Update behavior and troubleshooting](../../desktop/docs/client-updates.md#update-behavior-english)
 
 ![pureTV Manager in the Sky theme with simulated device data](../previews/manager-en.png)
 
@@ -47,6 +47,12 @@ The TV store uses the same Media, Games and Launchers directories as the desktop
 ## Install a game and connect a controller
 
 ### Play on a computer
+
+Connect your computer to the internet, open **Games** in pureTV Manager and select a game cover. Use the keyboard controls shown by the game. For a pureTV Wi-Fi controller, connect it to the same LAN as the computer and press its search button while the game is open. Choose **Back to games** to leave the session and select another title.
+
+Choose **Open in browser** to play the web version, or select **Play in browser** on a homepage game card. The browser version supports keyboard play without installing the manager. [Browse web games](https://ecojust.github.io/pureTV/)
+
+#### Use a standalone installer
 
 Find your game on the homepage and select its Apple or Windows icon. On macOS, open the DMG and drag the game to Applications. On Windows, run the installer and open the game from the Start menu. [Browse installers by game](../../README.en.md#games)
 

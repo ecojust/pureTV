@@ -79,7 +79,7 @@ def resource_card(key, info, prefix, locale, show_download=False):
 
 
 def management_table(tool_apps, locale):
-    version = '0.5.9'
+    version = json.loads((root / 'desktop/package.json').read_text())['version']
     release = f'https://github.com/ecojust/pureTV/releases/tag/desktop-v{version}'
     if locale == 'zh':
         description = '在电脑上管理电视应用和启动器'

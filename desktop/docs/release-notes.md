@@ -1,30 +1,27 @@
-# pureTV Manager 0.5.9
+# pureTV Manager 0.6.0
 
 ## 简体中文
 
-- APK 市场的启动器、影音、游戏及管理器自身更新改用 `https://apps.b14f.com` 的对应目录，直接通过 HTTPS 下载文件。
-- 下载时核对文件大小与服务器提供的版本标记；应用清单提供匹配的 SHA256 时追加校验，复用本地缓存前重新计算 SHA256。
-- “查看下载目录”打开客户端目录，市场入口打开启动器目录，避免访问不开放的服务器根网址。
-- 新服务器缓存与旧 Gitee 缓存隔离，移除 Gitee 下载及备用下载；论坛继续使用 Gitee。
+- 左侧新增「游戏」栏目。点击封面，联网后即可在管理器窗口里玩首页收录的 46 款网页游戏，按画面提示使用键盘。
+- 使用 pureTV 无线手柄时，将手柄与电脑接入同一局域网，打开游戏后按手柄搜索键。管理器的 TCP 服务把输入交给当前游戏。
+- 选择「浏览器中打开」，或点击项目首页每款游戏的「网页游玩」，即可在浏览器游玩。[网页游戏目录](https://ecojust.github.io/pureTV/)
 
 ## 繁體中文
 
-- APK 市場的啟動器、影音、遊戲及管理器本身更新改用 `https://apps.b14f.com` 的對應目錄，直接透過 HTTPS 下載檔案。
-- 下載時核對檔案大小與伺服器提供的版本標記；應用程式清單提供相符的 SHA256 時追加校驗，重用本機快取前重新計算 SHA256。
-- 「查看下載目錄」開啟用戶端目錄，市場入口開啟啟動器目錄，避免存取不開放的伺服器根網址。
-- 新伺服器快取與舊 Gitee 快取隔離，移除 Gitee 下載及備用下載；論壇繼續使用 Gitee。
+- 左側新增「遊戲」欄目。點選封面，連上網路後即可在管理器視窗內遊玩首頁收錄的 46 款網頁遊戲，依畫面提示使用鍵盤。
+- 使用 pureTV 無線手把時，讓手把和電腦連上同一個區域網路，開啟遊戲後按手把搜尋鍵。管理器的 TCP 服務會將輸入傳給目前的遊戲。
+- 可在瀏覽器開啟遊戲，也可以直接從專案首頁各遊戲的網頁連結進入。[網頁遊戲目錄](https://ecojust.github.io/pureTV/)
 
 ## English
 
-- APK Market launchers, media apps and games, along with manager updates, now use their respective directories on `https://apps.b14f.com` and download files directly over HTTPS.
-- Downloads check file size and server version metadata. A matching SHA256 from an app manifest is verified when available; cached files are hashed again before reuse.
-- Source links open the client or launcher directory rather than the server root, which is not publicly listed.
-- The new server uses a separate cache from Gitee. Gitee downloads and their fallback have been removed; the forum continues to use Gitee.
+- Choose **Games** in the sidebar and select a cover to load any of the 46 homepage games over the internet and play inside the manager. Follow each game's on-screen keyboard controls.
+- To use a pureTV Wi-Fi controller, connect it to the same LAN as the computer and press its search button while a game is open. The manager's TCP service delivers input to the active game.
+- Select **Open in browser** in the manager or **Play in browser** on a homepage game card to open the web version directly. [Web game catalog](https://ecojust.github.io/pureTV/)
 
 ---
 
-安装包格式：Windows x64 安装版／便携版、macOS ARM64／Intel DMG、Linux x64 DEB；发布文件的校验值见 `SHA256SUMS.txt`。macOS 使用 ad-hoc 签名，未进行 Apple 公证；Windows 未进行商业代码签名。应用内更新以 `https://apps.b14f.com/client/` 实际提供的版本为准。
+Windows x64 安装版和便携版、macOS ARM64 和 Intel DMG、Linux x64 DEB 的校验值见 `SHA256SUMS.txt`。macOS 使用 ad-hoc 签名，尚未经过 Apple 公证。Windows 安装包未使用商业代码签名。应用内更新以 [client 目录](https://apps.b14f.com/client/) 提供的版本为准。
 
-安裝套件格式：Windows x64 安裝版／可攜版、macOS ARM64／Intel DMG、Linux x64 DEB；發佈檔案的校驗值見 `SHA256SUMS.txt`。macOS 使用 ad-hoc 簽署，未經 Apple 公證；Windows 未進行商業程式碼簽署。應用程式內更新以 `https://apps.b14f.com/client/` 實際提供的版本為準。
+Windows x64 安裝版及可攜版、macOS ARM64 和 Intel DMG、Linux x64 DEB 的校驗值見 `SHA256SUMS.txt`。macOS 使用 ad-hoc 簽署，尚未經過 Apple 公證。Windows 安裝套件未使用商業程式碼簽署。應用程式內更新以 [client 目錄](https://apps.b14f.com/client/) 提供的版本為準。
 
-Package formats: Windows x64 installer/portable, macOS ARM64/Intel DMG and Linux x64 DEB. Checksums for release files are listed in `SHA256SUMS.txt`. macOS builds use ad-hoc signing without Apple notarization; Windows builds do not use commercial code signing. In-app updates depend on the versions actually available at `https://apps.b14f.com/client/`.
+Checksums for the Windows x64 installer and portable executable, macOS ARM64 and Intel DMGs, and Linux x64 DEB are in `SHA256SUMS.txt`. macOS builds use ad-hoc signing and lack Apple notarization. Windows builds lack commercial code signing. In-app updates use the versions available in the [client directory](https://apps.b14f.com/client/).

@@ -85,6 +85,7 @@ export function forumReplies(number = 'IABC123', overrides = {}) {
 
 export async function mockBridge(page, initial = snapshot(), options = {}) {
   await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate, defaultForumPage, defaultForumDetails, defaultForumReplies}) => {
+    if (window !== window.top) return;
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
     let launcherLayout=structuredClone(defaultLayout), customLayout=false;
@@ -139,6 +140,14 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     let clientUpdateCancelled=false;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
+    window.__gameCommands = [];
+    let gameSession = 0;
+    window.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
+      unregisterListener(event, id) {
+        window.__eventListeners[event] = (window.__eventListeners[event] || []).filter(value => value !== id);
+        callbacks.delete(id);
+      },
+    };
     window.__networkReads=0; window.__requests = []; window.__pickerCalls = 0; window.__xss = false; window.__toolsInstalls = 0; window.__resources = [];
     window.__TAURI_INTERNALS__ = {
       transformCallback: callback => { const id = nextCallback++; callbacks.set(id, callback); return id; },
@@ -146,6 +155,16 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
       invoke: async (command, args = {}) => {
         if (command === 'plugin:event|listen') { (window.__eventListeners[args.event] ||= []).push(args.handler); return args.handler; }
         if (command === 'plugin:event|unlisten') return;
+        if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers', 'open_web_game'].includes(command)) {
+          window.__gameCommands.push({command, ...args});
+          if (command === 'start_game_controllers') {
+            return {session: String(++gameSession), port: 63485, addresses: ['192.168.0.2'], discovery: true};
+          }
+          if (command === 'game_controller_state') {
+            return {session: args.session, revision: 0, connections: 0, players: []};
+          }
+          return;
+        }
         if(command==='get_local_network'){window.__networkReads++;return structuredClone(options.preflightNetwork || state.localNetwork || {addresses:[],error:null});}
         if(command==='get_interface_preferences')return structuredClone(window.__interfacePreferences);
         if(command==='set_interface_preferences'){Object.assign(window.__interfacePreferences,args.preferences);window.__emitMcp('interface-preferences',structuredClone(window.__interfacePreferences));return structuredClone(window.__interfacePreferences);}

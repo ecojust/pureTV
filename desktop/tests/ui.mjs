@@ -82,6 +82,61 @@ try {
     assert.equal(await act(p,'download-adb').isDisabled(), true);
     await nav(p,'apps'); assert.equal(await p.locator('input[data-select-package]').count(),0);
   }, null);
+  const gamesOrigin = 'https://ecojust.github.io';
+  const gamePage = gamesOrigin + '/pureTV/games/tetris/tv.html';
+  // The message exchange crosses origins even offline. The staged game site has its own gameplay checks.
+  const gameFrameHtml = `<!doctype html><html><body><script>
+    window.received = [];
+    window.addEventListener('message', event => {
+      if (event.source === parent && event.data.type === 'puretv:controller-state') received.push(event.data.state);
+    });
+    parent.postMessage({type:'puretv:game-ready'}, '*');
+  </script></body></html>`;
+  await check('games sidebar opens a cross-origin player, routes the active socket session and closes it', async p => {
+    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+    await nav(p, 'games');
+    const play = p.locator('[data-play-game="tetris"]');
+    const ids = await p.locator('[data-play-game]').evaluateAll(items => items.map(item => item.dataset.playGame).sort());
+    const catalog = JSON.parse(await readFile(new URL('../../tools/pc-games/catalog.json', import.meta.url), 'utf8'));
+    assert.deepEqual(ids, catalog.map(item => item.id).sort());
+    await play.click();
+    const dialog = p.locator('dialog.game-player[open]');
+    await dialog.locator('iframe').waitFor();
+    const frame = p.frame({url: url => url.href.startsWith(gamePage)}) || await p.waitForEvent('framenavigated', {predicate:f => f.url().startsWith(gamePage)});
+    await frame.waitForFunction(() => window.received?.some(state => state.revision === 0));
+    assert.match(await dialog.innerText(), /192\.168\.0\.2:63485/);
+    const emit = (session, revision) => p.evaluate(({session, revision}) => window.__emitMcp('game-controller-state', {session, revision, connections:1, players:[{id:1}]}), {session, revision});
+    await emit('old', 80);
+    await emit('1', 2);
+    await emit('1', 1);
+    await frame.waitForFunction(() => received.some(state => state.revision === 2));
+    assert.deepEqual(await frame.evaluate(() => received.map(state => state.revision)), [0, 2]);
+    await dialog.locator('[data-browser-game="tetris"]').click();
+    await dialog.locator('[data-close-game]').click();
+    await p.waitForFunction(() => window.__gameCommands.some(entry => entry.command === 'stop_game_controllers'));
+    assert.deepEqual(await p.evaluate(() => window.__gameCommands), [
+      {command:'start_game_controllers', players:2},
+      {command:'game_controller_state', session:'1'},
+      {command:'open_web_game', id:'tetris', language:'zh'},
+      {command:'stop_game_controllers', session:'1'}
+    ]);
+    assert.equal(frame.isDetached(), true);
+    assert.equal(await play.evaluate(button => document.activeElement === button), true);
+    await nav(p, 'apps');
+    assert.equal(await p.locator('iframe').count(), 0);
+  }, withoutAdb());
+  await check('games browser play opens the standalone web game without a TV or a desktop bridge', async p => {
+    await p.context().route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:'<title>Tetris</title>'}));
+    await nav(p, 'games');
+    const [external] = await Promise.all([
+      p.waitForEvent('popup'),
+      p.locator('[data-browser-game="tetris"]').click()
+    ]);
+    await external.waitForLoadState('domcontentloaded');
+    assert.equal(new URL(external.url()).origin + new URL(external.url()).pathname, gamePage);
+    assert.equal(await external.evaluate(() => window.opener), null);
+    assert.equal(await p.locator('iframe').count(), 0);
+  }, null);
   await check('local computer IPs are labeled independently from TV, refresh before ADB, and stay on home',async p=>{
     await p.locator('.local-network-addresses').waitFor();
     assert.match(await p.locator('.local-network-panel').innerText(),/192.168.0.2\/24/);assert.match(await p.locator('.local-network-panel').innerText(),/Ethernet/);
