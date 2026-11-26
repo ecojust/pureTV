@@ -1,6 +1,12 @@
 // Shared configuration for the static pages, both standalone and inside pureTV Manager.
 (() => {
   'use strict';
+  if (pureTVPCConfig.alias || pureTVPCConfig.gameKit) {
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = '../web-host.css';
+    document.head.appendChild(style);
+  }
   const embedded = window.parent !== window;
   const language = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'zh';
   pureTVPCConfig.info = {
