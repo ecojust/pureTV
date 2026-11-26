@@ -1,0 +1,18 @@
+/* Keep the authored scene, reserve the middle-right edge for real controller identity. */
+.tv-focus{outline:3px solid #fff!important;outline-offset:3px;box-shadow:0 0 0 6px #f1ae28!important}
+#puretv-controller-panel{z-index:450!important;max-height:28vh!important}
+#tv-help{position:fixed;z-index:210;left:6px;bottom:2px;max-width:calc(100vw - 12px);background:#171511ec;color:#fff0cc;border-radius:8px;padding:3px 8px;font:11px/1.35 system-ui;white-space:nowrap;pointer-events:none}
+#tv-help[hidden],#tv-suspend[hidden],#tv-editor[hidden]{display:none!important}
+#tv-suspend{position:fixed;inset:0;z-index:400;display:grid;place-items:center;background:#100c08b8;color:#fff;font:18px system-ui}
+#tv-suspend>div{padding:28px;border:2px solid #fbc45d;border-radius:18px;background:#252016;max-width:80vw}
+#tv-resume{display:block;width:100%;padding:20px;border-radius:10px;background:#b8ed8b;color:#171b10;border:0;font:700 20px system-ui}
+#tv-editor{position:fixed;z-index:500;left:15%;right:15%;bottom:60px;padding:20px;background:#252016;border:2px solid #fbc45d;border-radius:10px;color:#fff;white-space:pre-wrap;font:20px/1.6 monospace}
+#modal-panel{max-height:calc(100vh - 105px)!important;overflow:auto!important;margin-bottom:35px}
+#modal-panel .actions{gap:10px!important}#modal-panel .actions .btn{flex:initial!important;min-height:42px}
+#hub-panel{padding-bottom:68px!important}#story .dlg{bottom:65px}
+@media(max-width:1000px){#puretv-controller-panel{width:150px!important;right:6px!important}#tv-help{font-size:11px}#title .logo{font-size:clamp(44px,8vw,94px)}#title>.hint{display:none}}
+
+/* Keep both join methods visible next to the menu on small TVs. */
+@media(max-height:600px){
+  body[data-puretv-joining=true] #puretv-controller-panel{max-height:min(230px,50vh)!important}
+}
