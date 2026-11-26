@@ -1878,3 +1878,16 @@ select { box-sizing:border-box; height:38px; min-height:38px; line-height:normal
 .game-status { padding:0 12px; color:var(--muted); font-size:12px; }
 .game-status span:not(:empty) { display:inline-block; margin:0 12px 6px 0; }
 .game-player iframe { width:100%; flex:1; min-height:0; border:0; background:#161923; }
+@media (max-height:800px) {
+  .sidebar { padding-block:16px; }
+  .sidebar nav { gap:4px; }
+  .sidebar .nav-item { min-height:42px; padding-block:8px; }
+  .sidebar > .brand { margin-top:12px; }
+}
+@media (max-height:600px) {
+  .sidebar { padding-block:8px; }
+  .sidebar nav { gap:2px; }
+  .sidebar .nav-item { min-height:33px; padding-block:5px; }
+  .sidebar .appearance-panel { padding-block:9px; gap:6px; }
+  .sidebar > .brand { margin-top:6px; }
+}

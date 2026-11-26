@@ -94,7 +94,8 @@ test('static pages accept controller snapshots only from the embedding Manager',
   const sandbox = {
     parent, pureTVPCConfig: { alias: 'TetrisHost' }, URLSearchParams,
     location: { search: '?lang=en' },
-    document: { hidden: false, hasFocus: () => true, addEventListener() {} },
+    document: { hidden: false, hasFocus: () => true, addEventListener() {},
+      createElement: () => ({}), head: { appendChild() {} } },
     addEventListener: (name, fn) => listeners.set(name, fn),
     removeEventListener: name => listeners.delete(name),
   };

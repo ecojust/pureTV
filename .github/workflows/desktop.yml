@@ -7,6 +7,8 @@ on:
     paths:
       - 'desktop/**'
       - 'tools/pc-games/catalog.json'
+      - 'tools/pc-games/*bridge*'
+      - 'tools/pc-games/web-host.*'
       - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
       - 'resource/launcher/puretv/app/src/main/assets/layout.json'
@@ -14,6 +16,8 @@ on:
     paths:
       - 'desktop/**'
       - 'tools/pc-games/catalog.json'
+      - 'tools/pc-games/*bridge*'
+      - 'tools/pc-games/web-host.*'
       - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
       - 'resource/launcher/puretv/app/src/main/assets/layout.json'
@@ -68,31 +72,6 @@ jobs:
         working-directory: ${{ runner.temp }}
         run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /desktop/
-            /tools/pc-games/catalog.json
-            /tools/readme-app-games.json
-            /resource/launcher/*/layout.example.json
-            /resource/launcher/*/app/src/main/assets/layout.json
-            /resource/apps/*/resource.json
-            /resource/apps/*/logo.svg
-            /joystick-games/*/resource.json
-            /joystick-games/*/logo.svg
-      - name: Check out APK fixtures referenced by logo tests
-        working-directory: .
-        run: |
-          python - <<'PYTHON'
-          import json, subprocess
-          from pathlib import Path
-          apks = []
-          for root in ("resource/apps", "joystick-games"):
-              for metadata in Path(root).glob("*/resource.json"):
-                  package = json.loads(metadata.read_text(encoding="utf-8"))["apk"]
-                  apks.append("/" + (metadata.parent / package).as_posix())
-          subprocess.run(["git", "sparse-checkout", "add", "--stdin"], input="\n".join(apks) + "\n", text=True, check=True)
-          PYTHON
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -154,6 +133,8 @@ jobs:
         run: npm ci
       - name: Check and build frontend
         run: npm run build
+      - name: Test game input bridge
+        run: node --test ../tools/pc-games/test_bridge.cjs
       - name: Test subnet comparison
         run: npm run test:network
       - name: Test read-only TV compatibility probe

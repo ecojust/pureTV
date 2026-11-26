@@ -72,8 +72,8 @@ def main():
         parser.error('Unknown game ID')
     revision = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
     args.output.mkdir(parents=True, exist_ok=True)
-    for script in ('pc-bridge.js', 'web-host.js'):
-        shutil.copyfile(source / script, args.output / script)
+    for asset in ('pc-bridge.js', 'web-host.js', 'web-host.css'):
+        shutil.copyfile(source / asset, args.output / asset)
     for game in games:
         if not args.game or args.game == game['id']:
             stage(game, args.output, args.apk_cache, revision)

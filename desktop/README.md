@@ -135,9 +135,21 @@
 
 目录会缓存，网络失败且有新源缓存时明确提示正在使用上次目录。下载绑定所选文件及其精确字节数、ETag／Last-Modified 快照，通过条件请求和响应检查拒绝已检测到的文件变化；发现变化后需刷新目录重新选择。完整下载时计算 SHA256 并保存本地回执，复用缓存前重新校验，失败或取消会清理临时文件。服务器未提供统一 SHA256 清单；若同目录 `manifest.json` 为该文件和精确大小提供 SHA256，下载时会额外核对。多数 APK 使用 HTTP 元数据检查及本地 SHA256 回执，元数据快照不作为内容哈希。市场封面用于浏览资源，已安装启动器的背景仍从电视上的 Home 布局读取。
 
+## 网页游戏
+
+游戏站由 `gh-pages` 分支提供。维护者可在仓库根目录使用 Python 3 和 Pillow 将当前版本的网页、封面与授权说明输出到新的暂存目录，再用浏览器打开本地站点验证。
+
+```bash
+python3 tools/pc-games/stage_web_games.py --output /tmp/puretv-site/games
+python3 tools/pc-games/web_index.py /tmp/puretv-site
+python3 -m http.server --directory /tmp/puretv-site 8080
+```
+
+发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。管理器根据 `tools/pc-games/catalog.json` 和 `tools/readme-app-games.json` 展示游戏，两个目录中的游戏及顺序须一致。[线上游戏目录](https://ecojust.github.io/pureTV/)
+
 ## 论坛
 
-侧栏「APK市场」后的「论坛」读取 [pure-tv-store 的 Issues](https://gitee.com/juzisang331/pure-tv-store/issues)。列表显示标题、作者、状态、更新时间、回复数和标签，按最近更新排序，每页 20 条。点击标题在管理器内查看原帖正文及跟帖，支持返回列表、刷新和回复翻页。顶部「发布帖子」与每帖「去回复」仍由系统默认浏览器打开 Gitee；发帖、回复和登录在浏览器中完成。浏览论坛无需连接电视或安装 ADB。
+侧栏的「论坛」读取 [pure-tv-store 的 Issues](https://gitee.com/juzisang331/pure-tv-store/issues)。列表显示标题、作者、状态、更新时间、回复数和标签，按最近更新排序，每页 20 条。点击标题在管理器内查看原帖正文及跟帖，支持返回列表、刷新和回复翻页。顶部「发布帖子」与每帖「去回复」仍由系统默认浏览器打开 Gitee；发帖、回复和登录在浏览器中完成。浏览论坛无需连接电视或安装 ADB。
 
 APK市场、论坛和操作记录不显示常驻 ADB 提示、设备操作忙碌状态及右上角电视连接入口。市场中的实际安装操作仍会检查 ADB 与电视连接，保留必要的操作错误提示。
 
