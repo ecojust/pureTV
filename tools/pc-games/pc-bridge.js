@@ -91,7 +91,7 @@
       if (typeof text !== 'string' || text.length > 65536) return;
       try { published = JSON.parse(text); } catch {}
     },
-    exit() { window.close(); },
+    exit() { if (pureTVPCConfig.exit) pureTVPCConfig.exit(); else window.close(); },
   });
   window.PureGameHost = host;
   if (alias) window[alias] = host;
@@ -101,6 +101,10 @@
 
   function openStream() {
     if (stream) return;
+    if (pureTVPCConfig.subscribe) {
+      stream = { close: pureTVPCConfig.subscribe(receive) };
+      return;
+    }
     stream = new EventSource('/__puretv/events');
     stream.onmessage = event => receive(JSON.parse(event.data));
     stream.onerror = () => receive({

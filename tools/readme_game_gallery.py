@@ -115,7 +115,10 @@ def game_card(card, locale):
     if card['upstream']:
         label = f'{title} · 原作仓库' if locale == 'zh' else f'{title} · Original repository'
         icons.append(f'<a href="{escape(card["upstream"])}" title="{escape(label)}">{support_icon("upstream", label)}</a>')
-    return f'{page}<br>{" ".join(icons)}'
+    game_id = Path(card['page']).name
+    play = '网页游玩' if locale == 'zh' else 'Play in browser'
+    web = f'<a href="https://ecojust.github.io/pureTV/games/{escape(game_id)}/tv.html">{play}</a>'
+    return f'{page}<br>{web}<br>{" ".join(icons)}'
 
 
 def card_table(cards):

@@ -6,11 +6,15 @@ on:
     tags: ['desktop-v*']
     paths:
       - 'desktop/**'
+      - 'tools/pc-games/catalog.json'
+      - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
       - 'resource/launcher/puretv/app/src/main/assets/layout.json'
   pull_request:
     paths:
       - 'desktop/**'
+      - 'tools/pc-games/catalog.json'
+      - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
       - 'resource/launcher/puretv/app/src/main/assets/layout.json'
   workflow_dispatch:
@@ -64,6 +68,31 @@ jobs:
         working-directory: ${{ runner.temp }}
         run: git config --global core.longpaths true
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /desktop/
+            /tools/pc-games/catalog.json
+            /tools/readme-app-games.json
+            /resource/launcher/*/layout.example.json
+            /resource/launcher/*/app/src/main/assets/layout.json
+            /resource/apps/*/resource.json
+            /resource/apps/*/logo.svg
+            /joystick-games/*/resource.json
+            /joystick-games/*/logo.svg
+      - name: Check out APK fixtures referenced by logo tests
+        working-directory: .
+        run: |
+          python - <<'PYTHON'
+          import json, subprocess
+          from pathlib import Path
+          apks = []
+          for root in ("resource/apps", "joystick-games"):
+              for metadata in Path(root).glob("*/resource.json"):
+                  package = json.loads(metadata.read_text(encoding="utf-8"))["apk"]
+                  apks.append("/" + (metadata.parent / package).as_posix())
+          subprocess.run(["git", "sparse-checkout", "add", "--stdin"], input="\n".join(apks) + "\n", text=True, check=True)
+          PYTHON
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -220,6 +249,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /desktop/src-tauri/tauri.conf.json
+            /desktop/docs/release-notes.md
       - uses: actions/download-artifact@v4
         with:
           pattern: puretv-manager-*

@@ -2,11 +2,11 @@
 
 **简体中文** · [English](README.en.md) · [返回首页](../../README.md) · [开发指南](development.md)
 
-pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电视上直接浏览、安装应用或检查更新，可以安装 putrtv 商城。要玩手柄游戏，在电视或电脑上安装所选游戏，再让手柄连接游戏。[电视端商城 APK 0.1.3](../../resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1) · [按类型浏览游戏](../../README.md#games)
+pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电视上直接浏览、安装应用或检查更新，可以安装 putrtv 商城。在电脑上玩游戏，可以从管理器的「游戏」栏目进入，也可以直接打开网页版。在电视上游玩时，先安装对应的游戏 APK，再连接手柄。[电视端商城 APK 0.1.3](../../resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1) · [按类型浏览游戏](../../README.md#games)
 
 ## 安装与升级电脑管理器
 
-从 **pureTV Manager 0.5.9** 发布页下载与电脑匹配的文件。发布页提供文件大小及 SHA256 校验清单。[下载 0.5.9](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9)
+从 **pureTV Manager 0.6.0** 发布页下载与电脑匹配的文件。发布页提供文件大小及 SHA256 校验清单。[下载 0.6.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0)
 
 | 电脑系统 | 安装方式 |
 | --- | --- |
@@ -14,7 +14,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 | macOS 11 及以上 | 按芯片选择 Apple Silicon ARM64 或 Intel x86_64 DMG。将 `pureTV Manager.app` 拖入「应用程序」，再从那里打开。管理器使用 ad-hoc 签名，尚未经过 Apple 公证。[首次打开与校验](../../desktop/README.md#macos-安装与首次打开) |
 | Linux x64 | 下载 DEB。客户端自动安装更新时使用系统的 `pkexec` 和 `dpkg`。 |
 
-**从 0.5.7 及更早版本升级，请先手动安装 0.5.9。** 退出旧管理器后覆盖安装即可，电视上的应用和管理器配置可以保留。旧客户端继续使用原下载地址，0.5.9 将 APK 市场和客户端更新迁移到了 `apps.b14f.com`。新管理器在启动后检查一次更新，也可点击左下角版本旁的「检查更新」。选择「下载并安装」后，它才下载、校验并交给更新助手安装、重启。应用内可更新的版本以服务器实际提供的对应平台文件为准。[客户端目录](https://apps.b14f.com/client/) · [分平台更新与旧版故障处理](../../desktop/docs/client-updates.md)
+**从 0.5.7 及更早版本升级，请手动安装 0.6.0。** 退出旧管理器后覆盖安装即可，电视上的应用和管理器配置可以保留。旧客户端继续使用原下载地址，0.5.9 将 APK 市场和客户端更新迁移到了 `apps.b14f.com`。新管理器在启动后检查一次更新，也可点击左下角版本旁的「检查更新」。选择「下载并安装」后，它才下载、校验并交给更新助手安装、重启。应用内可更新的版本以服务器实际提供的对应平台文件为准。[客户端目录](https://apps.b14f.com/client/) · [分平台更新与旧版故障处理](../../desktop/docs/client-updates.md)
 
 ![pureTV 管理器的晴空主题，画面使用模拟设备数据](../previews/manager-zh.png)
 
@@ -47,6 +47,12 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 ## 安装游戏与连接手柄
 
 ### 在电脑上玩
+
+电脑联网后，打开 pureTV Manager 左侧的「游戏」，点击游戏封面即可开始。键盘按键见游戏画面提示。使用 pureTV 无线手柄时，让手柄和电脑接入同一局域网，打开游戏后按手柄上的搜索键。游玩结束后，选择「返回游戏列表」即可换一款游戏。
+
+选择「浏览器中打开」，或在首页游戏卡片下点击「网页游玩」，即可直接在浏览器使用键盘游玩，无需安装管理器。[浏览全部网页游戏](https://ecojust.github.io/pureTV/)
+
+#### 使用独立安装包
 
 在首页找到游戏，点击苹果或 Windows 图标下载这款游戏的独立客户端。macOS 打开 DMG，将游戏拖入“应用程序”。Windows 运行安装程序后，从开始菜单打开游戏。[按游戏选择安装包](../../README.md#games)
 

@@ -87,3 +87,33 @@ test('reloading an existing room baselines previous counts and closes the old ev
   assert.equal(pc.snapshot().connections, 0);
   assert.equal(pc.info().wifiController.connected, false);
 });
+
+test('static pages accept controller snapshots only from the embedding Manager', () => {
+  const messages = [], listeners = new Map();
+  const parent = { postMessage: (data, origin) => messages.push([data.type, origin]) };
+  const sandbox = {
+    parent, pureTVPCConfig: { alias: 'TetrisHost' }, URLSearchParams,
+    location: { search: '?lang=en' },
+    document: { hidden: false, hasFocus: () => true, addEventListener() {} },
+    addEventListener: (name, fn) => listeners.set(name, fn),
+    removeEventListener: name => listeners.delete(name),
+  };
+  sandbox.window = sandbox;
+  vm.runInNewContext(readFileSync(join(__dirname, 'web-host.js'), 'utf8'), sandbox);
+  vm.runInNewContext(code, sandbox);
+  const origin = 'tauri://localhost';
+  const event = (source, origin, revision, players) => listeners.get('message')({
+    source, origin, data: { type: 'puretv:controller-state', state: { revision, players } }
+  });
+  assert.deepEqual(messages, [['puretv:game-ready', '*']]);
+  event({}, origin, 1, [player(1)]);
+  event(parent, 'https://untrusted.example', 1, [player(1)]);
+  assert.equal(JSON.parse(sandbox.TetrisHost.snapshot()).revision, -1);
+  event(parent, origin, 0, []);
+  event(parent, origin, 1, [player(1, { RIGHT: true }, { RIGHT: 1 })]);
+  assert.equal(JSON.parse(sandbox.TetrisHost.snapshot()).players[0].x, 1);
+  sandbox.TetrisHost.exit();
+  assert.deepEqual(messages[1], ['puretv:game-exit', origin]);
+  listeners.get('pagehide')();
+  assert.equal(listeners.has('message'), false);
+});

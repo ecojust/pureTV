@@ -3,6 +3,7 @@ import './styles.css';
 import {UnifiedEditor} from './unified-editor';
 import {PackageInfoDialog} from './package-info';
 import {ClientUpdater} from './client-updater';
+import {Games} from './games';
 import {Forum} from './forum';
 import {adbInfoPage} from './adb-info';
 import {unavailableLayoutApps} from './layout-apps';
@@ -14,13 +15,14 @@ import {version as appVersion} from '../package.json';
 import * as api from './bridge';
 import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketCatalog, type MarketSeenEntry, type MarketProgress, type MarketResult } from './types';
 
-type Page = 'connect' | 'apps' | 'launchers' | 'market' | 'forum' | 'install' | 'history' | 'info';
+type Page = 'connect' | 'apps' | 'launchers' | 'market' | 'games' | 'forum' | 'install' | 'history' | 'info';
 type Filter = 'all' | 'system' | 'enabled' | 'disabled' | 'recoverable';
 const pages: Record<Page, [string, string, string]> = {
   connect: ['设备连接', '连接电视，开始管理你的应用和桌面', 'monitor'],
   apps: ['应用管理', '查看电视中的应用，按需停用或恢复', 'grid'],
   launchers: ['启动器', '选择电视的默认桌面，随时回到原来的启动器', 'home'],
   market: ['APK市场', '发现电视应用与启动器，下载或安装到你的电视', 'store'],
+  games: ['游戏', '选择游戏，用键盘或手柄开始游玩', 'gamepad'],
   forum: ['论坛', '浏览社区帖子，交流使用体验与反馈', 'forum'],
   install: ['应用管理', '导入本地安装包，安装后可用于启动器排布', 'download'],
   history: ['操作记录', '逐项查看操作结果，确认电视上的实际变化', 'list'],
@@ -41,7 +43,7 @@ let filter: Filter = 'all', query = '', busy = false, busyLabel = '', cancelling
 type NoticeKind = 'info' | 'success' | 'error';
 let notice = '', noticeKind: NoticeKind = 'info';
 let noticeRequiresTelevision = false;
-const needsTelevision = (value: Page = page): boolean => !['market', 'forum', 'history', 'info'].includes(value);
+const needsTelevision = (value: Page = page): boolean => !['market', 'games', 'forum', 'history', 'info'].includes(value);
 let connectionEdited=false;
 let host = api.demo ? '192.168.1.50' : '', port = '5555', adbPath = '';
 let selected = new Set<string>();
@@ -125,6 +127,7 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const packageInfo = new PackageInfoDialog(() => snapshot);
+const games = new Games(error => showNotice(error, 'error'));
 const forum = new Forum(() => { if (page === 'forum') render(); });
 const clientUpdater = new ClientUpdater({
   busy: () => busy,
@@ -307,7 +310,7 @@ function adbPanel(): string {
 }
 function shell(): string {
   const [label, status] = deviceStatus();
-  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${page === 'info' ? '' : api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>${page === 'info' ? t('本地命令说明') : !needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : page === 'market' ? 'apps.b14f.com' : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
+  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${page === 'info' || page === 'games' ? '' : api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>${page === 'games' ? 'pureTV · GitHub Pages' : page === 'info' ? t('本地命令说明') : !needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : page === 'market' ? 'apps.b14f.com' : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
 }
 function syncSceneScale():void {const canvas=layoutDialog.querySelector<HTMLElement>('.scene-canvas');if(canvas)canvas.style.setProperty('--scene-unit',`${canvas.clientWidth/960}px`);}
 function scrollAreas():HTMLElement[]{return [...root.querySelectorAll<HTMLElement>('[data-scroll]'),...layoutDialog.querySelectorAll<HTMLElement>('[data-scroll]')];}
@@ -325,6 +328,7 @@ function render(): void {
   }
   rendering = true;
   try {
+    if (page !== 'games') games.close();
     syncMarketVisit();
     forum.syncActive(page === 'forum');
     for (const area of scrollAreas()) scrollPositions.set(area.dataset.scroll!, { top: area.scrollTop, left: area.scrollLeft });
@@ -344,6 +348,7 @@ function content(): string {
     case 'apps': return appTabs() + appsPage();
     case 'launchers': return launchersPage();
     case 'market': return marketPage();
+    case 'games': return games.render();
     case 'forum': return forum.render();
     case 'install': return appTabs() + installPage();
     case 'history': return historyPage();
@@ -1048,6 +1053,10 @@ document.addEventListener('click', event => {
   if (target.closest('.brand')) { event.preventDefault(); page = 'connect'; render(); return; }
   const nav = target.closest<HTMLButtonElement>('[data-page]');
   if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
+  const playGame = target.closest<HTMLButtonElement>('[data-play-game]');
+  if (playGame) { games.open(playGame.dataset.playGame!); return; }
+  const browserGame = target.closest<HTMLButtonElement>('button[data-browser-game]');
+  if (browserGame) { games.openBrowser(browserGame.dataset.browserGame!); return; }
   const forumButton = target.closest<HTMLButtonElement>('[data-forum-action]');
   if (forumButton) { void forum.action(forumButton); return; }
   const marketTab = target.closest<HTMLButtonElement>('[data-market-category]');
@@ -1081,6 +1090,10 @@ document.addEventListener('change', event => {
     if (card) card.outerHTML = marketCard(group);
     Array.from(root.querySelectorAll<HTMLSelectElement>('[data-market-version]')).find(select => select.dataset.marketVersion === group.id)?.focus({preventScroll: true});
     return;
+  }
+  if (control.name === 'gameGroup') {
+    games.setGroup(control.value); render();
+    root.querySelector<HTMLElement>('[name="gameGroup"]')?.focus({preventScroll:true}); return;
   }
   if(control.name==='locale'){setLocale(control.value);render();void api.setInterfacePreferences({locale:control.value}).catch(error=>showNotice(String(error),'error'));return;}
   if(control.name==='theme'){setTheme(control.value);render();void api.setInterfacePreferences({theme:control.value}).catch(error=>showNotice(String(error),'error'));return;}

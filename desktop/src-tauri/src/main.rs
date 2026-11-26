@@ -5,6 +5,7 @@ mod app_store;
 mod client_install;
 mod client_updates;
 mod forum;
+mod game_controllers;
 mod launcher_covers;
 mod market;
 mod market_seen;
@@ -766,6 +767,20 @@ fn pick_adb(app: &tauri::AppHandle) -> Result<Option<String>, String> {
 }
 
 #[tauri::command]
+fn open_web_game(id: &str, language: &str, app: tauri::AppHandle) -> Result<(), String> {
+    let catalog: Vec<serde_json::Value> =
+        serde_json::from_str(include_str!("../../../tools/pc-games/catalog.json"))
+            .map_err(|_| "游戏目录无效")?;
+    if !matches!(language, "zh" | "en") || !catalog.iter().any(|game| game["id"] == id) {
+        return Err("游戏或语言无效".into());
+    }
+    let url = format!("https://ecojust.github.io/pureTV/games/{id}/tv.html?lang={language}");
+    app.opener()
+        .open_url(url, None::<&str>)
+        .map_err(|_| "无法打开浏览器".into())
+}
+
+#[tauri::command]
 fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
     let url = match resource {
         "repository" => "https://github.com/ecojust/pureTV",
@@ -1174,6 +1189,68 @@ fn mcp_call(
     result
 }
 
+#[derive(Default)]
+struct GameControllers(Mutex<Option<game_controllers::Server>>);
+
+impl GameControllers {
+    fn close(&self) {
+        if let Ok(mut active) = self.0.lock() {
+            active.take();
+        }
+    }
+}
+
+#[tauri::command]
+fn start_game_controllers(
+    players: usize,
+    app: tauri::AppHandle,
+    controllers: tauri::State<'_, GameControllers>,
+) -> Result<game_controllers::Info, String> {
+    let mut active = controllers.0.lock().map_err(|_| "手柄服务不可用")?;
+    drop(active.take());
+    let addresses = puretv_core::read_local_network()
+        .addresses
+        .into_iter()
+        .map(|address| address.ip)
+        .collect();
+    let server = game_controllers::Server::start(players, addresses, move |state| {
+        let _ = app.emit_to("main", "game-controller-state", state);
+    })?;
+    let info = server.info.clone();
+    *active = Some(server);
+    Ok(info)
+}
+
+#[tauri::command]
+fn stop_game_controllers(
+    session: String,
+    controllers: tauri::State<'_, GameControllers>,
+) -> Result<(), String> {
+    let mut active = controllers.0.lock().map_err(|_| "手柄服务不可用")?;
+    if active
+        .as_ref()
+        .is_some_and(|server| server.info.session == session)
+    {
+        active.take();
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn game_controller_state(
+    session: String,
+    controllers: tauri::State<'_, GameControllers>,
+) -> Result<Value, String> {
+    controllers
+        .0
+        .lock()
+        .map_err(|_| "手柄服务不可用")?
+        .as_ref()
+        .filter(|server| server.info.session == session)
+        .map(|server| server.snapshot())
+        .ok_or_else(|| "手柄服务已关闭".to_string())
+}
+
 fn main() {
     let args: Vec<_> = std::env::args_os().collect();
     if let Some(code) = client_install::helper_entry(&args) {
@@ -1193,6 +1270,13 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .manage(GameControllers::default())
+        .on_page_load(|webview, load| {
+            // A reload can discard the page before its async cleanup reaches the shell.
+            if webview.label() == "main" && load.event() == tauri::webview::PageLoadEvent::Started {
+                webview.state::<GameControllers>().close();
+            }
+        })
         .setup(|app| {
             let directory = app.path().app_data_dir()?;
             let cancel = Arc::new(AtomicBool::new(false));
@@ -1263,6 +1347,7 @@ fn main() {
             download_market_item,
             install_market_item,
             open_resource,
+            open_web_game,
             get_forum_posts,
             get_forum_post,
             get_forum_replies,
@@ -1273,11 +1358,17 @@ fn main() {
             client_update_result,
             get_package_insight,
             open_package_resource,
+            start_game_controllers,
+            stop_game_controllers,
+            game_controller_state,
             mcp_info
         ])
         .build(tauri::generate_context!())
         .expect("无法启动 pureTV 电视管理器")
         .run(|app, event| {
+            if matches!(event, tauri::RunEvent::Exit) {
+                app.state::<GameControllers>().close();
+            }
             if let tauri::RunEvent::ExitRequested { api, .. } = event {
                 if request_shutdown(app) {
                     api.prevent_exit();
