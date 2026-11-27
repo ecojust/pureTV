@@ -1,5 +1,6 @@
 import {invoke} from '@tauri-apps/api/core';
 import {listen, type UnlistenFn} from '@tauri-apps/api/event';
+import {getCurrentWindow} from '@tauri-apps/api/window';
 import catalog from '../../tools/pc-games/catalog.json';
 import sections from '../../tools/readme-app-games.json';
 import {desktop} from './bridge';
@@ -24,6 +25,7 @@ type ActiveGame = {
   game:Game;
   frame:HTMLIFrameElement;
   ready:boolean;
+  enteredFullscreen?:boolean;
   controller?:ControllerSession;
   snapshot?:ControllerState;
   unlisten?:UnlistenFn;
@@ -33,12 +35,6 @@ function gameName(game:Game) { return gameLanguage() === 'en' ? game.en : game.z
 function gameUrl(id:string) { return gamesBase + encodeURIComponent(id) + '/tv.html?lang=' + gameLanguage(); }
 const escape = (value:string) => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!));
 
-function browserLink(game:Game):string {
-  const label = t('浏览器中打开');
-  const attrs = `class="game-browser-link" data-browser-game="${escape(game.id)}" aria-label="${escape(label + ' · ' + gameName(game))}"`;
-  return desktop ? `<button type="button" ${attrs}>${label} ↗</button>` : `<a ${attrs} href="${gameUrl(game.id)}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`;
-}
-
 export class Games {
   private group = '';
   private player = document.createElement('dialog');
@@ -47,7 +43,9 @@ export class Games {
   // Finish late starts and stops in order when a player exits and opens another title.
   private socketWork = Promise.resolve();
 
-  constructor(private notify:(error:string)=>void) {
+  private windowWork = Promise.resolve();
+
+  constructor() {
     this.player.className = 'game-player';
     this.player.setAttribute('aria-labelledby', 'game-player-title');
     document.body.append(this.player);
@@ -75,7 +73,7 @@ export class Games {
     const options = groups.map(group => `<option value="${group.id}"${group.id === this.group ? ' selected' : ''}>${escape(locale() === 'en' ? group.en : t(group.zh))}</option>`).join('');
     const cards = shown.flatMap(section => section.games).map(game => {
       const id = game.id;
-      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}"><img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/thumb.png" alt=""><strong>${escape(gameName(game))}</strong></button>${browserLink(game)}</article>`;
+      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}"><img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/thumb.png" alt=""><strong>${escape(gameName(game))}</strong></button></article>`;
     });
     return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${cards.length}</span></div><div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards.join('')}</div>`;
   }
@@ -85,7 +83,9 @@ export class Games {
   open(id:string):void {
     const game = games.get(id);
     if (!game || this.active) return;
-    this.player.innerHTML = `<div class="game-player-toolbar"><button type="button" data-close-game>← ${t('返回游戏列表')}</button><h2 id="game-player-title">${escape(gameName(game))}</h2>${browserLink(game)}</div><div class="game-status" role="status"><span data-frame-status></span><span data-socket-status></span></div>`;
+    const content = document.createElement('div');
+    content.className = 'game-player-content';
+    content.innerHTML = `<div class="game-player-toolbar"><button type="button" data-close-game>← ${t('返回游戏列表')}</button><h2 id="game-player-title">${escape(gameName(game))}</h2></div><div class="game-status" role="status"><span data-frame-status></span><span data-socket-status></span></div>`;
     const frame = document.createElement('iframe');
     frame.title = gameName(game);
     frame.allow = 'gamepad; fullscreen; autoplay';
@@ -93,11 +93,23 @@ export class Games {
     frame.src = gameUrl(id);
     const active:ActiveGame = {game, frame, ready:false};
     this.active = active;
+    content.append(frame);
+    this.player.append(content);
     this.status('[data-frame-status]', t('正在加载游戏…'));
-    this.player.append(frame);
     this.player.showModal();
+    if (desktop) {
+      this.windowWork = this.windowWork.then(async () => {
+        const appWindow = getCurrentWindow();
+        if (!await appWindow.isFullscreen() && this.active === active) {
+          await appWindow.setFullscreen(true);
+          active.enteredFullscreen = true;
+        }
+      }).catch(() => {}); // The player still fills the window if fullscreen is unavailable.
+    } else {
+      void content.requestFullscreen?.().catch(() => {});
+    }
     this.readyTimeout = window.setTimeout(() => {
-      this.status('[data-frame-status]', t('游戏加载较慢，请检查网络或在浏览器中打开。'));
+      this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
     }, 25000);
     if (desktop) {
       this.status('[data-socket-status]', t('正在启动无线手柄服务…'));
@@ -105,15 +117,6 @@ export class Games {
         if (this.active === active) this.status('[data-socket-status]', t('无线手柄服务不可用，仍可使用键盘游玩。'));
       });
     }
-  }
-
-  openBrowser(id:string):void {
-    if (!desktop || !games.has(id)) return;
-    void invoke('open_web_game', {id, language:gameLanguage()}).catch(() => {
-      const error = t('无法打开系统浏览器。');
-      if (this.active) this.status('[data-frame-status]', error);
-      else this.notify(error);
-    });
   }
 
   private async startControllers(active:ActiveGame):Promise<void> {
@@ -165,6 +168,11 @@ export class Games {
     active.unlisten?.();
     const session = active.controller?.session;
     if (session) this.socketWork = this.socketWork.then(() => invoke<void>('stop_game_controllers', {session})).catch(() => {});
+    if (desktop) {
+      this.windowWork = this.windowWork.then(async () => {
+        if (active.enteredFullscreen) await getCurrentWindow().setFullscreen(false);
+      }).catch(() => {});
+    }
     this.player.close();
     this.player.replaceChildren();
     document.querySelector<HTMLElement>(`[data-play-game="${CSS.escape(active.game.id)}"]`)?.focus({preventScroll:true});

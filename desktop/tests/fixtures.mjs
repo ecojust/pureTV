@@ -141,6 +141,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
     window.__gameCommands = [];
+    window.__windowFullscreen = false;
     let gameSession = 0;
     window.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
       unregisterListener(event, id) {
@@ -150,12 +151,15 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     };
     window.__networkReads=0; window.__requests = []; window.__pickerCalls = 0; window.__xss = false; window.__toolsInstalls = 0; window.__resources = [];
     window.__TAURI_INTERNALS__ = {
+      metadata: {currentWindow:{label:'main'}},
       transformCallback: callback => { const id = nextCallback++; callbacks.set(id, callback); return id; },
       unregisterCallback: id => { callbacks.delete(id); },
       invoke: async (command, args = {}) => {
         if (command === 'plugin:event|listen') { (window.__eventListeners[args.event] ||= []).push(args.handler); return args.handler; }
         if (command === 'plugin:event|unlisten') return;
-        if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers', 'open_web_game'].includes(command)) {
+        if (command === 'plugin:window|is_fullscreen') return window.__windowFullscreen;
+        if (command === 'plugin:window|set_fullscreen') { window.__windowFullscreen = args.value; return; }
+        if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers'].includes(command)) {
           window.__gameCommands.push({command, ...args});
           if (command === 'start_game_controllers') {
             return {session: String(++gameSession), port: 63485, addresses: ['192.168.0.2'], discovery: true};

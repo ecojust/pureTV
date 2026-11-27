@@ -1861,18 +1861,15 @@ select { box-sizing:border-box; height:38px; min-height:38px; line-height:normal
   flex:1; min-height:0; overflow:auto; overscroll-behavior:contain;
   display:grid; align-content:start; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; padding:4px 10px 8px 3px;
 }
-.web-game-card { min-width:0; padding-bottom:10px; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
-.web-game-cover { width:100%; display:block; text-align:left; border:0; border-radius:11px 11px 0 0; padding:0; overflow:hidden; }
+.web-game-card { min-width:0; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
+.web-game-cover { width:100%; height:100%; display:block; text-align:left; border:0; border-radius:11px; padding:0; overflow:hidden; }
 .web-game-cover img { display:block; width:100%; aspect-ratio:16 / 9; object-fit:cover; background:var(--surface-soft); }
-.web-game-cover strong { display:block; padding:10px 12px 4px; overflow-wrap:anywhere; color:var(--text-strong); font-size:16px; }
-.game-browser-link { display:inline-block; min-height:0; border:0; margin:0; padding:5px 12px; color:var(--green); background:transparent; text-decoration:none; font-size:12px; }
-.game-browser-link:hover { text-decoration:underline; }
+.web-game-cover strong { display:block; padding:10px 12px; overflow-wrap:anywhere; color:var(--text-strong); font-size:16px; }
 .game-player {
-  width:calc(100vw - 24px); height:calc(100vh - 24px); max-width:none; max-height:none; margin:auto;
-  padding:0; color:var(--text); background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  width:100%; height:100%; max-width:none; max-height:none; margin:0;
+  padding:0; color:var(--text); background:var(--surface); border:0; border-radius:0; overflow:hidden;
 }
-.game-player[open] { display:flex; flex-direction:column; }
-.game-player::backdrop { background:rgb(0 0 0 / 65%); }
+.game-player-content { display:flex; flex-direction:column; width:100%; height:100%; background:var(--surface); }
 .game-player-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:8px 12px; }
 .game-player-toolbar h2 { margin:0; flex:1; font-size:16px; }
 .game-status { padding:0 12px; color:var(--muted); font-size:12px; }

@@ -767,20 +767,6 @@ fn pick_adb(app: &tauri::AppHandle) -> Result<Option<String>, String> {
 }
 
 #[tauri::command]
-fn open_web_game(id: &str, language: &str, app: tauri::AppHandle) -> Result<(), String> {
-    let catalog: Vec<serde_json::Value> =
-        serde_json::from_str(include_str!("../../../tools/pc-games/catalog.json"))
-            .map_err(|_| "游戏目录无效")?;
-    if !matches!(language, "zh" | "en") || !catalog.iter().any(|game| game["id"] == id) {
-        return Err("游戏或语言无效".into());
-    }
-    let url = format!("https://ecojust.github.io/pureTV/games/{id}/tv.html?lang={language}");
-    app.opener()
-        .open_url(url, None::<&str>)
-        .map_err(|_| "无法打开浏览器".into())
-}
-
-#[tauri::command]
 fn open_resource(resource: &str, app: tauri::AppHandle) -> Result<(), String> {
     let url = match resource {
         "repository" => "https://github.com/ecojust/pureTV",
@@ -1347,7 +1333,6 @@ fn main() {
             download_market_item,
             install_market_item,
             open_resource,
-            open_web_game,
             get_forum_posts,
             get_forum_post,
             get_forum_replies,

@@ -48,9 +48,9 @@ The TV store uses the same Media, Games and Launchers directories as the desktop
 
 ### Play on a computer
 
-Connect your computer to the internet, open **Games** in pureTV Manager and select a game cover. Use the keyboard controls shown by the game. For a pureTV Wi-Fi controller, connect it to the same LAN as the computer and press its search button while the game is open. Choose **Back to games** to leave the session and select another title.
+Connect your computer to the internet, open **Games** in pureTV Manager and select a cover to play the game full screen in the manager. Use the keyboard controls shown by the game. For a pureTV Wi-Fi controller, connect it to the same LAN as the computer and press its search button while the game is open. Choose **Back to games** to leave the session and select another title.
 
-Choose **Open in browser** to play the web version, or select **Play in browser** on a homepage game card. The browser version supports keyboard play without installing the manager. [Browse web games](https://ecojust.github.io/pureTV/)
+To play from the project homepage, select **Play in browser** on a game card. The browser version supports keyboard play without installing the manager. [Browse web games](https://ecojust.github.io/pureTV/)
 
 #### Use a standalone installer
 
