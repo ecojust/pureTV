@@ -6,6 +6,6 @@
 - pureTV 手柄在菜单用方向键选择、A 确认、START 开始。飞行中用方向键控制俯仰和横滚，A/B 加减推力，同时按 A 和 B 切换刹车，X 切换襟翼挡位，Y 收放起落架，START 暂停或恢复。
 - 成绩卡记录着陆表现，可继续滑跑、回放或重新飞行。[中文飞行指南](public/guide/index.html)
 
-在本目录使用 Node.js 22 或更新版本运行 `npm ci`、`npm run build` 与 `npm run build:check`。通过 HTTP 服务打开 `dist/tv.html`。构建校验会重新生成资源并逐文件比对。使用仓库内共享的 pureTV 手柄输入模块，与飞行模拟的既有键盘、触屏和标准游戏手柄输入配合。
+在本目录使用 Node.js 22.12 或更新版本运行 `npm ci`、`npm run build` 与 `npm run build:check`。通过 HTTP 服务打开 `dist/tv.html`。构建校验会重新生成资源并逐文件比对。使用仓库内共享的 pureTV 手柄输入模块，与飞行模拟的既有键盘、触屏和标准游戏手柄输入配合。
 
 [上游与授权说明](NOTICE.md) · [游戏源码许可证](LICENSE)

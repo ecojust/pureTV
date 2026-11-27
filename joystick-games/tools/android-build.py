@@ -20,6 +20,12 @@ LEGACY_PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'c
 REGISTRY = 'joystick-games/catalog-registry.json'
 CATALOG_WORKFLOW = '.github/workflows/joystick-catalog-android.yml'
 PHONE = ('controller.html', 'controller.js', 'controller.css')
+# These upstream layouts use build inputs outside the conventional src/ tree.
+GAME_BUILD_FILES = {
+    'claude-of-tanks': ('input.patch', 'puretv-input.js', 'zh.js', 'THIRD-PARTY-NOTICES.txt'),
+    'openaero-dfw': ('tv.html', 'vite.config.js', 'postcss.config.js', 'tailwind.config.js'),
+}
+GAME_BUILD_DIRECTORIES = {'openaero-dfw': ('public',)}
 POLICY_PATH = 'joystick-games/tools/asset-policy.py'
 policy_spec = importlib.util.spec_from_file_location('joystick_asset_policy', Path(__file__).with_name('asset-policy.py'))
 asset_policy = importlib.util.module_from_spec(policy_spec)
@@ -115,8 +121,8 @@ def target_sdk(slug):
     if slug == 'backroad-rally':
         return 35
     if slug in (
-        'bloom-hop', 'clawd-pop', 'dolmus', 'gogh-strike', 'kaboom-arena', 'kart-royale',
-        'lumenrift', 'marti', 'mechapede', 'nerd-of-duty', 'nova-lancer', 'operation-ironhold',
+        'bloom-hop', 'claude-of-tanks', 'clawd-pop', 'dolmus', 'gogh-strike', 'kaboom-arena', 'kart-royale',
+        'lumenrift', 'marti', 'mechapede', 'nerd-of-duty', 'nova-lancer', 'openaero-dfw', 'operation-ironhold',
         'ponpoko-kart', 'saber-magic-tower', 'starbase-spooky', 'turbo-kart-rally',
     ):
         target = metadata(slug).get('androidTargetSdk', 29)
@@ -154,7 +160,9 @@ def sources(slug):
     paths += [ROOT / name for name in ARTWORK_TOOLS]
     paths.append(source_image(game))
     paths += [KIT / 'web' / name for name in PHONE]
-    for folder in [KIT / 'android/src/main', game / 'src', game / 'dist', ROOT / 'joystick-games/shared/web']:
+    paths.extend(game / name for name in GAME_BUILD_FILES.get(slug, ()))
+    extra_folders = [game / name for name in GAME_BUILD_DIRECTORIES.get(slug, ())]
+    for folder in [KIT / 'android/src/main', game / 'src', game / 'dist', ROOT / 'joystick-games/shared/web', *extra_folders]:
         assert folder.is_dir() and not folder.is_symlink(), str(folder)
         for path in folder.rglob('*'):
             assert not path.is_symlink(), str(path)

@@ -52,7 +52,7 @@ def wait_for(page, condition, label, timeout=40):
 
 
 @contextlib.contextmanager
-def desktop(slug, package):
+def desktop(slug, package, language="en"):
     command = [
         sys.executable,
         "-u",
@@ -62,7 +62,7 @@ def desktop(slug, package):
         "--apk",
         str(package),
         "--language",
-        "en",
+        language,
         "--no-browser",
         "--http-port",
         "0",

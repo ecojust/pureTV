@@ -1,6 +1,7 @@
 // The results card (lazy chunk, loaded by main.js at the touchdown or a drill's end): the
 // grade, score, personal best, the stabilized-gate verdict and one bar per factor. DOM only;
 // main.js pauses the flight first (in the air, 0047; on the rollout, 0106).
+import { GATE_ITEM_NAMES } from './aero.js';
 import { GRADE_COLOURS } from './landing.js';
 import { flightResultText } from './resultTextZh.js';
 import { landingTip } from './landingTip.js';
@@ -20,7 +21,7 @@ export function showResults(sim, result, best, end, gate, replayBuf = null) {
   gradeEl.textContent = result.grade === 'CRASH' ? '坠机' : result.grade;
   gradeEl.className = `${result.grade === 'CRASH' ? 'text-2xl' : 'text-5xl'} font-black w-20 text-center ${GRADE_COLOURS[result.grade]}`;
   byId('txtScore').textContent = String(result.score);
-  byId('txtResultRunway').textContent = end.name;
+  byId('txtResultRunway').textContent = flightResultText(end.name);
   const reason = byId('txtGradeReason');
   // A tank run dry (fuel.js, 0162) says so first: the engine didn't just fail.
   const why = [sim.fuelOut && '燃油耗尽，发动机已停止。', flightResultText(result.reason)].filter(Boolean).join(' ');
@@ -40,7 +41,7 @@ export function showResults(sim, result, best, end, gate, replayBuf = null) {
   gateEl.classList.toggle('hidden', !gate && !result.note);
   if (gate) {
     gateEl.textContent = gate.stable ? `${gate.gateHeight} 英尺处进近稳定 ✓`
-      : `${gate.gateHeight} 英尺处进近不稳定 ✗ ${gate.failing.join(', ')}`;
+      : `${gate.gateHeight} 英尺处进近不稳定 ✗ ${gate.failing.map(item => GATE_ITEM_NAMES[item] ?? item).join('、')}`;
     // The drill flown back to stable: landing was the right call (0047).
     if (gate.stable && sim.goAround) gateEl.textContent += ' 已恢复稳定，可以着陆。';
     if ((result.wake || result.shortField || result.noFlap || result.entry || result.wingLow) && result.note) gateEl.textContent += ` · ${flightResultText(result.note)}`; // the wake (0115), short-field (0181) and pattern-entry (0187) and wing-low (0188) lessons' verdicts beside the gate's
