@@ -37,6 +37,21 @@
         document.getElementById('player-' + id)?.toggleAttribute('data-game-player', joined);
       }
     };
+  } else if (['last-track', 'night-racer', 'ponpoko-kart', 'turbo-kart-rally', 'turbo-kart-rush'].includes(game)) {
+    document.documentElement.setAttribute('data-controller-guide', '');
+    document.addEventListener('DOMContentLoaded', () => {
+      // The guide is attached to the body during each game's asynchronous startup.
+      const observer = new MutationObserver(labelGuide);
+      function labelGuide() {
+        const panel = document.getElementById('puretv-controller-panel');
+        if (panel) {
+          panel.setAttribute('aria-label', language === 'en' ? 'Game controls' : '游戏操作说明');
+          observer.disconnect();
+        }
+      }
+      observer.observe(document.body, {childList: true});
+      labelGuide();
+    }, {once: true});
   }
 
   function managerOrigin(origin) {

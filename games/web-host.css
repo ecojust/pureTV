@@ -4,10 +4,7 @@ html[data-puretv-game] #puretv-controller-panel {
 }
 
 /* Five racing games also append their own control legend to the SDK panel. */
-html:is([data-puretv-game="last-track"], [data-puretv-game="night-racer"],
-        [data-puretv-game="ponpoko-kart"], [data-puretv-game="turbo-kart-rally"],
-        [data-puretv-game="turbo-kart-rush"])
-  #puretv-controller-panel:not([hidden]):not([data-playing="true"]) {
+html[data-controller-guide] #puretv-controller-panel:not([hidden]):not([data-playing="true"]) {
   display: block !important;
 }
 #puretv-controller-panel > :not(.lasttrack-controller-help, #tv-help, .tv-control-help, .tv-mapping, .tv-help) {
