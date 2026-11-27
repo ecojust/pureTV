@@ -88,9 +88,9 @@
 
 <!-- game-index:start -->
 
-**48 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 48 款 · macOS 独立安装包 46 款 · Windows x64 独立安装包 46 款
+**50 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 50 款 · macOS 独立安装包 46 款 · Windows x64 独立安装包 46 款
 
-[竞速与体育（14）](#controller-racing) · [动作、角色扮演与探索（9）](#controller-action) · [飞行模拟（1）](#controller-flight) · [平台、弹幕与街机（8）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（14）](#controller-puzzle)
+[竞速与体育（14）](#controller-racing) · [动作、角色扮演与探索（9）](#controller-action) · [飞行模拟（1）](#controller-flight) · [平台、弹幕与街机（9）](#controller-arcade) · [策略、塔防与卡牌（3）](#controller-strategy) · [解谜与益智（14）](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
@@ -163,7 +163,7 @@
 
 <a id="controller-arcade"></a>
 
-### 平台、弹幕与街机（8）
+### 平台、弹幕与街机（9）
 
 <table>
   <tr>
@@ -178,17 +178,23 @@
     <td align="center" valign="top" width="207"><a href="joystick-games/mechapede/"><img src="joystick-games/mechapede/thumb.png" width="180" alt=""><br>机甲蜈蚣</a><br><a href="https://ecojust.github.io/pureTV/games/mechapede/tv.html">网页游玩</a><br><a href="joystick-games/mechapede/mechapede-0.1.1.apk?raw=1" title="机甲蜈蚣 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="机甲蜈蚣 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/mechapede-macos.dmg" title="机甲蜈蚣 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="机甲蜈蚣 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/mechapede-windows-x64-setup.exe" title="机甲蜈蚣 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="机甲蜈蚣 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/davbachman/Mechapede" title="机甲蜈蚣 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="机甲蜈蚣 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/marti/"><img src="joystick-games/marti/thumb.png" width="180" alt=""><br>马尔蒂 · 博斯普鲁斯海鸥</a><br><a href="https://ecojust.github.io/pureTV/games/marti/tv.html">网页游玩</a><br><a href="joystick-games/marti/marti-0.1.1.apk?raw=1" title="马尔蒂 · 博斯普鲁斯海鸥 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/marti-macos.dmg" title="马尔蒂 · 博斯普鲁斯海鸥 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/marti-windows-x64-setup.exe" title="马尔蒂 · 博斯普鲁斯海鸥 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/Furkiozknn/marti" title="马尔蒂 · 博斯普鲁斯海鸥 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 · 原作仓库"></a></td>
   </tr>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/zof-duty/"><img src="joystick-games/zof-duty/thumb.png" width="180" alt=""><br>光球挑战</a><br><a href="https://ecojust.github.io/pureTV/games/zof-duty/tv.html">网页游玩</a><br><a href="joystick-games/zof-duty/zof-duty-0.1.0.apk?raw=1" title="光球挑战 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="光球挑战 Android TV APK"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/mike007jd/ZofDuty" title="光球挑战 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="光球挑战 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+  </tr>
 </table>
 
 <a id="controller-strategy"></a>
 
-### 策略、塔防与卡牌（2）
+### 策略、塔防与卡牌（3）
 
 <table>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/emberbrood/"><img src="joystick-games/emberbrood/thumb.png" width="180" alt=""><br>Emberbrood · 余烬龙裔</a><br><a href="https://ecojust.github.io/pureTV/games/emberbrood/tv.html">网页游玩</a><br><a href="joystick-games/emberbrood/emberbrood-0.1.4.apk?raw=1" title="Emberbrood · 余烬龙裔 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Emberbrood · 余烬龙裔 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/emberbrood-macos.dmg" title="Emberbrood · 余烬龙裔 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Emberbrood · 余烬龙裔 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/emberbrood-windows-x64-setup.exe" title="Emberbrood · 余烬龙裔 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Emberbrood · 余烬龙裔 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/triptych/web-games-andrew" title="Emberbrood · 余烬龙裔 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Emberbrood · 余烬龙裔 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/lumenrift/"><img src="joystick-games/lumenrift/docs/night-one-1280.jpg" width="180" alt=""><br>光隙守望</a><br><a href="https://ecojust.github.io/pureTV/games/lumenrift/tv.html">网页游玩</a><br><a href="joystick-games/lumenrift/lumenrift-0.1.3.apk?raw=1" title="光隙守望 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="光隙守望 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/lumenrift-macos.dmg" title="光隙守望 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="光隙守望 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/lumenrift-windows-x64-setup.exe" title="光隙守望 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="光隙守望 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/WhiteBlackGoose/Lumenrift" title="光隙守望 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="光隙守望 · 原作仓库"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/starfall/"><img src="joystick-games/starfall/thumb.png" width="180" alt=""><br>星落舰队</a><br><a href="https://ecojust.github.io/pureTV/games/starfall/tv.html">网页游玩</a><br><a href="joystick-games/starfall/starfall-0.1.0.apk?raw=1" title="星落舰队 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="星落舰队 Android TV APK"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/e01-ai/starfall" title="星落舰队 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="星落舰队 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
 </table>

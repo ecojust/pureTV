@@ -1,5 +1,7 @@
 # 光球挑战
 
+[网页游玩](https://ecojust.github.io/pureTV/games/zof-duty/tv.html) · [Android TV 安装包](zof-duty-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt)
+
 青、橙和金色光球悬在三层轨道上。用光标脉冲点亮全部 15 颗，根据命中率与用时获得评级；连续命中可提高每颗光球的分数。
 
 |操作|手柄|键盘或触屏|
