@@ -1,0 +1,224 @@
+// Landing gear as wheels on oleo struts: a nose gear and two main gears at their real
+// positions, each a spring-damper with its own share of the weight. Pure (three.js math
+// only): flightModel.js calls it in every sub-step while any wheel can reach the ground.
+//
+// What it gives over one contact point under the centre of gravity: the mains touch first
+// and the nose comes down on its own (the weight sits ahead of the mains) unless the pilot
+// holds it off; the aircraft rotates about the main wheels on takeoff; a wing-low touchdown
+// lands on one main and rolls level; struts compress and rebound. The pedals steer the
+// nose wheel while it carries weight. The tyres' friction acts at each axle, below the CG,
+// so braking pitches the nose down onto its wheel; the brakes are on the mains only (toe
+// brakes on the C172, the 737's and F-16's main-wheel brakes; no nose-wheel brakes).
+//
+// spec.gear: { noseZ (m ahead of the CG, positive), mainZ (m aft), trackM (between the
+// mains), strokeM (static compression of the struts), zeta (damping ratio),
+// steerDeg (pedal nose-wheel steering), tail (optional, 0144: the tail's lowest point, [m aft,
+// m up] from the main tyres' contact, a stiff structural contact: it carries load, scrapes and
+// stops the rotation, in the air too, not a pitch clamp) }. The wheels hang so that standing still, level,
+// the CG sits spec.gearHeight above the ground (spawns and tests rely on it).
+// spec.inertia: { pitch, roll, yaw } kg·m² for the gear's moments.
+import { Vector3, Quaternion } from 'three';
+import { GRAVITY, MPS_TO_KTS } from './constants.js';
+import { brakeMu, ROLLING_MU } from './systems.js';
+
+const _r = new Vector3();
+const _w = new Vector3();
+const _f = new Vector3();
+const _m = new Vector3();
+const _omega = new Vector3();
+const _qi = new Quaternion();
+export const REBOUND = 3; // rebound damping over compression damping
+const BUMP_STOP = 10; // a bottomed strut's stiffness over its spring's
+
+// Per-wheel static load share and spring/damper constants, cached per spec.
+const cache = new WeakMap();
+export function gearConstants(spec) {
+  let c = cache.get(spec);
+  if (c) return c;
+  const g = spec.gear;
+  const wheelbase = g.noseZ + g.mainZ;
+  const noseShare = g.mainZ / wheelbase;              // moments about the CG
+  const loads = [noseShare, (1 - noseShare) / 2, (1 - noseShare) / 2].map((s) => s * spec.massKg * GRAVITY);
+  const masses = loads.map((l) => l / GRAVITY);
+  const k = loads.map((l) => l / g.strokeM);
+  const d = k.map((ki, i) => 2 * (g.zeta ?? 0.6) * Math.sqrt(ki * masses[i]));
+  // Body-frame axle positions (x right, y up, z aft): hung so the static strut is strokeM in.
+  const y = -(spec.gearHeight + g.strokeM);
+  const wheels = [
+    new Vector3(0, y, -g.noseZ),
+    new Vector3(-g.trackM / 2, y, g.mainZ),
+    new Vector3(g.trackM / 2, y, g.mainZ),
+  ];
+  if (g.tail) {
+    wheels.push(new Vector3(0, y + g.tail[1], g.mainZ + g.tail[0]));
+    // Its spring: our JSBSim C172's TAIL contact (20,000 lb/ft, ~2.9e5 N/m). Its damper is
+    // softer than JSBSim's 1,000 lb/ft/s (1.5e4 N·s/m, stable at JSBSim's own 1/120 s): the
+    // tail moves only ~120 kg of effective mass (its 3.7 m arm on the pitch inertia), and at
+    // the game's 1/60 s sub-step cap that damper overshot and threw the nose down at 260°/s.
+    // 4e3 (ζ ~0.34, no oleo rebound factor) damps in one step at 1/60 s.
+    k.push(29e4);
+    d.push(4e3);
+  }
+  c = { wheelbase, noseShare, k, d, wheels, maxStroke: g.strokeM * 2.5 };
+  cache.set(spec, c);
+  return c;
+}
+
+// Sums the struts' forces into `force` (world, N) and their moments about the CG into
+// `moment` (body axes, N·m), for a body whose ground is at groundY. Writes body.wheelLoads
+// [nose, left, right, tail if any] (N) and returns the wheels' total normal force.
+export function gearForces(body, spec, force, moment, dt = 0) {
+  const c = gearConstants(spec);
+  _omega.copy(body.angVel).applyQuaternion(body.quat); // body rates → world
+  _qi.copy(body.quat).invert();
+  let total = 0;
+  body.mainPitchMomentNm = 0; // the mains' nose-down moment (N·m), for the tail to work against
+  const loads = body.wheelLoads || (body.wheelLoads = c.wheels.map(() => 0));
+  for (let i = 0; i < c.wheels.length; i++) {
+    _r.copy(c.wheels[i]).applyQuaternion(body.quat);  // CG → axle, world
+    const wy = body.pos.y + _r.y;
+    let comp = body.groundY - wy;                     // how far the strut is pushed in
+    // Axle velocity: the body's plus the rotation's.
+    _w.copy(_omega).cross(_r).add(body.vel);
+    // The tail's stiff contact on ~120 kg (0214) is averaged over the step, not read at its start: read at the
+    // start, a tail that crosses into the runway during a step meets no force for it, and the spring then hands
+    // back energy it never took (at 1/60 s up to ~2.9 cm of a rotation's 1.7 m/s, ~8 kN more on the strike). With
+    // the axle moving at its present rate, the step's mean force is the spring at the mean penetration while in
+    // contact, spring and damper both times the share of the step in contact, so it reads the same at any dt.
+    let share = 1;
+    if (i === 3 && dt > 0) {
+      const end = comp - _w.y * dt;                   // the penetration at the step's end
+      if (comp <= 0 && end <= 0) { loads[i] = 0; continue; }
+      if (comp > 0 && end > 0) comp = (comp + end) / 2;
+      else { share = Math.max(comp, end) / Math.abs(end - comp); comp = Math.max(comp, end) / 2; }
+    }
+    if (comp <= 0) { loads[i] = 0; continue; }
+    // Oleos damp the rebound (extending, axle rising) harder than the compression: the
+    // struts settle instead of springing the airframe off the runway.
+    const damp = c.d[i] * (_w.y > 0 && i < 3 ? REBOUND : 1);
+    // Past its full stroke a strut is bottomed: a stiff stop (10× the spring), not slack,
+    // so hard braking can't fold the nose down onto the pitch floor (0082).
+    const n = share * Math.max(0, c.k[i] * (Math.min(comp, c.maxStroke) + BUMP_STOP * Math.max(0, comp - c.maxStroke)) - damp * _w.y);
+    loads[i] = n;
+    if (i < 3) total += n; // the wheels: a tail scrape alone is not on the ground
+    force.y += n;
+    // Moment of an upward force at the axle, into body axes.
+    _f.set(0, n, 0);
+    _m.copy(_r).cross(_f).applyQuaternion(_qi);
+    moment.add(_m);
+    if (i && i < 3) body.mainPitchMomentNm -= _m.x;
+  }
+  return total;
+}
+
+// The tyres' friction along the ground track, per wheel at its axle: rolling μ on every
+// wheel, the brakes (systems.js brakeMu) on the mains only. Adds the force (world, N) to
+// `force` and its moment about the CG (body axes) to `moment`: below the CG, braking pitches
+// the nose down. `fwd` is the horizontal unit vector along the nose, `vAlong` the
+// groundspeed along it (m/s). Needs body.wheelLoads from gearForces this sub-step.
+// body.surfaceMu: a softer surface's rolling μ in place of the runway's (0182's soft-field lesson). A game
+// choice for the brakes there: the larger of it and the paved brakes' μ (so a light pedal adds nothing over the
+// soft drag, and full brakes reach the paved muMax, above Raymer's soft-turf braked μ). The lesson only rolls on it
+// for its takeoff (main.js clears it at the card), so only an aborted roll brakes on it.
+export function gearFriction(body, spec, fwd, vAlong, force, moment) {
+  const loads = body.wheelLoads;
+  const rollMu = body.surfaceMu ?? ROLLING_MU;
+  const braked = Math.max(rollMu, brakeMu(spec, body.brakePress ?? 0, body.wetRunway, Math.abs(vAlong) * MPS_TO_KTS));
+  if (Math.abs(vAlong) <= 0.3) {
+    // Nearly stopped: static friction (no moment). The tyres hold whatever pushes along the
+    // nose (the METAR wind on a parked airplane, idle thrust: 0106) up to their grip, the
+    // brakes' on the mains and rolling resistance on the nose, and damp the speed left. A
+    // damper alone let any steady push creep it (a 737 at idle on its brakes, ~7 cm/s).
+    const grip = rollMu * Math.max(0, loads[0]) + braked * (Math.max(0, loads[1]) + Math.max(0, loads[2]));
+    const push = force.x * fwd.x + force.z * fwd.z;
+    const f = Math.max(-grip, Math.min(grip, -push - vAlong * spec.massKg * 2));
+    force.x += fwd.x * f;
+    force.z += fwd.z * f;
+    return;
+  }
+  const c = gearConstants(spec);
+  _qi.copy(body.quat).invert();
+  const s = -Math.sign(vAlong);
+  for (let i = 0; i < c.wheels.length; i++) {
+    // The tail scrapes at JSBSim's structural μ 0.5.
+    if (!(loads[i] > 0)) continue;
+    const f = s * (i ? i < 3 ? braked : 0.5 : rollMu) * loads[i];
+    _f.set(fwd.x * f, 0, fwd.z * f);
+    force.x += _f.x;
+    force.z += _f.z;
+    _r.copy(c.wheels[i]).applyQuaternion(body.quat);
+    _m.copy(_r).cross(_f).applyQuaternion(_qi);
+    moment.add(_m);
+  }
+}
+
+// Pedal steering of the nose wheel: the yaw rate a wheel turned by the pedals makes at this
+// groundspeed (rad/s, body y: + = nose left), while it carries weight; null when it doesn't.
+export function noseSteerYawRate(body, spec, alongMps) {
+  const c = gearConstants(spec);
+  if (!(body.wheelLoads?.[0] > 0)) return null;
+  const delta = -(body.rudderInput ?? 0) * (spec.gear.steerDeg ?? 7) * Math.PI / 180; // rudder + = yaw right
+  return alongMps * Math.tan(delta) / c.wheelbase;
+}
+
+// The loaded nose tyre holding the yaw rate the pedals steer (ticket 0110): the change in yaw
+// rate (rad/s) it makes this sub-step towards `errRate` (steered rate − current). Its pull
+// follows the nose wheel's load (NOSE_HOLD_PER_S at the static share, letting go as the elevator
+// or the lift unloads it at rotation), never more than its side grip can turn the airframe
+// (NOSE_SIDE_MU · load about the mains, through spec.inertia.yaw).
+export const NOSE_HOLD_PER_S = 30;
+export const NOSE_SIDE_MU = 0.5;
+export function noseWheelYawHold(body, spec, errRate, dt) {
+  const c = gearConstants(spec);
+  const load = Math.max(0, body.wheelLoads[0]);
+  const share = load / (c.noseShare * spec.massKg * GRAVITY);
+  const cap = (NOSE_SIDE_MU * load * c.wheelbase / spec.inertia.yaw) * dt;
+  const d = errRate * Math.min(1, dt * NOSE_HOLD_PER_S * Math.min(1, share));
+  return Math.max(-cap, Math.min(cap, d));
+}
+
+// Nearly stopped (0106), brakes set or not: turning the airframe about its CG scrubs every tyre
+// sideways, so the yaw is static friction. The yaw-rate change (rad/s) towards `errRate` this
+// sub-step, up to what the tyres' side grip (SCRUB_MU · load at each wheel's arm) can do through
+// spec.inertia.yaw: a parked airplane holds its heading against the wind, never more than that.
+export const SCRUB_MU = 0.8;
+export function wheelScrubYawHold(body, spec, errRate, dt) {
+  const g = spec.gear, l = body.wheelLoads;
+  const arm = Math.max(0, l[0]) * g.noseZ + (Math.max(0, l[1]) + Math.max(0, l[2])) * g.mainZ;
+  const cap = (SCRUB_MU * arm / spec.inertia.yaw) * dt;
+  return Math.max(-cap, Math.min(cap, errRate));
+}
+
+// The tail against the mains (rad/s², body x: + = nose up). The flight model's elevator is a
+// pitch-rate command tuned in the air, where most of a real tail's power goes into balancing
+// the static stability (flightModel.js models it softly about the trim α, 0090). On the ground that power works against
+// the weight on the main wheels: full elevator cancels the mains' moment at and above
+// 0.8 Vr, less as q falls with the square of the speed (so the nose can't be lifted at taxi
+// speeds, and it comes down by itself after touchdown with the stick neutral).
+export function tailVsMainsAccel(body, spec, iasKts) {
+  const m = body.mainPitchMomentNm ?? 0;
+  if (!(m > 0)) return 0;
+  // A coarse authority scale, the same for every flap: the 737 keeps its pre-0070 135 kt (gearVrKts),
+  // not the flaps 5 Vr 145, so its landings de-rotate as before.
+  const cap = Math.min(1, (iasKts / (0.8 * (spec.gearVrKts ?? spec.vrKts ?? spec.vrefKts))) ** 2);
+  return (-(body.elevInput ?? 0) * cap * m) / spec.inertia.pitch;
+}
+
+// Radio altitude (0122): the lowest main wheel's height over the ground (m), the struts
+// hanging out as they do in the air, so it reads 0 the moment a main tyre touches (and
+// stays 0 on the runway with the struts in). A radio altimeter is rigged to read 0 at
+// main-gear touchdown and the automatic callouts are wheel heights; the CG is gearHeight
+// + strokeM over the runway at that moment (~12 ft on a 737). Nose up lowers the mains
+// (they are aft of the CG), a bank lowers the low wing's main. No gear geometry: the CG's
+// height less gearHeight. Rigged to the mains: nose down, the nose wheel is lower (~4.5 ft at -5°
+// on a 737) and isn't read; past 90° of bank it reads high, where a real one loses lock. Allocates nothing.
+export function radioAltitudeM(body, spec) {
+  if (!spec.gear) return Math.max(0, body.pos.y - body.groundY - spec.gearHeight);
+  const c = gearConstants(spec), q = body.quat;
+  let low = Infinity;
+  for (let i = 1; i < 3; i++) {
+    _r.copy(c.wheels[i]).applyQuaternion(q);
+    if (_r.y < low) low = _r.y;
+  }
+  return Math.max(0, body.pos.y + low - body.groundY);
+}

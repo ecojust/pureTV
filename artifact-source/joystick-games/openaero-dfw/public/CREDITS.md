@@ -1,0 +1,63 @@
+# OpenAero DFW: third-party credits
+
+## JSBSim flight dynamics (`?fdm=jsbsim`)
+
+- **JSBSim** (https://github.com/JSBSim-Team/jsbsim), © the JSBSim team, licensed under the
+  **GNU Lesser General Public License v2.1** (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html).
+  The game loads it as a separate WebAssembly file (`assets/jsbsim_wasm-*.wasm`) only when
+  `?fdm=jsbsim` is used. That file can be replaced with your own build of JSBSim. The JSBSim
+  source is at the link above, and the exact build scripts are in the package below.
+- **@0x62/jsbsim-wasm** 1.2.4-beta.4 (https://github.com/0x62/jsbsim-wasm), © Benedict Lewis,
+  MIT. It is the Emscripten build of JSBSim and its TypeScript SDK.
+- The aircraft, engine and propeller files JSBSim flies (`jsbsim/`) were written for
+  OpenAero DFW from the Cessna 172S POH, Roskam's *Airplane Flight Dynamics* (Part I,
+  App. B), the Lycoming type certificate data and NACA TR-640. They are MIT, like the rest of
+  the repository, and are not derived from the GPL aircraft that ship with JSBSim.
+
+## Rapier physics (the ground vehicles)
+
+- **Rapier** (`@dimforge/rapier3d` 0.21.0, https://rapier.rs, https://github.com/dimforge/rapier),
+  © Sébastien Crozet (Dimforge) and the Rapier contributors, licensed under the **Apache License 2.0**
+  (https://www.apache.org/licenses/LICENSE-2.0). The rigid-body engine that drives the tow tractor at
+  KDFW. Loaded as a separate WebAssembly file (`assets/rapier_wasm3d_bg-*.wasm`) and its JavaScript
+  bindings, unmodified, only after you start flying.
+
+## Aircraft models
+
+- **Twin-jet** (`models/twinjet-v1.glb`, drawn for the 737-800): "jet airplane" by
+  **weirdybeardyman**, https://opengameart.org/content/jet-airplane, **CC0 1.0** (public
+  domain dedication). Changes: gear-down variant only; its external livery textures (not
+  included in the source file) dropped for plain paint; objects renamed; scaled to the
+  737-800's 39.5 m length (its span is then 30.8 m; the real jet's is 35.8 m) and seated on
+  the flight model's gear; meshopt-compressed
+  (`scripts/models/blend-to-glb.py`, `scripts/build-models.mjs`). A generic airliner shape,
+  not a Boeing replica, and no airline livery.
+- Loaded with three.js's `GLTFLoader` and the **meshoptimizer** decoder (© Arseny
+  Kapoulkine, MIT), bundled with the game.
+
+## Imagery and elevation
+
+- Satellite imagery © Esri, Maxar, Earthstar Geographics.
+- Elevation: USGS 3DEP via AWS Terrain Tiles.
+- Photorealistic 3D Tiles © Google (credited on screen while shown).
+
+## Airspace
+
+- DFW Class B shelves on the moving map (`airspace/dfw-classb-v1.json`, baked by
+  `scripts/bake-airspace.mjs`): **FAA Aeronautical Information Services, Class Airspace**
+  (https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Class_Airspace/FeatureServer/0),
+  a US Government work in the public domain. Simplified to 25 m. For reference, not for navigation.
+
+## Sky
+
+- Stars: the **Yale Bright Star Catalogue, 5th revised edition** (Hoffleit & Warren, 1991),
+  public domain, via the JSON conversion at https://github.com/brettonw/YaleBrightStarCatalog
+  (`sky/stars-v1.bin`, baked by `scripts/bake-stars.mjs`).
+- Moon position: the low-precision lunar series of *The Astronomical Almanac* (US Naval
+  Observatory / HM Nautical Almanac Office), implemented in `src/sky.js`.
+
+## pureTV 中文移植
+
+- 游戏源码 © 2026 Mutaaf Aziz，MIT。OpenAero DFW：https://github.com/mutaaf/openaero-dfw 。
+- 地形使用随包的 USGS 高程数据。联网卫星影像需主动开启，地图显示来源署名。
+- three.js、3D Tiles Renderer、meshoptimizer、Draco、Rapier、JSBSim 以及中文移植使用的许可文本随包置于 licenses/。

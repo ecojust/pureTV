@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>达拉斯飞行模拟</title>
+  <meta name="description" content="在达拉斯和沃思堡的机场之间飞行，体验六自由度飞行模拟。" />
+  <meta name="theme-color" content="#020617" />
+  <!-- Add to Home Screen launches fullscreen, like an app (0086); no service worker -->
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="达拉斯飞行模拟" />
+  <script type="module" crossorigin src="./assets/tv-D8oZm-mq.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/Vector3-CZajvpgo.js">
+  <link rel="modulepreload" crossorigin href="./assets/Euler-Dsh7Rp5B.js">
+  <link rel="modulepreload" crossorigin href="./assets/BufferAttribute-CM2iXJnh.js">
+  <link rel="modulepreload" crossorigin href="./assets/constants-b1kZgAm3.js">
+  <link rel="stylesheet" crossorigin href="./assets/tv-DZr6eizq.css">
+</head>
+<body class="relative w-full h-full overflow-hidden">
+
+  <!-- 3D WebGL Canvas and Collimated HUD Layer -->
+  <div id="simViewport" class="absolute inset-0 w-full h-full">
+    <canvas id="simCanvas" class="block w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+    <canvas id="hudCanvas" class="pointer-events-none absolute inset-0 block w-full h-full z-10"></canvas>
+  </div>
+
+  <!-- Mouse Flight Control Crosshair Indicator -->
+  <div id="mouseFlightCrosshair" class="hidden pointer-events-none absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 z-20 border-2 border-dashed border-sky-400 rounded-full flex items-center justify-center">
+    <span class="w-1.5 h-1.5 rounded-full bg-sky-300"></span>
+  </div>
+
+  <!-- Real-Time Master Alert / Callout Banner -->
+  <div id="masterAlertBanner" class="hidden pointer-events-none absolute left-1/2 -translate-x-1/2 z-30 px-6 py-2 rounded-xl bg-red-600/90 border-2 border-red-300 text-white font-mono font-black text-sm tracking-widest uppercase shadow-2xl animate-pulse">
+    前方有地形，请拉起！
+  </div>
+  <div id="stallAlertBanner" class="hidden pointer-events-none absolute left-1/2 -translate-x-1/2 z-30 px-5 py-1.5 rounded-xl bg-amber-500/90 border-2 border-amber-200 text-slate-950 font-mono font-extrabold text-xs tracking-widest uppercase shadow-2xl">
+    失速警告：加大推力，压低机头
+  </div>
+  <!-- First-flight coach (src/coach.js): above the phone touch deck / desktop stick panel, below the horizon -->
+  <div id="coach" class="hidden pointer-events-none absolute inset-x-3 z-30 mx-auto max-w-sm hud-glass rounded-xl pl-3 pr-1 py-1 flex items-center gap-2 font-mono border-amber-300/50" role="status" aria-live="polite">
+    <span id="txtCoachLabel" class="text-[9px] font-bold uppercase tracking-widest text-amber-300">飞行教练</span>
+    <span id="txtCoach" class="flex-1 text-xs font-bold text-slate-100"></span>
+    <button id="btnTakeover" class="hidden pointer-events-auto hud-btn active-amber rounded-lg min-h-[44px] min-w-[44px] px-2 text-[11px] font-bold whitespace-nowrap" aria-label="由你接手，退出自动驾驶">接手驾驶</button>
+    <button id="btnCoachSkip" class="pointer-events-auto hud-btn rounded-lg min-h-[44px] min-w-[44px] px-2 text-[11px] text-slate-300" aria-label="跳过教练提示">跳过</button>
+  </div>
+  <!-- ATIS-style briefing (0030, src/atis.js, a lazy chunk): after Start flight and from ATIS in the weather ribbon; a tap or Esc closes it -->
+  <div id="atis" class="hidden pointer-events-auto absolute inset-x-3 z-30 mx-auto max-w-md hud-glass rounded-xl pl-3 pr-1 py-1 font-mono border-sky-400/50 cursor-pointer" role="status" aria-live="polite">
+    <div class="flex items-start gap-2">
+      <div class="flex-1 min-w-0 py-0.5">
+        <div data-atis-src class="text-[9px] font-bold uppercase tracking-wider text-slate-400 [[data-live]_&]:text-emerald-300"></div>
+        <div data-atis-text class="text-[11px] leading-4 font-bold text-slate-100"></div>
+      </div>
+      <button class="hud-btn rounded-lg min-h-[44px] min-w-[44px] text-slate-300 text-sm" aria-label="关闭机场通播">✕</button>
+    </div>
+  </div>
+  <!-- Captions for the spoken callouts (0117, src/captions.js): the takeoff call's slot under the heading box, between the tapes -->
+  <div id="calloutCaption" class="hidden pointer-events-none absolute left-1/2 -translate-x-1/2 z-20 px-2 py-0.5 rounded-md bg-slate-950/85 text-white font-mono font-bold text-[13px] leading-4 uppercase text-center"></div>
+  <!-- Landing results card (src/landing.js grades every touchdown) -->
+  <div id="resultsCard" class="hidden absolute inset-x-3 top-1/2 -translate-y-1/2 z-40 mx-auto max-w-sm max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1rem)] flex flex-col overflow-hidden hud-glass rounded-2xl p-4 font-mono text-slate-200 border-emerald-400/50 shadow-2xl" role="dialog" aria-labelledby="txtGrade" aria-live="polite">
+    <div class="shrink-0 flex items-center gap-4 border-b border-slate-700/80 pb-3">
+      <div id="txtGrade" class="text-5xl font-black text-emerald-300 w-20 text-center">A</div>
+      <div class="flex-1">
+        <div id="txtResultTitle" class="text-[10px] uppercase tracking-widest text-slate-400">着陆评级</div>
+        <div class="text-sm font-bold"><span id="txtScore">0</span><span class="text-slate-400">/100</span> · <span id="txtResultRunway" class="text-sky-300">KDFW 35C</span></div>
+        <div id="txtBest" class="text-[11px] text-amber-300"></div>
+      </div>
+    </div>
+    <!-- The middle scrolls if it must; the grade above and the buttons below stay in view (0125: Safari held sideways is ~340 px tall) -->
+    <div id="resultsBody" class="flex-initial min-h-0 overflow-y-auto overscroll-contain rounded-md" tabindex="0" role="region" aria-label="着陆详情">
+      <div id="txtGradeReason" class="hidden text-xs text-red-300 pt-2"></div>
+      <div id="tipRow" class="hidden text-xs pt-2"><span class="text-[10px] uppercase tracking-widest text-slate-400">下次试试</span> <span id="txtTip" class="text-sky-200"></span></div>
+      <div id="txtStabilized" class="hidden text-[11px] font-bold pt-2 text-amber-300"></div>
+      <!-- Where the wheels touched (0088): runway strip drawn by src/touchdownStrip.js -->
+      <canvas id="touchdownStrip" class="hidden block w-full h-6 mt-2" role="img" aria-label=""></canvas>
+      <!-- A ground-reference lesson's track from above (0211): drawn by src/trackPlot.js -->
+      <div id="trackPlot" class="hidden w-full h-36 mt-2" role="img" aria-label=""></div>
+      <!-- A landing's approach from the side against the 3° path (0227): drawn by src/trackPlot.js -->
+      <div id="profilePlot" class="hidden w-full mt-2" role="img" aria-label=""></div>
+      <ul id="resultsFactors" class="flex flex-col gap-1.5 pt-2 pb-3 text-[11px]"></ul>
+    </div>
+    <div class="shrink-0 grid grid-flow-col auto-cols-fr gap-2">
+      <button id="btnFlyAgain" class="hud-btn active rounded-xl min-h-[44px] text-xs font-bold">再次飞行</button>
+      <button id="btnKeepRolling" class="hud-btn rounded-xl min-h-[44px] text-xs">继续滑跑</button>
+      <button id="btnReplay" class="hidden hud-btn rounded-xl min-h-[44px] text-xs" aria-label="回放着陆过程">▶ 回放</button>
+    </div>
+  </div>
+  <!-- Landing replay (0019, src/replay.js): over the whole view while it plays; any tap or key returns to the card -->
+  <div id="replayBar" class="hidden absolute inset-0 z-40 flex items-end justify-center cursor-pointer" style="padding-bottom: calc(max(1px, env(safe-area-inset-bottom)) + 2.25rem)" role="button" tabindex="-1" aria-roledescription="replay">
+    <div class="hud-glass rounded-xl px-3 min-h-[44px] flex items-center gap-2 font-mono text-xs text-slate-200 pointer-events-none"><span class="text-red-400 font-bold">● 回放中</span><span id="txtReplayCam" class="text-sky-300" aria-live="polite">尾随视角</span><span class="text-slate-300">· 点按或按任意键返回</span></div>
+  </div>
+
+  <!-- Lost WebGL context (ticket 0034): the browser took the GPU back; the sim waits here -->
+  <div id="gfxLost" class="hidden absolute inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/85" role="alertdialog" aria-modal="true" aria-labelledby="txtGfxLostTitle" aria-describedby="txtGfxLost">
+    <div id="gfxLostPanel" tabindex="-1" class="max-w-sm w-full hud-glass rounded-2xl p-4 font-mono text-slate-200 border-amber-300/50 shadow-2xl text-center outline-none">
+      <div id="txtGfxLostTitle" class="text-sm font-bold text-amber-300 uppercase tracking-widest">图形渲染已暂停</div>
+      <p id="txtGfxLost" class="text-xs text-slate-200 pt-2" aria-live="polite" data-gone="图形渲染未恢复。请重新加载并开始新的飞行，最佳成绩已保存。" data-ready="图形已恢复，可以继续飞行。" data-held="飞行仍处于暂停状态。">图形设备暂时被占用，请稍候……</p>
+      <div class="grid gap-2 pt-3">
+        <button id="btnGfxResume" class="hidden hud-btn active rounded-xl min-h-[44px] text-xs font-bold">继续飞行</button>
+        <button id="btnGfxReload" class="hidden hud-btn rounded-xl min-h-[44px] text-xs font-bold">重新加载</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding & Flight Academy Modal -->
+  <div id="onboardingModal" role="dialog" aria-modal="true" aria-labelledby="txtModalTitle" class="absolute inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md transition-opacity duration-200">
+    <div id="modalPanel" tabindex="-1" class="outline-none hud-glass max-w-2xl w-full max-h-[calc(100dvh-1.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] overflow-hidden rounded-2xl p-4 sm:p-6 flex flex-col gap-3 text-slate-200 border-sky-400/40 shadow-2xl">
+      <div class="shrink-0 flex items-center justify-between border-b border-slate-700/80 pb-3">
+        <div class="flex items-center gap-3">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <h1 id="txtModalTitle" class="text-base sm:text-lg font-black tracking-tight text-white">达拉斯<span class="text-sky-300">飞行模拟</span></h1>
+            <p class="text-[11px] text-slate-300">飞越达拉斯和沃思堡，在真实机场跑道上起降，体验当地的天气与昼夜变化。</p>
+          </div>
+        </div>
+        <button id="btnCloseModal" aria-label="关闭（Esc）" class="hud-btn px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white">✕ 关闭</button>
+      </div>
+
+      <!-- Everything between the title and ENTER COCKPIT scrolls inside the modal; the button stays pinned -->
+      <div id="modalScroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain -mx-1 px-1 flex flex-col gap-4">
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
+      <div class="flex flex-col gap-4">
+      <!-- Assist level (ticket 0042): same physics, more or less help; main.js setAssist() -->
+      <div id="assistPicker" role="group" aria-labelledby="txtAssistTitle" class="flex flex-col gap-1.5">
+        <div id="txtAssistTitle" class="step-title"><span class="step-n">1</span>选择驾驶难度</div>
+        <div class="grid grid-cols-3 gap-2">
+          <button data-assist="kid" aria-pressed="false" class="btnAssist hud-btn min-h-[64px] rounded-xl p-2 flex flex-col items-center justify-center gap-0.5 text-center">
+            <span class="text-2xl leading-none" aria-hidden="true">🧒</span><span class="text-sm font-bold text-slate-100">儿童</span>
+            <span class="text-[11px] leading-tight text-slate-200">提供防坠保护，进入最后进近后松开操纵杆即可自动着陆</span>
+          </button>
+          <button data-assist="learner" aria-pressed="false" class="btnAssist hud-btn min-h-[64px] rounded-xl p-2 flex flex-col items-center justify-center gap-0.5 text-center">
+            <span class="text-2xl leading-none" aria-hidden="true">🎓</span><span class="text-sm font-bold text-slate-100">学员</span>
+            <span class="text-[11px] leading-tight text-slate-200">提供防侧翻和失速保护，其余操作由你完成</span>
+          </button>
+          <button data-assist="pilot" aria-pressed="false" class="btnAssist hud-btn min-h-[64px] rounded-xl p-2 flex flex-col items-center justify-center gap-0.5 text-center">
+            <span class="text-2xl leading-none" aria-hidden="true">✈️</span><span class="text-sm font-bold text-slate-100">飞行员</span>
+            <span class="text-[11px] leading-tight text-slate-200">完全手动驾驶</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- When: the real sky over Dallas now, or today's dawn / noon / dusk / night (sun.js, sky.js) -->
+      <div id="timePicker" role="group" aria-labelledby="txtTimeTitle" class="flex flex-col gap-1.5">
+        <div id="txtTimeTitle" class="step-title"><span class="step-n">2</span>飞行时段</div>
+        <div class="grid grid-cols-5 gap-1.5">
+          <button data-time="0" aria-pressed="false" class="btnTime hud-btn min-h-[52px] rounded-xl flex flex-col items-center justify-center text-[11px] font-bold text-slate-100"><span class="text-lg leading-none" aria-hidden="true">🛰</span>当前</button>
+          <button data-time="1" aria-pressed="false" class="btnTime hud-btn min-h-[52px] rounded-xl flex flex-col items-center justify-center text-[11px] font-bold text-slate-100"><span class="text-lg leading-none" aria-hidden="true">🌅</span>黎明</button>
+          <button data-time="2" aria-pressed="false" class="btnTime hud-btn min-h-[52px] rounded-xl flex flex-col items-center justify-center text-[11px] font-bold text-slate-100"><span class="text-lg leading-none" aria-hidden="true">☀️</span>白天</button>
+          <button data-time="3" aria-pressed="false" class="btnTime hud-btn min-h-[52px] rounded-xl flex flex-col items-center justify-center text-[11px] font-bold text-slate-100"><span class="text-lg leading-none" aria-hidden="true">🌇</span>黄昏</button>
+          <button data-time="4" aria-pressed="false" class="btnTime hud-btn min-h-[52px] rounded-xl flex flex-col items-center justify-center text-[11px] font-bold text-slate-100"><span class="text-lg leading-none" aria-hidden="true">🌙</span>夜间</button>
+        </div>
+        <p id="txtSkyNow" class="text-[11px] text-slate-300 min-h-[1rem]"></p>
+      </div>
+
+      <details class="how-to rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-[11px] text-slate-300">
+        <summary class="cursor-pointer font-bold text-sky-300 min-h-[28px] flex items-center">飞行操作</summary>
+        <div class="lg:hidden pt-1 leading-relaxed">
+          <b class="hand-r">右手拇指</b><b class="hand-l">左手拇指</b>：操纵杆。向上拖动可抬头；飞行员模式下，地速低于 40 节可左右拖动控制前轮转向。儿童和学员模式会自动保持跑道中线。<br>
+          <b class="hand-r">左手拇指</b><b class="hand-l">右手拇指</b>：油门，推至顶部即为最大推力。<br>
+          <b>中间按钮</b>：控制起落架、襟翼和刹车；按「ILS 自动」可自动着陆。<br>
+          <span class="hand-tip"><b>习惯用左手？</b> 在下方选项选择「左手」，即可用左手控制操纵杆，右手控制油门。<br></span>
+          <b>飞行员</b>：按住油门旁的「抬头／低头」微调配平，松开杆后飞机会稳定在琥珀色标记的配平空速（速度带上的 T）。<br>
+          <b>手柄</b>：左摇杆驾驶，RT／LT 调油门，A 调襟翼，B 收放起落架，X 刹车，右摇杆调配平。
+        </div>
+        <div class="hidden lg:grid grid-cols-2 gap-x-4 gap-y-1 pt-1 font-mono">
+          <span><kbd>W</kbd> <kbd>S</kbd> 低头／抬头</span><span><kbd>A</kbd> <kbd>D</kbd> 左右倾斜</span>
+          <span><kbd>Shift</kbd> <kbd>Ctrl</kbd> 油门</span><span><kbd>Q</kbd> <kbd>E</kbd> 方向舵</span>
+          <span><kbd>[</kbd> <kbd>]</kbd> 低头／抬头配平（飞行员）</span><span></span>
+          <span><kbd>G</kbd> 起落架 · <kbd>F</kbd> 襟翼</span><span><kbd>B</kbd> 刹车 · <kbd>K</kbd> 自动刹车 · <kbd>R</kbd> 反推</span><span><kbd>Z</kbd> 自动驾驶</span>
+          <span><kbd>C</kbd> 切换视角 · 拖动环视</span><span><kbd>H</kbd> 显示／隐藏仪表</span>
+          <span><kbd>M</kbd> 鼠标操纵</span><span><kbd>空格</kbd> 操纵杆回中</span>
+        </div>
+      </details>
+      <!-- The player guide (public/guide/index.html): plain text, every control and how landings are graded -->
+      <a id="lnkGuide" href="guide/index.html" class="-mt-2 self-start inline-flex items-center min-h-[44px] px-1 text-[11px] font-bold text-sky-300 underline underline-offset-2 hover:text-white">飞行指南：操作、评分与技巧</a>
+      </div>
+
+      <!-- Mission picker (ticket 0029): generated from src/missions.js by buildMissionPicker() -->
+      <div class="flex flex-col gap-1.5">
+      <div class="step-title"><span class="step-n">3</span>选择飞行任务</div>
+      <!-- Density altitude from the mission field's METAR (ticket 0111, atmosphere.js) -->
+      <p id="txtDensityAlt" class="text-[11px] text-slate-300 min-h-[1rem]"><span id="txtDaValue"></span> <span id="txtThinAir" class="hidden text-amber-300"></span></p>
+      <!-- The mission runway's chart facts (ticket 0114, airports.js runwayFactsText) -->
+      <p id="txtRunwayFacts" class="hidden text-[11px] text-slate-300 -mt-1" title="跑道入口标高、长度和宽度来自 OurAirports 或美国联邦航空局记录；磁航向按 WMM-2025 计算，仅供游戏使用。"><span id="txtRunwayFactsLine" class="whitespace-nowrap"></span> <span id="txtRunwayFactsSrc" class="text-slate-400">(OurAirports)</span></p>
+      <div id="missionList" class="flex flex-col gap-3 text-xs">
+        <button id="btnCrosswindToday" data-scenario="crosswind_today" class="btnMission hud-btn hidden p-3 min-h-[44px] rounded-xl text-left flex-col gap-1 border-amber-400/50">
+          <div class="flex items-center justify-between gap-2 font-bold text-amber-300">
+            <span>🌬 今日侧风挑战</span>
+            <span class="flex items-center gap-1.5"><span class="missionBest text-[10px] font-mono text-emerald-300"></span><span class="text-[9px] bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300">实时航空天气</span></span>
+          </div>
+          <div class="text-[10px] text-slate-400"><span id="txtCrosswindToday" class="text-slate-200"></span>。挑战达拉斯地区当前的最强侧风：最后进近时修正偏流，拉平时对正跑道。</div>
+        </button>
+      </div>
+
+      </div>
+      </div>
+
+      <details class="rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2">
+      <summary class="cursor-pointer text-[11px] font-bold text-slate-300 min-h-[44px] flex items-center">选项</summary>
+      <div class="flex flex-col gap-1.5">
+        <!-- Left-handed touch layout (0221, src/handPrefs.js): touch-only screens (main.js unhides it);
+             the root class `lefty` mirrors the deck in styles.css: the stick under the left thumb -->
+        <div id="handPicker" role="group" aria-labelledby="txtHandTitle" class="hidden items-center gap-2 text-xs text-slate-300">
+          <span id="txtHandTitle">触控方式<span class="block text-[10px] text-slate-400">选择操纵杆的位置</span></span>
+          <button data-hand="right" aria-pressed="true" class="btnHand hud-btn min-h-[44px] px-3 rounded-lg font-bold text-slate-100">右手</button>
+          <button data-hand="left" aria-pressed="false" class="btnHand hud-btn min-h-[44px] px-3 rounded-lg font-bold text-slate-100">左手</button>
+        </div>
+        <label id="onlineTerrainOption" class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+          <input id="chkSatellite" type="checkbox" class="w-4 h-4 rounded accent-sky-400" />
+          <span>使用在线卫星影像（Esri，需要联网）</span>
+        </label>
+        <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+          <input id="chkAutoSound" type="checkbox" checked class="w-4 h-4 rounded accent-sky-400" />
+          <span>启用引擎声与高度提示音</span>
+        </label>
+        <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+          <input id="chkCoach" type="checkbox" checked class="w-4 h-4 rounded accent-amber-300" />
+          <span>在 35C 跑道最后进近时启用着陆指导</span>
+        </label>
+        <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+          <input id="chkTutor" type="checkbox" checked class="w-4 h-4 rounded accent-amber-300" />
+          <span>自动驾驶操作解说</span>
+        </label>
+      </div>
+      </details>
+      </div>
+
+      <p class="text-[11px] text-slate-300">pureTV 手柄：方向键选择任务或控制俯仰、横滚，START 起飞／暂停，A、B 调整推力，同时按下可切换刹车，X 换襟翼，Y 收放起落架。</p>
+      <div class="shrink-0 flex items-center justify-between gap-3 border-t border-slate-700/80 pt-3">
+        <div class="min-w-0 line-clamp-2 leading-tight text-[11px] text-slate-300"><b id="txtPickedMission" class="text-white"></b></div>
+        <a id="lnkCredits" href="credits.html" target="_blank" rel="noopener" class="ml-auto shrink-0 inline-flex items-center min-h-[44px] px-2 text-[11px] text-slate-300 underline underline-offset-2 hover:text-white">制作与授权</a>
+        <button id="btnStartFlight" class="btn-fly shrink-0 whitespace-nowrap px-7 py-2.5 min-h-[48px] rounded-xl text-sm font-black tracking-wide text-slate-950">
+          开始飞行 ✈
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Real-Time Aviation Operations Bar -->
+  <header id="phoneHeader" class="absolute left-2 right-2 z-20 flex flex-col gap-1.5 pointer-events-none" style="top: max(0.5rem, env(safe-area-inset-top))">
+    <!-- Phone top row (below lg): the menu button and the one telemetry strip; everything else folds into #hudMenu -->
+    <div id="topRow" class="lg:hidden flex items-stretch gap-1.5">
+      <button id="btnMenu" class="hud-btn pointer-events-auto rounded-xl min-h-[44px] min-w-[44px] px-2 text-[11px] font-mono font-bold text-sky-300" aria-label="菜单" aria-expanded="false" aria-controls="hudMenu">☰ 菜单</button>
+      <!-- Phone telemetry strip (the EICAS and moving map are desktop-only) -->
+      <div id="phoneTelemetry" class="flex-1 hud-glass pointer-events-auto rounded-xl px-2 py-1 grid grid-cols-4 lg:grid-cols-6 gap-1 text-center font-mono text-[10px]">
+        <div><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap">IAS</div><b id="txtPhoneIas" class="text-slate-100">140</b></div>
+        <div><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap"><span class="plainWord tracking-tight">地面</span><span class="pilotWord">AGL</span> FT</div><b id="txtPhoneAgl" class="text-emerald-300">1270</b></div>
+        <div><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap">V/S FPM</div><b id="txtPhoneVs" class="text-sky-300">-700</b></div>
+        <div><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap">PAPI</div><b id="txtPhonePapi" class="papi-cue" data-papi="2">在下滑道上</b></div>
+        <div class="hidden lg:block"><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap">推力</div><b id="txtPhoneThr" class="text-emerald-300">44%</b></div>
+        <div class="hidden lg:block"><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap">起落架 · 襟翼</div><b id="txtPhoneConfig" class="text-slate-100">放下 · 30°</b></div>
+        <!-- 0162: the Cessna's fuel in desktop clean view (the weather ribbon is folded away there; touch screens read it over THR) -->
+        <div id="fuelCell" class="fuel-cell hidden"><div class="text-slate-400 text-[10px] leading-none whitespace-nowrap">燃油</div><b id="txtFuelCell" class="fuel-readout whitespace-nowrap" data-short="1"></b></div>
+      </div>
+      <button id="btnPanelsShow" class="hud-btn hidden lg:block pointer-events-auto rounded-xl min-h-[44px] px-3 text-[11px] font-mono font-bold text-sky-300" title="显示仪表面板（H）">仪表</button>
+    </div>
+
+    <!-- Brand, missions, systems and weather: always shown on desktop, a sheet behind ☰ Menu below lg -->
+    <div id="hudMenu" class="flex flex-col gap-1.5">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: Aircraft, Scenario, NAVAID Selectors -->
+      <div class="hud-glass pointer-events-auto rounded-xl px-3 py-1.5 flex flex-wrap items-center gap-2 text-xs">
+        <div class="flex items-center gap-2 pr-2 border-r border-slate-700/80">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-bold font-mono text-sky-400 tracking-wider text-[11px]">达拉斯飞行仪表</span>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-1 font-mono">
+          <label for="selAircraft" class="text-[10px] text-slate-400 font-bold">机型</label>
+          <select id="selAircraft" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-xs text-slate-200">
+            <option value="b738">波音 737-800 NG</option>
+            <option value="c172">塞斯纳 172S「天鹰」</option>
+            <option value="f16">F-16C「战隼」</option>
+          </select>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-1 font-mono">
+          <label for="selScenario" class="text-[10px] text-slate-400 font-bold">任务</label>
+          <select id="selScenario" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-xs text-amber-300">
+            <option value="kdfw_35c_final">KDFW 35C 跑道（4 海里 ILS 最后进近）</option>
+          </select>
+        </div>
+
+        <button id="btnOpenMissions" class="hud-btn px-2 py-0.5 rounded text-[11px] font-mono text-sky-300 font-bold">🎯 任务</button>
+      </div>
+
+      <!-- Center: Autopilot Mode Control Panel (MCP) -->
+      <div class="hud-glass pointer-events-auto rounded-xl px-2.5 py-1.5 hidden lg:flex items-center gap-1.5 text-xs font-mono">
+        <span class="text-[10px] text-slate-400 font-bold mr-0.5">MCP:</span>
+        <button id="btnApMaster" class="hud-btn px-2 py-0.5 rounded text-[11px] font-bold" title="自动驾驶总开关（Z）">AP</button>
+        <button id="btnApHdg" class="hud-btn px-1.5 py-0.5 rounded text-[11px]" title="航向保持">HDG</button>
+        <button id="btnApAlt" class="hud-btn px-1.5 py-0.5 rounded text-[11px]" title="高度保持">ALT</button>
+        <button id="btnApApr" class="hud-btn active-amber px-2.5 py-0.5 rounded text-[11px] font-bold" title="截获 ILS 下滑道与航向道">ILS 自动着陆</button>
+      </div>
+
+      <!-- Right: Camera, Mouse Yoke, Weather, Audio, Reset -->
+      <div class="hud-glass pointer-events-auto rounded-xl px-2.5 py-1.5 flex flex-wrap items-center gap-1 text-xs font-mono">
+        <button id="btnCamera" class="hud-btn active-sky px-2 py-0.5 rounded text-[11px]" title="切换六种视角（C）">
+          视角 <span id="txtCamMode" class="font-bold">三维座舱</span>
+        </button>
+        <button id="btnMouseYoke" class="hud-btn hidden lg:inline-block px-2 py-0.5 rounded text-[11px]" title="切换鼠标操纵杆（M）">
+          鼠标驾驶 <span id="txtMouseYokeState" class="text-amber-400 font-bold">关</span>
+        </button>
+        <button id="btnSatLayer" class="hud-btn hidden lg:inline-block px-2 py-0.5 rounded text-[11px]" title="切换本地地形／联网 Esri 卫星影像">
+          🛰️ <span id="txtSatState">本地地形</span>
+        </button>
+        <button id="btnTimeOfDay" class="hud-btn hidden lg:inline-block px-2 py-0.5 rounded text-[11px]" title="切换当前、黎明、正午、黄昏和夜间">
+          ☀️ <span id="txtTimeBadge">当前</span>
+        </button>
+        <button id="btnAudio" class="hud-btn px-2 py-0.5 rounded text-[11px]">
+          声音 <span id="txtAudioState" class="text-amber-400 font-bold">关</span>
+        </button>
+        <button id="btnHaptics" class="hud-btn hidden px-2 py-0.5 rounded text-[11px] [@media(pointer:fine)_and_(max-width:1279px)]:before:content-['📳']" title="振动反馈：触地、失速和拉起警报会触发手机振动；手柄还能感受滑跑和失速抖振。" aria-pressed="true" aria-label="振动">
+          <!-- 0228: a desktop under 1280 px (a rumble pad shows it there) keeps the bar on one row: the icon (CSS, out of the text) and the state -->
+          <span class="[@media(pointer:fine)_and_(max-width:1279px)]:hidden">振动</span> <span id="txtHapticsState" class="text-emerald-400 font-bold">开</span>
+        </button>
+        <!-- 0076: below lg only the bulb and the state (the landscape sheet's row has ~50 px left before it wraps onto the stick) -->
+        <button id="btnLandLight" class="hud-btn hidden px-1.5 lg:px-2 py-0.5 rounded text-[11px] whitespace-nowrap" title="开关着陆灯（L）" aria-label="着陆灯" aria-pressed="true">
+          <span aria-hidden="true">💡</span><span class="hidden lg:inline ml-0.5">着陆灯</span> <span id="txtLandLight" class="text-emerald-400 font-bold">开</span>
+        </button>
+        <button id="btnPanelsHide" class="hud-btn hidden lg:inline-block px-2 py-0.5 rounded text-[11px] text-sky-200" title="隐藏仪表并扩大视野（H）">简洁视图</button>
+        <button id="btnControls" class="hud-btn px-2 py-0.5 rounded text-[11px] text-sky-200" title="键盘、手柄和触控说明（?）" aria-haspopup="dialog">操作说明</button>
+        <button id="btnPause" class="hud-btn px-2 py-0.5 rounded text-[11px] font-bold text-red-400">暂停</button>
+        <button id="btnReset" class="hud-btn px-2 py-0.5 rounded text-[11px] text-amber-300">重置</button>
+      </div>
+    </div>
+
+    <!-- Live METAR Weather Status Ribbon -->
+    <div class="hud-glass pointer-events-auto rounded-xl px-3 py-1 flex items-center justify-between text-[11px] font-mono border-sky-500/40">
+      <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+        <span id="wxBadge" class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-500 text-slate-300 font-bold text-[9px] shrink-0 data-[live]:bg-emerald-950 data-[live]:border-emerald-400 data-[live]:text-emerald-300">场景天气</span>
+        <span id="wxBumpy" class="hidden px-1.5 py-0.5 rounded bg-amber-950 border border-amber-400 text-amber-200 font-bold text-[9px] shrink-0" title="该天气报告有中度或更强湍流，飞机可能颠簸。">颠簸</span>
+        <span id="txtMetarString" class="text-emerald-300 truncate">SCENARIO KDFW 35010KT 10SM FEW050 18/08 A3000</span>
+      </div>
+      <div class="hidden md:flex items-center gap-3 text-slate-300 text-[10px] shrink-0">
+        <span>风向风速 <b class="text-amber-300" id="txtWindBadge">350° @ 10 KT</b></span>
+        <span id="txtRwyWind" class="text-slate-300"></span>
+        <span>迎角 <b class="text-emerald-300" id="txtAoaBadge">2.4°</b></span>
+        <span>进离场方向 <b id="txtFlow" class="text-emerald-400">向北</b></span>
+        <b id="txtFuel" class="fuel-readout hidden whitespace-nowrap"></b>
+      </div>
+      <!-- The ATIS-style briefing again (0030, shown once src/atis.js loads); at the right end, clear of the touch deck's trim rocker -->
+      <button id="btnAtis" class="hidden hud-btn shrink-0 ml-2 -my-2.5 rounded px-1.5 py-0.5 text-[9px] font-bold text-sky-300" title="重新收听机场通播" aria-label="机场自动通播">ATIS</button>
+    </div>
+    </div>
+  </header>
+
+  <!-- Left: EICAS Propulsion, Flight Controls & Trim Deck -->
+  <aside id="eicasPanel" class="hud-glass absolute bottom-3 left-3 z-20 w-68 sm:w-76 rounded-2xl p-3 text-xs hidden lg:flex flex-col gap-2 font-mono">
+    <div class="flex items-center justify-between border-b border-slate-700/80 pb-1">
+      <div>
+        <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">发动机与飞行数据</div>
+        <div id="txtAircraftTitle" class="font-bold text-sky-300 text-[11px]">波音 737-800 NG</div>
+      </div>
+      <div class="text-right text-[10px]">
+        <div>载荷 <span id="txtGLoad" class="text-emerald-400 font-bold">1.00G</span></div>
+        <div>V/S <span id="txtVsi" class="text-sky-300">-720 FPM</span></div>
+      </div>
+    </div>
+
+    <!-- Throttle Slider with Presets -->
+    <div class="flex flex-col gap-1 text-[11px]">
+      <div class="flex justify-between items-center">
+        <label for="rngThrottle" class="text-slate-400">油门／N1 转速</label>
+        <span id="txtThrottle" class="font-bold text-emerald-400 text-xs">44%</span>
+      </div>
+      <input id="rngThrottle" type="range" min="0" max="100" value="44" class="w-full h-2 rounded-lg cursor-pointer bg-slate-800" />
+      <div class="grid grid-cols-4 gap-1 text-[9px] font-bold text-center pt-0.5">
+        <button id="btnIdle" class="hud-btn py-1 rounded bg-slate-800/80 text-slate-300">慢车 0%</button>
+        <button id="btnApp" class="hud-btn py-1 rounded bg-slate-800/80 text-amber-300">进近 44%</button>
+        <button id="btnClimb" class="hud-btn py-1 rounded bg-slate-800/80 text-sky-300">爬升 75%</button>
+        <button id="btnToga" class="hud-btn py-1 rounded bg-slate-800/80 text-emerald-400">起飞／复飞 100%</button>
+      </div>
+    </div>
+
+    <!-- Secondary Flight Surfaces -->
+    <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800 text-center text-[10px]">
+      <button id="btnGear" class="hud-btn active p-1.5 rounded-lg flex flex-col items-center">
+        <span class="text-slate-400 text-[10px]">起落架（G）</span>
+        <span id="txtGear" class="font-bold text-emerald-400">放下 · 三绿灯</span>
+      </button>
+      <button id="btnFlaps" class="hud-btn p-1.5 rounded-lg flex flex-col items-center">
+        <span class="text-slate-400 text-[10px]">襟翼（F）</span>
+        <span id="txtFlaps" class="font-bold text-sky-300">30°</span>
+      </button>
+      <button id="btnBrakes" class="hud-btn p-1.5 rounded-lg flex flex-col items-center">
+        <span class="text-slate-400 text-[10px]">刹车（B）</span>
+        <span id="txtBrakes" class="font-bold">关</span>
+      </button>
+      <button id="btnAutobrake" class="hud-btn p-1.5 rounded-lg flex flex-col items-center">
+        <span class="text-slate-400 text-[10px]">自动刹车（K）</span>
+        <span id="txtAutobrake" class="font-bold text-sky-300">2</span>
+      </button>
+      <button id="btnReverse" class="hud-btn p-1.5 rounded-lg flex flex-col items-center">
+        <span class="text-slate-400 text-[10px]">反推（R）</span>
+        <span id="txtReverse" class="font-bold">收起</span>
+      </button>
+      <div class="p-1.5 rounded-lg flex flex-col items-center justify-center text-slate-400 text-[10px]">
+        <span id="txtHyd">HYD 3000 PSI</span>
+      </div>
+    </div>
+
+    <!-- Aerodynamic Control Deflection Meters -->
+    <div class="bg-slate-900/90 rounded p-1.5 border border-slate-800 text-[9px] flex flex-col gap-1">
+      <div class="flex justify-between text-slate-400">
+        <span>升降舵 <b id="meterElev" class="text-sky-300">0%</b></span>
+        <span>副翼 <b id="meterAil" class="text-sky-300">0%</b></span>
+        <span>方向舵 <b id="meterRud" class="text-sky-300">0%</b></span>
+      </div>
+      <div class="w-0 min-w-full text-[10px] text-slate-400 leading-tight">
+        按 M 键切换鼠标操纵杆
+      </div>
+    </div>
+  </aside>
+
+  <!-- Center-Bottom: Virtual Flight Stick & Glide Path Indicator -->
+  <div id="stickPanel" class="hud-glass absolute bottom-3 left-1/2 -translate-x-1/2 z-20 hidden lg:flex items-center gap-3 rounded-2xl px-3.5 py-2 text-xs font-mono">
+    <div class="flex flex-col items-center">
+      <div class="text-[9px] uppercase tracking-wider text-slate-400 font-semibold mb-1">飞行操纵杆（拖动或 WASD）</div>
+      <div id="virtualStickPad" class="relative w-24 h-24 rounded-xl bg-slate-950/95 border border-sky-500/30 cursor-crosshair flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-x-0 top-1/2 h-px bg-slate-800"></div>
+        <div class="absolute inset-y-0 left-1/2 w-px bg-slate-800"></div>
+        <div class="absolute inset-2 border border-slate-800/80 rounded-lg pointer-events-none"></div>
+        <div id="virtualStickKnob" class="w-6 h-6 rounded-full bg-sky-400/90 border-2 border-white shadow-lg pointer-events-none transition-transform duration-75 flex items-center justify-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-950"></span>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-1.5 text-[11px] min-w-[135px]">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-2.5 py-1">
+        <span class="text-slate-400 text-[10px]">状态</span>
+        <span id="txtSurfaceState" class="text-emerald-400 font-bold ml-1">飞行中</span>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-2.5 py-1">
+        <span class="text-slate-400 text-[10px]">PAPI:</span>
+        <span id="txtPapiStatus" class="papi-cue font-bold ml-1" data-papi="2">在下滑道上</span><span class="papi-lamps" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </div>
+      <button id="btnCenterWings" class="hud-btn px-2 py-1 rounded text-[10px] text-slate-200">操纵杆回中（空格）</button>
+    </div>
+  </div>
+
+  <!-- Right: Dallas Moving Map Radar & Telemetry -->
+  <aside id="mapPanel" class="hud-glass absolute bottom-3 right-3 z-20 w-64 sm:w-72 rounded-2xl p-2.5 text-xs hidden lg:flex flex-col gap-1.5 font-mono">
+    <div class="flex items-center justify-between text-[10px]">
+      <div class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-sky-300 font-bold uppercase">达拉斯 B 类空域航图</span>
+      </div>
+      <span id="txtNavDist" class="text-emerald-400 font-bold">DME 4.0 NM</span>
+    </div>
+
+    <div class="relative w-full h-36 rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+      <canvas id="mapCanvas" class="block w-full h-full"></canvas>
+      <div id="txtNav1" class="pointer-events-none absolute top-1 left-1.5 text-[9px] text-emerald-400">NAV1: KDFW 35C ILS</div>
+      <div class="pointer-events-none absolute bottom-1 right-1.5 text-[9px] text-amber-300">
+        HDG: <span id="txtRadarHdg">360°M</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-1 text-center text-[10px]">
+      <div class="bg-slate-900/90 rounded p-1 border border-slate-800">
+        <div class="text-slate-400 text-[10px]">指示空速／地速</div>
+        <div id="txtIasGs" class="text-slate-200 font-bold">140/122K</div>
+      </div>
+      <div class="bg-slate-900/90 rounded p-1 border border-slate-800">
+        <div class="text-slate-400 text-[10px]">高度（<span class="plainWord">海平面</span><span class="pilotWord">MSL</span>）</div>
+        <div id="txtAltMsl" class="text-sky-300 font-bold">1880 FT</div>
+      </div>
+      <div class="bg-slate-900/90 rounded p-1 border border-slate-800">
+        <div class="text-slate-400 text-[10px]"><span class="plainWord">离地高度</span><span class="pilotWord">RADAR AGL</span></div>
+        <div id="txtAltAgl" class="text-emerald-300 font-bold">1274 FT</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Touch flight deck (below lg): throttle under the left thumb, stick under the right (mirrored by .lefty, 0221: the other way round) -->
+  <div id="touchDeck" class="lg:hidden absolute inset-x-0 bottom-0 z-20 pointer-events-none font-mono">
+    <div class="flex items-end justify-between gap-2 px-3">
+      <div id="touchLeft" class="flex items-end gap-1.5">
+        <div class="pointer-events-auto flex flex-col items-center gap-1">
+          <!-- 0162: inside the throttle's 64 px, two lines, so the column (and the stick beside it) keeps its width -->
+          <span id="txtTouchFuel" class="fuel-readout hidden w-16 text-center text-[10px] leading-tight font-bold bg-slate-900/90 rounded px-0.5"></span>
+          <span class="text-[10px] text-slate-300 bg-slate-900/90 rounded px-1.5">THR <b id="txtTouchThr" class="text-emerald-400">44%</b></span>
+          <div id="touchThrottle" class="touch-control hud-glass relative w-16 h-44 rounded-2xl overflow-hidden" aria-label="油门" role="slider" aria-valuemin="0" aria-valuemax="100">
+            <div id="touchThrottleFill" class="absolute inset-x-0 bottom-0 bg-emerald-500/30"></div>
+            <div id="touchThrottleHandle" class="absolute inset-x-1 h-9 -mb-[18px] rounded-xl bg-slate-200/90 border-2 border-white shadow-lg pointer-events-none"></div>
+          </div>
+        </div>
+        <!-- Pitch trim (0094): Pilot only (main.js shows it where the trim is the player's); hold to
+             roll the wheel. NOSE UP over NOSE DN beside the throttle; over it on a phone held sideways,
+             where the speed tape starts just right of the throttle (styles.css). -->
+        <div id="touchTrim" class="hidden pointer-events-auto">
+          <div id="touchTrimRow" class="flex flex-col-reverse gap-1.5 text-[11px] font-bold leading-tight" role="group" aria-label="俯仰配平">
+            <button id="touchTrimDn" class="touch-control hud-btn rounded-xl px-1 min-w-[52px] min-h-[44px]" aria-label="低头配平">机头<br>低</button>
+            <button id="touchTrimUp" class="touch-control hud-btn rounded-xl px-1 min-w-[52px] min-h-[44px]" aria-label="抬头配平">机头<br>高</button>
+          </div>
+        </div>
+        <!-- Rudder pedals (0188): the wing-low crosswind lesson only, Pilot and Learner (main.js; the trim rocker's slot, which
+             the lesson hides: the throttle's thumb works the pedals while the other flies the stick). A tap steps the rudder 20%
+             that way and it stays (hold to keep moving it); the other pedal brings it back. Centred at the touchdown. -->
+        <div id="touchRudder" class="hidden pointer-events-auto flex flex-col items-center gap-1">
+          <span class="text-[10px] text-slate-300 bg-slate-900/90 rounded px-1">RUD <b id="txtTouchRud" class="text-emerald-400">0</b></span>
+          <div class="flex flex-col-reverse gap-1.5 text-[11px] font-bold leading-tight" role="group" aria-label="方向舵踏板">
+            <button id="touchRudL" class="touch-control hud-btn rounded-xl px-1 min-w-[52px] min-h-[44px]" aria-label="左舵">◀<br>RUD</button>
+            <button id="touchRudR" class="touch-control hud-btn rounded-xl px-1 min-w-[52px] min-h-[44px]" aria-label="右舵">RUD<br>▶</button>
+          </div>
+        </div>
+      </div>
+      <div id="touchButtons" class="pointer-events-auto flex flex-col gap-1.5 text-[11px] font-bold">
+        <button id="touchGear" class="hud-btn rounded-xl px-2 min-w-[76px] min-h-[44px]">起落架 <span id="txtTouchGear" class="text-emerald-400">低</span></button>
+        <button id="touchFlaps" class="hud-btn rounded-xl px-2 min-w-[76px] min-h-[44px]">襟翼 <span id="txtTouchFlaps" class="text-sky-300">30°</span></button>
+        <button id="touchBrakes" class="hud-btn rounded-xl px-2 min-w-[76px] min-h-[44px]">刹车</button>
+        <!-- ILS AUTO in the air; on the ground, REV for airframes with thrust reversers (0074) -->
+        <button id="touchIls" class="hud-btn rounded-xl px-2 min-w-[76px] min-h-[44px] text-amber-300"><span id="txtTouchIls">ILS 自动</span></button>
+      </div>
+      <div id="touchStick" class="touch-control hud-glass pointer-events-auto relative w-36 h-36 rounded-full flex items-center justify-center" aria-label="飞行操纵杆">
+        <div class="absolute inset-x-4 top-1/2 h-px bg-slate-600/60 pointer-events-none"></div>
+        <div class="absolute inset-y-4 left-1/2 w-px bg-slate-600/60 pointer-events-none"></div>
+        <div id="touchStickKnob" class="w-14 h-14 rounded-full bg-sky-400/90 border-2 border-white shadow-lg pointer-events-none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clean view on a keyboard: the keys, one quiet line above the credits -->
+  <div id="keyHints" class="hidden pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-5 z-20 gap-3 px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-200 key-hints">
+    <span><kbd data-k="pitchDown">W</kbd><kbd data-k="pitchUp">S</kbd> 俯仰</span><span><kbd data-k="bankLeft">A</kbd><kbd data-k="bankRight">D</kbd> 左右倾斜</span><span><kbd data-k="powerUp">Shift</kbd><kbd data-k="powerDown">Ctrl</kbd> 油门</span><span><kbd data-k="trimDown">[</kbd><kbd data-k="trimUp">]</kbd> 配平（飞行员）</span>
+    <span><kbd data-k="gear">G</kbd> 起落架</span><span><kbd data-k="flaps">F</kbd> 襟翼</span><span><kbd data-k="brakes">B</kbd> 刹车</span><span><kbd data-k="camera">C</kbd> 视角</span><span><kbd data-k="panels">H</kbd> 面板</span>
+  </div>
+
+  <!-- Controls cheat sheet (0049): "?" or Controls; src/controlsSheet.js (lazy) fills it, pauses the flight while open -->
+  <div id="controlsSheet" role="dialog" aria-modal="true" aria-labelledby="txtControlsTitle" class="hidden absolute inset-0 z-[55] flex items-center justify-center bg-slate-950/80" style="padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left))">
+    <div id="controlsPanel" tabindex="-1" class="outline-none hud-glass max-w-4xl w-full max-h-full overflow-hidden rounded-2xl p-3 sm:p-4 flex flex-col gap-2 text-slate-200">
+      <div class="shrink-0 flex items-center justify-between gap-2">
+        <h2 id="txtControlsTitle" class="text-sm font-black text-white">操作说明 <span id="txtControlsPaused" class="text-[11px] font-normal text-slate-300">· 飞行已暂停</span></h2>
+        <button id="btnCloseControls" class="hud-btn min-h-[44px] min-w-[44px] px-3 rounded-lg text-xs font-bold text-slate-200" aria-label="关闭操作说明（Esc）">✕ 关闭</button>
+      </div>
+      <div id="controlsBody" tabindex="0" class="flex-1 min-h-0 overflow-y-auto overscroll-contain grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-[13px]"></div>
+    </div>
+  </div>
+
+  <div id="mapCredits" class="imagery-credit">
+    <span id="creditsGoogle" class="hidden"><img src="attribution/google-maps-logo.svg" alt="Google Maps" class="google-logo"><span id="txtGoogleData"></span></span>
+    <span id="creditsFree"><span id="creditsEsri" class="hidden"><a href="https://www.esri.com/en-us/legal/terms/full-master-agreement" target="_blank" rel="noopener">卫星影像 © Esri、Maxar、Earthstar Geographics</a><span class="credit-sep"> · </span></span><a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">地形高程：USGS 3DEP／AWS Terrain Tiles</a></span>
+  </div>
+  <div id="toast" role="status" aria-live="polite" class="hidden pointer-events-none absolute left-1/2 -translate-x-1/2 w-max max-w-[min(90vw,28rem)] text-center z-40 px-4 py-2 rounded-xl hud-glass text-xs font-mono text-sky-200" style="top: 45%"></div>
+
+</body>
+</html>
