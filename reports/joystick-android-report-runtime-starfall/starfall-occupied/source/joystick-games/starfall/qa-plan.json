@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": ["gameplay.time", "gameplay.x", "gameplay.z"],
+  "steps": [
+    {"name":"开始舰队指挥","keys":["START"],"holdMs":250,"expect":[{"path":"stage","op":"eq","value":"playing"}]},
+    {"name":"选中一艘我方舰船","keys":["X"],"holdMs":300,"expect":[{"path":"gameplay.selected","op":"eq","value":1}]},
+    {"name":"移动指挥光标","keys":["RIGHT"],"holdMs":650,"expect":[{"path":"gameplay.cursorX","op":"changed"}]},
+    {"name":"暂停指挥","keys":["START"],"holdMs":250,"expect":[{"path":"stage","op":"eq","value":"paused"}]},
+    {"name":"继续指挥","keys":["START"],"holdMs":250,"expect":[{"path":"stage","op":"eq","value":"playing"}]}
+  ]
+}

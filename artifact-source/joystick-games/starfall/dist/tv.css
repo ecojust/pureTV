@@ -1,0 +1,10 @@
+#tv-menu[hidden], #tv-cursor[hidden], #return[hidden] { display:none }
+#tv-menu {position:fixed;inset:0;z-index:85;display:flex;align-items:center;padding:clamp(18px,6vw,90px);background:linear-gradient(90deg,rgba(4,9,19,.9),rgba(3,8,17,.13) 72%);color:#f2f6ff;font-family:system-ui,sans-serif}
+.tv-menu-card {max-width:28rem;padding:1.2rem 1.5rem;background:#0c1826db;border-left:3px solid #d2a267;text-align:left}
+.tv-menu-card h1 {font-size:clamp(26px,5vw,64px);line-height:1.1;margin:0 0 1rem;font-weight:700;letter-spacing:.06em}
+.tv-menu-card p {font-size:clamp(13px,1.75vw,18px);line-height:1.6;margin:.6rem 0;color:#d3e5f2}
+.tv-menu-card button {margin:.8rem .6rem 0 0;padding:.7rem 1rem;border:1px solid #cda873;background:#dec393;color:#152638;font:600 15px system-ui;cursor:pointer}
+.tv-menu-card button:focus-visible {outline:3px solid #fff;outline-offset:3px}
+#tv-cursor {position:fixed;pointer-events:none;z-index:84;width:14px;height:14px;box-sizing:border-box;border:2px solid #fff9b7;border-radius:50%;box-shadow:0 0 0 1px #202a39,0 1px 6px #000;transform:translate(-50%,-50%)}
+body[data-tv-stage="menu"] #ui,body[data-tv-stage="paused"] #ui {visibility:hidden}
+#boot .boot-mark {font-family:system-ui,sans-serif}
