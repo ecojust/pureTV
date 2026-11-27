@@ -1,0 +1,69 @@
+{
+  "game": "claude-of-tanks",
+  "targetPackage": "com.ecojust.joystick.claudeoftanks",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "1a532f8fe4b0cb4ff2ce6a838c8722ea91d87239",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/claude-of-tanks/claude-of-tanks-0.1.0.apk",
+    "bytes": 54253191,
+    "sha256": "989695d339996985a629adb42b0bccbbc166ffbf88a713053404d1df0c7118b5"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/claude-of-tanks/observer-claude-of-tanks.apk",
+    "bytes": 16783,
+    "sha256": "efa73a80a8a8516301b9f639a793a7acd7749ce0c90fce21dc5ed97dfd8ecdca"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77791,
+      "sha256": "56bd7e024a344af35fbc1470c31287a70cab744a715e831e52424f819593334e"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 14118,
+      "sha256": "f32db40440b4d811b87220e3dab3a6cb4fae602702e9f4672f2ae20a5787b186"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/claude-of-tanks/qa-plan.json": {
+      "bytes": 795,
+      "sha256": "41fa2297b185480f27c0a4dc57183b5eecbeb88cf1feae2b5be8f538bbe112ab"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 14542,
+      "sha256": "c1242bf26826084ba791544b360ccac56cb58040845e5a85d1bf5911fb05d927"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1234, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 586, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 344, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n"
+}
