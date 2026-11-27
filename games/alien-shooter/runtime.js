@@ -9,6 +9,7 @@
     if (!bridge) {
       try { if (new URLSearchParams(root.location.search).get("lang") === "en") info.language = "en"; } catch (_) {}
     }
+    var desktop = info.platform === "pc";
     var english = String(info.language).indexOf("en") === 0;
     var tr = function (zh, en) { return english ? en : zh; };
     var text = function (value) {
@@ -58,7 +59,9 @@
     $("tactical-label").textContent = tr("战术地图", "TACTICAL MAP");
     $("tactical-map").setAttribute("aria-label", tr("墙体、闸门、玩家与当前目标的战术地图", "Tactical map showing walls, gates, your position and the current objective"));
     $("pause-button").setAttribute("aria-label", tr("暂停", "Pause"));
-    $("battle-help").textContent = tr("SELECT 切换武器  ·  START 暂停 / 扫码", "SELECT switch weapon  ·  START pause / QR code");
+    $("battle-help").textContent = desktop
+      ? tr("Y / Q 切换武器  ·  START / P 暂停", "Y / Q switch weapon  ·  START / P pause")
+      : tr("SELECT 切换武器  ·  START 暂停 / 扫码", "SELECT switch weapon  ·  START pause / QR code");
 
         var lastWifiRefresh = -1000;
     function updateWifi(refresh) {
@@ -214,11 +217,16 @@
       if (value !== roomHtml) { $("room-players").innerHTML = value; roomHtml = value; runtimeStats.domWrites++; }
     }
     function titleMenu() {
-      return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("突围 · 补给 · 生存", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，独自杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction, alone.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("单人行动", "SINGLE PLAYER")) + '</span></div><div class="title-actions"><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>' + tr("开始键 / 回车", "START / ENTER") + '</em></button><p class="start-hint">' + esc(game.noticeTime > 0 && text(game.notice) ? text(game.notice) : tr("连接一部手机即可开始，也可用遥控器或键盘游玩。", "Connect one phone to begin, or use a TV remote or keyboard.")) + '</p></div>';
+      var hint = game.noticeTime > 0 && text(game.notice);
+      if (!hint && !desktop) hint = tr("连接一部手机即可开始，也可用遥控器或键盘游玩。", "Connect one phone to begin, or use a TV remote or keyboard.");
+      return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("突围 · 补给 · 生存", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，独自杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction, alone.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("单人行动", "SINGLE PLAYER")) + '</span></div><div class="title-actions"><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>' + tr("开始键 / 回车", "START / ENTER") + '</em></button>' + (hint ? '<p class="start-hint">' + esc(hint) + '</p>' : '') + '</div>';
     }
     function pauseMenu() {
       var disconnected = game.pausedReason === "disconnected";
-      return '<span class="eyebrow">' + esc(tr("行动暂停", "MISSION PAUSED")) + '</span><h1 class="dialog-title">' + esc(disconnected ? tr("等待手柄连接", "CONTROLLER DISCONNECTED") : tr("喘口气，再继续", "TAKE A BREATHER")) + '</h1><p class="dialog-description">' + esc(disconnected ? tr("手柄已断开，战斗已暂停。重新连接后按 START 继续，当前进度保留。", "A controller disconnected. The fight is paused. Reconnect, then press START to continue where you left off.") : tr("战斗已暂停。你可以在右侧扫码连接手柄，准备好后继续行动。", "The fight is paused. Scan the code to connect a controller, then resume when you are ready.")) + '</p><div class="end-stats"><div class="end-stat"><span>' + esc(tr("已消灭", "ELIMINATED")) + '</span><strong>' + game.kills + '</strong></div><div class="end-stat"><span>' + esc(tr("行动用时", "TIME")) + '</span><strong>' + timeLabel(game.elapsed) + '</strong></div><div class="end-stat"><span>' + esc(tr("补给资金", "CREDITS")) + '</span><strong>' + game.credits + '</strong></div></div><div class="dialog-actions"><button type="button" id="resume-button" class="primary" data-action="start">' + esc(tr("继续行动", "RESUME MISSION")) + '</button></div><p class="dialog-hint">' + esc(tr("START / ENTER 继续 · SELECT 切枪 · 右下区域投掷手雷", "START / ENTER resumes · SELECT switches weapons · Lower-right zone throws grenades")) + '</p>';
+      var description = "";
+      if (disconnected) description = tr("手柄已断开，战斗已暂停。重新连接后按 START 继续，当前进度保留。", "A controller disconnected. The fight is paused. Reconnect, then press START to continue where you left off.");
+      else if (!desktop) description = tr("战斗已暂停。你可以在右侧扫码连接手柄，准备好后继续行动。", "The fight is paused. Scan the code to connect a controller, then resume when you are ready.");
+      return '<span class="eyebrow">' + esc(tr("行动暂停", "MISSION PAUSED")) + '</span><h1 class="dialog-title">' + esc(disconnected ? tr("等待手柄连接", "CONTROLLER DISCONNECTED") : tr("喘口气，再继续", "TAKE A BREATHER")) + '</h1>' + (description ? '<p class="dialog-description">' + esc(description) + '</p>' : '') + '<div class="end-stats"><div class="end-stat"><span>' + esc(tr("已消灭", "ELIMINATED")) + '</span><strong>' + game.kills + '</strong></div><div class="end-stat"><span>' + esc(tr("行动用时", "TIME")) + '</span><strong>' + timeLabel(game.elapsed) + '</strong></div><div class="end-stat"><span>' + esc(tr("补给资金", "CREDITS")) + '</span><strong>' + game.credits + '</strong></div></div><div class="dialog-actions"><button type="button" id="resume-button" class="primary" data-action="start">' + esc(tr("继续行动", "RESUME MISSION")) + '</button></div><p class="dialog-hint">' + esc(tr("START / ENTER 继续 · SELECT 切枪 · 右下区域投掷手雷", "START / ENTER resumes · SELECT switches weapons · Lower-right zone throws grenades")) + '</p>';
     }
     function shopMenu() {
       var shop = game.shop || { items: [], selected: 0 };

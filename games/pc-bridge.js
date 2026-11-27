@@ -89,7 +89,8 @@
     getInfo: () => JSON.stringify(info),
     publish(text) {
       if (typeof text !== 'string' || text.length > 65536) return;
-      try { published = JSON.parse(text); } catch {}
+      try { published = JSON.parse(text); } catch { return; }
+      pureTVPCConfig.onPublish?.(published);
     },
     exit() { if (pureTVPCConfig.exit) pureTVPCConfig.exit(); else window.close(); },
   });

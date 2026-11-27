@@ -23,16 +23,16 @@ html #boot, .ow-hud .ow-attract {
   }
 }
 
+/* The web host shows connection status outside the game menu. */
+.ow-hud .ow-att-inner {
+  width: min(850px, calc(100% - 24px));
+  margin-right: 0;
+}
+.ow-hud .ow-menu-inner {
+  max-width: calc(100% - 24px);
+  margin-right: 0;
+}
+
 @media (max-width: 640px) {
-  body { --controller-width: 25vw; }
-  #puretv-controller-panel { max-width: var(--controller-width); }
-  .ow-hud .ow-att-inner {
-    width: calc(100% - var(--controller-width) - 36px);
-    margin-right: calc(var(--controller-width) + 12px);
-  }
-  .ow-hud .ow-menu-inner {
-    left: 12px;
-    max-width: calc(100% - var(--controller-width) - 36px);
-    margin-right: 0;
-  }
+  .ow-hud .ow-menu-inner { left: 12px; }
 }
