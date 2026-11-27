@@ -66,6 +66,10 @@ def stage(game, output, cache, revision):
         if layout.is_file():
             shutil.copyfile(layout, target / 'web-layout.css')
             scripts += '<link rel="stylesheet" href="web-layout.css">'
+        adapter = layout.with_suffix('.js')
+        if adapter.is_file():
+            shutil.copyfile(adapter, target / 'web-layout.js')
+            scripts += '<script src="web-layout.js"></script>'
         html, matches = re.subn(r'<head(?:\s[^>]*)?>', lambda match: match.group() + scripts,
                                 entry.read_text(encoding='utf-8-sig'), count=1, flags=re.I)
         if not matches:
