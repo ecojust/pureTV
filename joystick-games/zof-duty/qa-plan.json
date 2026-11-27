@@ -1,0 +1,10 @@
+{
+  "schemaVersion":1,"renderer":"webgl2","pauseStablePaths":["gameplay.elapsed","gameplay.score"],
+  "steps":[
+    {"name":"开始光球挑战","keys":["START"],"holdMs":250,"expect":[{"path":"stage","op":"eq","value":"playing"}]},
+    {"name":"点亮中央青色光球","keys":["A"],"holdMs":250,"expect":[{"path":"gameplay.hits","op":"eq","value":1}]},
+    {"name":"移动光标","keys":["RIGHT"],"holdMs":400,"expect":[{"path":"gameplay.cursorX","op":"changed"}]},
+    {"name":"暂停","keys":["START"],"holdMs":250,"expect":[{"path":"stage","op":"eq","value":"paused"}]},
+    {"name":"继续","keys":["START"],"holdMs":250,"expect":[{"path":"stage","op":"eq","value":"playing"}]}
+  ]
+}
