@@ -14,7 +14,7 @@ from time import monotonic
 from urllib.parse import urlsplit
 from zipfile import ZipFile
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeout, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'tools/pc-games'))
@@ -25,8 +25,21 @@ from recording import Recording
 
 def wait(page, condition, arg=None):
     print('Checking', condition, flush=True)
-    page.wait_for_function('arg => { const s = window.JoystickGameQA?.snapshot(); return s && (' + condition + '); }',
-                           arg=arg, polling=150, timeout=240_000)
+    deadline = monotonic() + 240
+    predicate = 'arg => { const s = window.JoystickGameQA?.snapshot(); return s && (' + condition + '); }'
+    while True:
+        try:
+            page.wait_for_function(predicate, arg=arg, polling=150, timeout=25_000)
+            return
+        except PlaywrightTimeout:
+            diagnostic = page.evaluate("""() => {
+                const s = window.JoystickGameQA?.snapshot();
+                return {stage: s?.stage, frames: s?.frames, gameplay: s?.gameplay,
+                    loading: Array.from(document.querySelectorAll('.cot-bl.on .mstage, .cot-bl.on .fstage, #cot-boot:not([hidden]) p, .cot-prebattle.on')).map(el => el.innerText)};
+            }""")
+            print('Still waiting:', diagnostic, flush=True)
+            if monotonic() >= deadline:
+                raise
 
 
 def state(page):
@@ -94,7 +107,7 @@ def run(game, play):
             browser = pw.chromium.launch(executable_path=opts.chromium, args=['--enable-unsafe-swiftshader', '--disable-dev-shm-usage'])
             page = browser.new_page(viewport={'width': 960, 'height': 540}, locale='zh-CN')
             page.set_default_timeout(240_000)
-            errors, external, missing = [], set(), set()
+            errors, console_errors, external, missing = [], [], set(), set()
             def offline(route):
                 address = urlsplit(route.request.url)
                 if address.netloc == urlsplit(url).netloc or address.scheme in ('blob', 'data'):
@@ -103,7 +116,17 @@ def run(game, play):
                     external.add(route.request.url)
                     route.abort()
             page.route('**/*', offline)
-            page.on('pageerror', lambda e: errors.append(str(e)))
+            def log_error(message):
+                if message.type == 'error':
+                    console_errors.append(message.text[:600])
+                    if len(console_errors) <= 6:
+                        print('Browser console:', console_errors[-1], flush=True)
+            page.on('console', log_error)
+            def page_error(error):
+                if str(error) not in errors:
+                    errors.append(str(error))
+                    print('Page error:', error, flush=True)
+            page.on('pageerror', page_error)
             page.on('response', lambda r: missing.add(urlsplit(r.url).path) if r.status >= 400 else None)
             started = monotonic()
             page.goto(url, wait_until='commit')
@@ -121,9 +144,11 @@ def run(game, play):
                 raise
             browser.close()
             assert not errors, errors
+            assert not missing, f'Missing offline assets: {sorted(missing)}'
+            assert not external, f'Unexpected external request: {sorted(external)[:3]}'
             report.update(game=game, chromium=browser.version, assetTreeSha256=digest, assetFiles=len(contents),
                           softwareBrowserMenuLoadSeconds=round(menu_seconds, 2),
-                          pageErrors=errors, failedLocalResponses=sorted(missing),
+                          pageErrors=errors, consoleErrors=console_errors, failedLocalResponses=sorted(missing),
                           blockedExternalRequests=dict(Counter(urlsplit(u).netloc for u in external)),
                           inputTransport='loopback TCP from JoystickClient', standardGamepadSimulated=True,
                           physicalTvTested=False, physicalPhoneTested=False)

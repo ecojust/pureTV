@@ -1,0 +1,71 @@
+{
+  "game": "openaero-dfw",
+  "payloadSha256": "4e5c4fb4fc5dcfaa8188d170c55ddf79fd30e855457fc6c216c6bbd5d3e6dbf1",
+  "browser": "156.0.8078.79",
+  "tvSha256": "f8de2253614da18e78b90ea742868c762470c73ff3c77c09314fac4616aadc0a",
+  "qrRect": [
+    779,
+    47,
+    108,
+    109
+  ],
+  "qrScreenshots": 1,
+  "screenshotSha256": "3c041bb00995fa3258d54f8d97c467609eff8c624a34a701793b7ef0de2e2892",
+  "menu": {
+    "stage": "menu",
+    "screen": null,
+    "frames": 24,
+    "active": "前方有地形，请拉起！\n  \n    失速警告：加大推力，压低机头\n  \n  \n  \n    飞行教练\n    \n    ",
+    "polls": 24
+  },
+  "gameplay": {
+    "plan": "joystick-games/openaero-dfw/qa-plan.json",
+    "steps": [
+      {
+        "step": "开始飞行",
+        "key": "START",
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ],
+        "before": {
+          "stage": "menu"
+        },
+        "after": {
+          "stage": "playing"
+        }
+      },
+      {
+        "step": "切换襟翼挡位",
+        "key": "X",
+        "expect": [
+          {
+            "path": "gameplay.flapsIndex",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.flapsIndex": 3
+        },
+        "after": {
+          "gameplay.flapsIndex": 4
+        }
+      }
+    ]
+  },
+  "gameplayScreenshotSha256": "551736e3c35b45ffc5783a56b8816d48c4f2529fe24d8675fde4d591e3f612db",
+  "touch": "DOWN",
+  "afterTouch": {
+    "stage": "playing",
+    "screen": null,
+    "frames": 47,
+    "active": "前方有地形，请拉起！\n  \n    失速警告：加大推力，压低机头\n  \n  \n  \n    飞行教练\n    保持跑道旁",
+    "polls": 47
+  },
+  "disconnectReleased": true,
+  "passed": true,
+  "seconds": 82.6
+}

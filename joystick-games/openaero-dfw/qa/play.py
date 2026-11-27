@@ -1,4 +1,6 @@
-"""Run after building dist/, or pass --apk to verify the released assets."""
+"""浏览器实玩验收。安装 Chromium、FFmpeg 和 Python playwright，从游戏目录运行
+python qa/play.py /tmp/flight-qa。加 --apk path/to/game.apk 可直接验证安装包内资源。
+"""
 from pathlib import Path
 import sys
 
