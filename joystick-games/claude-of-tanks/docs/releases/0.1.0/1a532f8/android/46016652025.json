@@ -183,7 +183,8 @@
           "skippedFrameMessages": 649,
           "targetCrashMessages": 0
         }
-      }
+      },
+      "observation": "默认端口连续通过 43 项，包括从车库进入战场、加速、转向、暂停与继续、断线及重新连接。结束时 target kill 对应测试主动 force-stop。"
     },
     {
       "mode": "occupied",
@@ -235,7 +236,8 @@
           "skippedFrameMessages": 0,
           "targetCrashMessages": 0
         }
-      }
+      },
+      "observation": "占用默认端口的第二轮已启动前台游戏，随后 ADB 连续超时并失去设备，未取得初始车库状态。主机采样证实 QEMU 进程随后消失，各级 cgroup 及内核没有 OOM 记录；具体退出原因未能确认。"
     }
   ],
   "emulatorProfile": {
@@ -261,7 +263,37 @@
         "maxLogBytes": 2097152,
         "samplesAttempted": 253
       },
-      "crashReport": "https://github.com/ecojust/pureTV/blob/bd988af78949db46c05c16f95fde44299aa14ada/evidence/joystick-android-runtime-claude-of-tanks/claude-of-tanks/environment-diagnostics/crash-report.json"
+      "crashReport": "https://github.com/ecojust/pureTV/blob/bd988af78949db46c05c16f95fde44299aa14ada/evidence/joystick-android-runtime-claude-of-tanks/claude-of-tanks/environment-diagnostics/crash-report.json",
+      "emulatorDisappearance": {
+        "source": "https://github.com/ecojust/pureTV/blob/bd988af78949db46c05c16f95fde44299aa14ada/evidence/joystick-android-runtime-claude-of-tanks/claude-of-tanks/environment-diagnostics/samples.jsonl",
+        "hostPid": 5833,
+        "lastObserved": "2026-11-27T14:56:18.181783+00:00",
+        "firstObservedGone": "2026-11-27T14:56:23.193243+00:00",
+        "lastResidentKiB": 4815424,
+        "lastHostAvailableKiB": 10478332,
+        "cgroupOomEventsAtDisappearance": [
+          {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          }
+        ],
+        "recordedExitCode": null,
+        "cause": "unknown"
+      }
     }
   ]
 }
