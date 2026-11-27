@@ -1,12 +1,12 @@
 {
   "game": "claude-of-tanks",
-  "sourceCommit": "58646c1ec3bcfc31c31b7c11a3cf44df2d47db8e",
-  "buildRunId": 46010919467,
-  "buildExportCommit": "3505a881ea1ebf66f78290bb29ec9e61a7f583b5",
+  "sourceCommit": "1a532f8fe4b0cb4ff2ce6a838c8722ea91d87239",
+  "buildRunId": 46015516593,
+  "buildExportCommit": "7ad24a21c7373b7969a0d05afd2ee06fc49e2c18",
   "apk": {
     "file": "claude-of-tanks-0.1.0.apk",
     "bytes": 54253191,
-    "sha256": "c24bf59a915ea203bb0c89c552cdb02e3953d4b3e7ab3f6ca6b6d34609b29460"
+    "sha256": "989695d339996985a629adb42b0bccbbc166ffbf88a713053404d1df0c7118b5"
   },
   "packageName": "com.ecojust.joystick.claudeoftanks",
   "versionName": "0.1.0",
@@ -16,30 +16,29 @@
   "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
   "payloadFiles": 494,
   "sourceFiles": 602,
-  "signingReceipt": "https://github.com/ecojust/pureTV/blob/3505a881ea1ebf66f78290bb29ec9e61a7f583b5/packages/claude-of-tanks/signing-receipt.json",
+  "signingReceipt": "https://github.com/ecojust/pureTV/blob/7ad24a21c7373b7969a0d05afd2ee06fc49e2c18/packages/claude-of-tanks/signing-receipt.json",
   "physicalDeviceTested": false,
-  "qaRunId": 46010919467,
-  "qaSourceCommit": "58646c1ec3bcfc31c31b7c11a3cf44df2d47db8e",
-  "qaExportCommit": "3505a881ea1ebf66f78290bb29ec9e61a7f583b5",
-  "workflow": "https://github.com/ecojust/pureTV/actions/runs/46010919467",
-  "runtimeVerification": "https://github.com/ecojust/pureTV/blob/3505a881ea1ebf66f78290bb29ec9e61a7f583b5/runtime-verification.json",
+  "qaRunId": 46015516593,
+  "qaSourceCommit": "1a532f8fe4b0cb4ff2ce6a838c8722ea91d87239",
+  "qaExportCommit": "7ad24a21c7373b7969a0d05afd2ee06fc49e2c18",
+  "workflow": "https://github.com/ecojust/pureTV/actions/runs/46015516593",
+  "runtimeVerification": "https://github.com/ecojust/pureTV/blob/7ad24a21c7373b7969a0d05afd2ee06fc49e2c18/runtime-verification.json",
   "status": "failed",
   "officialSdkDefaultAndOccupiedPort": false,
   "runtime": [
     {
       "mode": "normal",
       "status": "failed",
-      "passedChecks": 2,
-      "report": "https://github.com/ecojust/pureTV/blob/3505a881ea1ebf66f78290bb29ec9e61a7f583b5/reports/joystick-android-report-runtime-claude-of-tanks/claude-of-tanks-normal/report.json",
-      "controllerPort": 63485,
-      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1234, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 632, in setup\n    self.capture('join-before-connection', [])\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 558, in capture\n    before = self.snapshot()\n             ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 384, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 151, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n"
+      "passedChecks": 1,
+      "report": "https://github.com/ecojust/pureTV/blob/7ad24a21c7373b7969a0d05afd2ee06fc49e2c18/reports/joystick-android-report-runtime-claude-of-tanks/claude-of-tanks-normal/report.json",
+      "error": "AssertionError: initial-menu timed out; last snapshot retained"
     },
     {
       "mode": "occupied",
       "status": "failed",
-      "passedChecks": 1,
-      "report": "https://github.com/ecojust/pureTV/blob/3505a881ea1ebf66f78290bb29ec9e61a7f583b5/reports/joystick-android-report-runtime-claude-of-tanks/claude-of-tanks-occupied/report.json",
-      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1234, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 613, in setup\n    initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu')\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 400, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: initial-menu timed out; last snapshot retained\n"
+      "passedChecks": 0,
+      "report": "https://github.com/ecojust/pureTV/blob/7ad24a21c7373b7969a0d05afd2ee06fc49e2c18/reports/joystick-android-report-runtime-claude-of-tanks/claude-of-tanks-occupied/report.json",
+      "error": "subprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds"
     }
   ]
 }
