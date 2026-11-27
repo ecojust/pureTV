@@ -142,6 +142,12 @@ try {
     .replace('const noiseTex = makeShaderNoiseTexture(3011);', 'if (isSoftwareRenderer()) return createSoftwareTerrain(layers, mask);\n  const noiseTex = makeShaderNoiseTexture(3011);');
   writeFileSync(terrainPath, softwareImport + "import {createSoftwareTerrain} from './softwareTerrain.js';\n" + terrain);
   const softwareMain = "import {isSoftwareRenderer} from './engine/quality.js';\n" + read(entry)
+    // The upstream black-scene watchdog renders the scene synchronously and can
+    // restore shadows. Software rendering deliberately uses a shadowless scene.
+    .replace('if (!navigator.webdriver) {\n    setTimeout(() => runSceneBlackWatchdog',
+      'if (!isSoftwareRenderer() && !navigator.webdriver) {\n    setTimeout(() => runSceneBlackWatchdog')
+    .replace("if (!navigator.webdriver || new URLSearchParams(location.search).has('diagforce')) {",
+      "if (!isSoftwareRenderer() && (!navigator.webdriver || new URLSearchParams(location.search).has('diagforce'))) {")
     .replace('await warmBattleTerrainTiles(coveredYield);', 'if (!isSoftwareRenderer()) await warmBattleTerrainTiles(coveredYield);')
     .replace('await warmCombatPipelineChunked(24);', 'if (!isSoftwareRenderer()) await warmCombatPipelineChunked(24);');
   // Countdown seconds follow visible play time. Physics retains the upstream fixed
