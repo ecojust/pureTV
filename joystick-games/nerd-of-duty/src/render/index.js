@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { DEFAULTS } from '../core/config.js';
 import { SoftwareView } from './software-view.js';
 
 import { hdrTarget, blit } from './pass.js';
@@ -129,9 +130,6 @@ export class RenderSystem {
   async init(ctx) {
     this.ctx = ctx;
     const cfg = ctx.config;
-    const q = cfg.q;
-    this.q = q;
-    this.qLevel = QUALITY_LEVEL[cfg.quality] ?? 3;
     this.rng = ctx.rng.fork();
     this.frame = 0;
 
@@ -154,6 +152,14 @@ export class RenderSystem {
     const debug = gl.getExtension('WEBGL_debug_renderer_info');
     const device = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : '';
     cfg.softwareGpu = /swiftshader|llvmpipe|softpipe|software|microsoft basic render/i.test(device);
+    // Use the original preset on accelerated desktops. Software WebGL and TV
+    // hosts start with the lightweight renderer unless a preset was requested.
+    cfg.defaultQuality = cfg.desktop && !cfg.softwareGpu ? DEFAULTS.quality : 'low';
+    cfg.setQuality(cfg.requestedQuality ?? cfg.defaultQuality);
+    cfg.softwareFallback = cfg.softwareGpu && (!cfg.desktop || cfg.quality === 'low');
+    const q = cfg.q;
+    this.q = q;
+    this.qLevel = QUALITY_LEVEL[cfg.quality] ?? 3;
     renderer.autoClear = false;
     renderer.autoClearColor = false;
     renderer.autoClearDepth = false;
@@ -940,7 +946,9 @@ export class RenderSystem {
   // ==========================================================================
 
   resize(w, h, ctx) {
-    const widthCap = ctx.config.softwareGpu ? 512 : ctx.config.quality === 'low' ? 960 : Infinity;
+    let widthCap = Infinity;
+    if (ctx.config.softwareFallback) widthCap = ctx.config.desktop ? 960 : 512;
+    else if (ctx.config.quality === 'low') widthCap = 960;
     const pr = Math.min(globalThis.devicePixelRatio || 1, 1.5, widthCap / w);
     this.renderer.setPixelRatio(pr);
     this.renderer.setSize(w, h, false);

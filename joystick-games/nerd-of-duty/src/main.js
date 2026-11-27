@@ -31,7 +31,8 @@ const capture = params.get('capture') === '1';
 const lockstep = capture && params.get('lockstep') === '1';
 
 const config = createConfig({
-  quality: params.get('q') ?? 'low',
+  desktop: Boolean(window.PureTVPC),
+  requestedQuality: params.get('q'),
   deterministic: capture,
 });
 
