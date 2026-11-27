@@ -1,5 +1,7 @@
 # 克劳德坦克 0.1.0 试玩记录
 
+本页记录首次发布的 `58646c1` 版本。修正软件渲染阴影后的 `1a532f8` 版本另附[普通 Chromium 驾驶与停车记录](../releases/0.1.0/1a532f8/browser/README.md)。
+
 2026 年 11 月 27 日，在 Linux Chromium 156.0.8078.79 中加载 APK 内的游戏资源。从中文车库选择默认车辆，在本地“翠绿山谷”开局。车库在 28.59 秒后出现，从按 START 至倒计时结束、可以驾驶共 55.11 秒。两种窗口尺寸均呈现了坦克、地形和战斗界面。期间站外请求、失败的本地响应、页面异常与控制台错误均为零。[960 × 540 实玩截图](playing-960.png) · [1280 × 720 实玩截图](playing-1280.png) · [194 秒实玩录像](gameplay.mp4)
 
 ## 输入与暂停
@@ -16,6 +18,6 @@
 
 受测本地未签名 APK 中的 489 个游戏文件逐一匹配冻结提交 `58646c1ec3bcfc31c31b7c11a3cf44df2d47db8e`，包中另有 5 个 Game Kit 配置及手柄文件。正式签名 APK 含有同样的 494 个资源，每个文件均与这次浏览器实玩所用包一致。游戏卡片使用较早中文候选版在同一地图驾驶时的实拍，经裁剪缩放至 640 × 360。浏览器资源树、截图与录像的摘要可在校验清单核对。[资源校验清单](../source-check.json) · [封面原图](../gameplay-960.png) · [签名流程和模拟器报告](https://github.com/ecojust/pureTV/actions/runs/46010919467)
 
-首次 Android TV API 36 模拟器验收中，默认端口场景进入中文车库后，观察器在采集截图时断开；占用默认端口的场景在 150 秒内未取得车库状态。两项均未完成 Android 实玩验证。[签名包记录](../releases/0.1.0/android.json)
+首次 Android TV API 36 模拟器验收中，默认端口场景进入中文车库后，观察器在采集截图时断开；占用默认端口的场景在 150 秒内未取得车库状态。两项均未完成 Android 实玩验证。[签名包记录](../releases/0.1.0/58646c1/android.json)
 
 在游戏目录运行 `python qa/play.py /tmp/tanks-qa --apk /path/to/claude-of-tanks.apk` 可重新采集。环境使用 Chromium、FFmpeg、Python Playwright、Pillow 和仓库的手柄 SDK。
