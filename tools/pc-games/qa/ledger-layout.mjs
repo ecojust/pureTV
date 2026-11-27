@@ -45,6 +45,21 @@ try {
     await page.setViewportSize({width, height});
     await assertVisible('.ow-att-inner');
     await assertVisible('.ow-att-footer');
+    const renderer = await page.evaluate(() => {
+      const engine = window.__ENGINE__;
+      const render = engine.ctx.peek('render');
+      const gl = render.renderer.getContext();
+      return {
+        software:engine.config.softwareGpu, quality:engine.config.quality,
+        buffer:[gl.drawingBufferWidth, gl.drawingBufferHeight],
+        scene:[render.hdrRt.width, render.hdrRt.height],
+      };
+    });
+    const scale = renderer.software ? Math.min(1, 960 / width) : 1;
+    assert.equal(renderer.quality, renderer.software ? 'low' : 'ultra');
+    assert.deepEqual(renderer.buffer, [Math.floor(width * scale), Math.floor(height * scale)]);
+    // The software path draws directly to the canvas. Ultra draws the world into its HDR target first.
+    if (!renderer.software) assert.deepEqual(renderer.scene, [width, height]);
     console.log(`Role selection fits ${width}×${height}.`);
   }
   await page.locator('.ow-att-card').first().click();
