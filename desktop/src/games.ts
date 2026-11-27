@@ -20,7 +20,8 @@ const groups = sections.map(({id, zh, en, games:entries}) => ({
 }));
 type Game = (typeof catalog)[number];
 type ControllerSession = {session:string; port:number; addresses:string[]; discovery:boolean};
-type ControllerState = {session:string; revision:number; connections:number; players:unknown[]};
+type ControllerPlayer = {id:number; connected:boolean; controllerId:string};
+type ControllerState = {session:string; revision:number; connections:number; players:ControllerPlayer[]};
 type ActiveGame = {
   game:Game;
   frame:HTMLIFrameElement;
@@ -85,7 +86,13 @@ export class Games {
     if (!game || this.active) return;
     const content = document.createElement('div');
     content.className = 'game-player-content';
-    content.innerHTML = `<div class="game-player-toolbar"><button type="button" data-close-game>← ${t('返回游戏列表')}</button><h2 id="game-player-title">${escape(gameName(game))}</h2></div><div class="game-status" role="status"><span data-frame-status></span><span data-socket-status></span></div>`;
+    content.innerHTML = `<div class="game-player-toolbar">
+      <button type="button" data-close-game>← ${t('返回游戏列表')}</button>
+      <h2 id="game-player-title">${escape(gameName(game))}</h2>
+      <div class="game-status" role="status" aria-label="${t('游戏状态')}" tabindex="0">
+        <p><span data-frame-status></span> <span data-socket-status></span></p>
+      </div>
+    </div>`;
     const frame = document.createElement('iframe');
     frame.title = gameName(game);
     frame.allow = 'gamepad; fullscreen; autoplay';
@@ -96,6 +103,7 @@ export class Games {
     content.append(frame);
     this.player.append(content);
     this.status('[data-frame-status]', t('正在加载游戏…'));
+    this.status('[data-socket-status]', desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。'));
     this.player.showModal();
     if (desktop) {
       this.windowWork = this.windowWork.then(async () => {
@@ -112,7 +120,6 @@ export class Games {
       this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
     }, 25000);
     if (desktop) {
-      this.status('[data-socket-status]', t('正在启动无线手柄服务…'));
       this.socketWork = this.socketWork.then(() => this.startControllers(active)).catch(() => {
         if (this.active === active) this.status('[data-socket-status]', t('无线手柄服务不可用，仍可使用键盘游玩。'));
       });
@@ -134,18 +141,22 @@ export class Games {
   private update(active:ActiveGame, snapshot:ControllerState):void {
     if (this.active !== active || !active.controller || active.controller.session !== snapshot.session ||
         (active.snapshot && active.snapshot.revision >= snapshot.revision)) return;
-    const changed = active.snapshot?.connections !== snapshot.connections;
     active.snapshot = snapshot;
     this.forward(active);
-    if (changed) this.showControllerStatus(active);
+    this.showControllerStatus(active);
   }
 
   private showControllerStatus(active:ActiveGame):void {
     const info = active.controller!;
     const endpoints = info.addresses.map(address => address + ':' + info.port).join(' · ');
-    const count = active.snapshot?.connections ?? 0;
-    const hint = count ? `${t('已连接手柄')} · ${count}` : t('等待无线手柄连接');
-    this.status('[data-socket-status]', [hint, endpoints || `TCP ${info.port}`].join(' · '));
+    const snapshot = active.snapshot;
+    let hint = info.discovery ? t('请在同一局域网内按手柄搜索键连接。') : t('手柄自动发现不可用，请按地址连接。');
+    if (snapshot?.connections) {
+      const seats = snapshot.players.filter(player => player.connected)
+        .map(player => [`P${player.id}`, player.controllerId].filter(Boolean).join(' '));
+      hint = [t('已连接无线手柄'), snapshot.connections, ...seats].join(' · ');
+    }
+    this.status('[data-socket-status]', `${hint} · ${endpoints || `TCP ${info.port}`}`);
   }
 
   private forward(active:ActiveGame):void {
@@ -157,7 +168,7 @@ export class Games {
 
   private status(selector:string, text:string):void {
     const element = this.player.querySelector(selector);
-    if (element) element.textContent = text;
+    if (element && element.textContent !== text) element.textContent = text;
   }
 
   close():void {

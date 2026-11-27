@@ -107,13 +107,30 @@ try {
     assert.doesNotMatch(await dialog.innerText(), /浏览器/);
     const frame = p.frame({url: url => url.href.startsWith(gamePage)}) || await p.waitForEvent('framenavigated', {predicate:f => f.url().startsWith(gamePage)});
     await frame.waitForFunction(() => window.received?.some(state => state.revision === 0));
-    assert.match(await dialog.innerText(), /192\.168\.0\.2:63485/);
-    const emit = (session, revision) => p.evaluate(({session, revision}) => window.__emitMcp('game-controller-state', {session, revision, connections:1, players:[{id:1}]}), {session, revision});
+    const status = dialog.getByRole('status', {name:'游戏状态'});
+    assert.equal(await dialog.getByRole('status').count(), 1);
+    assert.match(await status.innerText(), /搜索键.*192\.168\.0\.2:63485/);
+    await p.setViewportSize({width:600, height:480});
+    const before = await dialog.locator('iframe').boundingBox();
+    const panel = await status.boundingBox();
+    assert.ok(panel.y + panel.height <= before.y, 'The host panel is outside the playfield');
+    const emit = (session, revision, connected=true, controllerId='pad-one') => p.evaluate(state =>
+      window.__emitMcp('game-controller-state', state), {
+        session, revision, connections:connected ? 1 : 0, players:[{id:1, connected, controllerId}]
+      });
     await emit('old', 80);
     await emit('1', 2);
     await emit('1', 1);
     await frame.waitForFunction(() => received.some(state => state.revision === 2));
     assert.deepEqual(await frame.evaluate(() => received.map(state => state.revision)), [0, 2]);
+    assert.match(await status.innerText(), /已连接无线手柄 · 1 · P1 pad-one/);
+    assert.deepEqual(await dialog.locator('iframe').boundingBox(), before);
+    await emit('1', 3, true, 'replacement');
+    assert.match(await status.innerText(), /P1 replacement/);
+    assert.doesNotMatch(await status.innerText(), /pad-one/);
+    await emit('1', 4, false);
+    assert.match(await status.innerText(), /搜索键/);
+    assert.deepEqual(await dialog.locator('iframe').boundingBox(), before);
     await dialog.locator('[data-close-game]').click();
     await p.waitForFunction(() => !window.__windowFullscreen);
     await p.waitForFunction(() => window.__gameCommands.some(entry => entry.command === 'stop_game_controllers'));
@@ -124,9 +141,26 @@ try {
     ]);
     assert.equal(frame.isDetached(), true);
     assert.equal(await play.evaluate(button => document.activeElement === button), true);
+    await p.setViewportSize({width:1440, height:1000});
     await nav(p, 'apps');
     assert.equal(await p.locator('iframe').count(), 0);
   }, withoutAdb());
+  await check('games show the actual controller port when discovery is unavailable', async p => {
+    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+    await nav(p, 'games');
+    await p.locator('[data-play-game="tetris"]').click();
+    const status = p.locator('dialog.game-player').getByRole('status');
+    await status.getByText(/自动发现不可用.*192\.168\.0\.2:54821/).waitFor();
+    assert.doesNotMatch(await status.innerText(), /63485/);
+  }, withoutAdb(), {gameControllerInfo:{port:54821, discovery:false}});
+  await check('games show keyboard fallback in the same panel if the controller listener fails', async p => {
+    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+    await nav(p, 'games');
+    await p.locator('[data-play-game="tetris"]').click();
+    const dialog = p.locator('dialog.game-player');
+    await dialog.getByRole('status').getByText(/无线手柄服务不可用，仍可使用键盘游玩/).waitFor();
+    assert.equal(await dialog.locator('iframe').isVisible(), true);
+  }, withoutAdb(), {gameControllerError:'TCP 63485: bind failed'});
   await check('games open fullscreen in the same browser tab and exit from the game', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
@@ -155,8 +189,11 @@ try {
     assert.equal(p.context().pages().length, 1);
     const bounds = await dialog.boundingBox();
     assert.deepEqual(bounds, {x:0, y:0, ...p.viewportSize()});
+    const status = dialog.getByRole('status', {name:'游戏状态'});
+    assert.match(await status.innerText(), /正在加载游戏/);
+    assert.match(await status.innerText(), /可使用键盘游玩/);
     await p.clock.fastForward(26000);
-    assert.match(await dialog.locator('[data-frame-status]').innerText(), /网络/);
+    assert.match(await status.innerText(), /检查网络/);
     assert.doesNotMatch(await dialog.innerText(), /浏览器/);
     await dialog.locator('[data-close-game]').click();
     assert.equal(await play.evaluate(button => document.activeElement === button), true);

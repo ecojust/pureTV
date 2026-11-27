@@ -91,10 +91,13 @@ test('reloading an existing room baselines previous counts and closes the old ev
 test('static pages accept controller snapshots only from the embedding Manager', () => {
   const messages = [], listeners = new Map();
   const parent = { postMessage: (data, origin) => messages.push([data.type, origin]) };
+  const scorecards = new Map();
   const sandbox = {
     parent, pureTVPCConfig: { alias: 'TetrisHost' }, URLSearchParams,
-    location: { search: '?lang=en' },
+    location: { pathname: '/pureTV/games/tetris/tv.html', search: '?lang=en' },
     document: { hidden: false, hasFocus: () => true, addEventListener() {},
+      documentElement: { dataset: {}, setAttribute() {} },
+      getElementById: id => ({toggleAttribute: (name, shown) => scorecards.set(id, shown)}),
       createElement: () => ({}), head: { appendChild() {} } },
     addEventListener: (name, fn) => listeners.set(name, fn),
     removeEventListener: name => listeners.delete(name),
@@ -113,6 +116,10 @@ test('static pages accept controller snapshots only from the embedding Manager',
   event(parent, origin, 0, []);
   event(parent, origin, 1, [player(1, { RIGHT: true }, { RIGHT: 1 })]);
   assert.equal(JSON.parse(sandbox.TetrisHost.snapshot()).players[0].x, 1);
+  sandbox.TetrisHost.publish(JSON.stringify({players: [{id: 1, joined: true}, {id: 2, joined: false}]}));
+  assert.deepEqual([...scorecards], [['player-1', true], ['player-2', false]]);
+  sandbox.TetrisHost.publish('null');
+  assert.deepEqual([...scorecards], [['player-1', false], ['player-2', false]]);
   sandbox.TetrisHost.exit();
   assert.deepEqual(messages[1], ['puretv:game-exit', origin]);
   listeners.get('pagehide')();
