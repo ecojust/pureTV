@@ -124,6 +124,7 @@ def main():
     home_resources = {key: groups[key] for key in ('launcher', 'media')}
     genres = json.loads((root/'tools/readme-app-games.json').read_text())
     catalog = game_catalog(genres, dict(groups['game']), ENGLISH, root)
+    hosted = json.loads((root/'tools/pc-games/hosted-games.json').read_text())
     rendered = {}
     for filename,locale in [('README.md','zh'),('README.en.md','en')]:
         p=root/filename;text=p.read_text()
@@ -132,7 +133,11 @@ def main():
             assert replaced<=1,f'{filename}: duplicate {label} count badge'
         text = replace_index(text, 'management-index', management_table(groups['tools'], locale))
         text = replace_index(text, 'resource-index', tables('resource/', home_resources, locale))
-        text = replace_index(text, 'game-index', game_index(catalog, locale))
+        heading = '作者在线原版' if locale == 'zh' else 'Play the original games online'
+        links = [f'[{game[locale]}](https://ecojust.github.io/pureTV/games/{game["id"]}/tv.html)'
+                 for game in hosted]
+        text = replace_index(text, 'game-index', game_index(catalog, locale) +
+                             f'\n\n### {heading}\n\n' + ' · '.join(links))
         page_cards = Counter(re.findall(r'<a\s+href="([^"]+)">\s*<img\b', text))
         for genre in catalog:
             for card in genre['cards']:

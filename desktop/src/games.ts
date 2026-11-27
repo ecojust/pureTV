@@ -2,6 +2,7 @@ import {invoke} from '@tauri-apps/api/core';
 import {listen, type UnlistenFn} from '@tauri-apps/api/event';
 import {getCurrentWindow} from '@tauri-apps/api/window';
 import catalog from '../../tools/pc-games/catalog.json';
+import hosted from '../../tools/pc-games/hosted-games.json';
 import sections from '../../tools/readme-app-games.json';
 import {desktop} from './bridge';
 import {locale, t} from './i18n';
@@ -9,16 +10,16 @@ import {locale, t} from './i18n';
 const gamesBase = 'https://ecojust.github.io/pureTV/games/';
 const gamesOrigin = new URL(gamesBase).origin;
 const twoPlayerGames = new Set(['tank', 'super-mario', 'jackal', 'tetris', 'jewel', 'used-car-racing']);
-const games = new Map(catalog.map(game => [game.id, game]));
+type Game = (typeof catalog)[number] | (typeof hosted)[number];
+const games = new Map<string, Game>([...catalog, ...hosted].map(game => [game.id, game]));
 const groups = sections.map(({id, zh, en, games:entries}) => ({
   id, zh, en,
   games: entries.flatMap(entry => {
     const path = entry.resource ?? entry.page;
     const game = path && games.get(path.split('/')[1]);
     return game ? [game] : [];
-  })
+  }).concat(hosted.filter(game => game.category === id))
 }));
-type Game = (typeof catalog)[number];
 type ControllerSession = {session:string; port:number; addresses:string[]; discovery:boolean};
 type ControllerPlayer = {id:number; connected:boolean; controllerId:string};
 type ControllerState = {session:string; revision:number; connections:number; players:ControllerPlayer[]};
@@ -74,7 +75,8 @@ export class Games {
     const options = groups.map(group => `<option value="${group.id}"${group.id === this.group ? ' selected' : ''}>${escape(locale() === 'en' ? group.en : t(group.zh))}</option>`).join('');
     const cards = shown.flatMap(section => section.games).map(game => {
       const id = game.id;
-      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}"><img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/thumb.png" alt=""><strong>${escape(gameName(game))}</strong></button></article>`;
+      const cover = 'controls' in game ? 'thumb.webp' : 'thumb.png';
+      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}"><img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/${cover}" alt=""><strong>${escape(gameName(game))}</strong></button></article>`;
     });
     return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${cards.length}</span></div><div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards.join('')}</div>`;
   }
@@ -103,7 +105,9 @@ export class Games {
     content.append(frame);
     this.player.append(content);
     this.status('[data-frame-status]', t('正在加载游戏…'));
-    this.status('[data-socket-status]', desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。'));
+    const hint = 'controls' in game ? game.controls[gameLanguage()] :
+      desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。');
+    this.status('[data-socket-status]', hint);
     this.player.showModal();
     if (desktop) {
       this.windowWork = this.windowWork.then(async () => {
@@ -119,7 +123,7 @@ export class Games {
     this.readyTimeout = window.setTimeout(() => {
       this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
     }, 25000);
-    if (desktop) {
+    if (desktop && !('controls' in game)) {
       this.socketWork = this.socketWork.then(() => this.startControllers(active)).catch(() => {
         if (this.active === active) this.status('[data-socket-status]', t('无线手柄服务不可用，仍可使用键盘游玩。'));
       });

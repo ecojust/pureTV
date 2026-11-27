@@ -3,16 +3,19 @@ from html import escape
 import json
 from pathlib import Path
 import sys
+from hosted_games import hosted_games
 
 
 def write_index(output):
     catalog = json.loads(Path(__file__).with_name("catalog.json").read_text(encoding="utf-8"))
     links = []
-    for game in catalog:
+    online = hosted_games()
+    for game in [*catalog, *online]:
         slug, title, english = (escape(game[key]) for key in ("id", "zh", "en"))
+        cover = 'thumb.webp' if 'controls' in game else 'thumb.png'
         links.append(
             f'<a lang="zh-CN" href="games/{slug}/tv.html"><img loading="lazy" '
-            f'src="games/{slug}/thumb.png" alt=""><strong>{title}</strong>'
+            f'src="games/{slug}/{cover}" alt=""><strong>{title}</strong>'
             f'<span lang="en">{english}</span></a>'
         )
     output.mkdir(parents=True, exist_ok=True)

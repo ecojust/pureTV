@@ -226,6 +226,10 @@ New installations start in Simplified Chinese.
 
 <img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt=""> Android TV · <img src="docs/branding/platforms/macos.png" width="22" height="22" alt=""> macOS · <img src="docs/branding/platforms/windows.png" width="22" height="22" alt=""> Windows x64 · <img src="docs/branding/platforms/controller.png" width="22" height="22" alt=""> Controller supported · <img src="docs/branding/platforms/upstream.png" width="22" height="22" alt=""> Original repository
 
+### Play the original games online
+
+[Vault Breakers (formerly Bandit)](https://ecojust.github.io/pureTV/games/bandit/tv.html) · [Fish Loop](https://ecojust.github.io/pureTV/games/fish-loop/tv.html) · [NOIR EXTREME](https://ecojust.github.io/pureTV/games/noir-extreme/tv.html) · [Struggle Bus](https://ecojust.github.io/pureTV/games/struggle-bus/tv.html) · [Vespertine](https://ecojust.github.io/pureTV/games/vespertine/tv.html) · [Daejeon Urban Science High School Department Tour](https://ecojust.github.io/pureTV/games/daejeon-campus/tv.html)
+
 <!-- game-index:end -->
 
 KINDLE requires WebGL 2. Its macOS 0.1.0 package passed native Apple Silicon and Rosetta testing. The game did not finish initializing on the Intel Mac test runner. The signed Android TV 0.1.1 build has only partial emulator verification.

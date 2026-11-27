@@ -226,6 +226,10 @@
 
 <img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt=""> Android TV · <img src="docs/branding/platforms/macos.png" width="22" height="22" alt=""> macOS · <img src="docs/branding/platforms/windows.png" width="22" height="22" alt=""> Windows x64 · <img src="docs/branding/platforms/controller.png" width="22" height="22" alt=""> 支持手柄 · <img src="docs/branding/platforms/upstream.png" width="22" height="22" alt=""> 原作仓库
 
+### 作者在线原版
+
+[金库大盗](https://ecojust.github.io/pureTV/games/bandit/tv.html) · [鱼群环线](https://ecojust.github.io/pureTV/games/fish-loop/tv.html) · [黑色侦探：雨夜](https://ecojust.github.io/pureTV/games/noir-extreme/tv.html) · [飞天涂色巴士](https://ecojust.github.io/pureTV/games/struggle-bus/tv.html) · [暮海点灯人](https://ecojust.github.io/pureTV/games/vespertine/tv.html) · [大田都市科学高中专业探索](https://ecojust.github.io/pureTV/games/daejeon-campus/tv.html)
+
 <!-- game-index:end -->
 
 KINDLE 需要 WebGL 2。macOS 0.1.0 在 Apple Silicon 原生和 Rosetta 模式下通过验证，Intel Mac 测试机未能完成初始化。Android TV 0.1.1 已签名，模拟器仅完成部分原生手柄验证。
