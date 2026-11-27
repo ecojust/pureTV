@@ -1,0 +1,213 @@
+import { localizedCallout } from './captions.js';
+// Web Audio synthesis: engine tone, wind rush, stall horn; spoken GPWS callouts
+// (speechSynthesis, on-device, no network) with chirps as the fallback.
+// createAudio(sim) binds to the shared sim state; nothing starts until init() runs
+// from a user gesture (browser autoplay policy). Every callout's words also go to
+// caption(text, queued) (0117), sound or not, so the calls are picked even with it off.
+import { gpwsCalloutIndex, gpwsRearm, GPWS_ALT_THRESHOLDS, isStallWarning, isGpwsWarning, calloutWord, stallWarningKts } from './aero.js';
+
+export function createAudio(sim, onStateChange, caption = () => {}) {
+  let audioCtx = null;
+  let engineOsc = null, engineFilter = null, engineGain = null;
+  let windNoiseNode = null, windFilter = null, windGain = null;
+  let stallOsc = null, stallGain = null;
+  let voice = null, session = null, roll = null; const v = { hz: 150, gain: 0.08, filterHz: 450 }; // a plain drone until (or if never) it loads // engineSound.js (0148, lazy)
+
+  function init() {
+    if (audioCtx) {
+      if (!sim.paused) pause(false); // paused (ticket 0032) stays silent until Resume
+      return;
+    }
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new Ctx();
+
+      // Engine jet turbine / propeller synthesis
+      engineOsc = audioCtx.createOscillator();
+      engineOsc.type = 'sawtooth';
+      engineOsc.frequency.setValueAtTime(80, audioCtx.currentTime);
+      engineFilter = audioCtx.createBiquadFilter();
+      engineFilter.type = 'lowpass';
+      engineFilter.frequency.setValueAtTime(450, audioCtx.currentTime);
+      engineGain = audioCtx.createGain();
+      engineGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      engineOsc.connect(engineFilter);
+      engineFilter.connect(engineGain);
+      engineGain.connect(audioCtx.destination);
+      engineOsc.start();
+      import('./engineSound.js').then((m) => { voice = m.engineVoice; session = m.audioSession; roll = m.rollSound(audioCtx); }, () => {}).catch(console.warn); // rollSound.js: the ground roll (0149)
+
+      // Wind rush noise synthesis
+      const bufferSize = audioCtx.sampleRate * 2;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+      windNoiseNode = audioCtx.createBufferSource();
+      windNoiseNode.buffer = noiseBuffer;
+      windNoiseNode.loop = true;
+      windFilter = audioCtx.createBiquadFilter();
+      windFilter.type = 'bandpass';
+      windFilter.frequency.setValueAtTime(320, audioCtx.currentTime);
+      windGain = audioCtx.createGain();
+      windGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      windNoiseNode.connect(windFilter);
+      windFilter.connect(windGain);
+      windGain.connect(audioCtx.destination);
+      windNoiseNode.start();
+
+      // Stall warning alarm
+      stallOsc = audioCtx.createOscillator();
+      stallOsc.type = 'square';
+      stallOsc.frequency.setValueAtTime(750, audioCtx.currentTime);
+      stallGain = audioCtx.createGain();
+      stallGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+      stallOsc.connect(stallGain);
+      stallGain.connect(audioCtx.destination);
+      stallOsc.start();
+
+      sim.audioEnabled = true;
+      onStateChange();
+    } catch (e) {
+      console.warn('Web Audio error:', e);
+    }
+  }
+
+  function chirp(freq, duration) {
+    if (!audioCtx || !sim.audioEnabled) return;
+    try {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(g);
+      g.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) { /* audio is best-effort */ }
+  }
+
+  const synth = typeof window !== 'undefined' && window.speechSynthesis ? window.speechSynthesis : null;
+  // Speak a callout. Altitude callouts interrupt a stale one (they must be on time);
+  // follow-ups like "retard" queue behind.
+  function say(text, { interrupt = true } = {}) {
+    if (!audioCtx || !sim.audioEnabled || sim.paused) return false;
+    if (!synth || typeof SpeechSynthesisUtterance === 'undefined') return false;
+    try {
+      if (interrupt && synth.cancel) synth.cancel();
+      const u = new SpeechSynthesisUtterance(localizedCallout(text));
+      u.lang = /[\u3400-\u9fff]/.test(u.text) ? 'zh-CN' : 'en-US';
+      u.rate = 1.35;
+      u.pitch = 0.75;
+      u.volume = 0.9;
+      synth.speak(u);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  // Seconds of speech time: the AudioContext's clock (real time, like the voice) once sound has
+  // started; before that the page clock, while nothing is spoken anyway.
+  const clock = () => (audioCtx ? audioCtx.currentTime : performance.now() / 1000);
+  let gateCallAt = -10, retardAt = -10;
+  function checkGpwsCallouts() {
+    // Heights, retard, sink rate and pull up read the radio altitude at the main wheels (sim.raFt,
+    // 0122), as the real callouts do: the CG is ~12 ft up when a 737's mains touch.
+    sim.lastCalloutIdx = gpwsRearm(sim.raFt, sim.lastCalloutIdx);
+    if (sim.onGround || sim.vel.y >= 0) return;
+    // A sink rate / pull up warning outranks the heights (EGPWS priority): none while it lasts.
+    if (isGpwsWarning(sim.raFt, sim.vsiFpm, sim.onGround)) return;
+    const i = gpwsCalloutIndex(sim.raFt, sim.lastCalloutIdx);
+    if (i >= 0 && i < GPWS_ALT_THRESHOLDS.length) {
+      sim.lastCalloutIdx = i;
+      // An altitude callout cuts off a stale one, but never the gate's "unstabilized" call
+      // (made the same frame, or just before when the terrain dips under the final).
+      // Nor a "retard" still being said: on a 737's flare "ten" follows "twenty, retard" ~1 s later (0122).
+      const interrupt = clock() - gateCallAt > 2.5 && clock() - retardAt > 1.5;
+      caption(calloutWord(i), !interrupt);
+      if (!say(calloutWord(i), { interrupt })) chirp(587.33, 0.18);
+      if (GPWS_ALT_THRESHOLDS[i] === 20 && sim.throttle > 0.05 && !sim.engineFailed) {
+        caption('retard', true);
+        say('retard', { interrupt: false });
+        retardAt = clock();
+      }
+    }
+  }
+
+  let lastPullUp = -10;
+  function checkGpwsWarning() {
+    if (!isGpwsWarning(sim.raFt, sim.vsiFpm, sim.onGround)) return;
+    const now = clock();
+    if (now - lastPullUp < 3) return;
+    lastPullUp = now;
+    const words = sim.raFt < 250 ? 'pull up' : 'sink rate';
+    // Like a height call, it queues behind the gate's call rather than cutting it off.
+    const interrupt = now - gateCallAt > 2.5;
+    caption(words, !interrupt);
+    if (!say(words, { interrupt })) chirp(880, 0.4);
+  }
+
+  // flying false (the start screen over the default final) holds the callouts.
+  function update(flying = true) {
+    session?.(sim); // set once sound has started (init's lazy import); iOS: play through the silent switch (0169, audioSession.js)
+    if (sim.paused) return;
+    if (flying) {
+      checkGpwsCallouts();
+      checkGpwsWarning();
+    }
+    if (!audioCtx || !sim.audioEnabled) return;
+    const now = audioCtx.currentTime;
+    // The spooled engine's voice (prop rpm, fan N1; 0148).
+    if (voice) voice(sim, v);
+    engineOsc.frequency.setTargetAtTime(v.hz, now, 0.1);
+    engineFilter.frequency.setTargetAtTime(v.filterHz, now, 0.1);
+    engineGain.gain.setTargetAtTime(v.gain, now, 0.1);
+    const speedRatio = Math.min(sim.iasKts / 260, 1.6);
+    windGain.gain.setTargetAtTime(0.015 + speedRatio * 0.065, now, 0.1);
+    const stalling = isStallWarning(sim.iasKts, stallWarningKts(sim.spec, sim.flapsIndex), sim.onGround);
+    stallGain.gain.setTargetAtTime(stalling ? 0.07 : 0.0, now, 0.05);
+    roll?.(sim);
+  }
+
+  // One-off callouts from the sim (the stabilized gate, ticket 0020): queued behind the
+  // altitude callout that fires at the same height, a low chirp when speech is unavailable.
+  function callout(text) {
+    gateCallAt = clock();
+    caption(text, true);
+    if (!audioCtx || !sim.audioEnabled) return;
+    if (!say(text, { interrupt: false })) chirp(440, 0.3);
+  }
+
+  // Takeoff callouts (0035): on time, so each cuts off whatever is still being said.
+  function takeoffCall(text) {
+    if (!audioCtx || !sim.audioEnabled) return;
+    if (!say(text)) chirp(523.25, 0.15);
+  }
+
+  // Hard-mute every voice (used when the player switches sound off).
+  function mute() {
+    if (engineGain) engineGain.gain.value = 0;
+    if (windGain) windGain.gain.value = 0;
+    if (stallGain) stallGain.gain.value = 0;
+    roll?.(null);
+  }
+
+  // The autopilot tutor's voice: queued, never interrupting a callout.
+  const teach = (text) => say(text, { interrupt: false });
+
+  // Pause (ticket 0032): silence everything, the engine drone and any queued speech;
+  // pause(false) undoes only that (init() still needs a user gesture to create the context).
+  // No state checks: the state flips only when the promise settles, so a quick pause/resume
+  // would be dropped; Web Audio applies the calls in order. iOS reports 'interrupted' after a
+  // lock, which resuming also covers.
+  function pause(on) {
+    try { if (on) synth?.cancel(); } catch { /* best-effort */ }
+    session?.(sim); // a hidden tab runs no update() (0169): main.js setPaused set sim.paused first
+    if (audioCtx && audioCtx.state !== 'closed') audioCtx[on ? 'suspend' : 'resume']().catch(() => {});
+  }
+
+  return {
+    init, update, mute, callout, takeoffCall, teach, pause,
+    get ctx() { return audioCtx; }, // null until init(); touchdownFeel.js plays its one-shot sounds on it (0147)
+    get state() { return audioCtx ? audioCtx.state : 'off'; },
+  };
+}
