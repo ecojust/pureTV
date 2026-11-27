@@ -13,6 +13,8 @@ spec.loader.exec_module(qa_plan)
 LAST_STEP = {
     'claude-of-tanks': '转动车身',
     'openaero-dfw': '切换襟翼挡位',
+    'starfall': '移动指挥光标',
+    'zof-duty': '移动光标',
     'turbo-kart-rally': 'Accelerate in the original physics simulation',
     'clawd-pop': 'Fire the cannon',
     'operation-ironhold': 'Change loadout',
