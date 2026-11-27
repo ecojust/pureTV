@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": ["gameplay.time", "gameplay.x", "gameplay.z"],
+  "steps": [
+    {"name": "从车库进入战场", "keys": ["START"], "holdMs": 250, "timeoutSeconds": 180, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]},
+    {"name": "驾驶坦克向前移动", "keys": ["UP"], "holdMs": 900, "expect": [{"path": "gameplay.speed", "op": "changed"}]},
+    {"name": "转动车身", "keys": ["LEFT"], "holdMs": 600, "expect": [{"path": "gameplay.yaw", "op": "changed"}]},
+    {"name": "暂停战斗", "keys": ["START"], "holdMs": 250, "expect": [{"path": "stage", "op": "eq", "value": "paused"}]},
+    {"name": "继续战斗", "keys": ["START"], "holdMs": 250, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]}
+  ]
+}

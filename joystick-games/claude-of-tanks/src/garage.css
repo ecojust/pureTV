@@ -1,0 +1,18 @@
+:root { color-scheme: dark; font-family: system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html, body, #app { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #111719; }
+#app canvas { display: block; }
+#garage { position: fixed; inset: 0; z-index: 8; pointer-events: none; color: #f3f2e9; }
+#garage[hidden], #cot-boot[hidden] { display: none; }
+.garage-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 4vw; background: linear-gradient(#111b21eb, transparent); }
+.garage-header h1, #cot-boot h1 { margin: 0; font-size: clamp(25px, 4vw, 48px); letter-spacing: .06em; }
+.garage-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; position: absolute; bottom: 0; width: 100%; padding: 1rem 4vw max(1rem, env(safe-area-inset-bottom)); background: linear-gradient(transparent, #101a20 40%); }
+.garage-controls label { display: grid; flex: 1; min-width: 100px; gap: 4px; font-size: 14px; }
+.garage-controls select, .cot-battle { min-height: 42px; border: 1px solid #78888f; border-radius: 4px; font: inherit; color: #fff; background: #19252d; padding: 7px 12px; }
+.garage-controls select { width: 100%; }
+.cot-battle { background: #d98a34; border-color: #dda569; color: #10181c; font-weight: 700; }
+.garage-controls, .settings-slot { pointer-events: auto; }
+#garage :focus-visible { outline: 3px solid #ffd77c; outline-offset: 2px; }
+#cot-boot { position: fixed; inset: 0; z-index: 10000; display: grid; align-items: end; padding: 6vh 5vw; color: #fff; background: linear-gradient(transparent, #12202bd9), url("field.webp") center / cover; }
+#cot-boot progress { width: min(300px, 75vw); accent-color: #f9ac54; }
+@media (max-height: 490px) { .garage-header { padding-block: .35rem; } .garage-controls { padding-block: .55rem; } }
