@@ -89,7 +89,7 @@ def runtime(args):
     confirm_install = getattr(args, 'confirm_backroad_install', 'false') == 'true'
     assert not confirm_install or args.game == 'backroad-rally', 'Installation confirmation is Backroad-only'
     outcomes = []
-    for mode in ('normal', 'occupied'):
+    for mode in ((args.mode,) if args.mode else ('normal', 'occupied')):
         cmd = [sys.executable, str(build.ROOT / 'joystick-games/qa/android/run.py'), '--game', args.game,
                '--apk', str(args.input / 'packages' / args.game / (args.game + '-' + meta['version'] + '.apk')),
                '--observer', str(args.input / 'observers' / args.game / ('observer-' + args.game + '.apk')),
@@ -100,7 +100,8 @@ def runtime(args):
                        if args.game == 'claude-of-tanks' else nullcontext())
         with diagnostics:
             outcomes.append({'mode': mode, 'exitCode': subprocess.run(cmd, check=False).returncode})
-    build.write(args.output / (args.game + '-outcomes.json'), outcomes)
+    if not args.mode:
+        build.write(args.output / (args.game + '-outcomes.json'), outcomes)
     assert all(item['exitCode'] == 0 for item in outcomes), 'Original scenario failures retained'
 
 
@@ -111,6 +112,7 @@ def main():
     p = subs.add_parser('runtime'); p.add_argument('--game', required=True, choices=build.PACKAGES)
     for name in ('input', 'output'): p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--adb', default='adb')
+    p.add_argument('--mode', choices=('normal', 'occupied'))
     p.add_argument('--confirm-backroad-install', choices=('false', 'true'), default='false')
     args = parser.parse_args()
     if args.command == 'select':
