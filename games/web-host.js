@@ -1,18 +1,58 @@
 // Shared configuration for the static pages, both standalone and inside pureTV Manager.
 (() => {
   'use strict';
-  if (pureTVPCConfig.alias || pureTVPCConfig.gameKit) {
-    const style = document.createElement('link');
-    style.rel = 'stylesheet';
-    style.href = '../web-host.css';
-    document.head.appendChild(style);
-  }
+  document.documentElement.dataset.puretvGame = location.pathname.split('/').slice(-2)[0];
+  const style = document.createElement('link');
+  style.rel = 'stylesheet';
+  style.href = '../web-host.css';
+  document.head.appendChild(style);
+
   const embedded = window.parent !== window;
   const language = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'zh';
+  // The Manager already displays host status outside its game frame.
+  if (!embedded) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const notice = document.createElement('div');
+      notice.id = 'puretv-web-notice';
+      notice.setAttribute('role', 'status');
+      notice.lang = language;
+      notice.textContent = language === 'en' ? 'Play with your keyboard.' : '可使用键盘游玩。';
+      document.body.appendChild(notice);
+      setTimeout(() => notice.remove(), 3500);
+    }, {once: true});
+  }
   pureTVPCConfig.info = {
     platform: 'pc', language, qr: '', url: '', addresses: [],
     wifiController: { state: 'unavailable', inputEnabled: true }
   };
+
+  // These games reuse the pairing cards for the score and lives once a player joins.
+  const game = document.documentElement.dataset.puretvGame;
+  if (['tank', 'super-mario', 'jackal', 'tetris', 'jewel'].includes(game)) {
+    document.documentElement.setAttribute('data-player-scorecards', '');
+    pureTVPCConfig.onPublish = state => {
+      const players = Array.isArray(state?.players) ? state.players : [];
+      for (const id of [1, 2]) {
+        const joined = players.some(player => player?.id === id && player.joined);
+        document.getElementById('player-' + id)?.toggleAttribute('data-game-player', joined);
+      }
+    };
+  } else if (['last-track', 'night-racer', 'ponpoko-kart', 'turbo-kart-rally', 'turbo-kart-rush'].includes(game)) {
+    document.documentElement.setAttribute('data-controller-guide', '');
+    document.addEventListener('DOMContentLoaded', () => {
+      // The guide is attached to the body during each game's asynchronous startup.
+      const observer = new MutationObserver(labelGuide);
+      function labelGuide() {
+        const panel = document.getElementById('puretv-controller-panel');
+        if (panel) {
+          panel.setAttribute('aria-label', language === 'en' ? 'Game controls' : '游戏操作说明');
+          observer.disconnect();
+        }
+      }
+      observer.observe(document.body, {childList: true});
+      labelGuide();
+    }, {once: true});
+  }
 
   function managerOrigin(origin) {
     return ['tauri://localhost', 'http://tauri.localhost', 'https://tauri.localhost'].includes(origin) ||
