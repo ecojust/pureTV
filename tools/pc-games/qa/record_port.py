@@ -7,10 +7,12 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import socket
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
-from time import monotonic
+from time import monotonic, sleep
+from urllib.request import urlopen
 from urllib.parse import urlsplit
 from zipfile import ZipFile
 
@@ -81,7 +83,46 @@ def tcp_press(page, client, key, condition, arg=None):
     wait(page, f'!s.controller.buttons[{json.dumps(key)}]')
 
 
-def run(game, play):
+@contextmanager
+def browser_for_run(pw, executable, tmp, native_chromium):
+    args = ['--enable-unsafe-swiftshader', '--disable-dev-shm-usage']
+    if not native_chromium:
+        browser = pw.chromium.launch(executable_path=executable, args=args)
+        try:
+            yield browser
+        finally:
+            browser.close()
+        return
+
+    # Chromium sets navigator.webdriver when the debugging port is zero or when
+    # launched with automation flags. Use a real nonzero loopback port and an
+    # isolated profile, then attach to the ordinary browser process over CDP.
+    with socket.socket() as reservation:
+        reservation.bind(('127.0.0.1', 0))
+        port = reservation.getsockname()[1]
+    address = f'http://127.0.0.1:{port}'
+    process = subprocess.Popen([executable, *args, '--no-sandbox', '--ozone-platform=headless',
+                                '--use-angle=swiftshader', '--remote-debugging-address=127.0.0.1',
+                                f'--remote-debugging-port={port}', f'--user-data-dir={tmp / "chromium"}', 'about:blank'],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        deadline = monotonic() + 20
+        while True:
+            try:
+                with urlopen(address + '/json/version', timeout=0.5):
+                    break
+            except OSError:
+                if process.poll() is not None or monotonic() >= deadline:
+                    raise RuntimeError('Chromium did not expose its debugging endpoint')
+                sleep(0.1)
+        browser = pw.chromium.connect_over_cdp(address)
+        yield browser
+    finally:
+        process.terminate()
+        process.wait(timeout=10)
+
+
+def run(game, play, *, native_chromium=False):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path, help='Directory for screenshots, video and the JSON report')
     parser.add_argument('--apk', type=Path, help='Exercise the assets of this APK instead of the local dist/')
@@ -104,8 +145,8 @@ def run(game, play):
             contents = {name: hashlib.sha256(z.read(name)).hexdigest() for name in sorted(z.namelist())
                         if name.startswith('assets/') and not name.endswith('/')}
         digest = hashlib.sha256(json.dumps(contents, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
-        with sync_playwright() as pw, desktop(game, package, language='zh') as (url, port):
-            browser = pw.chromium.launch(executable_path=opts.chromium, args=['--enable-unsafe-swiftshader', '--disable-dev-shm-usage'])
+        with sync_playwright() as pw, desktop(game, package, language='zh') as (url, port), \
+                browser_for_run(pw, opts.chromium, tmp, native_chromium) as browser:
             page = browser.new_page(viewport={'width': 960, 'height': 540}, locale='zh-CN')
             page.set_default_timeout(240_000)
             errors, console_errors, external, missing = [], [], set(), set()
@@ -146,8 +187,8 @@ def run(game, play):
                 except PlaywrightTimeout:
                     print('The failing page did not present a frame for the screenshot.', flush=True)
                 raise
-            browser.close()
             assert not errors, errors
+            assert not console_errors, console_errors
             assert not missing, f'Missing offline assets: {sorted(missing)}'
             assert not external, f'Unexpected external request: {sorted(external)[:3]}'
             report.update(game=game, chromium=browser.version, assetTreeSha256=digest, assetFiles=len(contents),

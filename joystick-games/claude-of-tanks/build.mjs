@@ -60,7 +60,11 @@ try {
   main = span(main, 'function loadPlayMenuModule()', 'const garage = await', '');
   main = span(main, '  onPlayRequest: (request)', '  // MAP-CONFIG', '');
   main = span(main, 'const VIEW_TIME =', 'damagePanel.setTank(getSpec(selectedSpecId), pedestalVisual);', '');
-  main = span(main, 'let studioRuntimePromise =', 'bootComplete = true;', '');
+  main = span(main, 'let studio = { active: false, tick() {} };', 'bootComplete = true;', '');
+  main = main.replace('  if (studio.active) { studio.tick(dtR); return; }', '')
+    .replace('studio: !!studio?.active,', 'studio: false,')
+    // A restored graphics context may schedule a frame during asynchronous boot.
+    .replace('if (graphicsContextLost) return;', 'if (!bootComplete || graphicsContextLost) return;');
   main = span(main, 'let debugAimTargetId =', "await bootStage('ready'", 'let debugAimTargetId = null;\n');
   main = span(main, '  aim.penRatio = null;\n  const shellSpec =', 'let lastPenRatio =', '  aim.penRatio = null;\n}\n');
   // The upstream simulation records hits and trajectories only if a replay
