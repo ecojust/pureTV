@@ -162,7 +162,8 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers'].includes(command)) {
           window.__gameCommands.push({command, ...args});
           if (command === 'start_game_controllers') {
-            return {session: String(++gameSession), port: 63485, addresses: ['192.168.0.2'], discovery: true};
+            if (options.gameControllerError) throw new Error(options.gameControllerError);
+            return {session: String(++gameSession), port: 63485, addresses: ['192.168.0.2'], discovery: true, ...options.gameControllerInfo};
           }
           if (command === 'game_controller_state') {
             return {session: args.session, revision: 0, connections: 0, players: []};

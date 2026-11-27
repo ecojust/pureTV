@@ -19,6 +19,13 @@ from prepare_standalone import ROOT, tracked_file, write_notices
 sys.path.insert(0, str(ROOT / 'tools'))
 from game_icons import save_banner
 
+# These pages need desktop-specific presentation newer than their signed TV assets.
+WEB_BUNDLES = {
+    'alien-shooter': 'src/main/assets/runtime.js',
+    'nerd-of-duty': 'dist/nerd-of-duty.js',
+    'used-car-racing': 'src/main/assets/game.js',
+}
+
 
 def stage(game, output, cache, revision):
     slug = game['id']
@@ -43,12 +50,10 @@ def stage(game, output, cache, revision):
                 with archive.open(member) as source, destination.open('xb') as file:
                     shutil.copyfileobj(source, file)
             write_notices(archive, game, directory, target / 'puretv-licenses')
-        if slug == 'nerd-of-duty':
-            # The signed TV package predates the desktop renderer profile.
-            bundle = f'{slug}.js'
-            bundle_path = f'{directory}/dist/{bundle}'
+        if slug in WEB_BUNDLES:
+            bundle_path = f'{directory}/{WEB_BUNDLES[slug]}'
             data = tracked_file(bundle_path)
-            (target / bundle).write_bytes(data)
+            (target / Path(bundle_path).name).write_bytes(data)
             source_file = target / 'puretv-licenses/source.json'
             source = json.loads(source_file.read_text(encoding='utf-8'))
             source['web_bundle'] = {'path': bundle_path, 'sha256': hashlib.sha256(data).hexdigest()}
