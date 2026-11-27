@@ -1,4 +1,4 @@
-"""Controller-driven gameplay checks for Kart Royale and the five November expansion games."""
+"""Controller-driven gameplay checks for adapted games."""
 import importlib.util
 from pathlib import Path
 import time
@@ -11,6 +11,8 @@ spec.loader.exec_module(qa_plan)
 
 # Stop after a verified gameplay action. Later steps may require simultaneous inputs.
 LAST_STEP = {
+    'claude-of-tanks': '转动车身',
+    'openaero-dfw': '切换襟翼挡位',
     'turbo-kart-rally': 'Accelerate in the original physics simulation',
     'clawd-pop': 'Fire the cannon',
     'operation-ironhold': 'Change loadout',

@@ -66,7 +66,9 @@ def expected_inputs(root, commit, slug):
     exact = {'resource/game-kit/build.py', build.POLICY_PATH, 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
              '.github/workflows/joystick-games-android.yml', *PHONE,
              *[game + name for name in ('game.json', 'package.json', 'package-lock.json', 'build.mjs')]}
-    required = tree(root, commit, 'resource/game-kit/android/src/main', game + 'src', game + 'dist', 'joystick-games/shared/web')
+    exact.update(game + name for name in build.GAME_BUILD_FILES.get(slug, ()))
+    extra_folders = [game + name for name in build.GAME_BUILD_DIRECTORIES.get(slug, ())]
+    required = tree(root, commit, 'resource/game-kit/android/src/main', game + 'src', game + 'dist', 'joystick-games/shared/web', *extra_folders)
     required |= {n for n in tree(root, commit, 'joystick-games/tools') if fnmatch.fnmatch(n, 'joystick-games/tools/android-*.py')}
     required |= tree(root, commit, 'joystick-games/tools/fixtures/audio')
     if tree(root, commit, 'tools/game_icons.py'):
@@ -95,6 +97,8 @@ def production_path(name, slug):
             name.startswith('resource/game-kit/android/src/main/') or name in PHONE or
             (name.startswith('joystick-games/shared/web/') and '.test.' not in name) or
             name.startswith(game + 'src/') or name.startswith(game + 'dist/') or
+            name in {game + f for f in build.GAME_BUILD_FILES.get(slug, ())} or
+            any(name.startswith(game + d + '/') for d in build.GAME_BUILD_DIRECTORIES.get(slug, ())) or
             name in {game + x for x in ('game.json', 'icon.xml', 'build.mjs', 'package.json', 'package-lock.json', 'upstream.json', 'NOTICE.md', 'LICENSE', 'LICENSE.txt')})
 
 

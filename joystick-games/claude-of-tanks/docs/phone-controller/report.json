@@ -1,0 +1,87 @@
+{
+  "game": "claude-of-tanks",
+  "payloadSha256": "12e6307012701d51c49f4ddaf117169ae82366e658bed583283bf49b1ff56439",
+  "browser": "156.0.8078.79",
+  "tvSha256": "f110a51ebacaeecd1255378173b2663b5c2e2dfed4cf17ce76fae3c807c9a38f",
+  "qrRect": [
+    761,
+    47,
+    108,
+    109
+  ],
+  "qrScreenshots": 1,
+  "screenshotSha256": "0dc601b4fa08e69a82f93de25a584a65f84aea1dc42320469e5df0826e26f713",
+  "menu": {
+    "stage": "menu",
+    "screen": null,
+    "frames": 24,
+    "active": "开始单人对战",
+    "polls": 24
+  },
+  "gameplay": {
+    "plan": "joystick-games/claude-of-tanks/qa-plan.json",
+    "steps": [
+      {
+        "step": "从车库进入战场",
+        "key": "START",
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ],
+        "before": {
+          "stage": "menu"
+        },
+        "after": {
+          "stage": "playing"
+        }
+      },
+      {
+        "step": "驾驶坦克向前移动",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.speed": 0.006540276608486883
+        },
+        "after": {
+          "gameplay.speed": 0.2730338758411211
+        }
+      },
+      {
+        "step": "转动车身",
+        "key": "LEFT",
+        "expect": [
+          {
+            "path": "gameplay.yaw",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.yaw": 0.10526978883770051
+        },
+        "after": {
+          "gameplay.yaw": 0.19173468198563573
+        }
+      }
+    ]
+  },
+  "gameplayScreenshotSha256": "75eb24a015a6beadc5b29398e617f980c5f7339bd86cf91cd64799522195e346",
+  "touch": "DOWN",
+  "afterTouch": {
+    "stage": "playing",
+    "screen": null,
+    "frames": 116,
+    "active": "克劳德坦克\n  \n  \n    车辆M1A2 AbramsT-62 obr. 1975T-64BV1T-72B3M ob",
+    "polls": 116
+  },
+  "disconnectReleased": true,
+  "passed": true,
+  "seconds": 202.4
+}

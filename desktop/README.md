@@ -4,7 +4,7 @@
 
 下载：[0.6.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-「游戏」栏目集中提供首页收录的 46 款网页游戏。点击封面，游戏会在管理器内全屏打开。[游玩与连接手柄](../docs/guide/README.md#在电脑上玩)
+本分支的「游戏」栏目收录 48 款网页游戏，包含《克劳德坦克》和《达拉斯飞行模拟》。点击封面即可在管理器内全屏游玩。已发布的 0.6.0 安装包使用发行时的 46 款游戏清单。[游玩与连接手柄](../docs/guide/README.md#在电脑上玩)
 
 0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.6.0**，旧客户端不会自动切换下载地址。
 

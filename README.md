@@ -88,9 +88,9 @@
 
 <!-- game-index:start -->
 
-**46 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 46 款 · macOS 独立安装包 46 款 · Windows x64 独立安装包 46 款
+**48 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 48 款 · macOS 独立安装包 46 款 · Windows x64 独立安装包 46 款
 
-[竞速与体育（14）](#controller-racing) · [动作、角色扮演与探索（8）](#controller-action) · [平台、弹幕与街机（8）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（14）](#controller-puzzle)
+[竞速与体育（14）](#controller-racing) · [动作、角色扮演与探索（9）](#controller-action) · [飞行模拟（1）](#controller-flight) · [平台、弹幕与街机（8）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（14）](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
@@ -125,7 +125,7 @@
 
 <a id="controller-action"></a>
 
-### 动作、角色扮演与探索（8）
+### 动作、角色扮演与探索（9）
 
 <table>
   <tr>
@@ -139,6 +139,25 @@
     <td align="center" valign="top" width="207"><a href="joystick-games/kindle/"><img src="joystick-games/kindle/thumb.png" width="180" alt=""><br>星球点灯人</a><br><a href="https://ecojust.github.io/pureTV/games/kindle/tv.html">网页游玩</a><br><a href="joystick-games/kindle/kindle-0.1.2.apk?raw=1" title="星球点灯人 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="星球点灯人 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/kindle-macos.dmg" title="星球点灯人 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="星球点灯人 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/kindle-windows-x64-setup.exe" title="星球点灯人 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="星球点灯人 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/TonyDowney/kindle" title="星球点灯人 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="星球点灯人 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/nerd-of-duty/"><img src="joystick-games/nerd-of-duty/thumb.png" width="180" alt=""><br>账本保卫战</a><br><a href="https://ecojust.github.io/pureTV/games/nerd-of-duty/tv.html">网页游玩</a><br><a href="joystick-games/nerd-of-duty/nerd-of-duty-0.1.1.apk?raw=1" title="账本保卫战 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="账本保卫战 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nerd-of-duty-macos.dmg" title="账本保卫战 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="账本保卫战 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nerd-of-duty-windows-x64-setup.exe" title="账本保卫战 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="账本保卫战 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/sytaylor/nerd-of-duty" title="账本保卫战 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="账本保卫战 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/gogh-strike/"><img src="joystick-games/gogh-strike/thumb.png" width="180" alt=""><br>梵高突击</a><br><a href="https://ecojust.github.io/pureTV/games/gogh-strike/tv.html">网页游玩</a><br><a href="joystick-games/gogh-strike/gogh-strike-0.1.1.apk?raw=1" title="梵高突击 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="梵高突击 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/gogh-strike-macos.dmg" title="梵高突击 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="梵高突击 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/gogh-strike-windows-x64-setup.exe" title="梵高突击 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="梵高突击 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/petergpt/gogh-strike" title="梵高突击 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="梵高突击 · 原作仓库"></a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/claude-of-tanks/"><img src="joystick-games/claude-of-tanks/thumb.png" width="180" alt=""><br>克劳德坦克</a><br><a href="https://ecojust.github.io/pureTV/games/claude-of-tanks/tv.html">网页游玩</a><br><a href="joystick-games/claude-of-tanks/claude-of-tanks-0.1.0.apk?raw=1" title="克劳德坦克 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="克劳德坦克 Android TV APK"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/Kevin-Liu-01/Claude-of-Tanks" title="克劳德坦克 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="克劳德坦克 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+  </tr>
+</table>
+
+<a id="controller-flight"></a>
+
+### 飞行模拟（1）
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/openaero-dfw/"><img src="joystick-games/openaero-dfw/thumb.png" width="180" alt=""><br>达拉斯飞行模拟</a><br><a href="https://ecojust.github.io/pureTV/games/openaero-dfw/tv.html">网页游玩</a><br><a href="joystick-games/openaero-dfw/openaero-dfw-0.1.0.apk?raw=1" title="达拉斯飞行模拟 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="达拉斯飞行模拟 Android TV APK"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/mutaaf/openaero-dfw" title="达拉斯飞行模拟 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="达拉斯飞行模拟 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
   </tr>
 </table>
 

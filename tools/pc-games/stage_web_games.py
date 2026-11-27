@@ -34,7 +34,8 @@ def stage(game, output, cache, revision):
     if not re.fullmatch(r'[a-z0-9-]+', slug) or not game['url'].startswith(prefix):
         raise ValueError(f'Invalid catalog entry for {slug}')
     pinned = game['url'].replace(REPOSITORY_RAW, f'https://github.com/ecojust/pureTV/raw/{revision}/', 1)
-    apk = fetch_game({**game, 'url': pinned}, cache)
+    pinned_game = {**game, 'url': pinned}
+    apk = fetch_game(pinned_game, cache)
     with TemporaryDirectory(dir=output) as temporary:
         target = Path(temporary) / slug
         target.mkdir()
@@ -49,7 +50,7 @@ def stage(game, output, cache, revision):
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 with archive.open(member) as source, destination.open('xb') as file:
                     shutil.copyfileobj(source, file)
-            write_notices(archive, game, directory, target / 'puretv-licenses')
+            write_notices(archive, pinned_game, directory, target / 'puretv-licenses')
         if slug in WEB_BUNDLES:
             bundle_path = f'{directory}/{WEB_BUNDLES[slug]}'
             data = tracked_file(bundle_path)
@@ -66,6 +67,10 @@ def stage(game, output, cache, revision):
         if layout.is_file():
             shutil.copyfile(layout, target / 'web-layout.css')
             scripts += '<link rel="stylesheet" href="web-layout.css">'
+        adapter = layout.with_suffix('.js')
+        if adapter.is_file():
+            shutil.copyfile(adapter, target / 'web-layout.js')
+            scripts += '<script src="web-layout.js"></script>'
         html, matches = re.subn(r'<head(?:\s[^>]*)?>', lambda match: match.group() + scripts,
                                 entry.read_text(encoding='utf-8-sig'), count=1, flags=re.I)
         if not matches:

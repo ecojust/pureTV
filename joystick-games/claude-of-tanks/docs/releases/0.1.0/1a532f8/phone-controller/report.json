@@ -1,0 +1,146 @@
+{
+  "game": "claude-of-tanks",
+  "payloadSha256": "5f5f8527dac7465608b31e66d8a6056535fb6b73005118731bb56f190e5ba6e6",
+  "browser": "156.0.8078.79",
+  "tvSha256": "f110a51ebacaeecd1255378173b2663b5c2e2dfed4cf17ce76fae3c807c9a38f",
+  "tvWebdriver": false,
+  "qrRect": [
+    761,
+    47,
+    108,
+    109
+  ],
+  "qrScreenshots": 93,
+  "screenshotSha256": "45b2c2227f32ddc5fabc2ca4e8030778d8783dfc53d95e16d0e7339259e8ddeb",
+  "menu": {
+    "stage": "menu",
+    "screen": null,
+    "frames": 7,
+    "active": "开始单人对战",
+    "polls": 7
+  },
+  "phoneWebdriver": false,
+  "gameplay": {
+    "plan": "joystick-games/claude-of-tanks/qa-plan.json",
+    "steps": [
+      {
+        "step": "从车库进入战场",
+        "key": "START",
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ],
+        "before": {
+          "stage": "menu"
+        },
+        "after": {
+          "stage": "playing"
+        }
+      },
+      {
+        "step": "驾驶坦克向前移动",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.speed": 0.005936613259184431
+        },
+        "after": {
+          "gameplay.speed": 0.09983105387184309
+        }
+      },
+      {
+        "step": "转动车身",
+        "key": "LEFT",
+        "expect": [
+          {
+            "path": "gameplay.yaw",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.yaw": 0.10526978883770051
+        },
+        "after": {
+          "gameplay.yaw": 0.12688601429937535
+        }
+      }
+    ]
+  },
+  "gameplayScreenshotSha256": "41e3e3c88e9a528c063ac130f4889ca669e3e67a5abc831d74f641fa671743c9",
+  "touch": "DOWN",
+  "afterTouch": {
+    "stage": "playing",
+    "screen": null,
+    "frames": 81,
+    "active": "克劳德坦克\n  \n  \n    车辆M1A2 AbramsT-62 obr. 1975T-64BV1T-72B3M ob",
+    "polls": 81
+  },
+  "disconnectReleased": true,
+  "passed": true,
+  "seconds": 370.5,
+  "frozenSource": "1a532f8fe4b0cb4ff2ce6a838c8722ea91d87239",
+  "physicalPhoneTested": false,
+  "physicalTvTested": false,
+  "scope": "APK resources and native Java LAN room with independently launched Chromium on both ends; touch input on the controller page.",
+  "initialAttempt": {
+    "stage": "menu",
+    "visible": true,
+    "webglContextLost": true,
+    "drawingBuffer": [
+      720,
+      405
+    ],
+    "screenshot": "graphics-reset.png",
+    "screenshotSha256": "175ac02b73b343f6bb534dcf0a2a44574d2c753cbba8f817531cf31dbc6cbc24",
+    "chromiumGpuProcessFlags": [
+      "--type=gpu-process",
+      "--gpu-recent-crash-count=2",
+      "--use-angle=swiftshader"
+    ],
+    "hostCgroupOomKills": 0,
+    "result": "The game displayed its graphics device reset dialog. The QR code was unavailable until Reload was clicked."
+  },
+  "recovery": "The actual visible Reload button was clicked once. The QR code was then decoded, START entered gameplay, touch moved and steered the player, and disconnect cleared the held direction.",
+  "independentColdStartEvidence": [
+    {
+      "at": "2026-11-27T14:37:09.095705+00:00",
+      "terminationProcess": "Linux Chromium SwiftShader GPU process",
+      "chromiumExitCode": 512,
+      "minidumpSha256": "4027ccd0928b304009a741df2a907f6a478c631f515af889d7b811e484791857",
+      "exceptionThreadId": 117232,
+      "exceptionThreadName": "GpuWatchdog"
+    },
+    {
+      "at": "2026-11-27T14:39:34.432041+00:00",
+      "terminationProcess": "Linux Chromium SwiftShader GPU process",
+      "chromiumExitCode": 512,
+      "minidumpSha256": "1db25dc692777015440dd68903c4853c8245b0d7c863e3f3d5f5f388ad2b9280",
+      "exceptionThreadId": 118570,
+      "exceptionThreadName": "GpuWatchdog"
+    },
+    {
+      "at": "2026-11-27T14:40:04.576941+00:00",
+      "terminationProcess": "Linux Chromium SwiftShader GPU process",
+      "chromiumExitCode": 512,
+      "minidumpSha256": "63084c47a1bf245c39f78d37b998ca621f797b21112bd2f3ba0aeb6f1111d1e2",
+      "exceptionThreadId": 118876,
+      "exceptionThreadName": "GpuWatchdog"
+    }
+  ],
+  "coldStartWithAutomaticNavigation": {
+    "passed": false,
+    "cause": "After the software GPU reset, the page navigated during startup and displayed the graphics reset dialog again. The rendered menu had no readable QR within the test deadline.",
+    "error": "No readable QR in the rendered menu after 78 screenshots",
+    "documentNavigations": 2,
+    "userReloadAttempted": false,
+    "qrWaitLimitSeconds": 150
+  }
+}

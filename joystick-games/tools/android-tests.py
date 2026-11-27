@@ -94,8 +94,8 @@ class PayloadBoundaries(unittest.TestCase):
 
 class TargetSdkBoundaries(unittest.TestCase):
     expansion_games = (
-        'bloom-hop', 'clawd-pop', 'dolmus', 'gogh-strike', 'kaboom-arena', 'lumenrift', 'marti',
-        'mechapede', 'nerd-of-duty', 'nova-lancer', 'operation-ironhold', 'saber-magic-tower', 'turbo-kart-rally',
+        'bloom-hop', 'claude-of-tanks', 'clawd-pop', 'dolmus', 'gogh-strike', 'kaboom-arena', 'lumenrift', 'marti',
+        'mechapede', 'nerd-of-duty', 'nova-lancer', 'openaero-dfw', 'operation-ironhold', 'saber-magic-tower', 'turbo-kart-rally',
     )
 
     def test_expansion_manifests_select_sdk_35(self):
@@ -227,8 +227,8 @@ class CatalogRegistrationBoundaries(unittest.TestCase):
         spec = importlib.util.spec_from_file_location('catalog_runtime_inputs_under_test', HERE / 'android-runtime-inputs.py')
         runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
         with tempfile.TemporaryDirectory(prefix='catalog-frozen-inventory-') as tmp:
-            root = Path(tmp); kit = root / 'resource/game-kit'; game = root / 'joystick-games/fixture-game'
-            for directory in ('resource/game-kit/android/src/main', 'joystick-games/shared/web', 'joystick-games/fixture-game/src', 'joystick-games/fixture-game/dist'):
+            root = Path(tmp); kit = root / 'resource/game-kit'; game = root / 'joystick-games/openaero-dfw'
+            for directory in ('resource/game-kit/android/src/main', 'joystick-games/shared/web', 'joystick-games/openaero-dfw/src', 'joystick-games/openaero-dfw/dist'):
                 (root / directory).mkdir(parents=True)
             files = ['resource/game-kit/build.py', build.POLICY_PATH, 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
                      '.github/workflows/joystick-games-android.yml', build.CATALOG_WORKFLOW, 'joystick-games/tools/qa-plan.py',
@@ -236,28 +236,33 @@ class CatalogRegistrationBoundaries(unittest.TestCase):
                      'joystick-games/shared/triptych/build.mjs', 'joystick-games/shared/web/input.js',
                      'resource/game-kit/android/src/main/AndroidManifest.xml',
                      *['resource/game-kit/web/' + name for name in build.PHONE],
-                     *['joystick-games/fixture-game/' + name for name in ('game.json', 'package.json', 'package-lock.json', 'build.mjs', 'qa-plan.json', 'NOTICE.md', 'LICENSE.txt', 'src/game.js', 'dist/tv.html')]]
+                     *['joystick-games/openaero-dfw/' + name for name in ('game.json', 'package.json', 'package-lock.json', 'build.mjs', 'qa-plan.json', 'NOTICE.md', 'LICENSE.txt', 'src/game.js', 'dist/tv.html',
+                         'tv.html', 'vite.config.js', 'postcss.config.js', 'tailwind.config.js', 'public/models/aircraft.glb')]]
             for name in files:
                 path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_text('fixture')
-            (root / build.REGISTRY).write_text(json.dumps(self.registry()))
+            (root / build.REGISTRY).write_text(json.dumps(self.registry({'openaero-dfw': {'packageName': 'com.ecojust.joystick.openaerodfw'}})))
             for name in build.ARTWORK_TOOLS:
                 (root / name).write_text('{}')
             (game / 'thumb.png').write_bytes(b'fixture capture')
             with patch.object(build, 'ROOT', root), patch.object(build, 'KIT', kit), patch.object(build, 'metadata', return_value={}):
-                inputs = build.sources('fixture-game')
+                inputs = build.sources('openaero-dfw')
                 subprocess.run(['git', 'init', '-q', str(root)], check=True)
                 subprocess.run(['git', '-C', str(root), 'add', '.'], check=True)
                 subprocess.run(['git', '-C', str(root), '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'frozen fixture'], check=True)
                 commit = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
-                self.assertEqual(set(inputs), runtime.expected_inputs(root, commit, 'fixture-game'))
+                self.assertEqual(set(inputs), runtime.expected_inputs(root, commit, 'openaero-dfw'))
                 build.assert_committed(inputs, commit)
+                for path in ('tv.html', 'public/models/aircraft.glb'):
+                    name = 'joystick-games/openaero-dfw/' + path
+                    self.assertIn(name, inputs)
+                    self.assertTrue(runtime.production_path(name, 'openaero-dfw'))
                 self.assertIn('joystick-games/shared/crisp/vendor/engine.js', inputs)
                 self.assertIn('joystick-games/shared/triptych/build.mjs', inputs)
                 (game / 'LICENSE').write_text('ambiguous second license')
-                with self.assertRaises(AssertionError): build.sources('fixture-game')
+                with self.assertRaises(AssertionError): build.sources('openaero-dfw')
                 (game / 'LICENSE').unlink()
                 (root / build.CATALOG_WORKFLOW).unlink()
-                with self.assertRaises(AssertionError): build.sources('fixture-game')
+                with self.assertRaises(AssertionError): build.sources('openaero-dfw')
 
 
 if __name__ == '__main__':

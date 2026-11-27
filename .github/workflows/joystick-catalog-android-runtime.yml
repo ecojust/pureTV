@@ -283,7 +283,10 @@ jobs:
         run: |
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
-          command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get -o Acquire::Retries=3 update
+            sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends ffmpeg
+          fi
       - name: Run normal and occupied-port QA independently against unchanged signed bytes
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d

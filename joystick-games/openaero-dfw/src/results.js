@@ -1,0 +1,99 @@
+// The results card (lazy chunk, loaded by main.js at the touchdown or a drill's end): the
+// grade, score, personal best, the stabilized-gate verdict and one bar per factor. DOM only;
+// main.js pauses the flight first (in the air, 0047; on the rollout, 0106).
+import { GATE_ITEM_NAMES } from './aero.js';
+import { GRADE_COLOURS } from './landing.js';
+import { flightResultText } from './resultTextZh.js';
+import { landingTip } from './landingTip.js';
+import { drawStrip, touchdownLabel } from './touchdownStrip.js';
+import { trackPlotSvg, trackLabel, trackLegend, LEGEND_PX, profilePoints, profileSvg, profileSummary, profileLegend } from './trackPlot.js';
+
+const byId = (id) => document.getElementById(id);
+// replayBuf: replay.js's buffer on a landing's card (0227's approach profile), else null.
+export function showResults(sim, result, best, end, gate, replayBuf = null) {
+  const card = byId('resultsCard');
+  const goAround = result.kind === 'goAround';
+  byId('txtResultTitle').textContent = flightResultText(result.title) ?? (goAround ? '复飞完成' : '着陆评级');
+  byId('btnKeepRolling').textContent = sim.onGround ? '继续滑跑' : '继续飞行';
+  // A drill that ended in the ground (the windshear, 0112) has nothing to keep flying: FLY AGAIN only.
+  byId('btnKeepRolling').classList.toggle('hidden', result.kind === 'windshear' && result.grade === 'CRASH');
+  const gradeEl = byId('txtGrade');
+  gradeEl.textContent = result.grade === 'CRASH' ? '坠机' : result.grade;
+  gradeEl.className = `${result.grade === 'CRASH' ? 'text-2xl' : 'text-5xl'} font-black w-20 text-center ${GRADE_COLOURS[result.grade]}`;
+  byId('txtScore').textContent = String(result.score);
+  byId('txtResultRunway').textContent = flightResultText(end.name);
+  const reason = byId('txtGradeReason');
+  // A tank run dry (fuel.js, 0162) says so first: the engine didn't just fail.
+  const why = [sim.fuelOut && '燃油耗尽，发动机已停止。', flightResultText(result.reason)].filter(Boolean).join(' ');
+  reason.textContent = why;
+  reason.classList.toggle('hidden', !why);
+  // The one thing to fix next time (0061); none for an S or a drill's own card.
+  const tip = landingTip(result, { kid: sim.assist === 'kid', noEngine: !!sim.engineFailed });
+  byId('txtTip').textContent = tip || '';
+  byId('tipRow').classList.toggle('hidden', !tip);
+  const bestEl = byId('txtBest');
+  if (best.isNewBest) bestEl.textContent = best.previous ? `★ 刷新个人纪录（原纪录 ${best.previous.score} 分）` : '★ 首次完成本任务';
+  else bestEl.textContent = best.best ? `个人最佳：${best.best.grade} · ${best.best.score} 分` : '';
+  // Kid and Learner bests are their own (assists.js): say which level this grade is for.
+  if (bestEl.textContent && sim.assist !== 'pilot') bestEl.textContent = `${sim.assist === 'kid' ? '儿童' : '学员'}难度 · ${bestEl.textContent}`;
+  // Not scored: the stabilized-gate verdict (null when the mission started below the gate).
+  const gateEl = byId('txtStabilized');
+  gateEl.classList.toggle('hidden', !gate && !result.note);
+  if (gate) {
+    gateEl.textContent = gate.stable ? `${gate.gateHeight} 英尺处进近稳定 ✓`
+      : `${gate.gateHeight} 英尺处进近不稳定 ✗ ${gate.failing.map(item => GATE_ITEM_NAMES[item] ?? item).join('、')}`;
+    // The drill flown back to stable: landing was the right call (0047).
+    if (gate.stable && sim.goAround) gateEl.textContent += ' 已恢复稳定，可以着陆。';
+    if ((result.wake || result.shortField || result.noFlap || result.entry || result.wingLow) && result.note) gateEl.textContent += ` · ${flightResultText(result.note)}`; // the wake (0115), short-field (0181) and pattern-entry (0187) and wing-low (0188) lessons' verdicts beside the gate's
+    gateEl.classList.toggle('text-emerald-300', gate.stable); // over the amber default (later in the CSS)
+  } else if (result.note) {
+    gateEl.textContent = `${flightResultText(result.note)} ✓`;
+    gateEl.classList.add('text-emerald-300');
+  }
+  const list = byId('resultsFactors');
+  list.innerHTML = '';
+  for (const f of result.factors) {
+    const li = document.createElement('li');
+    li.className = 'flex flex-col gap-0.5';
+    const tone = f.score >= 85 ? 'bg-emerald-400' : f.score >= 60 ? 'bg-amber-400' : 'bg-red-400';
+    li.innerHTML = `<div class="flex justify-between"><span class="text-slate-400">${flightResultText(f.label)}</span><span>${flightResultText(f.value)}</span></div>`
+      + `<div class="h-1.5 rounded bg-slate-800 overflow-hidden"><div class="h-full ${tone}" style="width:${f.score}%"></div></div>`;
+    list.appendChild(li);
+  }
+  card.classList.remove('hidden');
+  // The runway strip (0088): a landing on the runway's own picture; none for a drill's card or a
+  // glide that missed the runway (the miss is its own line, the strip would only pin it to an edge).
+  const strip = byId('touchdownStrip');
+  const td = result.madeRunway === false || !result.touchdown ? null : { ...result.touchdown, displacedM: end.displacedM || 0, zoneM: result.zoneM };
+  strip.classList.toggle('hidden', !td);
+  strip.setAttribute('aria-label', td ? touchdownLabel(td) : '');
+  shownStrip = td ? { td, grade: result.grade } : null;
+  if (td) drawStrip(strip, td, result.grade);
+  // A ground-reference lesson's track from above (0211, trackPlot.js): an SVG, so it fits any size it is given.
+  const plot = byId('trackPlot');
+  plot.classList.toggle('hidden', !result.track);
+  plot.innerHTML = result.track ? trackPlotSvg(result.track, plot.clientHeight - LEGEND_PX) + trackLegend(result.track) : '';
+  plot.setAttribute('aria-label', result.track ? trackLabel(result.track) : '');
+  // The approach from the side against the 3° path (0227): a landing on the runway with 5 s of final in the replay's
+  // buffer; not a lesson with its own plot. Built once here, never per frame.
+  const side = byId('profilePlot');
+  const prof = replayBuf && td && !result.track ? profilePoints(replayBuf, end, td.pastThresholdM) : null;
+  side.classList.toggle('hidden', !prof);
+  side.innerHTML = prof ? profileSvg(prof) + profileLegend : '';
+  side.setAttribute('aria-label', prof ? profileSummary(prof) : '');
+  const body = byId('resultsBody');
+  body.scrollTop = 0;
+  markMore();
+}
+// The card's middle scrolls on a short screen (0125): fade its foot while there is more below.
+function markMore() {
+  const body = byId('resultsBody');
+  body.classList.toggle('more', body.scrollTop + body.clientHeight < body.scrollHeight - 2);
+}
+byId('resultsBody').addEventListener('scroll', markMore, { passive: true });
+// Turned sideways with the card up, the strip changes size: draw it again at the new one.
+let shownStrip = null;
+addEventListener('resize', () => {
+  if (shownStrip && !byId('resultsCard').classList.contains('hidden')) drawStrip(byId('touchdownStrip'), shownStrip.td, shownStrip.grade);
+  markMore();
+});

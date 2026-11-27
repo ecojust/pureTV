@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": ["gameplay.altitudeFt", "gameplay.throttle"],
+  "steps": [
+    {"name": "开始飞行", "keys": ["START"], "holdMs": 250, "timeoutSeconds": 120, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]},
+    {"name": "切换襟翼挡位", "keys": ["X"], "holdMs": 250, "expect": [{"path": "gameplay.flapsIndex", "op": "changed"}]},
+    {"name": "暂停飞行", "keys": ["START"], "holdMs": 250, "expect": [{"path": "stage", "op": "eq", "value": "paused"}]},
+    {"name": "恢复飞行", "keys": ["START"], "holdMs": 250, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]}
+  ]
+}

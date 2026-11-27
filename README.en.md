@@ -88,9 +88,9 @@ New installations start in Simplified Chinese.
 
 <!-- game-index:start -->
 
-**46 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (46) · Standalone macOS downloads (46) · Standalone Windows x64 downloads (46)
+**48 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (48) · Standalone macOS downloads (46) · Standalone Windows x64 downloads (46)
 
-[Racing and sports (14)](#controller-racing) · [Action, RPGs and exploration (8)](#controller-action) · [Platformers, bullet hell and arcade (8)](#controller-arcade) · [Strategy, tower defense and card games (2)](#controller-strategy) · [Puzzles and brainteasers (14)](#controller-puzzle)
+[Racing and sports (14)](#controller-racing) · [Action, RPGs and exploration (9)](#controller-action) · [Flight simulation (1)](#controller-flight) · [Platformers, bullet hell and arcade (8)](#controller-arcade) · [Strategy, tower defense and card games (2)](#controller-strategy) · [Puzzles and brainteasers (14)](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
@@ -125,7 +125,7 @@ New installations start in Simplified Chinese.
 
 <a id="controller-action"></a>
 
-### Action, RPGs and exploration (8)
+### Action, RPGs and exploration (9)
 
 <table>
   <tr>
@@ -139,6 +139,25 @@ New installations start in Simplified Chinese.
     <td align="center" valign="top" width="207"><a href="joystick-games/kindle/"><img src="joystick-games/kindle/thumb.png" width="180" alt=""><br>KINDLE</a><br><a href="https://ecojust.github.io/pureTV/games/kindle/tv.html">Play in browser</a><br><a href="joystick-games/kindle/kindle-0.1.2.apk?raw=1" title="KINDLE Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="KINDLE Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/kindle-macos.dmg" title="KINDLE macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="KINDLE macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/kindle-windows-x64-setup.exe" title="KINDLE Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="KINDLE Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/TonyDowney/kindle" title="KINDLE · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="KINDLE · Original repository"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/nerd-of-duty/"><img src="joystick-games/nerd-of-duty/thumb.png" width="180" alt=""><br>Nerd of Duty</a><br><a href="https://ecojust.github.io/pureTV/games/nerd-of-duty/tv.html">Play in browser</a><br><a href="joystick-games/nerd-of-duty/nerd-of-duty-0.1.1.apk?raw=1" title="Nerd of Duty Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Nerd of Duty Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nerd-of-duty-macos.dmg" title="Nerd of Duty macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Nerd of Duty macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nerd-of-duty-windows-x64-setup.exe" title="Nerd of Duty Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Nerd of Duty Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/sytaylor/nerd-of-duty" title="Nerd of Duty · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Nerd of Duty · Original repository"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/gogh-strike/"><img src="joystick-games/gogh-strike/thumb.png" width="180" alt=""><br>Gogh Strike</a><br><a href="https://ecojust.github.io/pureTV/games/gogh-strike/tv.html">Play in browser</a><br><a href="joystick-games/gogh-strike/gogh-strike-0.1.1.apk?raw=1" title="Gogh Strike Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Gogh Strike Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/gogh-strike-macos.dmg" title="Gogh Strike macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Gogh Strike macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/gogh-strike-windows-x64-setup.exe" title="Gogh Strike Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Gogh Strike Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/petergpt/gogh-strike" title="Gogh Strike · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Gogh Strike · Original repository"></a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/claude-of-tanks/"><img src="joystick-games/claude-of-tanks/thumb.png" width="180" alt=""><br>Claude of Tanks</a><br><a href="https://ecojust.github.io/pureTV/games/claude-of-tanks/tv.html">Play in browser</a><br><a href="joystick-games/claude-of-tanks/claude-of-tanks-0.1.0.apk?raw=1" title="Claude of Tanks Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Claude of Tanks Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/Kevin-Liu-01/Claude-of-Tanks" title="Claude of Tanks · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Claude of Tanks · Original repository"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+  </tr>
+</table>
+
+<a id="controller-flight"></a>
+
+### Flight simulation (1)
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/openaero-dfw/"><img src="joystick-games/openaero-dfw/thumb.png" width="180" alt=""><br>OpenAero DFW</a><br><a href="https://ecojust.github.io/pureTV/games/openaero-dfw/tv.html">Play in browser</a><br><a href="joystick-games/openaero-dfw/openaero-dfw-0.1.0.apk?raw=1" title="OpenAero DFW Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="OpenAero DFW Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/mutaaf/openaero-dfw" title="OpenAero DFW · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="OpenAero DFW · Original repository"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
   </tr>
 </table>
 
