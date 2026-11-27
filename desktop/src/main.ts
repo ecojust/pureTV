@@ -127,7 +127,7 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const packageInfo = new PackageInfoDialog(() => snapshot);
-const games = new Games(error => showNotice(error, 'error'));
+const games = new Games();
 const forum = new Forum(() => { if (page === 'forum') render(); });
 const clientUpdater = new ClientUpdater({
   busy: () => busy,
@@ -1055,8 +1055,6 @@ document.addEventListener('click', event => {
   if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
   const playGame = target.closest<HTMLButtonElement>('[data-play-game]');
   if (playGame) { games.open(playGame.dataset.playGame!); return; }
-  const browserGame = target.closest<HTMLButtonElement>('button[data-browser-game]');
-  if (browserGame) { games.openBrowser(browserGame.dataset.browserGame!); return; }
   const forumButton = target.closest<HTMLButtonElement>('[data-forum-action]');
   if (forumButton) { void forum.action(forumButton); return; }
   const marketTab = target.closest<HTMLButtonElement>('[data-market-category]');

@@ -92,16 +92,19 @@ try {
     });
     parent.postMessage({type:'puretv:game-ready'}, '*');
   </script></body></html>`;
-  await check('games sidebar opens a cross-origin player, routes the active socket session and closes it', async p => {
+  await check('games sidebar opens the player fullscreen, routes the active socket session and returns to the card', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
     const play = p.locator('[data-play-game="tetris"]');
     const ids = await p.locator('[data-play-game]').evaluateAll(items => items.map(item => item.dataset.playGame).sort());
     const catalog = JSON.parse(await readFile(new URL('../../tools/pc-games/catalog.json', import.meta.url), 'utf8'));
     assert.deepEqual(ids, catalog.map(item => item.id).sort());
+    assert.equal(await p.locator('[data-browser-game], .web-game-grid [target="_blank"]').count(), 0);
     await play.click();
     const dialog = p.locator('dialog.game-player[open]');
     await dialog.locator('iframe').waitFor();
+    await p.waitForFunction(() => window.__windowFullscreen);
+    assert.doesNotMatch(await dialog.innerText(), /浏览器/);
     const frame = p.frame({url: url => url.href.startsWith(gamePage)}) || await p.waitForEvent('framenavigated', {predicate:f => f.url().startsWith(gamePage)});
     await frame.waitForFunction(() => window.received?.some(state => state.revision === 0));
     assert.match(await dialog.innerText(), /192\.168\.0\.2:63485/);
@@ -111,13 +114,12 @@ try {
     await emit('1', 1);
     await frame.waitForFunction(() => received.some(state => state.revision === 2));
     assert.deepEqual(await frame.evaluate(() => received.map(state => state.revision)), [0, 2]);
-    await dialog.locator('[data-browser-game="tetris"]').click();
     await dialog.locator('[data-close-game]').click();
+    await p.waitForFunction(() => !window.__windowFullscreen);
     await p.waitForFunction(() => window.__gameCommands.some(entry => entry.command === 'stop_game_controllers'));
     assert.deepEqual(await p.evaluate(() => window.__gameCommands), [
       {command:'start_game_controllers', players:2},
       {command:'game_controller_state', session:'1'},
-      {command:'open_web_game', id:'tetris', language:'zh'},
       {command:'stop_game_controllers', session:'1'}
     ]);
     assert.equal(frame.isDetached(), true);
@@ -125,17 +127,39 @@ try {
     await nav(p, 'apps');
     assert.equal(await p.locator('iframe').count(), 0);
   }, withoutAdb());
-  await check('games browser play opens the standalone web game without a TV or a desktop bridge', async p => {
-    await p.context().route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:'<title>Tetris</title>'}));
+  await check('games open fullscreen in the same browser tab and exit from the game', async p => {
+    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
-    const [external] = await Promise.all([
-      p.waitForEvent('popup'),
-      p.locator('[data-browser-game="tetris"]').click()
-    ]);
-    await external.waitForLoadState('domcontentloaded');
-    assert.equal(new URL(external.url()).origin + new URL(external.url()).pathname, gamePage);
-    assert.equal(await external.evaluate(() => window.opener), null);
-    assert.equal(await p.locator('iframe').count(), 0);
+    const play = p.locator('[data-play-game="tetris"]');
+    await play.click();
+    await p.waitForFunction(() => !!document.fullscreenElement?.querySelector('iframe'));
+    const frame = p.frameLocator('dialog.game-player iframe');
+    await frame.locator('body').evaluate(() => parent.postMessage({type:'puretv:game-exit'}, '*'));
+    await p.waitForFunction(() => !document.fullscreenElement && !document.querySelector('dialog.game-player[open]'));
+    assert.equal(p.context().pages().length, 1);
+    assert.equal(await play.evaluate(button => document.activeElement === button), true);
+  }, null);
+  await check('games remain playable in-page when fullscreen is denied and loading is slow', async p => {
+    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:'<title>Tetris</title>'}));
+    await p.evaluate(() => {
+      Element.prototype.requestFullscreen = () => Promise.reject(new TypeError('Fullscreen denied'));
+    });
+    await nav(p, 'games');
+    await p.clock.install();
+    const play = p.locator('[data-play-game="tetris"]');
+    await play.focus();
+    await play.press('Enter');
+    const dialog = p.locator('dialog.game-player[open]');
+    await dialog.locator('iframe').waitFor();
+    assert.equal(await dialog.locator('iframe').getAttribute('src'), gamePage + '?lang=zh');
+    assert.equal(p.context().pages().length, 1);
+    const bounds = await dialog.boundingBox();
+    assert.deepEqual(bounds, {x:0, y:0, ...p.viewportSize()});
+    await p.clock.fastForward(26000);
+    assert.match(await dialog.locator('[data-frame-status]').innerText(), /网络/);
+    assert.doesNotMatch(await dialog.innerText(), /浏览器/);
+    await dialog.locator('[data-close-game]').click();
+    assert.equal(await play.evaluate(button => document.activeElement === button), true);
   }, null);
   await check('local computer IPs are labeled independently from TV, refresh before ADB, and stay on home',async p=>{
     await p.locator('.local-network-addresses').waitFor();
