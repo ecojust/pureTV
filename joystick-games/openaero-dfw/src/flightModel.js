@@ -1,0 +1,367 @@
+// The 6-DOF rigid-body flight model: one sub-step of forces, moments and integration.
+// Pure (three.js math only, no DOM, no scene): main.js runs it on `sim` every frame, and
+// tests/flight/ runs it headless to fly test cards against published performance data.
+//
+// `body` carries the state and the control positions under the same names as main.js's
+// `sim`: pos, vel, quat, angVel (world frame, see autopilot.js for the sign conventions),
+// elevInput, aileronInput, rudderInput, throttle, flapsIndex, gearDown, brakesOn, apMaster,
+// windVec (air-mass velocity) and groundY (terrain height under the aircraft), trimAlphaDeg
+// (the angle of attack the elevator trim flies; autoTrim = it follows α), engineFailed (the
+// dead-stick drill, 0036: the engine makes no power whatever the throttle; the prop windmills); optional
+// air: mslOffsetM (MSL height of y = 0), isaDevC and altimInHg (atmosphere.js). The step
+// writes back onGround, lastAirVsi, iasKts, tasKts, gsKts, mach, aoaDeg, betaDeg, accelY, loadFactor,
+// sigma (density ratio), propAil (the aileron the prop's torque takes, 0194), aoaPrevRad and aoaRateF (the
+// α-rate damping's last α and filtered α̇, 0202: null / 0 on every teleport), engineN (spooled power setting; seed it with the throttle on spawn),
+// spoilers (ground spoiler extension 0–1, airframes with spec.groundSpoilers). Systems
+// (systems.js) run first: the gear, flaps, brakes and reversers follow their levers at
+// their own rates, so the aerodynamics see where the surfaces are, not where the levers are.
+import { Vector3, Quaternion, Euler, MathUtils } from 'three';
+import { MPS_TO_KTS, M_TO_FT, DEG_TO_RAD, RAD_TO_DEG, GRAVITY } from './constants.js';
+import { airAt } from './atmosphere.js';
+import { engineThrust, spoolEngine, throttleForThrust } from './engine.js';
+import { dynamicPressure, liftCoefficient, groundEffectFactor, dragCoefficient } from './aero.js';
+import { sideslipYawAccel, trimAoaDeg } from './autopilot.js';
+import { stepSystems, brakeMu, reversedThrust, gearLocked } from './systems.js';
+import { gearConstants, gearForces, gearFriction, noseSteerYawRate, noseWheelYawHold, wheelScrubYawHold, tailVsMainsAccel } from './gear.js';
+
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+const _v3 = new Vector3();
+const _v4 = new Vector3();
+const _q1 = new Quaternion();
+const _euler = new Euler(0, 0, 0, 'YXZ');
+const _air = {};
+const _gearM = new Vector3();
+const BETA_LIN = 20 * DEG_TO_RAD;
+// Wider than any airframe's elevatorAlphaDeg, so no held stick out-pulls the restoring moment.
+const ALPHA_LIN = 90 * DEG_TO_RAD;
+const ELEV_LIFT_FADE_S = 0.5;
+
+export function stepFlightModel(body, spec, dt) {
+  stepSystems(body, spec, dt);
+  // Transform the AIR-RELATIVE velocity to the body frame: u (fwd), v (right), w (down).
+  // Aerodynamics see the air mass, not the ground (weather.js wind, gusts included).
+  const invQuat = _q1.copy(body.quat).invert();
+  const bodyVel = _v1.copy(body.vel).sub(body.windVec).applyQuaternion(invQuat);
+  const u = -bodyVel.z;
+  const v = bodyVel.x;
+  const w = -bodyVel.y;
+
+  // The air here: ISA + today's temperature and altimeter (atmosphere.js).
+  const air = airAt(body.pos.y + (body.mslOffsetM ?? 0), body.isaDevC ?? 0, body.altimInHg ?? 29.92, _air);
+  body.sigma = air.sigma;
+
+  const airspeed = Math.max(0.1, bodyVel.length());
+  body.tasKts = airspeed * MPS_TO_KTS;
+  body.iasKts = body.tasKts * Math.sqrt(air.sigma); // EAS ≈ CAS below Mach 0.3
+  body.gsKts = Math.round(Math.hypot(body.vel.x, body.vel.z) * MPS_TO_KTS);
+  body.mach = airspeed / air.speedOfSoundMps;
+
+  // Angle of Attack (AoA) and Sideslip (Beta)
+  const aoaRad = Math.atan2(w, Math.max(u, 0.1));
+  body.aoaDeg = aoaRad * RAD_TO_DEG;
+  const betaRad = Math.asin(MathUtils.clamp(v / airspeed, -1, 1));
+  body.betaDeg = betaRad * RAD_TO_DEG;
+
+  const qDyn = dynamicPressure(airspeed, air.rho);
+
+  // Aerodynamic Lift & Drag Curves with Post-Stall Drop (aero.js)
+  let cl = liftCoefficient(spec, aoaRad, body.flapPos);
+  // The elevator's own lift beyond the trimmed one (spec.clElevator, Roskam's CLδe, 0214), as our JSBSim C172 has
+  // flown it since 0203: liftCoefficient is a trimmed fit, so it already holds the tail's download at the elevator
+  // that trims this α; only the deflection past that one adds or takes lift (full back stick at Vr: ~−0.1 CL).
+  // In the air only, faded in over ELEV_LIFT_FADE_S after the wheels leave (body.elevLiftK: 0 on the ground, 1 for an
+  // airborne spawn): switched on in full the step they left, a pull's 0.05-0.19 CL put them straight back down (lift-off
+  // chattered for ~20 ms, the validation panel). Not by height: that took a held pull's download away in the last
+  // half metre of a landing, a cushion that floated Kid's flare 100 ft long.
+  if (spec.clElevator) {
+    body.elevLiftK = body.onGround ? 0 : Math.min(1, (body.elevLiftK ?? 1) + dt / ELEV_LIFT_FADE_S);
+    if (body.elevLiftK > 0) cl += elevatorLiftCl(spec, body.elevInput, body.trimAlphaDeg ?? body.aoaDeg, body.aoaDeg) * body.elevLiftK;
+  }
+
+  // Induced Drag Polar + Ground Effect Factor (aero.js)
+  const groundEffect = groundEffectFactor(body.pos.y - body.groundY, spec.wingSpanM);
+  let cd = dragCoefficient(spec, cl, body.gearPos, body.flapPos, groundEffect, body.mach);
+
+  // Auto ground spoilers: out over ~1 s on the ground with the thrust levers at idle, in
+  // again as soon as they are advanced (reverse thrust keeps them out). Lift dumped onto
+  // the gear and brakes, plus drag.
+  if (spec.groundSpoilers) {
+    const deploy = body.onGround && (body.throttle < 0.05 || body.reverserPos > 0) ? 1 : 0;
+    body.spoilers = MathUtils.clamp((body.spoilers ?? 0) + Math.sign(deploy - (body.spoilers ?? 0)) * dt, 0, 1);
+    cl *= 1 - spec.groundSpoilers.liftDump * body.spoilers;
+    cd += spec.groundSpoilers.dCd * body.spoilers;
+  }
+
+  const liftForce = cl * qDyn * spec.wingAreaM2;
+  const dragForce = cd * qDyn * spec.wingAreaM2;
+  body.engineN = spoolEngine(spec, body.engineN ?? body.throttle, body.engineFailed ? 0 : body.throttle, dt);
+  const thrustForce = reversedThrust(spec, engineThrust(spec, body.engineN, airspeed, air, body.mach, qDyn), body.reverserPos);
+
+  // Lift is perpendicular to the relative wind (in the plane of the body's lateral axis),
+  // drag is along it; both built in body axes from the air-relative velocity direction.
+  // Thrust acts along the nose. (Body-axis lift leaned aft by α and acted as drag.)
+  const vHat = _v3.copy(bodyVel).divideScalar(airspeed);
+  const liftDir = _v4.set(1, 0, 0).cross(vHat).normalize();
+  // Sideslip pushes the fuselage and fin sideways (CYβ, body axes; + β = relative wind from
+  // the right, so the force is to the left): the side force a wing-low slip banks against.
+  // Linear derivatives, held at their 20° value beyond (a taxiing crosswind is all β, no q).
+  const betaLin = MathUtils.clamp(betaRad, -BETA_LIN, BETA_LIN);
+  // The rudder pushes the fin the other way (CYδr: right rudder, tail left), so a slip's
+  // opposite rudder takes back part of it.
+  const rudderRad = body.rudderInput * (spec.controlThrowsDeg?.rudder ?? 0) * DEG_TO_RAD;
+  const sideForce = ((spec.cyBeta ?? 0) * betaLin - (spec.cyRudder ?? 0) * rudderRad) * qDyn * spec.wingAreaM2;
+  const fBodyX = liftDir.x * liftForce - vHat.x * dragForce + sideForce;
+  const fBodyY = liftDir.y * liftForce - vHat.y * dragForce;
+  const fBodyZ = liftDir.z * liftForce - vHat.z * dragForce - thrustForce;
+
+  const totalForceWorld = _v2.set(fBodyX, fBodyY, fBodyZ).applyQuaternion(body.quat);
+  totalForceWorld.y -= spec.massKg * GRAVITY;
+
+  // Ground Spring-Damper Suspension, on the real ground under the aircraft (terrain.js)
+  // 1 cm contact tolerance: on a sloped runway, sub-nanometre drift along the slope changes
+  // the ground height by ~1e-13 m, which must not count as lifting off.
+  // Gear not down and locked: it folds, and the aircraft sits on its belly and scrapes.
+  const locked = gearLocked(body);
+  // Airframes with spec.gear stand on three struts (gear.js): nose and mains, each with its
+  // load, and their moments turn the airframe (rotation about the mains, the nose coming
+  // down, a one-wheel touchdown). The floor below is then the struts fully compressed.
+  const struts = locked && spec.gear;
+  _gearM.set(0, 0, 0);
+  const gh = struts
+    ? body.groundY + spec.gearHeight + spec.gear.strokeM - gearConstants(spec).maxStroke
+    : body.groundY + spec.gearHeight * (locked ? 1 : 0.35);
+  let normalForce = 0, held = false;
+  if (struts) {
+    // A wheel can reach the ground only when the CG is lower than the longest leg below it.
+    if (body.pos.y <= body.groundY + spec.gearHeight + spec.gear.noseZ + 1) normalForce = gearForces(body, spec, totalForceWorld, _gearM, dt);
+  } else if (body.pos.y <= gh + 0.01) {
+    const penetration = gh - body.pos.y;
+    const kSpring = spec.massKg * 85;
+    const kDamper = spec.massKg * 9;
+    // The gear carries whatever the wing doesn't (the contact is also held by the position
+    // clamp below, so the spring alone sees ~no compression and would carry ~nothing, which
+    // left rolling friction and the brakes with no load), or more while it absorbs a sink.
+    normalForce = Math.max(0, penetration * kSpring - body.vel.y * kDamper, -totalForceWorld.y);
+    totalForceWorld.y += normalForce;
+    normalForce = Math.max(normalForce, 1e-6);
+  }
+  if (normalForce > 0) {
+    body.onGround = true;
+
+    // Tyres: rolling resistance (μ·N, plus the brakes: systems.js) along the nose, and a stiff side
+    // force across it so the aircraft rolls where it points instead of skating sideways.
+    // (The prototype used friction ∝ speed, which capped the takeoff roll near 75 kt.)
+    const fwd = _v3.set(0, 0, -1).applyQuaternion(body.quat);
+    fwd.y = 0;
+    fwd.normalize();
+    const vAlong = body.vel.x * fwd.x + body.vel.z * fwd.z;
+    const vSideX = body.vel.x - fwd.x * vAlong;
+    const vSideZ = body.vel.z - fwd.z * vAlong;
+    // Raymer: rolling μ 0.03 on concrete/asphalt; the brakes add up to what anti-skid gets
+    // from the runway (systems.js). A belly slides at μ ~0.5.
+    // On struts the friction acts per wheel at its axle (gear.js): brakes on the mains, and
+    // their pull below the CG loads the nose wheel.
+    if (struts) gearFriction(body, spec, fwd, vAlong, totalForceWorld, _gearM);
+    else {
+      const mu = locked ? brakeMu(spec, body.brakePress, body.wetRunway, Math.abs(vAlong) * MPS_TO_KTS) : 0.5;
+      const roll = Math.abs(vAlong) > 0.3 ? -Math.sign(vAlong) * mu * normalForce : -vAlong * spec.massKg * 2;
+      totalForceWorld.x += fwd.x * roll;
+      totalForceWorld.z += fwd.z * roll;
+    }
+    const sideMax = 0.8 * normalForce;
+    let sideX = -vSideX * spec.massKg * 4, sideZ = -vSideZ * spec.massKg * 4;
+    // Nearly stopped on its wheels and not breaking away (what is left along the nose after the
+    // tyres' static grip is no more than their damping: power for the takeoff roll breaks it), the
+    // tyres also hold a steady push across them (a crosswind on a parked airplane, ticket 0106)
+    // instead of letting it creep sideways, and its heading (wheelScrubYawHold below).
+    const push = totalForceWorld.x * fwd.x + totalForceWorld.z * fwd.z;
+    held = struts && Math.abs(vAlong) <= 0.3 && Math.hypot(vSideX, vSideZ) <= 0.3 && Math.abs(push) <= spec.massKg * 0.6;
+    if (held) {
+      sideX -= totalForceWorld.x - fwd.x * push;
+      sideZ -= totalForceWorld.z - fwd.z * push;
+    }
+    totalForceWorld.x += MathUtils.clamp(sideX, -sideMax, sideMax);
+    totalForceWorld.z += MathUtils.clamp(sideZ, -sideMax, sideMax);
+    body.vAlongMps = vAlong;
+  } else {
+    body.onGround = false;
+  }
+
+  const accel = totalForceWorld.divideScalar(spec.massKg);
+  body.accelY = accel.y;
+  // The seat's load factor (g, + = pushed into the seat, 0121): the specific force (acceleration
+  // less gravity) along the body's up axis, what the HUD's G shows.
+  body.loadFactor = _v4.set(0, 1, 0).applyQuaternion(body.quat).dot(accel) / GRAVITY + _v4.y;
+  body.vel.addScaledVector(accel, dt);
+  body.pos.addScaledVector(body.vel, dt);
+
+  // Sink rate at the moment of contact, captured before the ground clamp zeroes it.
+  if (!body.onGround) body.lastAirVsi = Math.round(body.vel.y * M_TO_FT * 60);
+
+  if (body.pos.y < gh) {
+    body.pos.y = gh;
+    if (body.vel.y < 0) body.vel.y = 0;
+  }
+
+  // Angular Moments & Inertial Damping
+  // Static pitch stability (Cmα, ticket 0090): the nose is pulled back to the angle of attack
+  // the elevator trim is set for (body.trimAlphaDeg), and the stick moves that angle by the
+  // elevator balance: full stick = spec.elevatorAlphaDeg of α (Cmδe·δe / Cmα), so a released
+  // stick flies the trimmed speed. Its stiffness is the pitch authority over that angle (the
+  // short period is as soft as the elevator is weak; the trim α per stick is the source's). A
+  // pilot or autopilot that trims as it holds a pitch (body.autoTrim), or a fly-by-wire pitch
+  // law (spec.pitchFbw), carries the trim with the angle of attack, so the term is zero, all but the
+  // post-stall break (spec.pitchBreak, 0109): aerodynamic, so a trimming pilot meets it too.
+  const authority = spec.pitchAuthority ?? 1.8;
+  if (body.autoTrim || spec.pitchFbw || body.trimAlphaDeg == null) body.trimAlphaDeg = body.aoaDeg;
+  const stiffness = spec.elevatorAlphaDeg ? authority / (spec.elevatorAlphaDeg * DEG_TO_RAD) : 0;
+  // From α 8° (spec.pitchBreak, pitchBreak.js, 0109: NASA rotary-balance data) the nose-up elevator
+  // fades and past the stall the nose breaks down, so a held pull no longer out-pulls the stall.
+  const pb = spec.pitchBreak;
+  const alphaErr = MathUtils.clamp(aoaRad + (pb ? pb.breakDeg(body.aoaDeg) * DEG_TO_RAD : 0) - body.trimAlphaDeg * DEG_TO_RAD, -ALPHA_LIN, ALPHA_LIN);
+  // The stick's steady pitch rate (pitch authority over damping); a fly-by-wire airframe's g and
+  // AoA limiter (spec.fbw, fbw.js, 0121) caps it in the air, so a held pull stops at the limits.
+  let qCmd = -body.elevInput * authority / spec.pitchDamping * (pb ? pb.eta(body.aoaDeg, body.elevInput) : 1);
+  if (spec.fbw) qCmd = spec.fbw(body, spec, qCmd, aoaRad, fBodyY, airspeed, qDyn);
+  const qRate = (qCmd * spec.pitchDamping - stiffness * alphaErr - body.angVel.x * spec.pitchDamping) * (airspeed / 120);
+  // α-rate pitch damping (Cmα̇, 0202): the downwash reaches the tail late, so a rising α pushes the nose
+  // down: M = q·S·c̄·Cmα̇·(c̄/2V)·α̇ (Roskam's C172 −5.2, our JSBSim C172's aero/coefficient/Cmadot; c̄ = S/b).
+  // α̇ from step to step, smoothed over 0.08 s: an α differenced at 1/60 s and at 1/180 s then gives the same
+  // damping (unsmoothed, the tail-strike card's 1/60 s peak ran 1.5x its 1/180 s one). At the short period
+  // that lag costs some of the damping (0.08 s is ~32° of phase there); 0.04-0.25 s all moved the α cards < 0.2°. Each sample is held to ±2 rad/s (a wheel's
+  // bump). Every teleport (a spawn, the upset and power-off 180 set-ups, the dead-stick final, an airframe or
+  // FDM switch) clears body.aoaPrevRad and body.aoaRateF, so a jump in α is never read as a rate. dt 0 (a
+  // paused step) leaves both as they were: a 0/0 α̇ would be NaN in angVel for good.
+  let adotQ = 0;
+  if (spec.cmAlphaDot && dt > 0) {
+    const prev = body.aoaPrevRad;
+    const sample = prev == null ? 0 : MathUtils.clamp((aoaRad - prev) / dt, -2, 2);
+    const rate = prev == null ? 0 : (body.aoaRateF ?? 0) + (sample - (body.aoaRateF ?? 0)) * Math.min(1, dt / 0.08);
+    body.aoaRateF = rate;
+    body.aoaPrevRad = aoaRad;
+    const cbar = spec.wingAreaM2 / spec.wingSpanM;
+    if (airspeed > 10) adotQ = qDyn * spec.wingAreaM2 * cbar * spec.cmAlphaDot * (cbar / (2 * airspeed)) * rate / spec.inertia.pitch;
+  }
+  // aileron + rolls right (negative body z rate); see autopilot.js for the conventions.
+  // Dihedral effect (Clβ): sideslip rolls the windward wing up (dihedralAileron below).
+  const dihedral = dihedralAileron(spec, betaRad);
+  // The propeller's torque (0194) rolls the airframe left, as the aileron that makes the same moment.
+  // In the air only: on its wheels the gear takes it (475 N·m across the Cessna's 2.54 m track moves
+  // ~190 N, 2% of the weight, from one main to the other, not modelled), and this roll law is a rate
+  // law: an aileron's worth of torque at a crawl's q would lean it on its struts and steer it in circles.
+  // Written back as body.propAil: the autopilot and the assists feed it forward, as they do the dihedral's.
+  const propAil = spec.prop && !body.onGround ? propTorqueAileron(spec, thrustForce, qDyn) : 0;
+  body.propAil = propAil;
+  // The aileron's steady rate is rollRateGain (0156): it grows with the speed where a source gives it.
+  // On the wheels never more than the old constant rate: a game choice (no source), so a held stick on
+  // the F-16's takeoff roll can't cartwheel it past the wingtip (it banked 99° at Vr with the full gain).
+  const rg = rollRateGain(spec, airspeed);
+  const pRate = (-(body.aileronInput + dihedral - propAil) * (body.onGround ? Math.min(rg, legacyRollRate(spec)) : rg) - body.angVel.z) * spec.rollDamping * (airspeed / 120);
+  // Rudder + directional stability: the nose weathervanes into the relative wind, so a
+  // banked aircraft actually turns.
+  const rRate = (-body.rudderInput * 1.2 + sideslipYawAccel(betaRad) - body.angVel.y * spec.yawDamping) * (airspeed / 120);
+
+  body.angVel.x += (qRate + adotQ) * dt;
+  body.angVel.y += rRate * dt;
+  body.angVel.z += pRate * dt;
+
+  // The struts' moments (body axes: x pitch, y yaw, z roll) through the airframe's inertia,
+  // and the pedals steering the nose wheel while it carries weight.
+  // (A tail-only contact, 0144, turns it without putting it on the ground: _gearM is zero clear of it.)
+  if (struts) {
+    body.angVel.x += (_gearM.x / spec.inertia.pitch + tailVsMainsAccel(body, spec, body.iasKts)) * dt;
+    body.angVel.y += (_gearM.y / spec.inertia.yaw) * dt;
+    body.angVel.z += (_gearM.z / spec.inertia.roll) * dt;
+    const steer = noseSteerYawRate(body, spec, body.vAlongMps ?? 0);
+    // Nearly stopped, turning it scrubs every tyre: the wind can't weathervane a parked airplane
+    // past the tyres' grip (0106). Rolling, the loaded nose tyre holds its steered rate (0110).
+    if (steer !== null) body.angVel.y += (held ? wheelScrubYawHold : noseWheelYawHold)(body, spec, steer - body.angVel.y, dt);
+  }
+
+  // Hands off (under 0.05 of the old full rate, 0156: on the F-16 0.05 of stick is 15°/s), the roll dies away.
+  // The net roll input: a stick holding the prop's torque (0194) is not hands off, and a released one is not held.
+  if (Math.abs(body.aileronInput - propAil) * rg < 0.05 * legacyRollRate(spec) && !body.apMaster) {
+    body.angVel.z -= body.angVel.z * 1.5 * dt;
+  }
+
+  // Integrate Orientation Quaternion
+  const deltaRot = _q1.set(
+    body.angVel.x * dt * 0.5,
+    body.angVel.y * dt * 0.5,
+    body.angVel.z * dt * 0.5,
+    1.0
+  ).normalize();
+  body.quat.multiply(deltaRot).normalize();
+
+  // On the ground the gear and tail limit pitch: no rotating past the tailstrike angle. An
+  // airframe with a tail contact (gear.js, 0144) is held there by it, in the air too.
+  if (body.onGround) {
+    _euler.setFromQuaternion(body.quat, 'YXZ');
+    const maxP = spec.gear?.tail ? 2 /* rad: no clamp */ : (spec.maxGroundPitchDeg ?? 15) * DEG_TO_RAD;
+    // With struts the nose gear holds the nose up; the floor is only a backstop.
+    const minP = struts ? -0.12 : -0.05;
+    if (_euler.x > maxP || _euler.x < minP) {
+      _euler.x = MathUtils.clamp(_euler.x, minP, maxP);
+      body.quat.setFromEuler(_euler);
+      if ((_euler.x >= maxP && body.angVel.x > 0) || (_euler.x <= minP && body.angVel.x < 0)) body.angVel.x = 0;
+    }
+  }
+}
+
+// CLδe·(δe − δe_trim(α)) (0214), Roskam's CLδe beyond the elevator that trims this α, as our JSBSim C172's
+// aero/coefficient/CLde and aero/function/elevator-trim-rad: the trimming elevator is Cmα·α / Cmδe
+// (spec.elevatorPerAlpha) over the elevator's share of its power at that α (spec.pitchBreak's η, src/pitchBreak.js,
+// by the stick's side as the pitch law reads it; 1 until the chunk loads), held
+// at the clean stall's α past it (no trim exists there).
+// In flightModel.js's pitch law the stick moves the trimmed α by elevatorAlphaDeg (its elevator is that over
+// Cmδe / Cmα: the C172's 25.5° mean throw) and the trim sets the α it flies, so the elevator beyond trim is the
+// stick's plus the one that α's distance from the trimmed α calls for, at the same η. Any steady pre-stall flight
+// (a held stick included) then adds nothing; the lift comes in a transient and past the stall, where the trim
+// holds (full back stick at Vr: ~−0.1 CL).
+export function elevatorLiftCl(spec, elevInput, trimAlphaDeg, aoaDeg) {
+  const a = MathUtils.clamp(aoaDeg, -0.2 * RAD_TO_DEG, spec.alphaStallDegByFlap[0]);
+  const eta = spec.pitchBreak ? spec.pitchBreak.eta(a, elevInput) : 1;
+  return spec.clElevator * spec.elevatorPerAlpha * DEG_TO_RAD * (elevInput * spec.elevatorAlphaDeg + (a - trimAlphaDeg) / eta);
+}
+
+// The steady roll rate (rad/s) per unit of aileron at true airspeed `tasMps` (0156). An airframe with
+// a cited roll power (spec.rollPerTas = Clδa·δa/(−Clp)·2/b, rad/s per m/s: the aileron's moment goes
+// as q and the damping as q·pb/2V, so the rate goes as V) rolls faster the faster it flies, up to a
+// fly-by-wire roll-rate command (spec.rollCmdRad); one without (the 737) keeps the old constant rate,
+// rollAuthority / rollDamping. rollHoldScale is what a bank hold tuned on that old rate (autopilot.js
+// aileronForBank) multiplies its aileron by, so its loop and its gentle rate are the same at any
+// speed on any airframe (tests/flight/rollHold.test.js flies them at a slow phone's 1/60 s sub-steps).
+const legacyRollRate = (spec) => (spec.rollAuthority ?? 2.8) / spec.rollDamping;
+export const rollRateGain = (spec, tasMps) => (spec.rollPerTas
+  ? Math.min(spec.rollCmdRad ?? 9, spec.rollPerTas * tasMps)
+  : legacyRollRate(spec));
+export const rollHoldScale = (spec, tasMps) => Math.min(4, legacyRollRate(spec) / Math.max(0.01, rollRateGain(spec, tasMps)));
+
+// The dihedral effect (Clβ) as the aileron that makes the same rolling moment (Clβ·β / Cl of
+// full aileron), so the two keep their real ratio; + = rolls right. β linear to 20°. The
+// assists (assists.js) feed its opposite forward so the stick still commands a bank.
+export const dihedralAileron = (spec, betaRad) => (spec.clBeta && spec.clAileron
+  ? (spec.clBeta * MathUtils.clamp(betaRad, -BETA_LIN, BETA_LIN)) / spec.clAileron
+  : 0);
+
+// The propeller's torque reaction (N·m, + rolls left; spec.prop, 0194): Q = T × torqueArmM while it
+// pulls, nothing while it windmills. As aileron (+ = right) it is Q over full aileron's moment at qPa
+// (Clδa·δa max · q·S·b), at most full throw: a fixed-pitch prop's torque stays up as the airspeed falls,
+// so at a crawl it asks for more than the aileron has.
+export const propTorqueNm = (spec, thrustN) => (spec.prop ? Math.max(0, thrustN) * spec.prop.torqueArmM : 0);
+export const propTorqueAileron = (spec, thrustN, qPa) => Math.min(1, propTorqueNm(spec, thrustN) / (spec.clAileron * Math.max(qPa, 1) * spec.wingAreaM2 * spec.wingSpanM));
+
+// Throttle that holds `iasMps` on a steady flight path of `gammaDeg` (negative = descent)
+// at the trim angle of attack, out of ground effect: thrust·cos α = D + W·sin γ. Spawns use
+// it so a final starts in trim whatever the drag polar and engine are. `air` is the
+// atmosphere there (airAt; indicated airspeed in, so lift and drag don't depend on it).
+export function trimThrottle(spec, iasMps, flapsIndex, gammaDeg, gearDown = true, air = airAt(0)) {
+  const aoaRad = trimAoaDeg(spec, iasMps, flapsIndex) * DEG_TO_RAD;
+  const cl = liftCoefficient(spec, aoaRad, flapsIndex);
+  const q = dynamicPressure(iasMps);
+  const tas = iasMps / Math.sqrt(air.sigma), mach = tas / air.speedOfSoundMps;
+  const drag = dragCoefficient(spec, cl, gearDown, flapsIndex, 1, mach) * q * spec.wingAreaM2;
+  const thrust = (drag + spec.massKg * GRAVITY * Math.sin(gammaDeg * DEG_TO_RAD)) / Math.cos(aoaRad);
+  return throttleForThrust(spec, thrust, tas, air, mach, q);
+}

@@ -1,0 +1,318 @@
+// Assist levels (ticket 0042): Kid · Learner · Pilot over the same physics. Pure: no THREE,
+// no DOM (storage is passed in). Assists only shape the pilot's input before
+// stepFlightModel; Pilot is the raw airplane and never calls in here.
+// Tested in tests/unit/assists.test.js (headless, on the real flight model).
+//
+// Kid and Learner fly a simplified "normal law" (Airbus-style envelope protection):
+//   - the stick commands a bank angle (release = wings level), never past bankMaxDeg;
+//   - fore/aft stick moves a held pitch attitude (release = hold it: auto-trim), capped;
+//   - angle-of-attack protection keeps the wing below its stall angle: a stall becomes a
+//     gentle nose-drop;
+//   - auto-coordination: the rudder cancels sideslip unless the pilot is using it; when they
+//     do, the aileron the sideslip's dihedral effect asks for is fed forward (0081).
+// Kid adds hands-off guidance (let go of the stick and the airplane eases back to level
+// flight, or onto the localizer and glidepath when it is on a final), a no-dive floor
+// below ~500 ft and an auto-flare near the ground, and main.js adds the autothrottle, automatic
+// gear/flaps and a hard landing that resets instead of crashing (see ASSIST_CONFIG).
+import { aileronForBank, elevatorForPitch, flareSinkMps, bankCommandForHeading, glidepathGammaDeg } from './autopilot.js';
+import { headingError, vrefFor, landingFlaps } from './aero.js';
+
+export const ASSIST_KEY = 'openaero_assist_v1';
+export const ASSIST_LEVELS = ['kid', 'learner', 'pilot'];
+// A first visit (nothing stored, or storage that throws) flies Learner (ticket 0059); a
+// stored level always wins, and the default itself is never written. A player who has
+// already landed on Pilot without ever picking a card (a plain-key best) keeps Pilot.
+export const DEFAULT_ASSIST = 'learner';
+
+export const ASSIST_CONFIG = {
+  kid: {
+    bankMaxDeg: 30, pitchUpMaxDeg: 15, pitchDownMaxDeg: -10, aoaMarginDeg: 4, flareAoaMarginDeg: 3,
+    autoThrottle: true, autoConfig: true, autoFlare: true, softLanding: true, groundFloor: true, handsOff: true,
+  },
+  learner: {
+    bankMaxDeg: 45, pitchUpMaxDeg: 20, pitchDownMaxDeg: -15, aoaMarginDeg: 4,
+    autoThrottle: false, autoConfig: false, autoFlare: false, softLanding: false, groundFloor: false, handsOff: false,
+  },
+  pilot: null,
+};
+
+export const assistConfig = (level) => ASSIST_CONFIG[level] ?? null;
+export const isAssistLevel = (level) => ASSIST_LEVELS.includes(level);
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const DEAD = 0.05;
+const PITCH_RATE_DEG_S = 8;   // full fore/aft stick moves the held pitch this fast
+const PITCH_LEAD_DEG = 4;     // the held pitch never runs further than this ahead of the nose
+const COORD_GAIN = 0.1;       // rudder per degree of sideslip
+const COORD_FROM_M = 3;       // …with the wheels at least this high (0110)
+const CMD_SHARE = 0.85;       // full stick commands this share of a limit; the rest is overshoot room
+const FLARE_FROM_M = 12;      // Kid auto-flare: wheel height where it starts…
+const FLARE_BANK_DEG = 5;     // …and the most bank it allows there (wingtip strike is > 10°)
+const FLOOR_BELOW_M = 150;    // Kid ground floor: below ~500 ft no dive steeper than…
+const FLOOR_GAMMA_DEG = -4;   // …a 4° descent (a 3° glidepath still fits)
+const TAIL_MARGIN_DEG = 2;    // Kid auto-flare keeps the tail this far off the runway
+const GUIDE_RATE_DEG_S = 2;   // Kid hands-off: the held pitch eases toward the guide this fast
+// Kid's de-crab (0100): under DECRAB_FROM_M, coming down (not climbing away: a float or a bounce in ground effect
+// keeps it), the rudder lines the nose up with the ground track: this much rudder per degree of drift, less 0.3
+// per °/s of yaw rate (DECRAB_DAMP is per rad/s; without the damping it swung against the fin). Tuned headless
+// (tests/flight/kidFinal.test.js, pattern.test.js) for the grade too: the slip's drag sinks the Cessna, and from
+// 3 m (gain 0.4) its ~205-225 fpm cost the hands-off crosswind landing its S (first-timer panel); from 2.5 m it
+// lands at ~186-197 fpm, as in calm air.
+const DECRAB_FROM_M = 2.5;
+const DECRAB_GAIN = 0.7;
+const MAINS_GAIN = 0.4; // on the mains (below): 0.7 swung the F-16's nose ±6° there
+const DECRAB_DAMP = 17;
+const decrabRudder = (offDeg, s, gain) => clamp(-offDeg * gain - s.yawRateRight * DECRAB_DAMP, -1, 1);
+
+// departing: Kid left the ground (takeoff or touch-and-go) and has not yet reached 1,000 ft:
+// main.js climbs at full power instead of flying the approach speed and the flare retard.
+export const createAssistState = () => ({ pitchHoldDeg: null, departing: false });
+export const resetAssistState = (st) => { st.pitchHoldDeg = null; st.departing = false; return st; };
+export const KID_CLIMB_GAMMA_DEG = 5;
+export function updateDeparture(st, onGround, aglFt) {
+  if (onGround) st.departing = true;
+  else if (aglFt > 1000) st.departing = false;
+  return st.departing;
+}
+
+// One sub-step of input shaping. cfg = assistConfig(level) (never null here).
+// s: { pitchIn, rollIn, yawIn (raw stick targets: pitch + = nose down, roll + = right),
+//      pitchDeg, bankRightDeg, pitchRateUp, rollRateRight (rad/s), rollScale (rollHoldScale), aoaDeg, betaDeg, dihedralAil, propAil,
+//      stallAoaDeg, tailstrikeDeg, onGround, wheelHeightM, airspeedMps (true), vsMps (+ = up), flarePerS (spec.kidFlarePerS),
+//      pitchUpMaxDeg (a drill's lifted pitch cap, else null: the power-on stall's, 0191),
+//      guideBankDeg, guideGammaDeg (Kid hands-off targets: 0/0 for level flight, the
+//      localizer bank and glidepath angle on a final), rwyHdgDeg, noseHdgDeg, crossM, crossVelMps,
+//      steerRateDegS (on the runway: its true heading or null off it, the nose's, the offset and
+//      drift right of its centreline, full pedal's steered yaw rate; 0110), driftDeg (in the air: the
+//      nose minus the ground track, + = nose right of it, the crab into a wind from the right) and yawRateRight
+//      (rad/s, + = nose right; Kid's de-crab, 0100), noseWheelDown (the nose tyre carries weight), noFloor (no engine, 0036: the glide is
+//      steeper than the floor, and holding the floor would only slow it to a mush) }
+// Writes out.elev, out.ail, out.rud (surface commands, -1..1); returns out. No allocation.
+export function shapeControls(cfg, st, s, dt, out) {
+  if (s.onGround) {
+    // On the runway the stick is the pilot's (rotation, taxi): the envelope starts at lift-off.
+    // The pedals too, when they use them; when they don't, the nose wheel holds the centreline
+    // of the runway it is on (0110), never the sideslip's coordination (it would steer into the wind).
+    // Kid or Learner on the mains with the nose wheel still up (a 737 derotates for over a second, a kid may hold
+    // the stick back): the nose wheel can't steer yet, so the rudder, as in the de-crab, turns the nose
+    // to the runway hold's heading, at a softer gain (0100 panel: the hold's pedal, sized for the nose wheel, let the wind
+    // yaw it back to ~5° within 1.5 s).
+    st.pitchHoldDeg = null;
+    out.elev = s.pitchIn; out.ail = s.rollIn;
+    // Learner too lands on the mains (crabbed: it has no de-crab), and gets the same rudder there (0150 panel).
+    // With the nose wheel down, at landing speeds the hold asks more pedal per degree (0150): the nose tyre's side grip
+    // (gear.js noseWheelYawHold) can't out-turn the fin's weathervaning in a strong crosswind (a 737 at ~135 kt, 20 kt
+    // across: ~0.19 vs ~0.25 rad/s²), the rudder surface has to help, and the hold's 0.5°/s per degree, sized for the
+    // nose wheel's steered rate, asked a tenth of a pedal while the nose sat 2.5° into the wind. Up to 1° of the error
+    // asks 5°/s of steered rate per degree more (5 / steerRateDegS of pedal: the loop through the nose wheel stays at 5/s,
+    // stable at 30 fps), faded out from 31 to 15 m/s of airspeed. No yaw-rate damping: through the nose wheel's steering
+    // it chattered the pedal at the slew limit and slowed a crabbed turn-back (0150 physics panel).
+    if (Math.abs(s.yawIn) > DEAD || s.rwyHdgDeg == null) out.rud = s.yawIn;
+    else {
+      const off = headingError(s.noseHdgDeg, groundTargetHdg(s.rwyHdgDeg, s.crossM, s.crossVelMps));
+      out.rud = s.noseWheelDown === false ? decrabRudder(off, s, MAINS_GAIN)
+        : clamp(groundSteerRudder(s.rwyHdgDeg, s.noseHdgDeg, s.crossM, s.crossVelMps, s.steerRateDegS)
+          - clamp(off, -1, 1) * 5 / Math.max(1, s.steerRateDegS) * clamp(s.airspeedMps / 16 - 0.94, 0, 1), -1, 1);
+    }
+    return out;
+  }
+  if (st.pitchHoldDeg === null) st.pitchHoldDeg = s.pitchDeg;
+
+  // Pitch: the stick moves the held attitude; letting go holds it (auto-trim).
+  if (Math.abs(s.pitchIn) > DEAD) {
+    st.pitchHoldDeg = clamp(st.pitchHoldDeg - s.pitchIn * PITCH_RATE_DEG_S * dt,
+      s.pitchDeg - PITCH_LEAD_DEG, s.pitchDeg + PITCH_LEAD_DEG);
+  } else if (cfg.handsOff) {
+    // Kid let go: ease toward the guide's flight path (pitch = path + angle of attack).
+    // Not lower while climbing in the flare (0101 panel): after a balloon (a pull, then let go) the
+    // guide dived from the top of it faster than the flare's floor could catch: ~700-800 fpm.
+    const step = GUIDE_RATE_DEG_S * dt;
+    const ballooning = cfg.autoFlare && s.wheelHeightM < FLARE_FROM_M && s.vsMps > 0;
+    st.pitchHoldDeg += clamp(s.guideGammaDeg + s.aoaDeg - st.pitchHoldDeg, ballooning ? 0 : -step, step);
+  }
+  st.pitchHoldDeg = clamp(st.pitchHoldDeg, cfg.pitchDownMaxDeg * CMD_SHARE, (s.pitchUpMaxDeg ?? cfg.pitchUpMaxDeg) * CMD_SHARE); // a drill may lift the cap (0191)
+  // Kid ground floor: a dive held from higher up is shallowed out before the ground.
+  if (cfg.groundFloor && !s.noFloor && s.wheelHeightM < FLOOR_BELOW_M) {
+    st.pitchHoldDeg = Math.max(st.pitchHoldDeg, FLOOR_GAMMA_DEG + s.aoaDeg);
+  }
+  // Kid auto-flare: near the ground, never less nose-up than the flare's sink-rate profile.
+  if (cfg.autoFlare && s.wheelHeightM < FLARE_FROM_M) {
+    // Air-relative path (true airspeed), to match the air-relative angle of attack added to it.
+    // s.flarePerS: the airframe's sink profile (spec.kidFlarePerS, 0101), else autopilot.js's.
+    const flareGammaDeg = Math.atan2(flareSinkMps(Math.max(0, s.wheelHeightM), s.flarePerS), Math.max(20, s.airspeedMps)) * 180 / Math.PI;
+    st.pitchHoldDeg = Math.min(Math.max(st.pitchHoldDeg, flareGammaDeg + s.aoaDeg), s.tailstrikeDeg - TAIL_MARGIN_DEG);
+  }
+  // Angle-of-attack protection: the pitch that would put the wing at its limit on the
+  // current flight path (pitch − α + α_max). Over the limit, the nose comes down.
+  // Kid's auto-flare may use more of the wing (flareAoaMarginDeg, 0102): with a stiff nose the
+  // limit holds exactly, and 4° under the stall left no lift to stop a slow glide's sink.
+  const flaring = cfg.autoFlare && s.wheelHeightM < FLARE_FROM_M;
+  const aoaMax = s.stallAoaDeg - (flaring ? cfg.flareAoaMarginDeg : cfg.aoaMarginDeg);
+  // The loop overshoots α by ~1.5–2° as an idle airplane slows (headless runs), so the
+  // margins are 4°: ~2° of real margin left at worst.
+  const pitchAtAoaMax = s.pitchDeg - s.aoaDeg + aoaMax;
+  const pitchCmd = Math.min(st.pitchHoldDeg, pitchAtAoaMax);
+  if (pitchCmd < st.pitchHoldDeg) st.pitchHoldDeg = Math.max(pitchCmd, cfg.pitchDownMaxDeg * CMD_SHARE);
+  // In a coordinated turn the nose pitches up at q = (g/V)·tan φ·sin φ (body axes; ~8°/s at 45° and
+  // 95 KIAS) to stay on the horizon: the hold damps only the rate past that (0161: damping all of it
+  // held the nose ~3° low in a 45° bank, and Kid's steep turn sank 320 ft).
+  const phi = clamp(s.bankRightDeg, -60, 60) * Math.PI / 180;
+  const turnQ = s.airspeedMps > 20 ? 9.81 / s.airspeedMps * Math.tan(phi) * Math.sin(phi) : 0;
+  out.elev = elevatorForPitch(pitchCmd, s.pitchDeg, s.pitchRateUp - turnQ);
+
+  // Roll: the stick commands a bank angle, capped; release = wings level.
+  // s.bankMaxDeg: a mission's own cap (the steep turns' 45°, 0161), else the level's.
+  const bankLimit = cfg.autoFlare && s.wheelHeightM < FLARE_FROM_M ? FLARE_BANK_DEG : s.bankMaxDeg || cfg.bankMaxDeg;
+  const bankShare = bankLimit * CMD_SHARE;
+  const bankCmd = Math.abs(s.rollIn) <= DEAD && cfg.handsOff
+    ? clamp(s.guideBankDeg, -bankShare, bankShare)
+    : clamp(s.rollIn, -1, 1) * bankShare;
+  // Plus the aileron that cancels the sideslip's rolling moment (s.dihedralAil, flightModel.js
+  // dihedralAileron), fed forward like trim: a held rudder must not out-roll the bank hold. And the
+  // aileron the propeller's torque takes (s.propAil, flightModel.js propTorqueAileron, 0194), the same way.
+  // s.rollScale (flightModel.js rollHoldScale, 0156) keeps the hold's loop the same whatever the
+  // airframe's roll rate per aileron at this speed (the F-16's is up to ten times the Cessna's).
+  const k = s.rollScale ?? 1;
+  out.ail = clamp(aileronForBank(bankCmd, s.bankRightDeg, s.rollRateRight, k) - (s.dihedralAil ?? 0) + (s.propAil ?? 0), -1, 1);
+  // A bank past the cap (gust, upset) is rolled back at the most roll the hold's gains were tuned
+  // on (full aileron of the old constant rate, ~31-38°/s), not the F-16's 308°/s snap (0156).
+  if (Math.abs(s.bankRightDeg) > bankLimit) out.ail = -Math.sign(s.bankRightDeg) * Math.min(1, k);
+
+  // Yaw: the pilot's rudder if they use it, else coordinate (rudder + = yaw right cancels
+  // a positive, from-the-right sideslip).
+  // Not with the wheels just off the runway (lift-off, a skip): a crosswind's sideslip there asks for
+  // full pedal, which the nose wheel turns into a swerve when they touch again (0110). Kid's de-crab does
+  // apply there coming down (a skip): it lines the nose up with the track, which the nose wheel rolls along.
+  // Kid's flare, coming down: the rudder lines the nose up with the ground track (0100; FAA-H-8083-3C
+  // ch. 9: the crab is taken out just before touchdown), so the wheels roll where the airplane goes.
+  out.rud = Math.abs(s.yawIn) > DEAD ? s.yawIn
+    : cfg.autoFlare && !st.departing && s.wheelHeightM < DECRAB_FROM_M && s.vsMps < 1 ? decrabRudder(s.driftDeg, s, DECRAB_GAIN)
+    : s.wheelHeightM < COORD_FROM_M ? 0 : clamp(s.betaDeg * COORD_GAIN, -1, 1);
+  return out;
+}
+
+// The assists' rudder moves at most this fast (full travel in half a second, main.js): the runway
+// hold and the air's coordination ask for different pedals, and a wheels-on/off moment (lift-off, a
+// skip on touchdown) must not slam it from stop to stop (0110).
+export const RUDDER_SLEW_PER_S = 2;
+export const slewRudder = (cur, cmd, dt) => cur + clamp(cmd - cur, -RUDDER_SLEW_PER_S * dt, RUDDER_SLEW_PER_S * dt);
+
+// Kid and Learner on the runway with the pedals free (0110): the nose turns at most 4°/s
+// towards a heading at most 3° off the runway's, back towards the centreline, by the offset right of
+// it (crossM, m) and the drift across it (crossVelMps). steerRateDegS: the yaw rate full pedal
+// steers at this groundspeed (v·tan δ / wheelbase, main.js), so the pedal it asks is the rate it
+// wants: gentle at landing speeds, full at a walk.
+const GROUND_TURN_DEG_S = 4;
+const groundTargetHdg = (rwyHdgDeg, crossM, crossVelMps) => rwyHdgDeg - clamp(crossM * 0.5 + crossVelMps, -3, 3);
+export function groundSteerRudder(rwyHdgDeg, noseHdgDeg, crossM, crossVelMps, steerRateDegS) {
+  const target = groundTargetHdg(rwyHdgDeg, crossM, crossVelMps);
+  const want = clamp(headingError(target, noseHdgDeg) * 0.5, -GROUND_TURN_DEG_S, GROUND_TURN_DEG_S);
+  return clamp(want / Math.max(0.5, steerRateDegS), -1, 1);
+}
+
+// Kid hands-off line-up on a final: bank (deg, + = right) toward a 20°-max intercept of the
+// centreline (crossM + = right of it). Softer than the autopilot's localizer (0.5°/m, full
+// heading gain), which S-turned a hand-flown airplane with no roll-rate feedback of its own;
+// tuned on the flight model (tests/unit/assists.test.js) for the 737 and the 172 (0.8 of the
+// heading bank since the sideslip side force, 0081: at 0.7 the 737 overshot 31 m). curHdgDeg
+// is the ground track (0097; main.js, pattern.js, deadStick.js): fed the nose heading, a
+// crosswind's crab left a steady offset of drift / 0.15°/m, ~50 m at 10 kt in the Cessna.
+export const kidLocalizerBankDeg = (runwayHdgDeg, curHdgDeg, crossM) =>
+  0.8 * bankCommandForHeading(headingError(runwayHdgDeg + clamp(-crossM * 0.15, -20, 20), curHdgDeg));
+
+// A path over the ground (deg) as the path through the air that flies it: the vertical speed is the same, GS tan γ_ground =
+// TAS sin γ_air. ratio = GS / TAS (1 in still air: unchanged to 0.01° at 3°).
+export function airGammaDeg(groundGammaDeg, ratio = 1) {
+  if (!(ratio > 0) || ratio === 1) return groundGammaDeg;
+  const s = ratio * Math.tan(groundGammaDeg * Math.PI / 180);
+  return Math.asin(Math.max(-1, Math.min(1, s))) * 180 / Math.PI;
+}
+
+// The guide's ratio for airGammaDeg (0199): the ground speed over the airspeed along the track (m/s; v the velocity over the
+// ground, w the wind, both in the sim frame's horizontal). A headwind's share only: in a crab the air's along-track speed
+// is the ground speed, so a crosswind leaves it 1. (The exact ratio, GS / TAS, is cos(crab) lower in a crosswind: under
+// 0.01 for the 737 in 15 kt, ~0.03 for the Cessna; a 0.1° shallower path left out.)
+export function headwindPathRatio(vx, vz, wx, wz) {
+  const gs = Math.hypot(vx, vz);
+  if (gs < 1) return 1;
+  const airAlong = ((vx - wx) * vx + (vz - wz) * vz) / gs;
+  return airAlong > 1 ? gs / airAlong : 1;
+}
+
+// Kid's hands-off final (main.js applyAssists): `ap` is airports.js approachGeometry for `end`.
+// Captured on the nose (within 45°), flown on the ground track so a crab holds the centreline
+// (0097), the 3° path to its aim point and on over the runway, under the auto-flare's floor, so
+// it lands (0098: stopped at the threshold, level flight floated the runway). Past the threshold
+// only a landing: under ~100 ft over the first third of the runway, never steeper than 2° (an
+// airplane let go higher, later or climbing away is not dived at the runway). Leaves out.guide*
+// alone (level flight) off the final. liftM: the path that much higher, its aim point liftM / tan 3° further down the
+// runway (the wake lesson, 0115: past the jet's touchdown point, wake.js kidLiftM): the threshold allowance (30 m +
+// liftM), the first third and the 2° floor (3° on a lifted path: it is still the path) move with it.
+// gsOverTas (headwindPathRatio): the path is the PAPI's, over the ground; the guide's angle is flown through the air
+// (pitch = γ + α), so it is converted: sin γ_air = (GS / TAS) tan γ_ground (0199: in a 25 kt+ headwind the Cessna's
+// ratio is ~0.6 and the unconverted 3° rode ~35 ft under the PAPI's path to the threshold).
+export function kidFinalGuide(end, ap, noseDeg, trackDeg, out, liftM = 0, gsOverTas = 1) {
+  const past = ap.distM < 0;
+  if (past && ap.heightAbovePathM + ap.pathHeightM > 30 + liftM) return;
+  if (ap.distM < 20000 && Math.abs(ap.crossM) < 1500 && Math.abs(headingError(end.hdgT, noseDeg)) < 45) {
+    // The line-up holds the centreline low over all the runway (0100 panel: the de-crab's slip drifted a long
+    // float 12 m downwind; the bank, under the flare's 5° cap, puts the wing down into the wind).
+    out.guideBankDeg = kidLocalizerBankDeg(end.hdgT, trackDeg, ap.crossM);
+    if (past && -ap.distM > (end.lengthM - end.displacedM) / 3 + liftM * 19.08) return; // no path to dive at past the first third (19.08 = 1 / tan 3°)
+    // The PAPI's path over the ground up to the threshold; over the runway the auto-flare's floor flies it (as before).
+    out.guideGammaDeg = past ? Math.max(glidepathGammaDeg(ap.heightAbovePathM - liftM), liftM > 0 ? -3 : -2)
+      : airGammaDeg(glidepathGammaDeg(ap.heightAbovePathM - liftM), gsOverTas);
+  }
+}
+
+// Kid's automatic gear and flaps from height and vertical speed. Mutates and returns cfgOut
+// { gearDown, flapsIndex } (seeded with the current values). Hysteresis: down/out when
+// descending low, up/in when climbing higher; in between nothing changes.
+export function autoConfigure(spec, s, cfgOut) {
+  if (s.onGround) return cfgOut;
+  const descending = s.vsiFpm < -300, climbing = s.vsiFpm > 300;
+  if (!spec.fixedGear) {
+    if (descending && s.aglFt < 1000) cfgOut.gearDown = true;
+    else if (climbing && s.aglFt > 500) cfgOut.gearDown = false;
+  }
+  if (descending && s.aglFt < 1500 && s.iasKts < spec.vrefKts + 40) cfgOut.flapsIndex = Math.max(cfgOut.flapsIndex, landingFlaps(spec));
+  else if (climbing && s.aglFt > 1000) cfgOut.flapsIndex = 0;
+  return cfgOut;
+}
+
+// Kid's autothrottle target (kt): approach speed with flaps out, a cruise margin without. gustAddKts: on a gusty
+// day the approach adds half the gust factor (kidGustAddKts), the Airplane Flying Handbook's turbulent-air approach
+// (FAA-H-8083-3C ch. 9: "one-half the gust factor"), so a lull on the flare doesn't drop it short (0195). The
+// Handbook is the light airplane's, so the piston Cessna only: the 737's Kid flare landed at -900 fpm with +4 kt.
+export const kidTargetKts = (spec, flapsIndex, gustAddKts = 0) => (flapsIndex > 0 ? vrefFor(spec, flapsIndex) + 5 + gustAddKts : spec.vrefKts + 30);
+export const gustAddKts = (spec, wx) => (spec.engine?.type === 'piston-prop' && wx && wx.gustKts > wx.windKts ? (wx.gustKts - wx.windKts) / 2 : 0);
+export const kidGustAddKts = gustAddKts;
+// The speed bug and the coach's target on a final (main.js coachKts, 0219): Vref + 5 for the flaps set, plus half the gust
+// factor with flaps out (gustAddKts: the AFH's, the light piston airplane's only), the speed Kid's autothrottle flies.
+export const bugKts = (spec, flapsIndex, wx) => vrefFor(spec, flapsIndex) + 5 + (flapsIndex > 0 ? gustAddKts(spec, wx) : 0);
+
+// Personal bests are kept per level; Pilot keeps the mission's own key (save-data compatible).
+export const assistBestKey = (key, level) => (level === 'pilot' || !isAssistLevel(level) ? key : `${key}@${level}`);
+
+export function loadAssist(storage) {
+  try {
+    const data = JSON.parse(storage.getItem(ASSIST_KEY) || 'null');
+    if (data && data.v === 1 && isAssistLevel(data.level)) return data.level;
+  } catch { /* storage unavailable or junk: fall through */ }
+  return flownPilot(storage) ? 'pilot' : DEFAULT_ASSIST;
+}
+
+// Pilot's bests keep the plain mission key (assistBestKey); Kid's and Learner's carry '@'.
+function flownPilot(storage) {
+  try {
+    const best = JSON.parse(storage.getItem('openaero_best') || 'null');
+    return !!best && best.v === 1 && !!best.missions && Object.keys(best.missions).some((k) => !k.includes('@'));
+  } catch {
+    return false;
+  }
+}
+
+export function saveAssist(storage, level, now = Date.now()) {
+  if (!isAssistLevel(level)) return;
+  try { storage.setItem(ASSIST_KEY, JSON.stringify({ v: 1, level, at: now })); } catch { /* private mode */ }
+}

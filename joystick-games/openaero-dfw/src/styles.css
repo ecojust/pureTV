@@ -1,0 +1,480 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ported verbatim from the single-file prototype. */
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: #020617; color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", monospace;
+}
+.hud-glass {
+  background: rgba(10, 15, 29, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.hud-btn {
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  cursor: pointer;
+}
+/* Mouse only: on touch a tapped button keeps :hover, and its sky border read as "on" (0050). */
+@media (hover: hover) {
+  .hud-btn:hover {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: #38bdf8;
+    transform: translateY(-1px);
+  }
+}
+.hud-btn:active { transform: translateY(1px); }
+/* Active states are near-opaque coloured fills (alpha 0.95), not 28% washes: the touch buttons
+   sit straight on the 3D world, and over bright ground a wash left GEAR DN at ~1.2:1 (ticket
+   0050). Bright enough to read ON next to the slate OFF fill, dark enough for >= 4.5:1 over
+   white and black; captions inside an active button lift a step (slate-300, emerald-300). */
+.hud-btn.active {
+  background: rgba(6, 78, 59, 0.95);
+  border-color: #10b981;
+  color: #6ee7b7;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+}
+.hud-btn.active-amber {
+  background: rgba(110, 62, 6, 0.95);
+  border-color: #f59e0b;
+  color: #fcd34d;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
+}
+.hud-btn.active-sky {
+  background: rgba(12, 74, 110, 0.95);
+  border-color: #38bdf8;
+  color: #bae6fd;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+}
+.hud-btn.active .text-slate-400, .hud-btn.active-amber .text-slate-400, .hud-btn.active-sky .text-slate-400 { color: #cbd5e1; }
+.hud-btn.active .text-emerald-400 { color: #6ee7b7; }
+input[type=range] { accent-color: #38bdf8; }
+.scanlines {
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+  background-size: 100% 3px;
+}
+
+/* Imagery attribution (Esri World Imagery terms require it to be visible).
+   Lives inside the moving-map panel so it never covers the HUD. */
+.imagery-credit {
+  display: block;
+  font-size: 8px;
+  line-height: 1.2;
+  color: rgba(148, 163, 184, 0.85);
+  text-align: right;
+  text-decoration: none;
+}
+.imagery-credit a { color: inherit; text-decoration: none; white-space: nowrap; }
+.imagery-credit a:hover { color: #e2e8f0; }
+/* Google's attribution rules: logo 16–19 px tall with clear space; data providers in a line. */
+.imagery-credit .google-logo { display: inline-block; height: 16px; width: auto; margin: 10px 10px 5px 10px; vertical-align: bottom; }
+
+/* Imagery credit: always visible, tucked at the very bottom edge. */
+.imagery-credit {
+  position: absolute;
+  z-index: 30;
+  left: 50%;
+  /* Above the home indicator when installed fullscreen (0086); the touch deck pads the same
+     inset plus 0.75rem, so the credit stays in the gap under its controls. */
+  bottom: max(1px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  text-align: center;
+  /* One line from 430 px; under that, two (below), whole inside the screen, never off both
+     edges (0216: the line is ~378 px in CI's font, more in iOS's). */
+  width: max-content;
+  max-width: calc(100vw - 8px);
+  white-space: normal;
+  /* Only the links take a tap: the box (Google's logo clear space above all) stands over the
+     touch deck's bottom edge, where a thumb on the throttle or stick must still land (0216). */
+  pointer-events: none;
+}
+.imagery-credit a { pointer-events: auto; }
+/* Google's data providers stay one line; on a narrow screen the logo goes above it (0216). */
+#txtGoogleData { display: inline-block; white-space: nowrap; }
+
+/* The touch deck stands on the credit's line: it pads the same inset plus 0.75rem. Under 430 px
+   (every phone held upright) the free credit is always two lines, one credit each, whatever the
+   font: at 390 px one line had <1% to spare in CI's font and wraps in a wider one. The deck
+   stands 10 px higher to clear the ~20 px, and the throttle is 10 px shorter so the THR chip
+   over it stays clear of the SPD bug readout (0216). */
+#touchDeck { padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+@media (max-width: 429.98px) {
+  #creditsFree a { display: block; }
+  #creditsFree .credit-sep { display: none; }
+  #touchDeck { padding-bottom: calc(1.375rem + env(safe-area-inset-bottom)); }
+  #touchThrottle { height: 10.375rem; }
+}
+
+/* Start screen inside the safe area: installed fullscreen (0086) the page runs under the
+   notch, the status bar and the home indicator (viewport-fit=cover). */
+#onboardingModal {
+  padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+    max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+}
+@media (min-width: 640px) {
+  #onboardingModal {
+    padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+      max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  }
+}
+
+/* Touch controls own their gestures: no scroll, zoom or text selection. */
+.touch-control { touch-action: none; -webkit-touch-callout: none; }
+
+/* Left-handed (0221, main.js sets the root class on touch-only screens, src/handPrefs.js): the deck
+   mirrors, the stick under the left thumb, the throttle (with the trim or pedals inboard of it) under
+   the right, the function buttons between. Same boxes, same safe-area padding on both sides. */
+.lefty #touchDeck > div { flex-direction: row-reverse; }
+.lefty #touchLeft { flex-direction: row-reverse; }
+.hand-l, .lefty .hand-r { display: none; }
+.lefty .hand-l { display: inline; }
+/* The How to fly tip names the chip only where the chip is (touch-only screens). */
+.hand-tip { display: none; }
+@media (hover: none) and (pointer: coarse) { .hand-tip { display: inline; } }
+
+/* Coarse pointers get ≥44px targets on the HUD buttons. */
+@media (pointer: coarse) {
+  header .hud-btn, header select { min-height: 44px; min-width: 44px; }
+}
+
+/* First-flight coach: above the phone touch deck (which pads for the home indicator),
+   above the stick panel on desktop; always below the horizon. */
+#coach { bottom: calc(232px + env(safe-area-inset-bottom)); }
+#atis { top: calc(max(0.5rem, env(safe-area-inset-top)) + 3.125rem); }
+#atis [data-atis-text] { max-height: 6.5rem; overflow-y: auto; } /* a long METAR scrolls in the card, never grows into the HUD (0030) */
+/* A phone held sideways (0030; only when asked for, from the ATIS button): the top-left, over the top bar (the tapes keep
+   the speed), clear of the heading box, the wind box and the coach card's top-right slot. Elsewhere atis.js sets its top
+   under the header and the coach card's top slot. */
+@media (orientation: landscape) and (max-height: 500px) {
+  #atis { top: max(0.5rem, env(safe-area-inset-top)); left: max(0.5rem, env(safe-area-inset-left)); right: auto; margin: 0; width: min(22.5rem, calc(50vw - 4rem - env(safe-area-inset-left))); }
+  #atis [data-atis-text] { font-size: 10px; line-height: 13px; max-height: 5.75rem; }
+}
+@media (min-width: 1024px) { #coach { bottom: 10rem; } }
+/* A short screen held upright (0130, hudLayout.js coachOverHud): that slot is on the speed tape and
+   the runway, so the card goes up into the sky under the top bar's 44 px row (COACH_TOP_SLOT). */
+body #coach.coach-top, body.view-clean #coach.coach-top { top: calc(max(0.5rem, env(safe-area-inset-top)) + 3.125rem); bottom: auto; }
+/* Up there the words run on across the whole card under the buttons' corner (a Kid autopilot tip
+   is seven lines in the usual row's narrow column): a floated spacer holds the corner, the buttons
+   sit in it (DOM order, so Tab and screen readers still meet the words first). Smaller words
+   (.coach-tight) if they would still reach the heading box. */
+body #coach.coach-top:not(.hidden) { display: block; line-height: 1rem; padding-right: 0.25rem; }
+#coach.coach-top::before { content: ''; float: right; width: 3rem; height: 44px; }
+#coach.coach-top.coach-ap::before { width: 8.75rem; }
+#coach.coach-top #btnCoachSkip { position: absolute; top: 0.25rem; right: 0.25rem; }
+#coach.coach-top #btnTakeover { position: absolute; top: 0.25rem; right: 3.25rem; width: 5.25rem; }
+#coach.coach-top #txtCoachLabel { margin-right: 0.375rem; }
+#coach.coach-top::after { content: ''; display: block; clear: both; }
+body #coach.coach-tight:not(.hidden) { line-height: 0.875rem; }
+#coach.coach-tight #txtCoach, .assist-kid #coach.coach-tight #txtCoach { font-size: 11px; line-height: 0.875rem; }
+#masterAlertBanner:not(.hidden) ~ #coach.coach-top, #stallAlertBanner:not(.hidden) ~ #coach.coach-top { visibility: hidden; }
+
+/* Phone/tablet (below lg): the top HUD is one row (☰ Menu + telemetry strip); brand,
+   missions, camera, sound, pause, reset and the weather line open as a sheet under it. */
+@media (max-width: 1023.98px) {
+  #hudMenu { display: none; }
+  #hudMenu.open { display: flex; }
+}
+/* The coach card yields to the open menu sheet (they meet in phone landscape). */
+.hud-menu-open #coach, .hud-menu-open #calloutCaption, .hud-menu-open #atis { visibility: hidden; }
+/* Callout captions (0117): hudLayout.js takeoffCallTop (heading box top max(cy - 145, 72) + 28, times
+   the HUD's scale on a tablet, --hud-s: main.js handleResize, 0218),
+   left of the wind box (windBoxRect: x = min(cx + 126, w - 70)), so between the tapes too. */
+#calloutCaption { top: max(calc(50% - 117px * var(--hud-s, 1)), 100px); max-width: min(248px * var(--hud-s, 1), calc(100% - 148px)); width: max-content; }
+/* On a tablet the words grow with the canvas verdict they sit over (0218, the first-timer panel); 13 px on a phone. */
+#calloutCaption { font-size: calc(13px * var(--hud-s, 1)); line-height: calc(16px * var(--hud-s, 1)); }
+
+/* The alert banners stand under the top bar, which moves down by the status bar's inset when
+   installed (0086); a phone held sideways puts them in the coach's slot below. */
+#masterAlertBanner { top: calc(5rem + env(safe-area-inset-top)); }
+#stallAlertBanner { top: calc(7rem + env(safe-area-inset-top)); }
+/* Held upright on a phone (0137): left: 50% gave the box half the width, so PULL UP wrapped to two
+   lines and reached the heading box on a short screen (375x548: its top is 129 px). One line, as wide
+   as it needs, tracked a little tighter so the longest (WINDSHEAR — MAX THRUST, PITCH 15°) fits 360. */
+@media (orientation: portrait) and (max-width: 699.98px) {
+  #masterAlertBanner { width: max-content; max-width: calc(100% - 1rem); padding-left: 1rem; padding-right: 1rem; letter-spacing: 0.05em; }
+}
+@media (orientation: portrait) and (max-width: 359.98px) { #masterAlertBanner { font-size: 0.75rem; letter-spacing: 0; } }
+
+/* Phone held sideways (ticket 0025): the canvas tapes fill most of the height, so the
+   controls go to the edges. Throttle on the left edge, a stick on the right sized to
+   clear the altitude tape, the four function buttons as one row under the tapes, the
+   coach in the top bar beside a narrower telemetry strip (fixed widths, so the coach's
+   left edge never depends on font metrics). GPWS and stall alerts take the coach's slot,
+   over it, GPWS on top. Notch-side insets come in through --safe-left/right (0 while the
+   browser letterboxes the notch; ready for viewport-fit=cover). */
+:root {
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+@media (orientation: landscape) and (max-height: 480px) and (max-width: 1023.98px) {
+  #phoneHeader {
+    --tel-w: clamp(12rem, 45vw - 6rem, 16rem);
+    left: max(0.5rem, var(--safe-left));
+    right: auto;
+    max-width: calc(100% - max(0.5rem, var(--safe-left)) - max(0.5rem, var(--safe-right)));
+  }
+  #btnMenu { flex: none; width: 4.5rem; overflow: hidden; white-space: nowrap; }
+  #phoneTelemetry { flex: none; width: var(--tel-w); }
+  /* The sheet stops above the function-button row; touching the stick folds it. */
+  #hudMenu.open { max-height: calc(100dvh - 8.5rem - env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; pointer-events: auto; }
+  #touchDeck > div {
+    padding-left: max(0.75rem, var(--safe-left));
+    padding-right: max(0.75rem, var(--safe-right));
+  }
+  #touchButtons { flex-direction: row; }
+  /* The trim rocker (0094) stands over the throttle, not beside it (the speed tape starts
+     just right of the throttle on a 568 px screen); a shorter throttle makes the room. */
+  #touchLeft, .lefty #touchLeft { flex-direction: column-reverse; align-items: center; }
+  #touchThrottle { height: 7rem; }
+  /* Right of the altitude tape (it ends at cx + 186 px), 128 px at most. */
+  #touchStick {
+    width: clamp(3.5rem, 50vw - 190px - max(0.75rem, var(--safe-right)), 8rem);
+    height: clamp(3.5rem, 50vw - 190px - max(0.75rem, var(--safe-right)), 8rem);
+  }
+  /* Left-handed (0221): under ~360 px tall the pedals over the throttle (the crosswind lessons) would reach the
+     coach card's top-right slot (its foot ~66 px): there the throttle is 4.5rem when the pedals show. */
+  @media (max-height: 359.98px) {
+    .lefty #touchLeft:has(#touchRudder:not(.hidden)) #touchThrottle { height: 4.5rem; }
+  }
+  /* Left-handed (0221): left of the speed tape's scale (hudLayout.js: it reaches cx - 191 px) with
+     4 px clear, inside the notch side's inset. */
+  .lefty #touchStick {
+    width: clamp(3.5rem, 50vw - 195px - max(0.75rem, var(--safe-left)), 8rem);
+    height: clamp(3.5rem, 50vw - 195px - max(0.75rem, var(--safe-left)), 8rem);
+  }
+  #coach, #masterAlertBanner, #stallAlertBanner {
+    top: max(0.5rem, env(safe-area-inset-top));
+    bottom: auto;
+    left: calc(max(0.5rem, var(--safe-left)) + 4.5rem + 0.375rem + clamp(12rem, 45vw - 6rem, 16rem) + 0.5rem);
+    right: max(0.5rem, var(--safe-right));
+    max-width: 24rem;
+    margin: 0 0 0 auto;
+    transform: none;
+  }
+  #masterAlertBanner, #stallAlertBanner { text-align: center; white-space: normal; }
+  /* Results card held sideways: wider, factor bars in two columns, so the grade, its reason,
+     the gate line and the next-time tip (0061) leave both buttons in view. */
+  #resultsCard { max-width: 36rem; }
+  #resultsFactors { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; }
+  #stallAlertBanner { z-index: 34; }
+  #masterAlertBanner { z-index: 35; }
+  /* An alert over the coach hides it (the RTO's banner says what to do, 0107): two cards
+     showing through each other read as neither. */
+  #masterAlertBanner:not(.hidden) ~ #coach, #stallAlertBanner:not(.hidden) ~ #coach { visibility: hidden; }
+}
+
+/* Accessibility floor (ticket 0007). Keyboard focus is always visible: amber reads against
+   the sky, emerald and slate states the buttons take. */
+.hud-btn:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+/* Reduced motion: no pings, pulses, transitions or scanlines. Alerts stay, just still. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .hud-btn:hover, .hud-btn:active { transform: none; }
+  .scanlines { display: none; }
+}
+
+/* Increase Contrast (ticket 0192): iOS "Increase Contrast", Windows contrast themes, Android
+   high-contrast text. The glass goes opaque with a firm light edge and secondary text lifts to
+   the primary slate, so every HUD label reads >= 7:1 over a white day scene (WCAG 1.4.6).
+   The 2 px edge is the 1 px border plus a 1 px inset ring: no box changes size (no reflow). */
+@media (prefers-contrast: more) {
+  .hud-glass, .hud-btn {
+    background-color: #0a0f1d;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: #e2e8f0;
+  }
+  .hud-glass { box-shadow: inset 0 0 0 1px #e2e8f0, 0 12px 32px rgba(0, 0, 0, 0.8); }
+  .hud-btn { box-shadow: inset 0 0 0 1px #e2e8f0; }
+  .hud-btn.active { background-color: #022c22; border-color: #6ee7b7; box-shadow: inset 0 0 0 1px #6ee7b7; }
+  .hud-btn.active-amber { background-color: #3b1d02; border-color: #fcd34d; box-shadow: inset 0 0 0 1px #fcd34d; }
+  .hud-btn.active-sky { background-color: #082f49; border-color: #bae6fd; box-shadow: inset 0 0 0 1px #bae6fd; }
+  .hud-glass .text-slate-400, .hud-glass .text-slate-500, .hud-btn .text-slate-400, .hud-btn .text-slate-500 { color: #e2e8f0; }
+  .hud-btn.text-red-400 { color: #fca5a5; }
+}
+/* Forced colours (Windows contrast themes): the browser flattens every fill, so the ON state
+   of a button would vanish; system colours survive, so ON wears the Highlight edge. */
+@media (forced-colors: active) {
+  .hud-glass, .hud-btn { border-color: CanvasText; }
+  .hud-btn.active, .hud-btn.active-amber, .hud-btn.active-sky { border-color: Highlight; }
+}
+
+/* The autopilot is moving these controls (src/apTutor.js "show and teach"). */
+.ap-flying { box-shadow: 0 0 0 2px rgb(252 211 77 / 0.85), 0 0 14px rgb(252 211 77 / 0.45); }
+.ap-flying::after {
+  content: 'AP'; position: absolute; top: 4px; right: 6px;
+  font: 700 9px/1 ui-monospace, monospace; color: rgb(252 211 77); letter-spacing: 0.08em;
+}
+
+/* Kid assist level (ticket 0042): big, friendly coach prompts */
+.assist-kid #txtCoach { font-size: 1rem; line-height: 1.35rem; }
+
+/* Start screen: numbered steps, the mark, the one big button. */
+.step-title { display: flex; align-items: center; gap: 0.5rem; font-size: 12px; font-weight: 800; color: #e0f2fe; letter-spacing: 0.02em; }
+.step-n {
+  display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; border-radius: 999px;
+  background: #0ea5e9; color: #020617; font-size: 11px; font-weight: 900;
+}
+.brand-mark {
+  width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; flex: none;
+  background:
+    radial-gradient(circle at 70% 28%, #fde68a 0 9%, transparent 10%),
+    linear-gradient(160deg, #0c4a6e 0%, #1e3a8a 45%, #f97316 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), 0 6px 18px rgba(14, 165, 233, 0.35);
+}
+.btn-fly {
+  background: linear-gradient(180deg, #6ee7b7, #10b981);
+  border: 1px solid #a7f3d0;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.btn-fly:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.5); }
+.btn-fly:focus-visible { outline: 2px solid #fbbf24; outline-offset: 2px; }
+kbd {
+  display: inline-block; min-width: 1.4em; padding: 0 0.3em; margin-right: 0.15em; border-radius: 0.3rem;
+  border: 1px solid rgba(148, 163, 184, 0.45); border-bottom-width: 2px; background: rgba(15, 23, 42, 0.9);
+  color: #f1f5f9; font: 700 10px/1.5 ui-monospace, monospace; text-align: center;
+}
+.key-hints span { white-space: nowrap; }
+.key-hints { background: rgba(2, 6, 23, 0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+/* Clean view (desktop, H): the sky and the HUD, nothing else. The panels fold away, the
+   top bar becomes the phone's one row (☰ Menu + telemetry), keys hint at the bottom. */
+@media (min-width: 1024px) {
+  body.view-clean #topRow { display: flex; }
+  body.view-clean #phoneHeader { right: auto; width: min(46rem, calc(100% - 1rem)); }
+  body.view-clean #hudMenu { display: none; }
+  body.view-clean #hudMenu.open { display: flex; }
+  body.view-clean #eicasPanel, body.view-clean #stickPanel, body.view-clean #mapPanel { display: none !important; }
+  body.view-clean #keyHints { display: flex; }
+  body.view-clean #coach { bottom: 4.5rem; }
+}
+/* A touch-only screen at desktop width (iPad held sideways, 1180x820; iPad Pro portrait,
+   ticket 0044): the desktop panels assume a mouse and keys, so it flies like a phone or
+   an iPad in portrait: the touch deck, the one-row top bar, no panels or key hints. */
+@media (min-width: 1024px) and (hover: none) and (pointer: coarse) {
+  #touchDeck { display: block; }
+  #topRow { display: flex; }
+  #phoneHeader { right: auto; width: min(46rem, calc(100% - 1rem)); }
+  #hudMenu { display: none; }
+  #hudMenu.open { display: flex; }
+  /* Mouse-Fly too: a tap fires a mousemove, so the yoke would jump to the last finger. */
+  #eicasPanel, #stickPanel, #mapPanel, #keyHints, #btnPanelsShow, #btnPanelsHide, #btnMouseYoke { display: none !important; }
+  #coach, body.view-clean #coach { bottom: calc(232px + env(safe-area-inset-bottom)); }
+}
+/* Tablets (touch-only, 700 px across and 600 px tall, either way round; phones held sideways
+   keep their own row above): the four function buttons are one row along the bottom between
+   the thumbs, not a column standing over the runway, lifted clear of the ~31 px Google
+   attribution under photoreal (logo + data line, drawn above the deck). */
+@media (min-width: 700px) and (min-height: 600px) and (hover: none) and (pointer: coarse) {
+  #touchButtons { flex-direction: row; gap: 0.5rem; margin-bottom: 2rem; }
+}
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: '▸'; display: inline-block; width: 1em; transition: transform 0.15s; }
+details[open] > summary::before { transform: rotate(90deg); }
+
+/* ?debug usage readout (debugScreen.js overlay): kept here, out of the boot JS budget. */
+.debug-overlay {
+  position: absolute; left: 8px; bottom: 14px; z-index: 40; font: 10px monospace; color: #a7f3d0;
+  background: rgba(2, 6, 23, .7); padding: 2px 6px; border-radius: 4px; pointer-events: none;
+}
+/* The results card on a short screen (a phone held sideways): the runway strip (0088) and the
+   factor rows close up so FLY AGAIN stays inside the card with a line of room for a wider font. */
+@media (max-height: 480px) {
+  #resultsCard { padding-block: 0.75rem; }
+  #touchdownStrip { height: 1.25rem; margin-top: 0.375rem; }
+  #trackPlot { height: 6rem; margin-top: 0.375rem; }
+  #profilePlot { margin-top: 0.375rem; }
+  #profilePlot svg { max-width: 22rem; margin-inline: auto; } /* as wide as on an upright phone: labels ≥ 11 px */
+  #resultsFactors { gap: 0.25rem; }
+}
+/* Shorter still (Safari held sideways, ~340 px): the buttons win over the picture; the factor
+   rows still say where you touched (0125 keeps the buttons in view whatever the card holds). */
+@media (max-height: 370px) {
+  #touchdownStrip, #trackPlot, #profilePlot { display: none; }
+}
+
+/* Controls cheat sheet (0049): input on the left, what it does on the right */
+.controls-list { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 0.6rem; margin: 0; }
+.controls-list dt { font: 700 12px/1.5 ui-monospace, monospace; color: #f1f5f9; white-space: nowrap; }
+.controls-list dd { margin: 0; color: #cbd5e1; line-height: 1.5; }
+.keys-list { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.3rem 0.6rem; }
+.keys-list dt { font-family: inherit; font-size: 13px; font-weight: 400; line-height: 1.3; white-space: normal; color: #e2e8f0; }
+@media (min-width: 640px) { .keys-list { grid-template-columns: repeat(2, minmax(0, 1fr) auto); column-gap: 1rem; } }
+@media (min-width: 1024px) { .keys-list { grid-template-columns: repeat(3, minmax(0, 1fr) auto); } }
+
+/* Landing replay (0019): the HUD, panels and controls make way; the imagery credits stay */
+.replaying :is(#hudCanvas, #phoneHeader, #eicasPanel, #stickPanel, #mapPanel, #touchDeck, #keyHints, #coach,
+  #calloutCaption, #masterAlertBanner, #stallAlertBanner, #mouseFlightCrosshair) { visibility: hidden; }
+.replaying #mapCredits { z-index: 41; } /* over the replay bar: its links still open */
+/* The results card's scrolling middle (0125): a fade at its foot while there is more below it
+   (results.js toggles .more; iOS hides the scrollbar until you scroll). */
+#resultsBody.more {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.75rem), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.75rem), transparent);
+}
+#resultsBody:focus-visible { outline: 2px solid #38bdf8; outline-offset: -2px; }
+
+/* The top bar's height word (0140): Pilot reads AGL, Kid and Learner GROUND (main.js setAssist's .assist-pilot). */
+.assist-pilot .plainWord, body:not(.assist-pilot) .pilotWord { display: none; }
+
+/* The Cessna's fuel (0162, fuel.js sets data-fuel): green, amber under the 45-minute reserve, red when dry.
+   The words say it too (FUEL EXHAUSTED), so it never rests on colour alone. */
+.fuel-readout { color: #6ee7b7; }
+.fuel-readout[data-fuel='low'] { color: #fbbf24; }
+.fuel-readout[data-fuel='out'] { color: #f87171; }
+/* Desktop clean view shows #topRow's strip and not the weather ribbon: the fuel gets a 7th cell there
+   (fuel.js toggles .hidden on #fuelCell). Never on a phone's strip or a touch screen (the label over THR). */
+@media (max-width: 1023px), (hover: none) and (pointer: coarse) { #fuelCell { display: none !important; } }
+@media (min-width: 1024px) { #phoneTelemetry:has(#fuelCell:not(.hidden)) { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+
+/* The PAPI reading (0089): never colour alone (WCAG 1.4.1). main.js sets data-papi to the white-lamp
+   count (0-4, '' with no runway ahead); the colour, a glyph and, on the desktop panel, the four lamps as
+   the pilot sees them (white rings on the left, red squares on the right) all follow it. The glyph is the
+   way to fly, like every other arrow on this HUD (▲ FLARE ▲, the coach's "You're low: raise the nose"):
+   ▲▲ low, ▲ slightly low, ◆ on the path, ▼ slightly high, ▼▼ high. It is decoration for screen readers
+   ("/ ''"; the word says it), larger than the word, in a fixed-width box so the readout never shifts. */
+.papi-cue { color: #94a3b8; white-space: nowrap; }
+.papi-cue[data-papi="2"] { color: #34d399; }
+.papi-cue:is([data-papi="3"], [data-papi="4"]) { color: #7dd3fc; }
+.papi-cue:is([data-papi="0"], [data-papi="1"]) { color: #fbbf24; }
+.papi-cue::before { display: inline-block; width: 1.7em; font-size: 1.2em; line-height: 1; text-align: center; letter-spacing: -0.1em; }
+.papi-cue[data-papi=""]::before { content: none; }
+.papi-cue[data-papi="0"]::before { content: '▲▲'; content: '▲▲' / ''; }
+.papi-cue[data-papi="1"]::before { content: '▲'; content: '▲' / ''; }
+.papi-cue[data-papi="2"]::before { content: '◆'; content: '◆' / ''; }
+.papi-cue[data-papi="3"]::before { content: '▼'; content: '▼' / ''; }
+.papi-cue[data-papi="4"]::before { content: '▼▼'; content: '▼▼' / ''; }
+.papi-lamps { display: inline-flex; gap: 3px; margin-left: 0.4rem; vertical-align: middle; }
+.papi-lamps i { width: 7px; height: 7px; background: #f87171; }
+.papi-cue[data-papi=""] + .papi-lamps { visibility: hidden; }
+:is(.papi-cue[data-papi="1"] + .papi-lamps i:nth-child(-n+1), .papi-cue[data-papi="2"] + .papi-lamps i:nth-child(-n+2),
+  .papi-cue[data-papi="3"] + .papi-lamps i:nth-child(-n+3), .papi-cue[data-papi="4"] + .papi-lamps i) {
+  background: transparent; border: 2px solid #f8fafc; border-radius: 50%;
+}
+
+/* Leave the native pairing card its own column on TV menus. The web host
+   presents connection status outside the game and uses the full menu width. */
+@media (min-width: 760px) {
+  html:not([data-puretv-game]) body:has(#puretv-controller-panel) #onboardingModal {
+    padding-right: 204px;
+  }
+}
+#onboardingModal :focus-visible, #resultsCard :focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 2px;
+}
