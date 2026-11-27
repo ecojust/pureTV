@@ -98,7 +98,8 @@ try {
     const play = p.locator('[data-play-game="tetris"]');
     const ids = await p.locator('[data-play-game]').evaluateAll(items => items.map(item => item.dataset.playGame).sort());
     const catalog = JSON.parse(await readFile(new URL('../../tools/pc-games/catalog.json', import.meta.url), 'utf8'));
-    assert.deepEqual(ids, catalog.map(item => item.id).sort());
+    const hosted = JSON.parse(await readFile(new URL('../../tools/pc-games/hosted-games.json', import.meta.url), 'utf8'));
+    assert.deepEqual(ids, [...catalog, ...hosted].map(item => item.id).sort());
     assert.equal(await p.locator('[data-browser-game], .web-game-grid [target="_blank"]').count(), 0);
     await play.click();
     const dialog = p.locator('dialog.game-player[open]');
@@ -161,6 +162,22 @@ try {
     await dialog.getByRole('status').getByText(/无线手柄服务不可用，仍可使用键盘游玩/).waitFor();
     assert.equal(await dialog.locator('iframe').isVisible(), true);
   }, withoutAdb(), {gameControllerError:'TCP 63485: bind failed'});
+  await check('games hosted by the author use the shared status panel and original input', async p => {
+    const hostedPage = gamesOrigin + '/pureTV/games/vespertine/tv.html';
+    await p.route(hostedPage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+    await nav(p, 'games');
+    const play = p.locator('[data-play-game="vespertine"]');
+    await play.click();
+    const dialog = p.locator('dialog.game-player[open]');
+    await p.waitForFunction(() => window.__windowFullscreen && !document.querySelector('[data-frame-status]').textContent);
+    assert.equal(await dialog.getByRole('status').count(), 1);
+    assert.match(await dialog.getByRole('status').innerText(), /划船/);
+    const commands = await p.evaluate(() => window.__gameCommands.map(item => item.command));
+    assert.ok(!commands.includes('start_game_controllers'));
+    await dialog.locator('[data-close-game]').click();
+    await p.waitForFunction(() => !window.__windowFullscreen);
+    assert.equal(await play.evaluate(button => document.activeElement === button), true);
+  }, withoutAdb());
   await check('games open fullscreen in the same browser tab and exit from the game', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
