@@ -1,0 +1,190 @@
+MIT License
+
+Copyright (c) 2026 Kevin B. Liu
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+# Claude of Tanks — authorship notice
+
+Claude of Tanks was created, designed, and directed by **Kevin B. Liu**.
+Claude and Codex were development tools; they are not authors, creators, or
+copyright holders of the project's first-party work.
+
+Unless a file, embedded notice, or [`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md)
+identifies another author or license, every original file and asset in this
+repository is:
+
+> Copyright © 2026 Kevin B. Liu. Licensed under the MIT License.
+
+This repository-wide notice covers source code, documentation, procedural
+vehicle and world definitions, interface and brand composition, generated
+vehicle diagrams and icons, screenshots, video, synthesized audio, tests,
+tools, and other first-party project output. An individual file does not need
+to repeat the notice for this attribution to apply.
+
+Every selectable vehicle model is original procedural geometry authored for
+this project by Kevin B. Liu. External vehicle models are comparison or
+research inputs only; they are not playable geometry and retain their original
+authors and licenses.
+
+Third-party fonts, marks, shader code, reference models, environment props,
+and other exceptions remain the property of their respective authors. Their
+required notices and exact paths are preserved in
+[`docs/ATTRIBUTION.md`](docs/ATTRIBUTION.md) and `docs/licenses/`. The project
+MIT License does not replace or relicense those works.
+
+## Embedded open-source shader code
+
+| Software | Author | Source | License | Files |
+|---|---|---|---|---|
+| FidelityFX Super Resolution 1 spatial upscaler (EASU + RCAS), adapted to Three.js `ShaderMaterial`/`EffectComposer` conventions. | Advanced Micro Devices, Inc. | https://github.com/GPUOpen-Effects/FidelityFX-FSR | MIT | `src/engine/post.js` (copyright and MIT notice retained inline) |
+
+## Open-source UI assets
+
+| Asset | Author | Source | License | Files |
+|---|---|---|---|---|
+| National and territory flags (selective 4x3 SVG imports; the build includes only roster nations rather than the complete catalog). | Panayiotis Lipiridis and flag-icons contributors | https://flagicons.lipis.dev/ / https://github.com/lipis/flag-icons | MIT | npm package `flag-icons`; mapping/render adapter in `src/ui/{flagCodes,flags}.js` |
+| Three.js logo mark (official icon geometry, presented in the landing-page engine credit through a CSS color mask). | three.js authors | https://github.com/mrdoob/three.js/blob/072dcccba979a47a44a44769c051793ebe800d67/files/icon.svg | MIT | `public/brand/threejs-mark.svg` |
+
+
+Three.js
+The MIT License
+
+Copyright © 2010-2026 three.js authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+flag-icons
+The MIT License (MIT)
+
+Copyright (c) 2013 Panayiotis Lipiridis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+pureTV
+MIT License
+
+Copyright (c) 2026 桔子桑
+Copyright (c) 2026 Gathin
+Copyright (c) 2026 mclhm8182
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+Runtime texture provenance
+
+All CC0; license verified on each asset page at download time. Winners ship
+from `public/textures/terrain/` (splat layers, wired via
+`src/world/sourcedTextures.js` + `src/world/terrain.js`) and
+`public/textures/buildings/` (village materials via `src/world/props.js`).
+The procedural painters remain the synchronous fallback behind the
+`USE_SOURCED_*` flags in `src/world/sourcedTextures.js`. Only the 1K
+Color/NormalGL/Roughness/AmbientOcclusion maps are kept; preview PNGs and the
+losing candidates were deleted.
+
+- ambientCG asset pages each state: "Creative Commons CC0 license, making
+  them free to use without attribution - even in commercial circumstances."
+  (quoted from https://ambientcg.com/view?id=<AssetID> for every asset below)
+- Poly Haven license page (https://polyhaven.com/license) states all assets
+  are CC0 — "CC0 means absolute freedom."
+
+| Asset | Author | Source | License | Files |
+|---|---|---|---|---|
+| Grass 004 (1K JPG PBR set) | ambientCG (Lennart Demes) | https://ambientcg.com/view?id=Grass004 | CC0 1.0 | public/textures/terrain/Grass004_1K-JPG_*.jpg |
+| Withered Grass (1K JPG maps) | Charlotte Baglioni / Poly Haven | https://polyhaven.com/a/withered_grass | CC0 1.0 | public/textures/terrain/withered_grass_*_1k.jpg |
+| Ground 071 (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Ground071 | CC0 1.0 | public/textures/terrain/Ground071_1K-JPG_*.jpg |
+| Ground 093C (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Ground093C | CC0 1.0 | public/textures/terrain/Ground093C_1K-JPG_*.jpg |
+| Snow 010A (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Snow010A | CC0 1.0 | public/textures/terrain/Snow010A_1K-JPG_*.jpg |
+| Paving Stones 046 (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=PavingStones046 | CC0 1.0 | public/textures/terrain/PavingStones046_1K-JPG_*.jpg |
+| Rock 058 (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Rock058 | CC0 1.0 | public/textures/terrain/Rock058_1K-JPG_*.jpg |
+| Rock 063 (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Rock063 | CC0 1.0 | public/textures/terrain/Rock063_1K-JPG_*.jpg |
+| Bricks 097 (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Bricks097 | CC0 1.0 | public/textures/buildings/Bricks097_1K-JPG_*.jpg |
+| Plaster 007 (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Plaster007 | CC0 1.0 | public/textures/buildings/Plaster007_1K-JPG_*.jpg |
+| Roofing Tiles 012A (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=RoofingTiles012A | CC0 1.0 | public/textures/buildings/RoofingTiles012A_1K-JPG_*.jpg |
+| Planks 023A (1K JPG PBR set) | ambientCG | https://ambientcg.com/view?id=Planks023A | CC0 1.0 | public/textures/buildings/Planks023A_1K-JPG_*.jpg |
+| Kloofendal 43D Clear (Pure Sky) 2K HDR | Greg Zaal / Poly Haven | https://polyhaven.com/a/kloofendal_43d_clear_puresky | CC0 1.0 | REJECTED after in-engine A/B — deleted |
+| Kloofendal Overcast (Pure Sky) 2K HDR | Greg Zaal / Poly Haven | https://polyhaven.com/a/kloofendal_overcast_puresky | CC0 1.0 | REJECTED (untested runner-up) — deleted |
+| Snow Field (Pure Sky) 2K HDR | Jarod Guest, Sergej Majboroda / Poly Haven | https://polyhaven.com/a/snow_field_puresky | CC0 1.0 | REJECTED (untested runner-up) — deleted |
+
+
+
+FidelityFX FSR1 — AMD
+Copyright (c) 2021 Advanced Micro Devices, Inc. All rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions: the above
+copyright notice and this permission notice shall be included in all copies
+or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS",
+WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
