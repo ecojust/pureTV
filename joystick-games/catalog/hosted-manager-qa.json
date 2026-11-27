@@ -41,10 +41,10 @@
       "name": "鱼群环线",
       "category": "puzzle",
       "manager": "http://127.0.0.1:1437",
-      "checkedAt": "2026-11-27T15:48:40.231Z",
+      "checkedAt": "2026-11-27T16:13:03.195Z",
       "wrapperSource": "public pureTV Pages",
       "browser": "156.0.8078.79",
-      "hint": "点击或轻触操作，按颜色将环形管道里的鱼分类。",
+      "hint": "点鱼车，把车尾相连的同色鱼放进环形管道。鱼会自动进入车尾同色且有空位的车，没有匹配的车时可进入空车。",
       "documents": [
         {
           "url": "https://ecojust.github.io/pureTV/games/fish-loop/tv.html?lang=zh",
@@ -62,11 +62,12 @@
         "surface": "Phaser canvas",
         "level": 1,
         "state": "playing",
-        "buses": 3
+        "buses": 3,
+        "movesAfterBusClick": 1
       },
       "pixels": {
-        "colors": 441,
-        "contrast": 218
+        "colors": 439,
+        "contrast": 217
       },
       "hostCommands": [],
       "restoredWindow": true,
@@ -145,10 +146,10 @@
       "name": "暮海点灯人",
       "category": "action",
       "manager": "http://127.0.0.1:1437",
-      "checkedAt": "2026-11-27T15:49:27.093Z",
+      "checkedAt": "2026-11-27T16:12:05.979Z",
       "wrapperSource": "public pureTV Pages",
       "browser": "156.0.8078.79",
-      "hint": "选「BEGIN THE NIGHTS」再选「ROW OUT」出航。移动指针划船收集灯火，点击或按空格点亮油灯，Esc 回岸。",
+      "hint": "选标题页第一项开始、续玩或重玩，再选「ROW OUT」出航。移动指针划船，靠近微光收集。点击或按空格放出灯火，Esc 回岸。",
       "documents": [
         {
           "url": "https://ecojust.github.io/pureTV/games/vespertine/tv.html?lang=zh",
@@ -163,12 +164,31 @@
       "fullscreen": true,
       "authorTitle": "VESPERTINE — The Lamplighter of Hollow Sound",
       "visibleUI": {
+        "firstOption": "BEGIN THE NIGHTS",
         "night": "The Shallow Drift",
-        "hud": "NIGHT I"
+        "hud": "NIGHT I",
+        "savedProgress": {
+          "fixture": "isolated saved-game examples",
+          "origin": "https://sunkencity999.github.io",
+          "embeddedStorage": "blocked by the test browser in the third-party frame",
+          "surface": "first-party author page",
+          "cases": [
+            {
+              "completedNights": 1,
+              "firstOption": "CONTINUE — NIGHT II",
+              "intro": "The Glass Meadows"
+            },
+            {
+              "completedNights": 5,
+              "firstOption": "THE NIGHTS (COMPLETE — REPLAY)",
+              "intro": "The Mouth of the Sound"
+            }
+          ]
+        }
       },
       "pixels": {
-        "colors": 54,
-        "contrast": 155
+        "colors": 63,
+        "contrast": 159
       },
       "hostCommands": [],
       "restoredWindow": true,

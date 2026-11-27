@@ -53,7 +53,10 @@ async function inspectOriginal(game, frame) {
         name:window.__noir.game.scenes.current.name, state:window.__noir.game.state}));
     }
     case 'vespertine': {
-      await frame.locator('#btn-nights').click();
+      const entrance = frame.locator('#btn-nights');
+      const firstOption = await entrance.innerText();
+      assert.equal(firstOption, 'BEGIN THE NIGHTS');
+      await entrance.click();
       const night = await frame.locator('#intro-name').innerText();
       await frame.locator('#btn-row').click();
       await frame.locator('#hud').waitFor({state:'visible'});
@@ -61,18 +64,28 @@ async function inspectOriginal(game, frame) {
         const remaining = document.querySelector('#dawn-fill').style.transform.match(/scaleX\(([.\d]+)\)/);
         return remaining && Number(remaining[1]) < .98;
       });
-      return {night, hud:await frame.locator('#hud-night').innerText()};
+      return {firstOption, night, hud:await frame.locator('#hud-night').innerText()};
     }
     case 'daejeon-campus': {
       await frame.locator('#gamesBtn').click();
       await frame.locator('.course.pick').first().waitFor({state:'visible'});
       return {minigames:await frame.locator('.course.pick').count()};
     }
-    case 'fish-loop':
-      await frame.locator('#game-container canvas').first().waitFor({state:'visible'});
-      await frame.waitForFunction(() => window.__fishloop?.sim?.status === 'playing' && window.__fishloop.sim.time > 1);
+    case 'fish-loop': {
+      const board = frame.locator('#game-container canvas').first();
+      await board.waitFor({state:'visible'});
+      await frame.waitForFunction(() => window.__fishloop?.sim?.status === 'playing' && window.__fishloop.sim.time > .4,
+        undefined, {polling:200});
+      const target = await board.evaluate(canvas => {
+        const sim = window.__fishloop.sim;
+        const bus = sim.buses.find(item => sim.isTappable(item));
+        return {moves:sim.moves, position:{x:canvas.clientWidth * bus.x / 1080, y:canvas.clientHeight * bus.y / 1920}};
+      });
+      await board.click({position:target.position});
+      await frame.waitForFunction(previous => window.__fishloop.sim.moves === previous + 1, target.moves);
       return await frame.evaluate(() => ({surface:'Phaser canvas', level:window.__fishloop.sim.level.id,
-        state:window.__fishloop.sim.status, buses:window.__fishloop.sim.buses.length}));
+        state:window.__fishloop.sim.status, buses:window.__fishloop.sim.buses.length, movesAfterBusClick:window.__fishloop.sim.moves}));
+    }
     case 'struggle-bus':
       await frame.waitForFunction(() => window.__game?.city?.loadedRegionCount() > 0);
       return {loadedRegions:await frame.evaluate(() => window.__game.city.loadedRegionCount())};
@@ -80,6 +93,36 @@ async function inspectOriginal(game, frame) {
       // Further catalog entries may have an HTML title screen or a game drawn entirely on canvas.
       await frame.locator('canvas:visible, button:visible, [role="button"]:visible').first().waitFor();
       return {title:await frame.title()};
+  }
+}
+
+async function inspectSavedNights(page, author, url) {
+  const storageAllowed = await author.evaluate(() => {
+    try { return localStorage.length >= 0; } catch { return false; }
+  });
+  // When the browser blocks third-party storage, inspect the same public author page
+  // in its own origin. Seed only this isolated test context with two saved-game examples.
+  const firstParty = storageAllowed ? null : await page.context().newPage();
+  const frame = firstParty?.mainFrame() || author;
+  const cases = [];
+  try {
+    if (firstParty) await frame.goto(url);
+    for (const [bestNight, label] of [[1,'CONTINUE — NIGHT II'], [5,'THE NIGHTS (COMPLETE — REPLAY)']]) {
+      await frame.evaluate(completed => {
+        localStorage.setItem('vespertine.keeper.v1', JSON.stringify({bestNight:completed}));
+      }, bestNight);
+      await frame.goto(url);
+      const button = frame.locator('#btn-nights');
+      await frame.waitForFunction(text => document.querySelector('#btn-nights')?.textContent === text, label);
+      await button.click();
+      await frame.locator('#btn-row').waitFor({state:'visible'});
+      cases.push({completedNights:bestNight, firstOption:label, intro:await frame.locator('#intro-name').innerText()});
+    }
+    return {fixture:'isolated saved-game examples', origin:new URL(url).origin,
+      embeddedStorage:storageAllowed ? 'available' : 'blocked by the test browser in the third-party frame',
+      surface:firstParty ? 'first-party author page' : 'embedded author page', cases};
+  } finally {
+    await firstParty?.close();
   }
 }
 
@@ -124,7 +167,8 @@ async function captureSource(page, frameElement, destination) {
 async function verify(browser, game) {
   const dir = join(output, game.id);
   await mkdir(dir, {recursive:true});
-  const page = await browser.newPage({locale:'zh-CN', viewport:{width:960,height:540}, ignoreHTTPSErrors:true});
+  const context = await browser.newContext({locale:'zh-CN', viewport:{width:960,height:540}, ignoreHTTPSErrors:true});
+  const page = await context.newPage();
   page.setDefaultTimeout(90000);
   const evidence = {game:game.id, name:game.zh, category:game.category, manager, checkedAt:new Date().toISOString(),
     wrapperSource:local ? 'local staged wrapper at Pages URL' : 'public pureTV Pages', browser:browser.version()};
@@ -190,6 +234,7 @@ async function verify(browser, game) {
     evidence.visibleUI = await inspectOriginal(game,author);
     evidence.pixels = await captureSource(page,frameElement,join(dir,'manager.png'));
     assert.equal(page.context().pages().length,1);
+    if (game.id === 'vespertine') evidence.visibleUI.savedProgress = await inspectSavedNights(page,author,game.url);
     await dialog.locator('[data-close-game]').click();
     await page.waitForFunction(() => !window.__windowFullscreen && !document.querySelector('dialog.game-player[open]'));
     assert.equal(await card.evaluate(el => el === document.activeElement),true);
@@ -209,7 +254,7 @@ async function verify(browser, game) {
     throw error;
   } finally {
     await writeFile(join(dir,'evidence.json'), JSON.stringify(evidence,null,2) + '\n');
-    await page.close();
+    await context.close();
   }
 }
 
