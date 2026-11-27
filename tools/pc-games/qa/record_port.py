@@ -34,7 +34,8 @@ def wait(page, condition, arg=None):
         except PlaywrightTimeout:
             diagnostic = page.evaluate("""() => {
                 const s = window.JoystickGameQA?.snapshot();
-                return {stage: s?.stage, frames: s?.frames, gameplay: s?.gameplay,
+                return {stage: s?.stage, frames: s?.frames, buffer: [s?.canvasWidth, s?.canvasHeight],
+                    gameplay: s?.gameplay, buttons: s?.controller?.buttons,
                     loading: Array.from(document.querySelectorAll('.cot-bl.on .mstage, .cot-bl.on .fstage, #cot-boot:not([hidden]) p, .cot-prebattle.on')).map(el => el.innerText)};
             }""")
             print('Still waiting:', diagnostic, flush=True)
@@ -139,8 +140,11 @@ def run(game, play):
                     print('SDK client joined.', flush=True)
                     report = play(page, client, out, tmp)
             except Exception:
-                page.screenshot(path=out / 'failure.png', timeout=15_000)
                 print('Page errors:', errors, 'Missing resources:', sorted(missing), flush=True)
+                try:
+                    page.screenshot(path=out / 'failure.png', timeout=15_000)
+                except PlaywrightTimeout:
+                    print('The failing page did not present a frame for the screenshot.', flush=True)
                 raise
             browser.close()
             assert not errors, errors

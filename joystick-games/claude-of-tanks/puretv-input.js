@@ -1,18 +1,23 @@
 // The original input layer continues to own keyboard, mouse, touch and USB pads.
 import { createController } from 'puretv-input-bridge';
 
-export function attachPureTV({ game, input, settings, renderer, boot }) {
+export function attachPureTV({ game, input, settings, renderer, boot, battleLoad }) {
   let frames = 0;
   let driving = false;
   let previousStage = '';
+  let pauseAfterLoad = false;
   let lastPublished = -Infinity;
   const held = new Set();
   const blocked = new Set();
   const gl = renderer.getContext();
   const version = gl.getParameter(gl.VERSION);
 
+  function battleStarting() {
+    return battleLoad.covering || (game.phase === 'battle' && game.preBattleS > 0);
+  }
+
   function stage() {
-    if (!window.__GAME_READY) return 'loading';
+    if (!window.__GAME_READY || battleStarting()) return 'loading';
     if (settings.isOpen()) return 'paused';
     if (game.result && game.phase !== 'garage') return 'ended';
     return game.phase === 'battle' ? 'playing' : 'menu';
@@ -36,7 +41,8 @@ export function attachPureTV({ game, input, settings, renderer, boot }) {
 
   function suspend() {
     clearControls();
-    if (stage() === 'playing') settings.open();
+    if (battleStarting()) pauseAfterLoad = true;
+    else if (stage() === 'playing') settings.open();
   }
 
   const controller = createController({ side: 'right', onCancel: suspend, onSuspend: suspend });
@@ -91,6 +97,10 @@ export function attachPureTV({ game, input, settings, renderer, boot }) {
   return function updatePureTV(dt) {
     frames++;
     const { buttons, pressed, cancelled } = controller.poll();
+    if (pauseAfterLoad && !battleStarting()) {
+      pauseAfterLoad = false;
+      if (stage() === 'playing') settings.open();
+    }
     const current = stage();
     if (current !== previousStage) {
       clearControls();

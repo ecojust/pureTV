@@ -15,7 +15,11 @@ export function createGarage({specs, maps, onSelect, onBattle}) {
   for (const scene of maps) map.add(new Option(mapNames[scene.id] || scene.name, scene.id));
   map.value = 'verdant';
   tank.addEventListener('change', () => onSelect(tank.value));
-  battle.addEventListener('click', () => onBattle(tank.value, map.value));
+  const error = root.querySelector('.garage-error');
+  battle.addEventListener('click', () => {
+    error.hidden = true;
+    onBattle(tank.value, map.value);
+  });
   return {
     get isOpen() { return !root.hidden; },
     show(id) {
@@ -31,6 +35,10 @@ export function createGarage({specs, maps, onSelect, onBattle}) {
       onSelect(tank.value);
     },
     attachSettingsControl(control) { root.querySelector('.settings-slot').append(control); },
+    showEntryError() {
+      error.textContent = '未能载入战场。请重新开始，或在车库设置中调低画质后重试。';
+      error.hidden = false;
+    },
     setRoomStatus() {},
   };
 }

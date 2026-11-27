@@ -12,15 +12,15 @@
    isGamePaused: () => game.phase === 'battle' && !game.result && !killcam.isActive(),
  });
  garage.attachSettingsControl(settings.gear);
-+const updatePureTV = attachPureTV({ game, input, settings, renderer, boot });
++const updatePureTV = attachPureTV({ game, input, settings, renderer, boot, battleLoad });
  let mobileSoundMuted = false;
  const touchControls = createTouchControls({
    input, bus,
 @@ -4232,6 +4234,7 @@
    if (graphicsContextLost) return;
 
-   if (battleLoadRenderingCovered) return;
 +  updatePureTV(dtR);
+   if (battleLoadRenderingCovered) return;
 
    // Sniper-zoom de-fog: at high zoom the exp2 fog + ACES crush distant
    // contrast to haze; scale density down toward 0.35x as FOV drops below 15

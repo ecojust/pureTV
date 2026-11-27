@@ -1,6 +1,8 @@
 # 克劳德坦克 · Claude of Tanks
 
-本地单人坦克游戏，车辆、竞技地图、机器人、渲染及声音取自 Kevin B. Liu 的 Claude of Tanks。可在车库选择车辆和地图，点击“开始单人对战”进入游戏。键鼠或 pureTV 手柄均可操作。对局内按 Esc 暂停。
+[在线游玩](https://ecojust.github.io/pureTV/games/claude-of-tanks/tv.html) · [下载 Android TV 安装包](claude-of-tanks-0.1.0.apk?raw=1) · [SHA-256 校验值](SHA256SUMS.txt)
+
+本地单人坦克游戏，车辆、竞技地图、机器人、渲染及声音取自 Kevin B. Liu 的 Claude of Tanks。可在车库选择车辆和地图，点击“开始单人对战”进入游戏。键鼠或 pureTV 手柄均可操作。对局内按 Esc 暂停。正常 GPU 使用原作画质设置。设备使用 SwiftShader、llvmpipe 等软件渲染器时，车库和比赛采用低纹理档与 720 像素长边，缩短首次进入对局的时间。
 
 ## 构建
 
