@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Select registered catalog batches and run both immutable installed-APK scenarios."""
 import argparse
+from contextlib import contextmanager, nullcontext
 import importlib.util
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
+import threading
+import time
 
 spec = importlib.util.spec_from_file_location('joystick_build', Path(__file__).with_name('android-build.py'))
 build = importlib.util.module_from_spec(spec); spec.loader.exec_module(build)
@@ -24,6 +27,62 @@ def select(batch, games):
     return selected
 
 
+@contextmanager
+def device_diagnostics(adb, output):
+    """Keep guest evidence even if the emulator disappears before QA cleanup."""
+    output.mkdir(parents=True, exist_ok=True)
+    package = 'com.ecojust.joystick.claudeoftanks'
+    tags = ['PureTVQA:W', 'ActivityManager:I', 'ActivityTaskManager:I', 'AndroidRuntime:E',
+            'chromium:W', 'Choreographer:I', 'HWUI:I', 'lowmemorykiller:I', 'lmkd:I',
+            'am_kill:I', 'am_proc_died:I', 'am_anr:I', 'am_crash:I', '*:S']
+    logcat = subprocess.Popen([adb, 'logcat', '-b', 'main', '-b', 'system', '-b', 'events',
+                               '-b', 'crash', '-v', 'threadtime', '-T', '1', *tags],
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stop = threading.Event()
+    def log_guest():
+        budget = 4 * 1024 * 1024
+        with (output / 'logcat.txt').open('wb') as stream:
+            for line in logcat.stdout:
+                if len(line) <= budget:
+                    stream.write(line)
+                    stream.flush()
+                    budget -= len(line)
+    def sample_guest():
+        # The disposable test image runs only the target app and the usual Android services.
+        command = (f"ps -A -o PID,PPID,RSS,STAT,NAME | grep -E '{package}|webview:sandboxed'; "
+                   "grep -E '^(MemAvailable|MemFree|SwapFree):' /proc/meminfo; "
+                   "dumpsys activity activities | grep -m1 -E 'topResumedActivity|mResumedActivity'")
+        with (output / 'guest-state.jsonl').open('w', encoding='utf-8') as stream:
+            while not stop.is_set():
+                started = time.time()
+                row = {'at': started}
+                try:
+                    response = subprocess.run([adb, 'shell', command], capture_output=True, timeout=6)
+                    row.update(exitCode=response.returncode, stdout=response.stdout.decode(errors='replace')[:16384],
+                               stderr=response.stderr.decode(errors='replace')[:2048])
+                except subprocess.TimeoutExpired:
+                    row['error'] = 'ADB shell timed out after 6 seconds'
+                stream.write(json.dumps(row) + '\n')
+                stream.flush()
+                stop.wait(max(0, 10 - (time.time() - started)))
+    readers = [threading.Thread(target=worker, daemon=True) for worker in (log_guest, sample_guest)]
+    for reader in readers:
+        reader.start()
+    try:
+        yield
+    finally:
+        stop.set()
+        logcat.terminate()
+        try:
+            logcat.wait(timeout=3)
+        except subprocess.TimeoutExpired:
+            logcat.kill()
+            logcat.wait()
+        for reader in readers:
+            reader.join(timeout=7)
+        logcat.stdout.close()
+
+
 def runtime(args):
     meta = build.metadata(args.game)
     assert args.game not in build.LEGACY_PACKAGES
@@ -37,7 +96,10 @@ def runtime(args):
                '--output', str(args.output / (args.game + '-' + mode)), '--adb', args.adb]
         if mode == 'occupied': cmd += ['--occupy-default-port']
         if confirm_install: cmd += ['--confirm-backroad-install']
-        outcomes.append({'mode': mode, 'exitCode': subprocess.run(cmd, check=False).returncode})
+        diagnostics = (device_diagnostics(args.adb, args.output / args.game / 'device-diagnostics' / mode)
+                       if args.game == 'claude-of-tanks' else nullcontext())
+        with diagnostics:
+            outcomes.append({'mode': mode, 'exitCode': subprocess.run(cmd, check=False).returncode})
     build.write(args.output / (args.game + '-outcomes.json'), outcomes)
     assert all(item['exitCode'] == 0 for item in outcomes), 'Original scenario failures retained'
 
