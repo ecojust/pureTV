@@ -1,0 +1,26 @@
+--- a/src/main.js
++++ b/src/main.js
+@@ -82,6 +82,7 @@
+ import { createPerfHud, debugModeRequested } from './ui/perfHud.js';
+ import { createAudio } from './audio/audio.js';
+ import { createInput } from './game/input.js';
++import { attachPureTV } from './puretv-input.js';
+ import { loadEquipment as loadSelectedEquipment } from './game/equipment.js';
+ import {
+   CONSUMABLE_RULES, cooldownRemaining, resetConsumableCooldowns,
+@@ -2106,6 +2107,7 @@
+   isGamePaused: () => game.phase === 'battle' && !game.result && !killcam.isActive(),
+ });
+ garage.attachSettingsControl(settings.gear);
++const updatePureTV = attachPureTV({ game, input, settings, renderer, boot, battleLoad });
+ let mobileSoundMuted = false;
+ const touchControls = createTouchControls({
+   input, bus,
+@@ -4232,6 +4234,7 @@
+   if (graphicsContextLost) return;
+
++  updatePureTV(dtR);
+   if (battleLoadRenderingCovered) return;
+
+   // Sniper-zoom de-fog: at high zoom the exp2 fog + ACES crush distant
+   // contrast to haze; scale density down toward 0.35x as FOV drops below 15
