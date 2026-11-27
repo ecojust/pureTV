@@ -17,6 +17,19 @@
 | --- | --- | --- |
 | 230 | [克劳德坦克](claude-of-tanks/) | 从车库选择车辆和地图，和电脑队友一起进行单人对局。 |
 | 455 | [达拉斯飞行模拟](openaero-dfw/) | 在达拉斯－沃思堡地区自由飞行，或选择任务练习起飞和降落。 |
+| 542 | [星落舰队](starfall/) | 在中文太空即时战略中选择舰船，向目标位置下达指令。 |
+| 603 | [光球挑战](zof-duty/) | 在三层场地寻找 15 颗彩球，完成一轮后查看连击、准确率和评级。 |
+
+另外六款从作者网站加载，管理器提供中文名称与操作说明。点击链接可在 pureTV 内游玩。[原版语言、操作与试玩记录](catalog/hosted-originals.md)
+
+| 候选编号 | 游戏 | 作者版本 |
+| --- | --- | --- |
+| 769 | [金库大盗](https://ecojust.github.io/pureTV/games/bandit/tv.html) | 《Bandit》的后续多人版《Vault Breakers》，金库模式至少需要两人。 |
+| 1457 | [鱼群环线](https://ecojust.github.io/pureTV/games/fish-loop/tv.html) | 在循环管道中为彩色鱼群分类。 |
+| 2286 | [黑色侦探：雨夜](https://ecojust.github.io/pureTV/games/noir-extreme/tv.html) | 由 NOIR CITY 托管，加载 NOIR EXTREME 的第一章餐馆。 |
+| 2980 | [飞天涂色巴士](https://ecojust.github.io/pureTV/games/struggle-bus/tv.html) | 驾驶会飞的校车，在旧金山上空喷绘彩虹。 |
+| 3266 | [暮海点灯人](https://ecojust.github.io/pureTV/games/vespertine/tv.html) | 在夜海中划船收集灯火，点亮海岸的信标。 |
+| 3570 | [大田都市科学高中专业探索](https://ecojust.github.io/pureTV/games/daejeon-campus/tv.html) | 在韩语视觉小说中参观学校，体验各专业小游戏。 |
 
 ## 清单移植的七款游戏
 

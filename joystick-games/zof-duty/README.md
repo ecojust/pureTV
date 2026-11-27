@@ -1,0 +1,16 @@
+# 光球挑战
+
+[网页游玩](https://ecojust.github.io/pureTV/games/zof-duty/tv.html) · [Android TV 安装包](zof-duty-0.1.0.apk?raw=1) · [校验值](SHA256SUMS.txt)
+
+青、橙和金色光球悬在三层轨道上。用光标脉冲点亮全部 15 颗，根据命中率与用时获得评级；连续命中可提高每颗光球的分数。
+
+|操作|手柄|键盘或触屏|
+|---|---|---|
+|开始、暂停和继续|START|回车开始，Esc 暂停或继续|
+|移动光标|方向键或左摇杆|方向键，或移动鼠标、触摸屏幕|
+|发出脉冲|A|空格、Z、鼠标点击或触摸松开|
+|按住微调|B|按住 X 并用方向键移动|
+|切换视野、光标回中|X、Y|C、V|
+|移动观察位置| |W/A/S/D|
+
+从游戏目录运行 `node build.mjs`，再运行 `node build.mjs --check` 校验文件。用本地 HTTP 服务打开 `dist/tv.html`。构建使用已随仓库提供的 Three.js 与共享手柄模块。游戏可离线运行。[来源与许可](NOTICE.md)

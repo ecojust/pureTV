@@ -12,6 +12,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 from host import ALIASES
+from hosted_games import hosted_games, stage_hosted
 from launcher import cache_directory, fetch_game
 from package import REPOSITORY_RAW
 from prepare_standalone import ROOT, tracked_file, write_notices
@@ -93,15 +94,24 @@ def main():
     featured = [Path(item.get('page') or item['resource']).name for genre in genres for item in genre['games']]
     if [game['id'] for game in games] != featured or len(featured) != len(set(featured)):
         raise ValueError('Desktop and README game catalogs differ')
-    if args.game and args.game not in featured:
+    hosted = hosted_games()
+    online_ids = {game['id'] for game in hosted}
+    if online_ids.intersection(featured):
+        raise ValueError('Duplicate game in the packaged and hosted catalogs')
+    if {game['category'] for game in hosted} - {genre['id'] for genre in genres}:
+        raise ValueError('Hosted game has an unknown Manager category')
+    if args.game and args.game not in featured and args.game not in online_ids:
         parser.error('Unknown game ID')
     revision = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
     args.output.mkdir(parents=True, exist_ok=True)
-    for asset in ('pc-bridge.js', 'web-host.js', 'web-host.css'):
+    for asset in ('pc-bridge.js', 'web-host.js', 'web-host.css', 'hosted-player.js'):
         shutil.copyfile(source / asset, args.output / asset)
     for game in games:
         if not args.game or args.game == game['id']:
             stage(game, args.output, args.apk_cache, revision)
+    for game in hosted:
+        if not args.game or args.game == game['id']:
+            stage_hosted(game, args.output, tracked_file)
 
 
 if __name__ == '__main__':

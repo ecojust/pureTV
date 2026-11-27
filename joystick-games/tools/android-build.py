@@ -123,7 +123,7 @@ def target_sdk(slug):
     if slug in (
         'bloom-hop', 'claude-of-tanks', 'clawd-pop', 'dolmus', 'gogh-strike', 'kaboom-arena', 'kart-royale',
         'lumenrift', 'marti', 'mechapede', 'nerd-of-duty', 'nova-lancer', 'openaero-dfw', 'operation-ironhold',
-        'ponpoko-kart', 'saber-magic-tower', 'starbase-spooky', 'turbo-kart-rally',
+        'ponpoko-kart', 'saber-magic-tower', 'starbase-spooky', 'starfall', 'turbo-kart-rally', 'zof-duty',
     ):
         target = metadata(slug).get('androidTargetSdk', 29)
         assert type(target) is int and target in (29, 35), 'Unsupported catalog Android target SDK'
