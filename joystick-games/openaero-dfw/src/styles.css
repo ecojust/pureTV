@@ -467,12 +467,13 @@ details[open] > summary::before { transform: rotate(90deg); }
   background: transparent; border: 2px solid #f8fafc; border-radius: 50%;
 }
 
-/* Leave the native pairing card its own column on TV menus. The web host
-   presents connection status outside the game and uses the full menu width. */
-@media (min-width: 760px) {
-  html:not([data-puretv-game]) body:has(#puretv-controller-panel) #onboardingModal {
-    padding-right: 204px;
-  }
+/* Keep the native controller card in its own column, in front of the
+   onboarding backdrop. The desktop game's host owns its connection UI. */
+body:not(.openaero-native) #puretv-controller-panel { display: none; }
+.openaero-native #onboardingModal { padding-right: min(204px, 33vw); }
+.openaero-native #puretv-controller-panel:not([data-playing="true"]) {
+  z-index: 51;
+  max-width: calc(min(204px, 33vw) - 24px);
 }
 #onboardingModal :focus-visible, #resultsCard :focus-visible {
   outline: 2px solid #7dd3fc;

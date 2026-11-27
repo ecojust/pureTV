@@ -46,6 +46,7 @@ def play(page, client, out, tmp):
             wait(page, 's.gameplay.rollInput > 0.5')
         page.set_viewport_size({'width': 1280, 'height': 720})
         wait(page, 's.canvasWidth > 0 && s.canvasHeight > 0')
+        page.locator('#toast').wait_for(state='hidden')
         page.screenshot(path=out / 'playing-1280.png')
         flight = state(page)['gameplay']
     tcp_press(page, client, 'START', "s.stage === 'paused'")

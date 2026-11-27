@@ -3379,6 +3379,7 @@ function setCamera(i) {
 
 // The signed Android game is restricted to packaged resources.
 const packagedGame = !!window.PureGameHost && !window.PureTVPC;
+document.body.classList.toggle('openaero-native', packagedGame);
 if (packagedGame) {
   byId('btnSatLayer').style.display = 'none';
   byId('onlineTerrainOption').style.display = 'none';
