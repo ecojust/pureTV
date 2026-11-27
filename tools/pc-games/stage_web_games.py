@@ -46,6 +46,10 @@ def stage(game, output, cache, revision):
         config = json.dumps({'alias': ALIASES.get(slug), 'gameKit': slug == 'neon-rush'})
         scripts = (f'<script>const pureTVPCConfig={config};</script>'
                    '<script src="../web-host.js"></script><script src="../pc-bridge.js"></script>')
+        layout = Path(__file__).with_name('web-layouts') / f'{slug}.css'
+        if layout.is_file():
+            shutil.copyfile(layout, target / 'web-layout.css')
+            scripts += '<link rel="stylesheet" href="web-layout.css">'
         html, matches = re.subn(r'<head(?:\s[^>]*)?>', lambda match: match.group() + scripts,
                                 entry.read_text(encoding='utf-8-sig'), count=1, flags=re.I)
         if not matches:
