@@ -202,7 +202,7 @@ export class WorldSystem {
     buildPerimeter(A, rng);
     dressStreet(A, rng);
     dressBuildings(A, rng, infos);
-    if (!ctx.config.softwareGpu) scatterDebris(A, rng);
+    if (!ctx.config.softwareFallback) scatterDebris(A, rng);
 
     // NERD OF DUTY re-dress: fintech signage, NerdCon banners, THE LEDGER set
     // piece and a few flavour props. Additive only — placed last so its own
@@ -439,7 +439,7 @@ export class WorldSystem {
    */
   _stabiliseLightCount(ctx) {
     const list = this._pointLights;
-    if (!list || ctx.config.softwareGpu) return;
+    if (!list || ctx.config.softwareFallback) return;
     const render = this._render ?? (this._render = ctx.peek('render'));
     // The set of point lights in the scene only changes when a subsystem builds
     // or frees a pool, so rescanning every frame is pure waste. Every 90 frames

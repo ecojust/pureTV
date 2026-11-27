@@ -1,6 +1,7 @@
 """Stage the README games as static browser pages from their verified web assets."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -13,7 +14,7 @@ from zipfile import ZipFile
 from host import ALIASES
 from launcher import cache_directory, fetch_game
 from package import REPOSITORY_RAW
-from prepare_standalone import ROOT, write_notices
+from prepare_standalone import ROOT, tracked_file, write_notices
 
 sys.path.insert(0, str(ROOT / 'tools'))
 from game_icons import save_banner
@@ -42,6 +43,16 @@ def stage(game, output, cache, revision):
                 with archive.open(member) as source, destination.open('xb') as file:
                     shutil.copyfileobj(source, file)
             write_notices(archive, game, directory, target / 'puretv-licenses')
+        if slug == 'nerd-of-duty':
+            # The signed TV package predates the desktop renderer profile.
+            bundle = f'{slug}.js'
+            bundle_path = f'{directory}/dist/{bundle}'
+            data = tracked_file(bundle_path)
+            (target / bundle).write_bytes(data)
+            source_file = target / 'puretv-licenses/source.json'
+            source = json.loads(source_file.read_text(encoding='utf-8'))
+            source['web_bundle'] = {'path': bundle_path, 'sha256': hashlib.sha256(data).hexdigest()}
+            source_file.write_text(json.dumps(source, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         entry = target / 'tv.html'
         config = json.dumps({'alias': ALIASES.get(slug), 'gameKit': slug == 'neon-rush'})
         scripts = (f'<script>const pureTVPCConfig={config};</script>'

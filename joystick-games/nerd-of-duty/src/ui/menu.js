@@ -85,7 +85,7 @@ export class PauseMenu {
       this.sens.set(1);
       this.fov.set(80);
       this.ctx.config.invertY = false;
-      this.setQuality('low');
+      this.setQuality(this.ctx.config.defaultQuality);
     });
     if (window.PureGameHost?.exit) {
       const quit = el('button', 'ow-btn', btns, '退出游戏');

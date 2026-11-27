@@ -347,7 +347,7 @@ export class Assembler {
         continue;
       }
       const buckets = new Map();
-      const software = this.materials.ctx.config.softwareGpu;
+      const software = this.materials.ctx.config.softwareFallback;
       const cellWidth = software ? 16 : CHUNK;
       if (p.chunk && n > (software ? 6 : 24)) {
         for (let i = 0; i < n; i++) {
