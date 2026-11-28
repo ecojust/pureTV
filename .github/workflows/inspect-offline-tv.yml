@@ -1,0 +1,39 @@
+name: Inspect offline Manager UI failure
+on:
+  push:
+    branches: [qa/manager-offline-diagnostics-140896182353]
+    paths: ['.github/workflows/inspect-offline-tv.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --allow-escape-sequences repos/ecojust/pureTV/actions/jobs/140896182353/logs > source.log
+
+          python - <<'PY'
+          import re,zipfile,json
+          lines=open('source.log').read().splitlines()
+          matches=[i for i,x in enumerate(lines) if 'Traceback (most recent call last)' in x]
+          if matches:
+              t='\n'.join(lines[matches[-1]:matches[-1]+40]).split('##[error]')[0][-3600:]
+          else:
+              t='\n'.join(x for x in lines if re.search('Error:|AssertionError|RuntimeError|emulator: ERROR|cannot stat|failed to run command|not found|is not a file',x,re.I))[-1600:]
+          t=re.sub(r'https?://\S+','[url]',t)
+          print('::notice title=Runtime failure::'+t.replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46118052504
+          name: manager-offline-tv-0.8.0
+          path: evidence
+      - run: |
+          echo "::notice title=Evidence files::$(ls evidence | tr '\n' ' ')"
+          echo "::notice title=QA environment::$(jq -c .emulatorEnvironment evidence/native.json)"
+          echo "::notice title=Recorded stages::$(jq -r 'keys | join(",")' evidence/native.json)"
