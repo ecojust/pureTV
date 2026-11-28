@@ -16,13 +16,12 @@ import {version as appVersion} from '../package.json';
 import * as api from './bridge';
 import { emptySnapshot, type Request, type DeviceTarget, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketCatalog, type MarketSeenEntry, type MarketProgress, type MarketResult } from './types';
 
-type Page = 'connect' | 'apps' | 'launchers' | 'market' | 'games' | 'forum' | 'install' | 'history' | 'info';
+type Page = 'connect' | 'apps' | 'market' | 'games' | 'forum' | 'install' | 'history' | 'info';
 type Filter = 'all' | 'system' | 'enabled' | 'disabled' | 'recoverable';
 const pages: Record<Page, [string, string, string]> = {
   connect: ['设备连接', '连接电视，开始管理你的应用和桌面', 'monitor'],
   apps: ['应用管理', '查看电视中的应用，按需停用或恢复', 'grid'],
-  launchers: ['启动器', '选择电视的默认桌面，随时回到原来的启动器', 'home'],
-  market: ['APK市场', '发现电视应用与启动器，下载或安装到你的电视', 'store'],
+  market: ['电视应用', '下载安装包，管理电视启动器并自定义桌面', 'store'],
   forum: ['论坛', '浏览社区帖子，交流使用体验与反馈', 'forum'],
   games: ['游戏', '游玩本地或联网游戏，或将游戏部署到电视。', 'gamepad'],
   install: ['应用管理', '导入本地安装包，安装后可用于启动器排布', 'download'],
@@ -44,7 +43,7 @@ let filter: Filter = 'all', query = '', busy = false, busyLabel = '', cancelling
 type NoticeKind = 'info' | 'success' | 'error';
 let notice = '', noticeKind: NoticeKind = 'info';
 let noticeRequiresTelevision = false;
-const needsTelevision = (value: Page = page): boolean => !['market', 'games', 'forum', 'history', 'info'].includes(value);
+const needsTelevision = (value: Page = page): boolean => value === 'market' ? launcherTabActive() : !['games', 'forum', 'history', 'info'].includes(value);
 let connectionEdited=false;
 let host = api.demo ? '192.168.1.50' : '', port = '5555', adbPath = '';
 let selected = new Set<string>();
@@ -60,6 +59,12 @@ const gameMarketFilter = {category: 'game' as const, query: ''};
 
 function marketActive(): boolean {
   return page === 'market' || (page === 'games' && gamesView === 'market');
+}
+function launcherTabActive(): boolean {
+  return page === 'market' && apkMarketFilter.category === 'launcher';
+}
+function readLauncherLayout(): void {
+  if (launcherTabActive() && online() && !busy) void launcherOperation({action:'getLayout'}, true);
 }
 function marketFilter(): {category: MarketCategory; query: string} {
   return page === 'games' ? gameMarketFilter : apkMarketFilter;
@@ -212,9 +217,11 @@ feedbackDialog.addEventListener('click', event => {
     if (!matchesDeploymentTarget(device) || busy) return;
     closeFeedback();
     if (installed) {
-      page = 'launchers';
+      page = 'market';
+      apkMarketFilter.category = 'launcher';
       render();
-      void launcherOperation({action:'getLayout'}, true);
+      root.querySelector<HTMLElement>('#launcher-management')?.scrollIntoView({block:'start'});
+      readLauncherLayout();
     } else {
       root.querySelector<HTMLButtonElement>(`[data-deploy-game="${CSS.escape(gameId)}"]`)?.click();
     }
@@ -397,7 +404,6 @@ function content(): string {
   switch (page) {
     case 'connect': return connectionPage() + mcpPanel();
     case 'apps': return appTabs() + appsPage();
-    case 'launchers': return launchersPage();
     case 'market': return marketPage();
     case 'games': return gamesPage();
     case 'forum': return forum.render();
@@ -473,7 +479,7 @@ function marketCard(group: MarketGroup): string {
   const downloaded = marketDownloads.get(item.id)?.blobSha === item.blobSha;
   const cover = marketCoverUrl(item.coverUrl);
   const options = group.versions.map(version => `<option value="${esc(version.id)}"${version.id === item.id ? ' selected' : ''}>${esc(version.version ? `v${version.version}` : version.fileName)}</option>`).join('');
-  return ui`<article class="market-card" data-market-id="${esc(item.id)}"><div class="market-cover"><span class="market-cover-placeholder" aria-hidden="true">${icon(marketCategoryIcons[group.category])}</span>${cover ? `<img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ''}<span class="market-category">${t(marketCategoryLabels[group.category])}</span>${marketVisit?.newIds.has(group.id) ? `<span class="market-new" title="${esc(t('本次新增或更新'))}" aria-label="${esc(t('本次新增或更新'))}">${esc(t('新'))}</span>` : ''}</div><div class="market-card-body"><div class="market-card-heading"><h2 title="${esc(item.name)}">${esc(item.name)}</h2><span class="market-author-name" title="${esc(provider)}">${esc(provider)}</span></div><div class="market-meta"><label class="market-version"><span>版本</span><select data-market-version="${esc(group.id)}" aria-label="${esc(item.name)} · ${t('版本')}" title="最近 5 个版本"${disabled(busy)}>${options}</select></label><span class="market-size">${marketSize(item.bytes)}</span></div><div class="market-file-row"><p class="market-file" title="${esc(item.fileName)}">${esc(item.fileName)}</p>${downloaded ? `<span class="market-downloaded">${icon('check')}${t('已下载')}</span>` : ''}</div><div class="market-card-actions">${actionButton('download-market', icon('download') + t('下载到电脑'), ` data-id="${esc(item.id)}"${disabled(busy || (!api.desktop && !api.demo))}`, 'small')}${actionButton('install-market', t('下载并安装'), ` data-id="${esc(item.id)}"${disabled(busy || !online())}`, 'small primary')}</div></div></article>`;
+  return ui`<article class="market-card" data-market-id="${esc(item.id)}"><div class="market-cover"><span class="market-cover-placeholder" aria-hidden="true">${icon(marketCategoryIcons[group.category])}</span>${cover ? `<img src="${esc(cover)}" alt="${esc(item.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ''}<span class="market-category">${t(marketCategoryLabels[group.category])}</span>${marketVisit?.newIds.has(group.id) ? `<span class="market-new" title="${esc(t('本次新增或更新'))}" aria-label="${esc(t('本次新增或更新'))}">${esc(t('新'))}</span>` : ''}</div><div class="market-card-body"><div class="market-card-heading"><h2 title="${esc(item.name)}">${esc(item.name)}</h2><span class="market-author-name" title="${esc(provider)}">${esc(provider)}</span></div><div class="market-meta"><label class="market-version"><span>版本</span><select data-market-version="${esc(group.id)}" aria-label="${esc(item.name)} · ${t('版本')}" title="最近 5 个版本"${disabled(busy)}>${options}</select></label><span class="market-size">${marketSize(item.bytes)}</span></div><div class="market-file-row"><p class="market-file" title="${esc(item.fileName)}">${esc(item.fileName)}</p>${downloaded ? `<span class="market-downloaded">${icon('check')}${t('已下载')}</span>` : ''}</div><div class="market-card-actions">${actionButton('download-market', icon('download') + t('下载到电脑'), ` data-id="${esc(item.id)}"${disabled(busy || (!api.desktop && !api.demo))}`, 'small')}${actionButton('install-market', downloaded && item.kind === 'launcher' ? t('安装到电视') : t('下载并安装'), ` data-id="${esc(item.id)}"${disabled(busy || !online())}`, 'small primary')}</div></div></article>`;
 }
 function marketCards(): string {
   const groups = visibleMarketGroups();
@@ -496,11 +502,12 @@ function marketPage(): string {
   const pending = pendingKind === 'launcher' ? launcherApks.length : apkPaths.length;
   const count = (category: MarketCategory) => marketGroups.filter(group => group.category === category).length;
   const heading = page === 'games' ? '' : ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${marketCategories.map(category => `<button type="button" role="tab" id="market-tab-${category}" aria-controls="market-panel" data-market-category="${category}" aria-selected="${marketCategory === category}" class="${marketCategory === category ? 'primary' : ''}">${icon(marketCategoryIcons[category])}${t(marketCategoryLabels[category])}<span>${count(category)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请直接提交 PR'), '', 'text-button small')}</div>`;
-  return ui`${heading}<section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (pendingKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${pendingKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div id="market-panel" class="market-grid" data-scroll="${page === 'games' ? 'games-market' : `market-${marketCategory}`}" tabindex="0" role="${page === 'games' ? 'region' : 'tabpanel'}" aria-labelledby="${page === 'games' ? 'games-view-market' : `market-tab-${marketCategory}`}">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 apps.b14f.com')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
+  return ui`${heading}<section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (pendingKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${pendingKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div id="market-panel" class="market-grid" data-scroll="${page === 'games' ? 'games-market' : `market-${marketCategory}`}" tabindex="0" role="${page === 'games' ? 'region' : 'tabpanel'}" aria-labelledby="${page === 'games' ? 'games-view-market' : `market-tab-${marketCategory}`}">${launcherTabActive() ? launcherManagement() : ''}<div data-market-cards>${marketCards()}</div></div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 apps.b14f.com')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
 }
 function updateMarketList(): void {
   const list = root.querySelector<HTMLElement>('.market-grid');
-  if (list) { list.innerHTML = marketCards(); list.scrollTop = 0; }
+  const cards = list?.querySelector<HTMLElement>('[data-market-cards]');
+  if (list && cards) { cards.innerHTML = marketCards(); list.scrollTop = 0; }
   const count = root.querySelector<HTMLElement>('#market-count');
   if (count) count.textContent = marketCount();
 }
@@ -546,8 +553,8 @@ function adoptMarketResult(result: MarketResult): void {
 function marketResultMessage(result: MarketResult): string {
   if (result.error) return message(result.error) + '\n' + t('安装包已保留在待安装列表，可稍后重试。');
   if (result.operation === 'install' && !result.installed) return t('尚未确认安装成功，安装包已保留在待安装列表。');
-  if (result.installed) return result.download.item.kind === 'launcher' ? t('启动器安装成功。请前往“启动器”选择默认桌面。') : t('应用安装成功，电视应用列表已刷新。');
-  return result.download.item.kind === 'launcher' ? t('下载完成，已加入启动器的待安装列表。') : t('下载完成，已加入应用管理的待安装列表。');
+  if (result.installed) return result.download.item.kind === 'launcher' ? t('启动器安装成功。可在电视应用的启动器列表中启用并自定义桌面。') : t('应用安装成功，电视应用列表已刷新。');
+  return result.download.item.kind === 'launcher' ? t('下载完成。可在此列表中安装启动器。') : t('下载完成，已加入应用管理的待安装列表。');
 }
 async function loadMarketCatalog(refresh = false, visit = marketVisit): Promise<void> {
   if (busy || marketLoading || (!api.desktop && !api.demo)) return;
@@ -582,6 +589,7 @@ async function loadMarketCatalog(refresh = false, visit = marketVisit): Promise<
     if (refresh) finishFeedback(cancelling ? 'info' : 'error', marketError);
   } finally {
     marketLoading = false; marketWorking = false; localBusy = false; marketProgress = null; busy = !!agentOperation?.running; cancelling = false; render();
+    if (layoutDirty) readLauncherLayout();
   }
 }
 async function runMarketItem(id: string, operation: 'download' | 'install'): Promise<void> {
@@ -606,6 +614,7 @@ async function runMarketItem(id: string, operation: 'download' | 'install'): Pro
     marketWorking = false; marketProgress = null; localBusy = false; busy = !!agentOperation?.running; cancelling = false;
     notice = description; noticeKind = outcome; noticeRequiresTelevision = false; finishFeedback(outcome, description, rows); render();
   }
+  if (operation === 'install' && item.kind === 'launcher' && outcome === 'success') readLauncherLayout();
 }
 function storageBytes(value: number | null | undefined): string {
   if (value == null) return t('未知'); const units=['B','KiB','MiB','GiB','TiB']; let unit=0;
@@ -797,8 +806,8 @@ function launcherCardCover(background?:HomeBackground):string {
   if(image&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(image))return `<img class="launcher-card-background" src="${esc(image)}" alt=""${style}>`;
   return style?`<div class="launcher-card-background"${style}></div>`:'';
 }
-function launchersPage(): string {
-  return ui`<div class="section-title launcher-toolbar"><div><h2>电视启动器</h2><p>安装、激活启动器；当前桌面支持时可调整布局。</p></div><div class="button-row">${actionButton('scan',icon('refresh')+t('重新扫描'),disabled(busy || !online()))}${actionButton('add-launcher',icon('plus')+t('添加启动器 APK'),disabled(busy),'primary')}</div></div><div class="launcher-grid" data-scroll="launchers" tabindex="0" aria-label="启动器列表">${launcherApks.map(item=>ui`<article class="panel launcher-card pending-launcher ${pendingLauncherBackground(item)?'has-background':''}" data-launcher-apk="${esc(item.path)}">${launcherCardCover(pendingLauncherBackground(item))}<div class="launcher-card-content"><span class="pill">待安装</span><h3>${esc(fileName(item.path))}</h3><code>${esc(item.path)}</code><p class="hint">背景自动匹配 APK 的 Home 布局；无布局时使用同目录封面。</p><div class="launcher-card-actions">${actionButton('install-launcher',t('安装启动器'),` data-path="${esc(item.path)}"${disabled(busy || !online())}`,'primary')}${actionButton('remove-launcher-apk',t('移除'),` data-path="${esc(item.path)}"${disabled(busy)}`)}</div></div></article>`).join('')}${snapshot.launchers.map(l=>ui`<article data-launcher-component="${esc(l.component)}" class="panel launcher-card ${l.isDefault?'current':''} ${launcherCardBackground(l.component)?'has-background':''}">${launcherCardCover(launcherCardBackground(l.component))}<div class="launcher-card-content"><div class="launcher-top"><span class="large-icon">${icon('home')}</span>${l.isDefault?t('<span class="pill">当前默认桌面</span>'):''}</div><h3>${esc(l.label || l.packageName)}</h3><code>${esc(l.component)}</code><p class="launcher-size">安装包大小：${l.apkSizeBytes!=null?storageBytes(l.apkSizeBytes):packageSize(snapshot.packages.find(p=>p.packageName===l.packageName) || {packageName:l.packageName,label:l.label,installed:true,system:false,enabled:true,protectedReason:null})}</p><div class="launcher-card-actions">${actionButton('set-home',l.isDefault?t('正在使用'):t('设为默认桌面'),` data-component="${esc(l.component)}"${disabled(busy || !online() || l.isDefault)}`,l.isDefault?'':'primary')}${l.isDefault && layoutAvailable()?actionButton('open-layout',t('调整布局'),disabled(busy),'primary'):''}</div></div></article>`).join('')}${!snapshot.launchers.length && !launcherApks.length?ui`<section class="panel empty-state">${icon('home')}<h3>${online()?t('未查询到启动器'):t('连接后查看启动器')}</h3><p>也可以添加本地启动器 APK，在此页面直接安装。</p></section>`:''}</div><section class="panel restore-panel"><div><h2>恢复原桌面</h2><p>${snapshot.originalHome?esc(snapshot.originalHome):t('首次切换前会记录原来的默认桌面。')}</p></div>${actionButton('restore-home',t('恢复原桌面'),disabled(busy || !online() || !snapshot.originalHome || snapshot.originalHome===snapshot.defaultHome))}</section>${layoutTarget===launcherTarget() && launcherLayout && !launcherLayout.supported?`<p class="hint">${esc(message(launcherLayout.message || t('此启动器不支持布局调整')))}</p>`:''}`;
+function launcherManagement(): string {
+  return ui`<section class="launcher-management" id="launcher-management" tabindex="-1"><div class="section-title launcher-toolbar"><div><h2>电视启动器</h2><p>安装并启用启动器，然后自定义受支持的桌面。</p></div><div class="button-row">${actionButton('scan',icon('refresh')+t('重新扫描'),disabled(busy || !online()))}${actionButton('add-launcher',icon('plus')+t('添加启动器 APK'),disabled(busy),'primary')}</div></div><div class="launcher-grid" aria-label="启动器列表">${launcherApks.map(item=>ui`<article class="panel launcher-card pending-launcher ${pendingLauncherBackground(item)?'has-background':''}" data-launcher-apk="${esc(item.path)}">${launcherCardCover(pendingLauncherBackground(item))}<div class="launcher-card-content"><span class="pill">待安装</span><h3>${esc(fileName(item.path))}</h3><code>${esc(item.path)}</code><p class="hint">背景自动匹配 APK 的 Home 布局；无布局时使用同目录封面。</p><div class="launcher-card-actions">${actionButton('install-launcher',t('安装启动器'),` data-path="${esc(item.path)}"${disabled(busy || !online())}`,'primary')}${actionButton('remove-launcher-apk',t('移除'),` data-path="${esc(item.path)}"${disabled(busy)}`)}</div></div></article>`).join('')}${snapshot.launchers.map(l=>ui`<article data-launcher-component="${esc(l.component)}" class="panel launcher-card ${l.isDefault?'current':''} ${launcherCardBackground(l.component)?'has-background':''}">${launcherCardCover(launcherCardBackground(l.component))}<div class="launcher-card-content"><div class="launcher-top"><span class="large-icon">${icon('home')}</span>${l.isDefault?t('<span class="pill">当前默认桌面</span>'):''}</div><h3>${esc(l.label || l.packageName)}</h3><code>${esc(l.component)}</code><p class="launcher-size">安装包大小：${l.apkSizeBytes!=null?storageBytes(l.apkSizeBytes):packageSize(snapshot.packages.find(p=>p.packageName===l.packageName) || {packageName:l.packageName,label:l.label,installed:true,system:false,enabled:true,protectedReason:null})}</p><div class="launcher-card-actions">${actionButton('set-home',l.isDefault?t('正在使用'):t('设为默认桌面'),` data-component="${esc(l.component)}"${disabled(busy || !online() || l.isDefault)}`,l.isDefault?'':'primary')}${l.isDefault && layoutAvailable()?actionButton('open-layout',t('自定义桌面'),disabled(busy),'primary'):''}</div></div></article>`).join('')}${!snapshot.launchers.length && !launcherApks.length?ui`<section class="panel empty-state">${icon('home')}<h3>${online()?t('未查询到启动器'):t('连接后查看启动器')}</h3><p>也可以添加本地启动器 APK，在此页面直接安装。</p></section>`:''}</div><section class="panel restore-panel"><div><h2>恢复原桌面</h2><p>${snapshot.originalHome?esc(snapshot.originalHome):t('首次切换前会记录原来的默认桌面。')}</p></div>${actionButton('restore-home',t('恢复原桌面'),disabled(busy || !online() || !snapshot.originalHome || snapshot.originalHome===snapshot.defaultHome))}</section>${layoutTarget===launcherTarget() && launcherLayout && !launcherLayout.supported?`<p class="hint">${esc(message(launcherLayout.message || t('此启动器不支持布局调整')))}</p>`:''}</section>`;
 }
 function installPage(): string {
   return ui`${connectionStrip()}<section class="panel install-panel"><div class="section-title"><div><h2>待安装的 APK</h2><p>从电脑导入安装包，勾选要安装的文件；添加不会立即安装。</p></div>${actionButton('add-apks', icon('plus') + t('添加安装包'), disabled(busy || (!api.desktop && !api.demo)), 'primary')}</div><div class="install-footer"><span>共 ${apkPaths.length} 个文件 · 已选择 ${selectedApks.size} 个</span><div class="button-row">${actionButton('select-apks', t('全选'), disabled(busy || !apkPaths.length))}${actionButton('clear-apks-selection', t('取消选择'), disabled(busy || !selectedApks.size))}${actionButton('install-apks', t('安装所选'), disabled(busy || !online() || !selectedApks.size), 'primary')}</div></div>${apkPaths.length ? ui`<div class="apk-list" data-scroll="apks" tabindex="0" aria-label="待安装 APK 列表">${apkPaths.map(path => ui`<div class="apk-item" data-apk="${esc(path)}"><input type="checkbox" data-select-apk="${esc(path)}" aria-label="选择 ${esc(fileName(path))}"${selectedApks.has(path) ? ' checked' : ''}${disabled(busy)}><span class="large-icon">${icon('box')}</span><div class="apk-name"><strong>${esc(fileName(path))}</strong><code>${esc(path)}</code></div><div class="button-row apk-item-actions">${actionButton('install-one-apk',t('安装'),` data-path="${esc(path)}"${disabled(busy || !online())}`,'primary')}${actionButton('remove-apk', t('移除'), ` data-path="${esc(path)}"${disabled(busy)}`, 'text-button')}</div></div>`).join('')}</div>` : ui`<div class="empty-state upload-state">${icon('download')}<h3>添加你自己的安装包</h3><p>支持多次添加和多选 APK。移除列表项不会删除电脑文件。</p>${actionButton('add-apks', t('选择本地 APK'), disabled(busy || (!api.desktop && !api.demo)))}</div>`}</section><div class="two-columns install-notes"><section class="panel"><h2>电视应用资源</h2><p>启动器和第三方电视应用可从公共资源目录下载。</p>${actionButton('resource-catalog', t('打开资源目录 ↗'), '', 'text-button link-button')}</section><section class="panel"><h2>安装说明</h2><p>首版支持单个 APK 文件，可批量顺序安装多个应用。分包应用（APKS / XAPK）需使用其他安装方式。</p><p class="hint">同包名升级需签名一致。安装结束后会更新应用列表。</p></section></div>`;
@@ -1036,8 +1045,16 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'refresh-market': await loadMarketCatalog(true); break;
     case 'download-market': await runMarketItem(button.dataset.id!, 'download'); break;
     case 'install-market': await runMarketItem(button.dataset.id!, 'install'); break;
-    case 'market-pending': page = button.dataset.kind === 'launcher' ? 'launchers' : 'install'; render(); if (page === 'launchers' && online() && !busy) void launcherOperation({action: 'getLayout'}, true); break;
-    case 'scan': await run({ action: 'scan' }, t('扫描电视应用，读取当前用户状态…')); if(page==='launchers' && online())await launcherOperation({action:'getLayout'},true);break;
+    case 'market-pending': {
+      if (button.dataset.kind === 'launcher') {
+        const management = root.querySelector<HTMLElement>('#launcher-management');
+        const pending = management?.querySelector<HTMLElement>('[data-act="install-launcher"]:enabled') || management;
+        pending?.scrollIntoView({block:'nearest'});
+        pending?.focus({preventScroll:true});
+      } else { page = 'install'; render(); }
+      break;
+    }
+    case 'scan': await run({ action: 'scan' }, t('扫描电视应用，读取当前用户状态…')); if(launcherTabActive() && online())await launcherOperation({action:'getLayout'},true);break;
     case 'cancel': await cancelOperation(); break;
     case 'details': details(button.dataset.pkg!); break;
     case 'package-info': packageInfo.open(button.dataset.pkg!, button); break;
@@ -1050,7 +1067,9 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'remove-launcher-apk': launcherApks=launcherApks.filter(item=>item.path!==button.dataset.path);render();break;
     case 'install-launcher': {
       const path=button.dataset.path!;if(busy || !online())return;
+      const target = launcherTarget();
       if(await confirm(t('安装启动器'),t('将安装此 APK，完成后刷新启动器列表。'),[path],t('开始安装'))) {
+        if (!online() || target !== launcherTarget()) throw new Error(t('目标电视已变化，请重新确认安装。'));
         const before=new Set(snapshot.launchers.map(item=>item.component)), item=launcherApks.find(item=>item.path===path);
         const result = await run({action:'install',paths:[path]},t('正在安装启动器…'),t('安装启动器'));
         if(result.installedPaths.includes(path)) {
@@ -1109,7 +1128,13 @@ async function doAction(button: HTMLButtonElement): Promise<void> {
     case 'layout-add': modifyLayout(draft=>{if(!layoutApp || draft[layoutSection].items.some(entry=>entry.packageName===layoutApp))return;const page=draft[layoutSection];page.items.push({packageName:layoutApp,icon:'app',color:'#374959',...(draft.version===3?{frame:autoFrame(layoutSection,page.items.length,page.columns,page.items.length+1),visible:true,zIndex:1}:{})});layoutNode=null;layoutSelected=page.items.length-1;});break;
     case 'set-home': {
       const component = button.dataset.component!;
-      if (await confirm(t('更换默认桌面'), t('切换前会记录原来的桌面，便于之后恢复。'), [component], t('设为默认桌面'))) {await run({ action: 'setHome', component }, t('切换默认桌面并核对结果…'));await launcherOperation({action:'getLayout'});} break;
+      const target = launcherTarget();
+      if (await confirm(t('更换默认桌面'), t('切换前会记录原来的桌面，便于之后恢复。'), [component], t('设为默认桌面'))) {
+        if (!online() || target !== launcherTarget()) throw new Error(t('设备或启动器已变化，请重新确认。'));
+        await run({action:'setHome', component}, t('切换默认桌面并核对结果…'));
+        await launcherOperation({action:'getLayout'});
+      }
+      break;
     }
     case 'restore-home': if (snapshot.originalHome && await confirm(t('恢复原来的桌面'), t('将当前电视的默认桌面切换回记录的启动器。'), [snapshot.originalHome], t('恢复原桌面'))) {await run({ action: 'restoreHome' }, t('恢复原桌面并核对结果…'));await launcherOperation({action:'getLayout'});} break;
     case 'clear-history': if (await confirm(t('清空操作记录'), t('仅清空本机保存的记录，不撤销电视上已执行的操作。'), [ui`${snapshot.history.length} 条记录`], t('清空记录'))) await run({ action: 'clearHistory' }, t('清空记录…')); break;
@@ -1119,7 +1144,7 @@ document.addEventListener('click', event => {
   const target = event.target as HTMLElement;
   if (target.closest('.brand')) { event.preventDefault(); page = 'connect'; render(); return; }
   const nav = target.closest<HTMLButtonElement>('[data-page]');
-  if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
+  if (nav) { page = nav.dataset.page as Page; render(); readLauncherLayout(); return; }
   const viewButton = target.closest<HTMLButtonElement>('[data-games-view]');
   if (viewButton) {
     gamesView = viewButton.dataset.gamesView === 'market' ? 'market' : 'web';
@@ -1146,7 +1171,14 @@ document.addEventListener('click', event => {
   const forumButton = target.closest<HTMLButtonElement>('[data-forum-action]');
   if (forumButton) { void forum.action(forumButton); return; }
   const marketTab = target.closest<HTMLButtonElement>('[data-market-category]');
-  if (marketTab) { apkMarketFilter.category = marketTab.dataset.marketCategory as MarketCategory; apkMarketFilter.query = ''; render(); return; }
+  if (marketTab) {
+    apkMarketFilter.category = marketTab.dataset.marketCategory as MarketCategory;
+    apkMarketFilter.query = '';
+    render();
+    readLauncherLayout();
+    root.querySelector<HTMLElement>(`[data-market-category="${apkMarketFilter.category}"]`)?.focus({preventScroll:true});
+    return;
+  }
   const node=target.closest<HTMLElement>('[data-scene-node]');if(node){layoutNode=node.dataset.sceneNode || null;layoutSelected=-1;render();return;}
   const tile=target.closest<HTMLElement>('[data-layout-tile]');if(tile){layoutNode=null;layoutSelected=Number(tile.dataset.layoutTile);render();return;}
   const tab = target.closest<HTMLButtonElement>('[data-filter]');
@@ -1267,7 +1299,7 @@ void api.watchMcp(value => {
   render();
   if (seenCatalog) void rememberMarketVisit(seenCatalog.visit, seenCatalog.entries);
   // Only explicit device/catalogue/layout operations trigger reads. Background reads never recurse.
-  if(page==='launchers'&&!busy&&online()&&!value.running){
+  if(launcherTabActive()&&!busy&&online()&&!value.running){
     if(['install','install_market_item','uninstall','restore','set_enabled','scan','connect','set_home','restore_home'].includes(value.tool)&&layoutDirty)void launcherOperation({action:'getLayout'},true);
     else if(acceptedLayout&&['get_launcher_layout','apply_launcher_layout','reset_launcher_layout'].includes(value.tool))void launcherOperation({action:'getBackgrounds'});
   }

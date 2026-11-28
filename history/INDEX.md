@@ -6,6 +6,7 @@
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
+| [2026-11-28-004](2026-11-28-004.md) | completed | 合并电视应用 | 同一分类支持下载、安装、设为默认与自定义桌面，界面回归通过。[PR #102](https://github.com/ecojust/pureTV/pull/102) |
 | [2026-11-28-003](2026-11-28-003.md) | completed | 游戏库按需下载，统一 Android 宿主 | 0.8.3 的游戏库仅保留 web/，48 款用共享宿主生成的 APK 通过官方签名校验。跨平台构建和断网电视部署通过。[PR #101](https://github.com/ecojust/pureTV/pull/101) |
 | [2026-11-28-002](2026-11-28-002.md) | blocked | 游戏卡片一键部署到电视，电脑游玩和打包都使用内置本地项目 | 0.8.1 已发布，48 款用同一份内置项目断网游玩和生成 APK，Android TV 模拟器已实际安装并启动。另八款等待整作分发许可，保留联网入口。[下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1) · [验收](../desktop/docs/release-0.8.1-evidence/README.md) |
 | [2026-11-28-001](2026-11-28-001.md) | completed | 网页游戏统一打包安卓、游戏栏目整合市场游戏功能 | Manager 0.7.0 已发布。六款可离线生成独立 APK，50 款可获取正式包。游戏市场支持版本选择、下载与安装，共用待安装队列。已用公开 Linux 客户端和 Android TV 模拟器复核。[下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0) · [验收](../desktop/docs/release-0.7.0-evidence/README.md) |

@@ -15,7 +15,7 @@ let browser, passed = 0;
 const testMatch=process.env.PURETV_TEST_MATCH?new RegExp(process.env.PURETV_TEST_MATCH):null;
 const feedback = p => p.locator('dialog.operation-feedback[open]');
 const act = (p, action) => p.locator(action==='cancel' ? 'dialog.operation-feedback[open][data-phase="loading"] [data-feedback-cancel], body:not(:has(dialog.operation-feedback[open][data-phase="loading"])) [data-act="cancel"]' : `[data-act="${action}"]`).first();
-const nav = async (p, page) => {if(page==='install'){await p.locator('[data-page="apps"]').click();await p.locator('[data-act="go-install"]').first().click();}else await p.locator(`[data-page="${page}"]`).click();};
+const nav = async (p, page) => {if(page==='install'){await p.locator('[data-page="apps"]').click();await p.locator('[data-act="go-install"]').first().click();}else if(page==='launchers'){await p.locator('[data-page="market"]').click();await p.locator('[data-market-category="launcher"]').click();}else await p.locator(`[data-page="${page}"]`).click();};
 const requests = p => p.evaluate(() => window.__requests);
 const box = (p, pkg) => p.locator(`input[data-select-package="${pkg}"]`);
 async function acknowledge(p) {
@@ -729,7 +729,7 @@ try {
   await check('all long lists scroll internally while top actions and surrounding content stay fixed', async p => {
     for (const viewport of [{width:1440,height:900},{width:960,height:640}]) {
       await p.setViewportSize(viewport);
-      for (const [page,key] of [['apps','apps'],['launchers','launchers'],['history','history'],['install','apks']]) {
+      for (const [page,key] of [['apps','apps'],['launchers','market-launcher'],['history','history'],['install','apks']]) {
         await nav(p,page);await settled(p);
         if (page==='install' && !await p.locator('[data-scroll="apks"]').count()) await act(p,'add-apks').click();await settled(p);
         const area = p.locator(`[data-scroll="${key}"]`);
@@ -819,7 +819,7 @@ try {
     await nav(p,'launchers');await settled(p);await act(p,'add-launcher').click();await settled(p);
     assert.equal(await p.locator('.pending-launcher').count(),1);assert.equal(await p.locator('.pending-launcher .launcher-card-background').count(),1);
     await act(p,'install-launcher').click();await confirmOperation(p);assert.equal(await p.locator('.pending-launcher').count(),0);
-    assert.equal(await p.locator('[data-page="launchers"]').getAttribute('aria-current'),'page');
+    assert.equal(await p.locator('[data-page="market"]').getAttribute('aria-current'),'page');
     assert.equal(await p.locator('[data-act="launcher-cover"], [data-act="remove-launcher-cover"]').count(),0);
     await settled(p);
     await p.setViewportSize({width:1000,height:700});
@@ -1038,7 +1038,7 @@ try {
     assert.equal(await act(p,'restore-home').isDisabled(),true);
     await act(p,'add-launcher').click();await settled(p);
     await p.locator('.pending-launcher').first().waitFor();
-    assert.equal(await p.locator('[data-page="launchers"]').getAttribute('aria-current'),'page');
+    assert.equal(await p.locator('[data-page="market"]').getAttribute('aria-current'),'page');
   });
   await check('failed mutation shows error and retains actual package state', async p => {
     await nav(p,'apps'); await box(p,'com.vendor.recommendations').check();
@@ -1983,7 +1983,7 @@ try {
   const waitCatalogHold=p=>p.waitForFunction(()=>window.__pendingOperations.some(operation=>operation.action==='getMarketCatalog'));
   await check('market updates first visit builds a small persistent baseline and only real reentry checks the network',async p=>{
     await openMarket(p);await p.waitForFunction(()=>Array.isArray(window.__marketSeenApps));
-    assert.equal(await p.locator('h1').innerText(),'APK市场');assert.equal(await p.locator('[data-page="market"]').innerText(),'APK市场');
+    assert.equal(await p.locator('h1').innerText(),'电视应用');assert.equal(await p.locator('[data-page="market"]').innerText(),'电视应用');
     assert.deepEqual(await newMarketIds(p),[],'The first successful visit establishes a baseline rather than marking every existing app new');
     const first=await seenState(p);assert.equal(first.length,3);assert.deepEqual(first.map(entry=>Object.keys(entry).sort()),first.map(()=>['id','name','version']));
     assert.deepEqual(new Set(first.map(entry=>entry.id)),new Set(originalSeen.map(entry=>entry.id)));
@@ -2011,9 +2011,9 @@ try {
     await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
     assert.deepEqual(await newMarketIds(p),[versionedItem('0.9.0').id,newMarketApp.id],'Refreshing the same visit does not consume its new markers');
     await shot(p,'apk-market-updates-zh');
-    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'APK Market');assert.equal(await p.locator('.market-new').count(),2);
+    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'TV Apps');assert.equal(await p.locator('.market-new').count(),2);
     await p.locator('[name="theme"]').selectOption('graphite');await shot(p,'apk-market-updates-graphite');
-    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');assert.equal(await p.locator('.market-new').count(),2);
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'電視應用');assert.equal(await p.locator('.market-new').count(),2);
     await marketCard(p,versionedItem('0.9.0')).locator('[data-act="download-market"]').click();await result(p,'success');await acknowledge(p);
     assert.equal((await marketRequests(p)).filter(value=>value.command==='download_market_item').at(-1).id,versionedItem('0.9.0').id);
     await nav(p,'apps');await openMarket(p);assert.deepEqual(await newMarketIds(p),[],'The next visit uses the successful previous visit as its baseline');
@@ -2163,7 +2163,7 @@ try {
   await check('market discovers categorized APKs without ADB and escapes repository metadata',async p=>{
     await openMarket(p);
     const navigation=await p.locator('nav [data-page]').evaluateAll(elements=>elements.map(element=>element.dataset.page));
-    assert.equal(navigation[navigation.indexOf('launchers')+1],'market','Market immediately follows Launchers');
+    assert.equal(navigation.includes('launchers'),false,'Launchers is integrated into TV Apps');
     assert.equal(await p.locator('.market-card').count(),2);
     assert.equal(await marketCard(p,store.items[0]).locator('img[src="x"]').count(),0);
     assert.match(await marketCard(p,store.items[0]).innerText(),/onerror/);
@@ -2205,17 +2205,30 @@ try {
     assert.equal(await pending.locator('.launcher-card-background').evaluate(element=>getComputedStyle(element).backgroundColor),'rgb(34, 51, 68)');
     assert.deepEqual(await requests(p),[],'Downloading a launcher never changes the default Home');
   },withoutAdb());
-  await check('market installation reports completion and does not activate a downloaded launcher',async p=>{
-    await openMarket(p);await p.locator('[data-market-category="launcher"]').click();await act(p,'install-market').click();
+  await check('TV Apps installs a launcher, then lets the user enable and customize it',async p=>{
+    await openMarket(p);await p.locator('[data-market-category="launcher"]').click();
+    await act(p,'download-market').click();
+    await result(p,'success');await acknowledge(p);
+    assert.equal(await p.locator('[data-launcher-apk]').count(),1);
+    const installButton = marketCard(p,store.items[2]).getByRole('button',{name:'安装到电视'});
+    await installButton.click();
     await p.locator('#confirm-operation').click();await held(p,'installMarketItem');
     await release(p,'installMarketItem');await result(p,'success');await acknowledge(p);
     const install=(await marketRequests(p)).find(value=>value.command==='install_market_item');assert.equal(install.id,store.items[2].id);assert.equal(install.revision,store.revision);
-    await nav(p,'launchers');await settled(p);
+    await settled(p);
+    assert.equal(await p.locator('h1').innerText(),'电视应用');
     assert.match(await p.locator('.launcher-card.current').innerText(),/原厂桌面/);
     assert.equal(await p.locator('[data-launcher-apk]').count(),0,'A verified successful install is removed from pending');
     assert.match(await p.locator('.launcher-grid').innerText(),/Nova TV/);
     assert.equal((await requests(p)).some(value=>value.action==='setHome'),false,'Installing does not silently select the launcher');
-  },snapshot(),{holdActions:['installMarketItem']});
+    const installedLauncher = p.locator('[data-launcher-component="com.market.nova/.Main"]');
+    await installedLauncher.locator('[data-act="set-home"]').click();
+    await confirmOperation(p);
+    await settled(p);
+    assert.match(await installedLauncher.innerText(),/当前默认桌面/);
+    await installedLauncher.getByRole('button',{name:'自定义桌面'}).click();
+    await p.locator('.layout-modal[open]').waitFor();
+  },snapshot(),{holdActions:['installMarketItem'],layoutSupported:true});
   const signatureFailure='安装失败：应用签名不一致，无法覆盖安装。请在电视系统设置中卸载旧版并删除数据后重装；这会清除存档和本地数据。如需保留数据，请先备份或使用原签名版本。原始错误：INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.ecojust.tanktv signatures do not match previously installed version; ignoring!';
   for (const [language, expected, uncertainText] of [
     ['zh-CN', /请在电视系统设置中卸载旧版并删除数据后重装/, /操作可能已生效/],
@@ -2244,7 +2257,7 @@ try {
   await check('market refresh replaces a stale catalog and preserves localized controls',async p=>{
     await openMarket(p);assert.match(await p.locator('main').innerText(),/缓存目录/);
     assert.equal(await marketAuthor(p,store.items[0]).innerText(),store.items[0].provider,'Cached provider metadata remains visible while offline');
-    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'APK Market');
+    await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'TV Apps');
     assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/Launchers/);
     assert.match(await marketCard(p,store.items[0]).innerText(),/HIFINi TV/);
     assert.equal(await marketAuthor(p,store.items[0]).innerText(),store.items[0].provider,'Provider is not passed through the UI translation catalog');
@@ -2267,7 +2280,7 @@ try {
       await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
       assert.equal(await marketAuthor(p,updated.items[0]).innerText(),provider?.trim()||'Not provided','Missing and blank providers share the localized fallback; provided names are trimmed');
     }
-    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'電視應用');
     assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/啟動器/);
     assert.equal(await marketAuthor(p,updated.items[0]).innerText(),'更新后的演示作者','Provider remains unchanged in Traditional Chinese');
     await inlineProvider(p,updated.items[0]);
@@ -2409,7 +2422,7 @@ try {
   const forumRequests=p=>p.evaluate(()=>window.__forumRequests);
   const forumFirst=forumPage({hasMore:true});
   const forumSecond=forumPage({page:2,posts:[{number:'IABC121',title:'第二页的帖子',author:'另一位用户',state:'progressing',comments:1,updatedAt:'2026-10-30T10:00:00+08:00',labels:[]}]});
-  await check('forum: navigation follows APK Market and browsing never requires ADB or reserves device operations',async p=>{
+  await check('forum: navigation follows TV Apps and browsing never requires ADB or reserves device operations',async p=>{
     const writes=[];p.on('request',request=>{if(request.url().includes('gitee.com')&&['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push({url:request.url(),method:request.method()});});
     const pages=await p.locator('.sidebar nav [data-page]').evaluateAll(elements=>elements.map(element=>element.dataset.page));
     assert.equal(pages[pages.indexOf('market')+1],'forum');
