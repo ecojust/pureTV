@@ -1,103 +1,164 @@
-name: Recover the signed TV package and per-game runtime diagnostics
+name: Replay six native TV games with the verified signed APK
 on:
   push:
     branches: [recover-hosted-46104774692]
     paths: ['.github/workflows/hosted-games-recovery.yml']
 permissions:
-  actions: read
-  contents: write
+  contents: read
+env:
+  QA_SHA: d7c32fb61e3361e4436e89986496d95ec2edd202
+  APK_SHA: a72fddf7b643ba2d1f4f5090386ce94d962902ae0bc635a44fa68acf70c60699
 jobs:
-  preserve:
-    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/recover-hosted-46104774692'
+  replay:
+    if: github.repository == 'ecojust/pureTV'
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 22
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - kind: signed
-            run: '46105928279'
-            source: f23e13df65206fa84bfa315356bfb57ee53d9606
-            id: '15247207215'
-            digest: '86798b0283eca1f47e7fe863b7476e4e96c39233981619827017fe584f9071b1'
-            name: hosted-games-tv-signed
-          - kind: bus
-            run: '46105512858'
-            source: b50b26858645f3b708e885121704fc05a9957c32
-            id: '15247323212'
-            digest: '9935fd3890169572f3cf4d0fc88d0a6c6f3953cc08b4e1b1dc3aab4b5c9dc3c8'
-            name: hosted-games-tv-case-struggle-bus
-          - kind: fish-loop
-            run: '46105512858'
-            source: b50b26858645f3b708e885121704fc05a9957c32
-            id: '15247268404'
-            digest: 'fc5788fab119cafb9caee2cca66f44d296aa3be856b0194f0bc38de368bb66ce'
-            name: hosted-games-tv-case-fish-loop
-          - kind: noir-extreme
-            run: '46105512858'
-            source: b50b26858645f3b708e885121704fc05a9957c32
-            id: '15247686484'
-            digest: '79f6b1f16dcef66dea7e42f74ae8973ea99fd4263b2199842489db48508a6f6f'
-            name: hosted-games-tv-case-noir-extreme
-          - kind: controllers
-            run: '46105512858'
-            source: b50b26858645f3b708e885121704fc05a9957c32
-            id: '15246918919'
-            digest: 'a0c2c72dc5974683348870150592080c6921f9e93530ba47dae420bff8bf30f9'
-            name: hosted-games-tv-case-controllers
+        game: [bandit, fish-loop, noir-extreme, struggle-bus, vespertine, daejeon-campus]
     env:
-      GH_TOKEN: ${{ github.token }}
-      ORIGINAL: ${{ matrix.run }}
-      SOURCE: ${{ matrix.source }}
-      ARTIFACT: ${{ matrix.id }}
-      DIGEST: ${{ matrix.digest }}
-      NAME: ${{ matrix.name }}
-      KIND: ${{ matrix.kind }}
+      GAME: ${{ matrix.game }}
     steps:
-      - name: Verify and preserve only the requested artifact entries
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.QA_SHA }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/hosted-games-tv/
+            /joystick-games/tools/android-environment-diagnostics.py
+      - name: Fetch the signed app from its frozen commit
         shell: bash
         run: |
           set -euo pipefail
-          prefix=repos/ecojust/pureTV/actions
-          gh api "$prefix/artifacts/$ARTIFACT" > selected.json
-          jq -e --arg sha "$SOURCE" --arg name "$NAME" --argjson run "$ORIGINAL" '.workflow_run.id==$run and .workflow_run.head_sha==$sha and .name==$name and (.expired|not) and .size_in_bytes>0 and .size_in_bytes<10000000' selected.json
-          gh api "$prefix/artifacts/$ARTIFACT/zip" > input.zip
-          echo "$DIGEST  input.zip" | sha256sum --check
-          mkdir -p export/release-staging/hosted-games
+          curl -fsSL --retry 3 https://raw.githubusercontent.com/ecojust/pureTV/e9992b9ec69875593178dc5208d3b170a7304aec/resource/apps/hosted-games/hosted-games-0.1.0.apk -o "$RUNNER_TEMP/hosted.apk"
+          echo "$APK_SHA  $RUNNER_TEMP/hosted.apk" | sha256sum --check
+          test "$(git rev-parse HEAD)" = "$QA_SHA"
+          python3 -m pip install Pillow==11.3.0 websocket-client==1.8.0
+          sudo chmod a+rw /dev/kvm
+          mkdir -p "$RUNNER_TEMP/qa" "$RUNNER_TEMP/share"
+          cat > "$RUNNER_TEMP/test-guest.sh" <<'SH'
+          #!/usr/bin/env bash
+          set -u
+          adb="$ANDROID_HOME/platform-tools/adb"
+          mem() {
+            timeout 8 "$adb" -s emulator-5554 shell cat /proc/meminfo | tr -d '\r' | grep -E '^(MemAvailable|MemFree|MemTotal|SwapFree|SwapTotal):'
+          }
+          mem > "$RUNNER_TEMP/share/guest-memory-before.txt" || true
+          python3 tools/hosted-games-tv/qa.py --case "$GAME" --apk "$RUNNER_TEMP/hosted.apk" --out "$RUNNER_TEMP/qa"
+          result=$?
+          mem > "$RUNNER_TEMP/share/guest-memory-after.txt" || true
+          timeout 8 "$adb" -s emulator-5554 shell dumpsys activity exit-info com.ecojust.hostedgames | grep -Eo 'reason=[0-9]+ \([^)]{0,80}\)' | head -20 > "$RUNNER_TEMP/share/guest-exit-reasons.txt" || true
+          exit "$result"
+          SH
+      - name: Test the author game and retain bounded host diagnostics
+        id: play
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 36
+          emulator-build: '16970787'
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          disable-animations: false
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
+          script: python3 joystick-games/tools/android-environment-diagnostics.py --output "$RUNNER_TEMP/host" -- bash "$RUNNER_TEMP/test-guest.sh"
+      - name: Preserve safe per-title results even if the emulator exits
+        if: always()
+        shell: bash
+        env:
+          CASE_RESULT: ${{ steps.play.outcome }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/share"
+          cd "$RUNNER_TEMP"
           python3 - <<'PY'
           from pathlib import Path
-          import hashlib,json,os,re,zipfile,xml.etree.ElementTree as ET
-          env=os.environ
-          dest=Path('export/release-staging/hosted-games')
-          case='struggle-bus' if env['KIND']=='bus' else env['KIND']
-          signed=(case=='signed')
-          files=['hosted-games-0.1.0.apk','SHA256SUMS.txt'] if signed else ['report.json',case+'-played.png']+[case+'-'+stage+'.xml' for stage in ('card','author','guide','failure')]
-          if case=='fish-loop': files+=['fish-loop-before.png','fish-loop-after.png']
-          with zipfile.ZipFile('input.zip') as z:
-              for name in files:
-                  if not signed and name!='report.json' and name not in z.namelist(): continue
-                  assert 0<z.getinfo(name).file_size<10000000 and z.namelist().count(name)==1
-                  data=z.read(name)
-                  if name.endswith('.xml'):
-                      xml=ET.fromstring(data)
-                      for node in xml.iter():
-                          for attr, value in node.attrib.items():
-                              if re.search(r'https?://|[?&](?:room|token|key)=|room=|bearer\s+|邀请码[:：]|加入码[:：]',value,re.I): node.set(attr,'[omitted]')
-                      data=ET.tostring(xml,encoding='utf-8')
-                  (dest/name).write_bytes(data)
-          if env['KIND']=='signed':
-              file=dest/files[0]
-              assert (dest/files[1]).read_text().strip()==hashlib.sha256(file.read_bytes()).hexdigest()+'  '+file.name
-          meta=dict(runId=env['ORIGINAL'],sourceSha=env['SOURCE'],attempt='1',artifactId=int(env['ARTIFACT']),artifactDigest='sha256:'+env['DIGEST'],copyRun=env['GITHUB_RUN_ID'])
-          (dest/'build.json').write_text(json.dumps(meta,indent=2)+'\n')
+          import json, os, re, xml.etree.ElementTree as ET
+          game=os.environ['GAME']
+          for p in Path('qa').glob('*'):
+              names=['report.json',game+'-played.png',game+'-author.xml',game+'-card.xml',game+'-failure.xml',game+'-guide.xml',game+'-guide.png','offline-error.png']
+              if game=='struggle-bus': names+=['struggle-bus-scene.png']
+              if game=='fish-loop': names+=['fish-loop-before.png','fish-loop-after.png']
+              if p.name not in names or not p.is_file() or p.is_symlink() or p.stat().st_size>5_000_000: continue
+              data=p.read_bytes()
+              if p.suffix=='.xml':
+                  xml=ET.fromstring(data)
+                  for node in xml.iter():
+                      for attr,text in node.attrib.items():
+                          if re.search(r'https?://|[?&](?:room|token|key)=|room=|bearer\s+|邀请码[:：]|加入码[:：]',text,re.I): node.set(attr,'[redacted]')
+                  data=ET.tostring(xml,encoding='utf8')
+              (Path('share')/p.name).write_bytes(data)
+          host=Path('host/report.json')
+          if host.is_file() and host.stat().st_size<100_000: Path('share/host-environment.json').write_bytes(host.read_bytes())
+          samples=Path('host/samples.jsonl')
+          if samples.is_file() and samples.stat().st_size<=2_097_152: Path('share/host-samples.jsonl').write_bytes(samples.read_bytes())
+          meta={'case':game,'apkSha256':os.environ['APK_SHA'],'qaSha':os.environ['QA_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'emulatorStep':os.environ['CASE_RESULT'],'requestedGpu':'lavapipe','emulatorBuild':'16970787'}
+          Path('share/replay.json').write_text(json.dumps(meta,indent=2)+'\n')
           PY
-          cd export
-          git init -q
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add .
-          git commit -qm "Recover $NAME for $ORIGINAL at $SOURCE"
-          git remote add origin https://github.com/ecojust/pureTV.git
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-${{ matrix.game }}
+          path: ${{ runner.temp }}/share/
+          if-no-files-found: error
+          retention-days: 7
+
+  preserve:
+    if: github.repository == 'ecojust/pureTV'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 44
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Export each case as its artifact becomes available
+        shell: bash
+        run: |
+          set -euo pipefail
           gh auth setup-git
-          branch="build-assets/recovered-hosted-$ORIGINAL-$KIND"
-          git push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
+          games=(bandit fish-loop noir-extreme struggle-bus vespertine daejeon-campus)
+          prefix="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          while true; do
+            gh api "$prefix/artifacts" > manifest.json
+            for game in "${games[@]}"; do
+              test ! -f "$game.done" || continue
+              name="replay-$game"
+              id="$(jq -r --arg n "$name" '.artifacts[]|select(.name==$n and (.expired|not) and .size_in_bytes<20000000)|.id' manifest.json)"
+              [[ "$id" =~ ^[0-9]+$ ]] || continue
+              digest="$(jq -r --argjson id "$id" '.artifacts[]|select(.id==$id)|.digest|split(":")[1]' manifest.json)"
+              gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > package.zip
+              echo "$digest  package.zip" | sha256sum --check
+              mkdir "$game"
+              python3 - "$game" <<'PY'
+          from pathlib import Path
+          import re,sys,zipfile
+          dest=Path(sys.argv[1])
+          with zipfile.ZipFile('package.zip') as z:
+              for e in z.infolist():
+                  n=e.filename
+                  assert re.fullmatch(r'[a-z0-9-]+\.(?:json|jsonl|xml|png|txt)',n)
+                  assert 0<=e.file_size<=5000000 and z.namelist().count(n)==1
+                  (dest/n).write_bytes(z.read(e))
+          PY
+              git -C "$game" init -q
+              git -C "$game" config user.name github-actions[bot]
+              git -C "$game" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+              git -C "$game" add .
+              git -C "$game" commit -qm "Retain $game TV replay $GITHUB_RUN_ID from $QA_SHA"
+              git -C "$game" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+              branch="build-assets/hosted-replay-$GITHUB_RUN_ID-$game"
+              git -C "$game" push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
+              touch "$game.done"
+            done
+            count="$(find . -maxdepth 1 -name '*.done' | wc -l)"
+            if test "$count" = 6; then break; fi
+            gh api "$prefix/jobs" > jobs.json
+            if jq -e '[.jobs[]|select(.name|startswith("replay ("))]|length==6 and all(.status=="completed")' jobs.json; then
+              echo "Missing one of the six case artifacts"; exit 1
+            fi
+            sleep 15
+          done
