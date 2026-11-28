@@ -7,6 +7,7 @@ mod client_updates;
 mod forum;
 mod game_controllers;
 mod launcher_covers;
+mod local_game_player;
 mod market;
 mod market_seen;
 mod mcp;
@@ -1412,6 +1413,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(GameControllers::default())
+        .manage(local_game_player::Player::default())
         .on_page_load(|webview, load| {
             // A reload can discard the page before its async cleanup reaches the shell.
             if webview.label() == "main" && load.event() == tauri::webview::PageLoadEvent::Started {
@@ -1502,6 +1504,7 @@ fn main() {
             client_update_result,
             get_package_insight,
             open_package_resource,
+            local_game_player::local_game_base,
             start_game_controllers,
             stop_game_controllers,
             game_controller_state,

@@ -85,7 +85,8 @@ try {
     await nav(p,'apps'); assert.equal(await p.locator('input[data-select-package]').count(),0);
   }, null);
   const gamesOrigin = 'https://ecojust.github.io';
-  const gamePage = gamesOrigin + '/pureTV/games/tetris/tv.html';
+  const gamePage = 'http://127.0.0.1:48731/games/tetris/tv.html';
+  const browserGamePage = gamesOrigin + '/pureTV/games/tetris/tv.html';
   // The message exchange crosses origins even offline. The staged game site has its own gameplay checks.
   const gameFrameHtml = `<!doctype html><html><body><script>
     window.received = [];
@@ -233,7 +234,7 @@ try {
   await check('games cancel only the APK requested by the closed dialog', verifyGameApkCancellation, withoutAdb());
   await checkGameDeployment(check, snapshot, withoutAdb);
   await check('games open fullscreen in the same browser tab and exit from the game', async p => {
-    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+    await p.route(browserGamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
     assert.equal(await p.locator('[data-build-game]').count(), 0);
     const play = p.locator('[data-play-game="tetris"]');
@@ -246,7 +247,7 @@ try {
     assert.equal(await play.evaluate(button => document.activeElement === button), true);
   }, null);
   await check('games remain playable in-page when fullscreen is denied and loading is slow', async p => {
-    await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:'<title>Tetris</title>'}));
+    await p.route(browserGamePage + '*', route => route.fulfill({contentType:'text/html', body:'<title>Tetris</title>'}));
     await p.evaluate(() => {
       Element.prototype.requestFullscreen = () => Promise.reject(new TypeError('Fullscreen denied'));
     });
@@ -257,7 +258,7 @@ try {
     await play.press('Enter');
     const dialog = p.locator('dialog.game-player[open]');
     await dialog.locator('iframe').waitFor();
-    assert.equal(await dialog.locator('iframe').getAttribute('src'), gamePage + '?lang=zh');
+    assert.equal(await dialog.locator('iframe').getAttribute('src'), browserGamePage + '?lang=zh');
     assert.equal(p.context().pages().length, 1);
     const bounds = await dialog.boundingBox();
     assert.deepEqual(bounds, {x:0, y:0, ...p.viewportSize()});
