@@ -1,0 +1,35 @@
+name: Inspect the actual captured Manager frame
+on:
+  push:
+    branches: [qa/manager-offline-frame-140899611520]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  frame:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46119156696
+          name: manager-offline-tv-0.8.0
+          path: evidence
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --allow-escape-sequences repos/ecojust/pureTV/actions/jobs/140899611520/logs > captured.log
+          python - <<'INNER'
+          import base64,json,re,subprocess
+          from pathlib import Path
+          text=Path('captured.log').read_text(errors='replace')
+          for line in text.splitlines():
+              if 'Active window class WM_CLASS' in line or 'Manager window count ' in line or 'Screenshot attempt ' in line or 'Active window WM_CLASS' in line:
+                  print('::notice title=Capture environment::'+line[-450:].replace('%','%25'))
+          for name in ('deployed.png','no-device.png'):
+              raw=Path('evidence',name).read_bytes()
+              assert raw.startswith(b'\x89PNG\r\n\x1a\n') and len(raw)<2500000
+              data={'encoding':'base64','content':base64.b64encode(raw).decode()}
+              sha=json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/git/blobs','-X','POST','--input','-'],text=True,input=json.dumps(data)))['sha']
+              print('::notice title='+name+'::'+sha)
+          INNER
