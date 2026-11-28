@@ -1,7 +1,7 @@
 import { Channel, invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {version as appVersion} from '../package.json';
-import { emptySnapshot, type Snapshot, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult, type ForumPage, type ForumPostDetail, type ForumRepliesPage } from './types';
+import { emptySnapshot, type Snapshot, type DeviceTarget, type LocalNetworkInfo, type Request, type PlatformToolsInfo, type DownloadProgress, type MarketCatalog, type MarketSeenEntry, type MarketSeenApps, type MarketProgress, type MarketResult, type MarketEventResult, type PackageInsight, type ClientUpdateInfo, type ClientUpdateProgress, type ClientUpdateResult, type ForumPage, type ForumPostDetail, type ForumRepliesPage } from './types';
 
 export const demo = new URLSearchParams(location.search).get('demo') === '1';
 export const desktop = '__TAURI_INTERNALS__' in window;
@@ -71,13 +71,13 @@ async function simulate(request: Request): Promise<Snapshot> {
   sample.message = request.action === 'getState' ? '' : '演示操作完成，未连接真实设备';
   return copy();
 }
-export async function execute(request: Request): Promise<Snapshot> {
+export async function execute(request: Request, expectedTarget?: DeviceTarget): Promise<Snapshot> {
   if (demo) return simulate(request);
   if (!desktop) {
     if (request.action === 'getState') return { ...emptySnapshot(), message: unavailable };
     throw new Error(unavailable);
   }
-  return invoke<Snapshot>('execute', { request });
+  return invoke<Snapshot>('execute', expectedTarget ? {request, expectedTarget} : {request});
 }
 export async function cancel(): Promise<void> { if (demo) { demoDownloadCancelled = true; return; } if (!desktop) throw new Error(unavailable); await invoke('cancel'); }
 export async function chooseApks(): Promise<string[]> {

@@ -261,8 +261,52 @@ fn wait_for_operation(running: &AtomicBool, timeout: std::time::Duration) -> boo
     true
 }
 
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ExpectedDevice {
+    serial: String,
+    user_id: u32,
+}
+
+impl ExpectedDevice {
+    fn matches(&self, device: Option<&puretv_core::Device>) -> bool {
+        device.is_some_and(|d| {
+            d.status == "device" && d.serial == self.serial && d.user_id == self.user_id
+        })
+    }
+}
+
+#[test]
+fn deployment_requires_the_same_authorized_device_and_user() {
+    let target = ExpectedDevice {
+        serial: "tv-a".into(),
+        user_id: 10,
+    };
+    let mut device = puretv_core::Device {
+        serial: "tv-a".into(),
+        user_id: 10,
+        status: "device".into(),
+        model: String::new(),
+        android_version: String::new(),
+    };
+    assert!(target.matches(Some(&device)));
+    assert!(!target.matches(None));
+    device.status = "unauthorized".into();
+    assert!(!target.matches(Some(&device)));
+    device.status = "device".into();
+    device.user_id = 0;
+    assert!(!target.matches(Some(&device)));
+    device.user_id = 10;
+    device.serial = "tv-b".into();
+    assert!(!target.matches(Some(&device)));
+}
+
 #[tauri::command]
-async fn execute(request: Request, bridge: tauri::State<'_, Bridge>) -> Result<Snapshot, String> {
+async fn execute(
+    request: Request,
+    expected_target: Option<ExpectedDevice>,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<Snapshot, String> {
     if bridge.closing.load(Ordering::Acquire) {
         return Err("管理器正在退出".into());
     }
@@ -288,6 +332,11 @@ async fn execute(request: Request, bridge: tauri::State<'_, Bridge>) -> Result<S
             .map_err(|_| "管理状态不可用，请重新打开程序".to_string())?;
         if closing.load(Ordering::Acquire) {
             return Err("管理器正在退出".into());
+        }
+        if let Some(target) = expected_target {
+            if !target.matches(manager.snapshot().device.as_ref()) {
+                return Err("目标电视已变化，请重新确认安装。".into());
+            }
         }
         let result = manager.execute(request);
         *cache.lock().map_err(|_| "状态缓存不可用")? = manager.snapshot();

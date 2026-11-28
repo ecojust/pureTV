@@ -13,7 +13,7 @@ import {groupMarketItems, marketSeenEntries, newMarketGroups, marketCoverUrl, ty
 import {validGeometry,validScene,sceneLabels,autoFrame,sceneNode,frameStyle} from './scene';
 import {version as appVersion} from '../package.json';
 import * as api from './bridge';
-import { emptySnapshot, type Request, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketCatalog, type MarketSeenEntry, type MarketProgress, type MarketResult } from './types';
+import { emptySnapshot, type Request, type DeviceTarget, type PackageInfo, type PlatformToolsInfo, type DownloadProgress, type Snapshot, type LauncherLayout, type LauncherLayoutInfo, type LauncherRequest, type MarketCatalog, type MarketSeenEntry, type MarketProgress, type MarketResult } from './types';
 
 type Page = 'connect' | 'apps' | 'launchers' | 'market' | 'games' | 'forum' | 'install' | 'history' | 'info';
 type Filter = 'all' | 'system' | 'enabled' | 'disabled' | 'recoverable';
@@ -138,10 +138,27 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const packageInfo = new PackageInfoDialog(() => snapshot);
+type GameInstall = {gameId:string; target:DeviceTarget};
+function deploymentTarget():DeviceTarget | undefined {
+  const device = snapshot.device;
+  return snapshot.adbAvailable && device?.status === 'device' ? {serial:device.serial,userId:device.userId} : undefined;
+}
+function matchesDeploymentTarget(target:DeviceTarget):boolean {
+  const current = deploymentTarget();
+  return current?.serial === target.serial && current.userId === target.userId;
+}
 const games = new Games(path => {
   queueAppApk(path);
   page = 'install';
   render();
+}, {
+  target: deploymentTarget,
+  connect: () => { page = 'connect'; render(); },
+  install: (gameId, path, target) => {
+    if (!matchesDeploymentTarget(target)) throw new Error(t('目标电视已变化，请重新确认安装。'));
+    if (busy) throw new Error(t('已有操作正在执行，请等待完成或取消'));
+    void run({action:'install', paths:[path]}, t('正在安装游戏到电视…'), t('部署到电视'), {gameId,target});
+  }
 });
 const forum = new Forum(() => { if (page === 'forum') render(); });
 const clientUpdater = new ClientUpdater({
@@ -152,7 +169,7 @@ const clientUpdater = new ClientUpdater({
 });
 const layoutDialog=document.createElement('dialog');layoutDialog.className='layout-modal';layoutDialog.setAttribute('aria-label',t('调整启动器布局'));document.body.append(layoutDialog);
 type FeedbackRow = { target: string; success: boolean | null; message: string };
-type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; checkingLayout?:boolean; cancelError?: string };
+type Feedback = { phase: 'loading' | 'result'; operation: string; description: string; outcome?: NoticeKind; rows: FeedbackRow[]; cancellable: boolean; checkingLayout?:boolean; cancelError?: string; gameInstall?:GameInstall & {installed:boolean} };
 let feedback: Feedback | null = null, feedbackMarkup = '';
 let feedbackFocus: HTMLElement | null = null;
 const feedbackDialog = document.createElement('dialog');
@@ -189,6 +206,19 @@ function dismissFeedback(): void {
 }
 feedbackDialog.addEventListener('click', event => {
   const target = event.target as HTMLElement;
+  if (target.closest('[data-game-install-next]') && feedback?.gameInstall) {
+    const {gameId,target:device,installed} = feedback.gameInstall;
+    if (!matchesDeploymentTarget(device) || busy) return;
+    closeFeedback();
+    if (installed) {
+      page = 'launchers';
+      render();
+      void launcherOperation({action:'getLayout'}, true);
+    } else {
+      root.querySelector<HTMLButtonElement>(`[data-deploy-game="${CSS.escape(gameId)}"]`)?.click();
+    }
+    return;
+  }
   if (target.closest('[data-feedback-close]')) closeFeedback();
   if (target.closest('[data-feedback-cancel]') && feedback?.phase === 'loading' && !cancelling) void cancelOperation();
 });
@@ -199,7 +229,10 @@ function renderFeedback(): void {
   const market = activeMarketOperation(), marketStatus = activeMarketProgress();
   const downloading = downloadingTools || (market && marketStatus?.stage !== 'installing');
   const description = loading && market ? marketProgressText(marketStatus) : loading && downloadingTools ? progressText() : feedback.description;
-  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${loading && cancelling ? `<p class="hint">${esc(feedback.checkingLayout ? t('正在取消检查…') : downloading ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && market ? downloadMeter(marketStatus, t('安装包下载进度')) : loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : feedback.checkingLayout ? t('取消检查') : downloading ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
+  const followup = feedback.gameInstall && matchesDeploymentTarget(feedback.gameInstall.target) ? feedback.gameInstall : undefined;
+  const gameHint = followup?.installed ? `<p>${esc(t('游戏已安装。可前往启动器，将游戏添加到电视主屏幕。'))}</p>` : '';
+  const gameButton = followup ? `<button type="button" data-game-install-next${disabled(busy)}>${esc(followup.installed ? t('前往启动器') : t('重试'))}</button>` : '';
+  const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2><div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${gameHint}${loading && cancelling ? `<p class="hint">${esc(feedback.checkingLayout ? t('正在取消检查…') : downloading ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && market ? downloadMeter(marketStatus, t('安装包下载进度')) : loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${gameButton}${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : feedback.checkingLayout ? t('取消检查') : downloading ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;
   const wasLoading = feedbackDialog.dataset.phase === 'loading';
   feedbackDialog.dataset.phase = feedback.phase;
   feedbackDialog.dataset.outcome = feedback.outcome || '';
@@ -217,8 +250,8 @@ function beginFeedback(operation: string, description: string, cancellable = tru
   feedback = { phase: 'loading', operation, description, rows: [], cancellable, checkingLayout };
   renderFeedback();
 }
-function finishFeedback(outcome: NoticeKind, description: string, rows: FeedbackRow[] = [], operation = feedback?.operation || t('操作结果')): void {
-  feedback = { phase: 'result', operation, description, outcome, rows, cancellable: false };
+function finishFeedback(outcome: NoticeKind, description: string, rows: FeedbackRow[] = [], operation = feedback?.operation || t('操作结果'), gameInstall?:Feedback['gameInstall']): void {
+  feedback = { phase: 'result', operation, description, outcome, rows, cancellable: false, gameInstall };
   renderFeedback();
 }
 function actionError(error: unknown): void {
@@ -793,7 +826,7 @@ function cleanSelection(): void {
   selected = new Set([...selected].filter(p => valid.has(p)));
 }
 type RunResult = { success: boolean; installedPaths: string[] };
-async function run(request: Request, label: string, operation?: string): Promise<RunResult> {
+async function run(request: Request, label: string, operation?: string, gameInstall?:GameInstall): Promise<RunResult> {
   const result: RunResult = { success: false, installedPaths: [] };
   if (busy) return result;
   const before = snapshot.device, originalHome = snapshot.originalHome;
@@ -804,7 +837,7 @@ async function run(request: Request, label: string, operation?: string): Promise
   let rows: FeedbackRow[] = [], outcome: NoticeKind = 'error', resultMessage = '';
   try {
     // Evaluate this response, never an unrelated event/recovery snapshot or old install results.
-    const value = await api.execute(request);
+    const value = await api.execute(request, gameInstall?.target);
     const accepted = applySnapshot(value);
     if (request.action === 'install') layoutDirty = true;
     if (before?.serial !== snapshot.device?.serial) selected.clear(); cleanSelection();
@@ -846,7 +879,9 @@ async function run(request: Request, label: string, operation?: string): Promise
   } finally {
     localBusy = false; busy = !!agentOperation?.running; cancelling = false;
     notice = resultMessage; noticeKind = outcome; noticeRequiresTelevision = request.action !== 'clearHistory';
-    finishFeedback(outcome, resultMessage, rows); render();
+    const confirmed = gameInstall && request.action === 'install' && result.installedPaths.includes(request.paths[0]);
+    const followup = gameInstall && (!confirmed || result.success) ? {...gameInstall, installed:!!confirmed && result.success} : undefined;
+    finishFeedback(outcome, resultMessage, rows, operation, followup); render();
   }
   return result;
 }
@@ -1089,6 +1124,8 @@ document.addEventListener('click', event => {
     root.querySelector<HTMLButtonElement>(`[data-games-view="${gamesView}"]`)?.focus({preventScroll: true});
     return;
   }
+  const deployGame = target.closest<HTMLButtonElement>('[data-deploy-game]');
+  if (deployGame) { games.packageGame(deployGame.dataset.deployGame!, deployGame, true); return; }
   const buildGame = target.closest<HTMLButtonElement>('[data-build-game]');
   if (buildGame) { games.packageGame(buildGame.dataset.buildGame!, buildGame); return; }
   const playGame = target.closest<HTMLButtonElement>('[data-play-game]');

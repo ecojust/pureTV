@@ -1,17 +1,25 @@
 import {Channel, invoke} from '@tauri-apps/api/core';
-import type {MarketProgress} from './types';
+import type {DeviceTarget, MarketProgress} from './types';
 import {message, t} from './i18n';
 
 type GameApk = {path:string; packageName?:string | null; sha256:string};
 export type QueueGameApk = (path:string) => void | Promise<void>;
 
+export interface GameDeployment {
+  target():DeviceTarget | undefined;
+  connect():void;
+  install(gameId:string, path:string, target:DeviceTarget):void;
+}
+
 export class WebGamePackaging {
   private dialog?:HTMLDialogElement;
 
-  constructor(private readonly enqueue:QueueGameApk) {}
+  constructor(private readonly enqueue:QueueGameApk, private readonly deployment:GameDeployment) {}
 
-  open(gameId:string, name:string, generate:boolean, opener:HTMLButtonElement):void {
+  open(gameId:string, name:string, generate:boolean, opener:HTMLButtonElement, deploy:boolean):void {
     if (this.dialog?.open) return;
+    const device = deploy ? this.deployment.target() : undefined;
+    const deployment = this.deployment;
     const dialog = document.createElement('dialog');
     this.dialog = dialog;
     dialog.className = 'modal game-apk-dialog';
@@ -24,6 +32,7 @@ export class WebGamePackaging {
       </div>
       <dl data-apk-details hidden><dt>${t('包名')}</dt><dd></dd><dt>SHA-256</dt><dd></dd></dl>
       <div class="game-apk-actions">
+        <button type="button" class="primary" data-apk-connect hidden>${t('前往设备连接')}</button>
         <button type="button" data-apk-retry hidden>${t('重试')}</button>
         <button type="button" data-apk-save hidden>${t('保存到电脑')}</button>
         <button type="button" class="primary" data-apk-queue hidden>${t('加入安装队列')}</button>
@@ -35,6 +44,7 @@ export class WebGamePackaging {
     const bytes = transfer.querySelector('span')!;
     const details = dialog.querySelector('dl')!;
     const [packageValue, digestValue] = Array.from(details.querySelectorAll('dd'));
+    const connect = dialog.querySelector<HTMLButtonElement>('[data-apk-connect]')!;
     const retry = dialog.querySelector<HTMLButtonElement>('[data-apk-retry]')!;
     const save = dialog.querySelector<HTMLButtonElement>('[data-apk-save]')!;
     const queue = dialog.querySelector<HTMLButtonElement>('[data-apk-queue]')!;
@@ -86,6 +96,12 @@ export class WebGamePackaging {
         const result = await invoke<GameApk>('build_web_game_apk', {gameId, onProgress});
         if (!dialog.open) return;
         transfer.hidden = true;
+        if (device) {
+          // The native build is complete. Hand this exact APK to the existing installation dialog.
+          deployment.install(gameId, result.path, device);
+          dialog.close();
+          return;
+        }
         apk = result;
         packageValue.textContent = result.packageName || '';
         packageValue.hidden = !result.packageName;
@@ -98,8 +114,10 @@ export class WebGamePackaging {
       } catch (error) {
         if (!dialog.open) return;
         transfer.hidden = true;
-        showError(generate ? t('生成失败') : t('获取失败'), error);
-        retry.hidden = false;
+        showError(deploy ? t('部署未完成') : generate ? t('生成失败') : t('获取失败'), error);
+        const current = deployment.target();
+        retry.hidden = !!device && (current?.serial !== device.serial || current.userId !== device.userId);
+        connect.hidden = !device || !!current;
       } finally {
         preparing = undefined;
         closeButton.textContent = t('关闭');
@@ -126,6 +144,7 @@ export class WebGamePackaging {
       }
     };
 
+    connect.addEventListener('click', () => { dialog.close(); deployment.connect(); });
     retry.addEventListener('click', () => void prepare());
     save.addEventListener('click', () => void useApk('save'));
     queue.addEventListener('click', () => void useApk('queue'));
@@ -138,11 +157,18 @@ export class WebGamePackaging {
       dialog.remove();
       if (this.dialog !== dialog) return;
       this.dialog = undefined;
-      const target = opener.isConnected ? opener : document.querySelector<HTMLElement>(`[data-build-game="${CSS.escape(gameId)}"]`);
+      const target = opener.isConnected ? opener : document.querySelector<HTMLElement>(`[data-${deploy ? 'deploy' : 'build'}-game="${CSS.escape(gameId)}"]`);
       target?.focus({preventScroll:true});
     }, {once:true});
     document.body.append(dialog);
     dialog.showModal();
-    void prepare();
+    if (deploy && !device) {
+      status.textContent = t('请先连接电视并完成 ADB 授权，再部署游戏。');
+      closeButton.textContent = t('关闭');
+      connect.hidden = false;
+      connect.focus();
+    } else {
+      void prepare();
+    }
   }
 }

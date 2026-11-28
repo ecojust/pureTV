@@ -1,3 +1,4 @@
+export type DeviceTarget = Pick<Device, 'serial' | 'userId'>;
 export interface Device { serial: string; model: string; androidVersion: string; userId: number; status: string }
 export interface PackageInfo { apkSizeBytes?: number | null; packageName: string; label: string; system: boolean; enabled: boolean; installed: boolean; protectedReason: string | null }
 export interface PackageInsight {

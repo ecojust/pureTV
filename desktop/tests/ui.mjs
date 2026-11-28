@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { checkGameDeployment } from './game-deployment.mjs';
 import { verifyGameApkCancellation } from './game-apk-cancel.mjs';
 import { mockBridge, snapshot, marketCatalog, packageInsight, clientUpdate, forumPage, forumDetail, forumReplies } from './fixtures.mjs';
 
@@ -230,6 +231,7 @@ try {
     assert.equal(await button.evaluate(el => el === document.activeElement), true);
   }, withoutAdb(), {gameApkError:'下载失败'});
   await check('games cancel only the APK requested by the closed dialog', verifyGameApkCancellation, withoutAdb());
+  await checkGameDeployment(check, snapshot, withoutAdb);
   await check('games open fullscreen in the same browser tab and exit from the game', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
