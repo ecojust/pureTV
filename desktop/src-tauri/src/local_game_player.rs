@@ -471,6 +471,18 @@ mod tests {
         ] {
             assert!(asset(&game, path, Source::UserFolder).is_none(), "{path}");
         }
+        #[cfg(windows)]
+        for name in [
+            "NuL",
+            "COM1.js",
+            "prn .txt",
+            "Lpt²",
+            "trailing.",
+            "trailing ",
+            "a?b",
+        ] {
+            assert!(!valid_project_component(name), "{name}");
+        }
         #[cfg(unix)]
         {
             std::os::unix::fs::symlink(temp.path(), root.join("link")).unwrap();
