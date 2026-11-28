@@ -23,16 +23,20 @@ def localized(text):
     return f'<span data-en="{escape(text["en"], quote=True)}">{escape(text["zh"])}</span>'
 
 
+def hosted_cover(game, read_file):
+    number = game['number']
+    start = (number - 1) // 500 * 500 + 1
+    preview = f'joystick-games/catalog/previews/{start:04}-{start + 499:04}/{number:04}.webp'
+    return read_file(preview)
+
+
 def stage_hosted(game, output, read_file):
     title = escape(game['zh'])
     upstream = escape(game['url'], quote=True)
     title_en = escape(game['en'], quote=True)
     target = output / game['id']
     target.mkdir()
-    number = game['number']
-    start = (number - 1) // 500 * 500 + 1
-    preview = f'joystick-games/catalog/previews/{start:04}-{start + 499:04}/{number:04}.webp'
-    (target / 'thumb.webp').write_bytes(read_file(preview))
+    (target / 'thumb.webp').write_bytes(hosted_cover(game, read_file))
     guide = game['guide']
     steps = '\n'.join(f'<li>{localized(step)}</li>' for step in guide['steps'])
     terms = '\n'.join(f'<dt>{escape(term["label"])}</dt><dd>{localized(term)}</dd>'

@@ -173,6 +173,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           if (command === 'save_web_game_apk') return options.gameApkDestination || null;
           return {path:`/cache/games/${id}-0.1.0.apk`, packageName:null, sha256:'a'.repeat(64)};
         }
+        if (command === 'local_game_base') return options.localGameBase || 'http://127.0.0.1:48731/games/';
         if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers'].includes(command)) {
           window.__gameCommands.push({command, ...args});
           if (command === 'start_game_controllers') {

@@ -1,4 +1,4 @@
-// Run a Manager frontend locally, then set MANAGER_URL to its URL. The games load from public GitHub Pages.
+// Run a Manager frontend locally, and set LOCAL_GAME_BASE to the installed game's loopback session URL.
 // Example: MANAGER_URL=http://127.0.0.1:1420 QA_OUTPUT=/tmp/manager-qa node tools/pc-games/qa/manager-two-ports.mjs
 // Use GAME_IDS=starfall,zof-duty for the next two local ports. The default remains the original pair.
 // Set CHROMIUM_PATH to use installed Chromium, GAME_ID to run one title or EXPECT_DENIED=1 to require the blocked storage case.
@@ -12,7 +12,8 @@ import { mockBridge, snapshot } from '../../../desktop/tests/fixtures.mjs';
 
 const manager = process.env.MANAGER_URL || 'http://127.0.0.1:1420';
 const output = resolve(process.env.QA_OUTPUT || join(tmpdir(), 'puretv-manager-two-ports'));
-const pages = 'https://ecojust.github.io/pureTV/games/';
+const pages = process.env.LOCAL_GAME_BASE;
+assert.ok(pages && /^http:\/\/127\.0\.0\.1:4873[1-4]$/.test(new URL(pages).origin), 'Set LOCAL_GAME_BASE to the active desktop game session');
 const games = [
   {id:'openaero-dfw', name:'达拉斯飞行模拟', category:'flight', start:'#btnStartFlight'},
   {id:'claude-of-tanks', name:'克劳德坦克', category:'action', start:'.cot-battle'},
@@ -150,7 +151,7 @@ async function verify(browser, game) {
   const page = await browser.newPage({locale:'zh-CN', viewport:{width:960,height:540}, ignoreHTTPSErrors:true});
   page.setDefaultTimeout(120000);
   const evidence = {game:game.id, checkedAt:new Date().toISOString(), manager, browser:browser.version(),
-    bridge:'Simulated Tauri fullscreen and wireless controller events', source:'Public GitHub Pages', files:{}};
+    bridge:'Simulated Tauri fullscreen and wireless controller events', source:'Bundled APK and desktop adapters', files:{}};
   const hashes = [];
   page.on('response', response => {
     const url = new URL(response.url());
@@ -163,12 +164,12 @@ async function verify(browser, game) {
   });
   try {
     // Observe the native property before the game's storage fallback runs.
-    await page.addInitScript(() => {
-      if (window === window.top || location.origin !== 'https://ecojust.github.io') return;
+    await page.addInitScript(origin => {
+      if (window === window.top || location.origin !== origin) return;
       try { void window.localStorage.length; window.__qaOriginalStorage = 'available'; }
       catch (error) { window.__qaOriginalStorage = error.name; }
-    });
-    await mockBridge(page, snapshot());
+    }, new URL(pages).origin);
+    await mockBridge(page, snapshot(), {localGameBase:pages});
     await page.goto(manager, {waitUntil:'domcontentloaded'});
     await page.locator('[data-page="games"]').click();
     if (game.assets) {
@@ -179,8 +180,7 @@ async function verify(browser, game) {
     }
     await page.locator('[name="gameGroup"]').selectOption(game.category);
     const card = page.locator('[data-play-game="' + game.id + '"]');
-    assert.equal(await card.innerText(), game.name);
-    assert.equal(await card.locator('xpath=..').getByRole('button').count(), 1);
+    assert.equal(await card.getAttribute('aria-label'), game.name);
     await card.scrollIntoViewIfNeeded();
     const url = pages + game.id + '/tv.html?lang=zh';
     const [response] = await Promise.all([

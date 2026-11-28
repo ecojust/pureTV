@@ -28,6 +28,38 @@ WEB_BUNDLES = {
 }
 
 
+def write_player_assets(archive, game, directory, target):
+    """Write the PC entry and adapters alongside the unmodified signed game assets."""
+    slug = game['id']
+    write_notices(archive, game, directory, target / 'puretv-licenses')
+    if slug in WEB_BUNDLES:
+        bundle_path = f'{directory}/{WEB_BUNDLES[slug]}'
+        data = tracked_file(bundle_path)
+        (target / Path(bundle_path).name).write_bytes(data)
+        source_file = target / 'puretv-licenses/source.json'
+        source = json.loads(source_file.read_text(encoding='utf-8'))
+        source['web_bundle'] = {'path': bundle_path, 'sha256': hashlib.sha256(data).hexdigest()}
+        source_file.write_text(json.dumps(source, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    entry = target / 'tv.html'
+    config = json.dumps({'alias': ALIASES.get(slug), 'gameKit': slug == 'neon-rush'})
+    scripts = (f'<script>const pureTVPCConfig={config};</script>'
+               '<script src="../web-host.js"></script><script src="../pc-bridge.js"></script>')
+    layout = Path(__file__).with_name('web-layouts') / f'{slug}.css'
+    if layout.is_file():
+        shutil.copyfile(layout, target / 'web-layout.css')
+        scripts += '<link rel="stylesheet" href="web-layout.css">'
+    adapter = layout.with_suffix('.js')
+    if adapter.is_file():
+        shutil.copyfile(adapter, target / 'web-layout.js')
+        scripts += '<script src="web-layout.js"></script>'
+    html, matches = re.subn(r'<head(?:\s[^>]*)?>', lambda match: match.group() + scripts,
+                            archive.read('assets/tv.html').decode('utf-8-sig'), count=1, flags=re.I)
+    if not matches:
+        raise ValueError(f'{slug} has no game page head')
+    entry.write_text(html, encoding='utf-8')
+    save_banner(ROOT / directory, target / 'thumb.png', size=(480, 270))
+
+
 def stage(game, output, cache, revision):
     slug = game['id']
     directory = f'joystick-games/{slug}'
@@ -51,33 +83,7 @@ def stage(game, output, cache, revision):
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 with archive.open(member) as source, destination.open('xb') as file:
                     shutil.copyfileobj(source, file)
-            write_notices(archive, pinned_game, directory, target / 'puretv-licenses')
-        if slug in WEB_BUNDLES:
-            bundle_path = f'{directory}/{WEB_BUNDLES[slug]}'
-            data = tracked_file(bundle_path)
-            (target / Path(bundle_path).name).write_bytes(data)
-            source_file = target / 'puretv-licenses/source.json'
-            source = json.loads(source_file.read_text(encoding='utf-8'))
-            source['web_bundle'] = {'path': bundle_path, 'sha256': hashlib.sha256(data).hexdigest()}
-            source_file.write_text(json.dumps(source, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-        entry = target / 'tv.html'
-        config = json.dumps({'alias': ALIASES.get(slug), 'gameKit': slug == 'neon-rush'})
-        scripts = (f'<script>const pureTVPCConfig={config};</script>'
-                   '<script src="../web-host.js"></script><script src="../pc-bridge.js"></script>')
-        layout = Path(__file__).with_name('web-layouts') / f'{slug}.css'
-        if layout.is_file():
-            shutil.copyfile(layout, target / 'web-layout.css')
-            scripts += '<link rel="stylesheet" href="web-layout.css">'
-        adapter = layout.with_suffix('.js')
-        if adapter.is_file():
-            shutil.copyfile(adapter, target / 'web-layout.js')
-            scripts += '<script src="web-layout.js"></script>'
-        html, matches = re.subn(r'<head(?:\s[^>]*)?>', lambda match: match.group() + scripts,
-                                entry.read_text(encoding='utf-8-sig'), count=1, flags=re.I)
-        if not matches:
-            raise ValueError(f'{slug} has no game page head')
-        entry.write_text(html, encoding='utf-8')
-        save_banner(ROOT / directory, target / 'thumb.png', size=(480, 270))
+            write_player_assets(archive, pinned_game, directory, target)
         target.rename(output / slug)
     print(f'{slug} ready', flush=True)
 

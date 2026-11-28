@@ -43,6 +43,12 @@ def tracked_file(path):
     return subprocess.check_output(["git", "-C", str(ROOT), "show", f"HEAD:{path}"])
 
 
+def source_revision():
+    if (ROOT / '.git').exists():
+        return subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
+    return 'refs/heads/master'
+
+
 def write_notices(archive, game, page, directory):
     directory.mkdir()
     slug = game["id"]
@@ -50,10 +56,20 @@ def write_notices(archive, game, page, directory):
     filenames = ["LICENSE", "NOTICE.md", "upstream.json", "licenses"]
     if slug == "jackal":
         filenames.extend(["docs/reference.md", "docs/reference-audio.md"])
-    tracked = subprocess.check_output(
-        ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", "HEAD", "--",
-         *(f"{page}/{name}" for name in filenames)], text=True
-    ).splitlines()
+    candidates = [f"{page}/{name}" for name in filenames]
+    if (ROOT / ".git").exists():
+        tracked = subprocess.check_output(
+            ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", "HEAD", "--", *candidates],
+            text=True
+        ).splitlines()
+    else:
+        tracked = []
+        for candidate in candidates:
+            path = ROOT / candidate
+            if path.is_file():
+                tracked.append(candidate)
+            elif path.is_dir():
+                tracked.extend(sorted(p.relative_to(ROOT).as_posix() for p in path.rglob("*") if p.is_file()))
     for path in tracked:
         (directory / ("game-" + Path(path).name)).write_bytes(tracked_file(path))
     (directory / "desktop-host-LICENSE.txt").write_bytes(tracked_file("LICENSE"))
@@ -66,7 +82,7 @@ def write_notices(archive, game, page, directory):
     if b"com/google/zxing" in archive.read("classes.dex"):
         for name in ("zxing-LICENSE.txt", "zxing-NOTICE.txt"):
             (directory / name).write_bytes(tracked_file(f"resource/apps/hifini/third-party/{name}"))
-    revision = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
+    revision = source_revision()
     source = {
         "game": slug,
         "game_directory": f"https://github.com/ecojust/pureTV/tree/{revision}/{page}",
