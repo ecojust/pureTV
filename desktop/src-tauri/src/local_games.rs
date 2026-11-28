@@ -6,7 +6,6 @@ use std::{
     fs,
     io::Write,
     path::{Path, PathBuf},
-    sync::Mutex,
 };
 use tauri::{Emitter, Manager};
 use tauri_plugin_dialog::DialogExt;
@@ -20,7 +19,6 @@ pub struct LocalGame {
 
 #[derive(Default)]
 pub struct Library {
-    registry: Mutex<()>,
     player: Player,
 }
 
@@ -61,6 +59,18 @@ fn register_folder(
     title: Option<&str>,
 ) -> Result<LocalGame, String> {
     let root = project_root(directory)?;
+    let parent = registry.parent().ok_or("本地游戏目录不可用。")?;
+    fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    // Separate running manager instances can register folders at the same time.
+    // Keep the lock on a stable file while replacing the registry atomically.
+    let guard = fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .truncate(false)
+        .open(registry.with_extension("lock"))
+        .map_err(|e| e.to_string())?;
+    guard.lock().map_err(|e| e.to_string())?;
     let mut games = read_registry(registry)?;
     let previous = games.iter().position(|game| game.directory == root);
     let title = title
@@ -84,8 +94,6 @@ fn register_folder(
     } else {
         games.push(game.clone());
     }
-    let parent = registry.parent().ok_or("本地游戏目录不可用。")?;
-    fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     let mut temp = tempfile::NamedTempFile::new_in(parent).map_err(|e| e.to_string())?;
     serde_json::to_writer(temp.as_file_mut(), &games).map_err(|e| e.to_string())?;
     temp.flush().map_err(|e| e.to_string())?;
@@ -98,22 +106,12 @@ pub fn register(
     directory: &str,
     title: Option<&str>,
 ) -> Result<LocalGame, String> {
-    let library = app.state::<Library>();
-    let _lock = library
-        .registry
-        .lock()
-        .map_err(|_| "本地游戏目录不可用。")?;
     let game = register_folder(&registry_path(app)?, Path::new(directory), title)?;
     let _ = app.emit_to("main", "local-games-changed", ());
     Ok(game)
 }
 
 pub fn list(app: &tauri::AppHandle) -> Result<Vec<LocalGame>, String> {
-    let library = app.state::<Library>();
-    let _lock = library
-        .registry
-        .lock()
-        .map_err(|_| "本地游戏目录不可用。")?;
     read_registry(&registry_path(app)?)
 }
 
@@ -178,6 +176,22 @@ impl Library {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn concurrent_registrations_preserve_both_projects() {
+        let temp = tempfile::tempdir().unwrap();
+        let registry = temp.path().join("settings/local-games.json");
+        std::thread::scope(|scope| {
+            for name in ["one", "two"] {
+                let path = temp.path().join(name);
+                fs::create_dir(&path).unwrap();
+                fs::write(path.join("index.html"), "play").unwrap();
+                let registry = &registry;
+                scope.spawn(move || register_folder(registry, &path, None).unwrap());
+            }
+        });
+        assert_eq!(read_registry(&registry).unwrap().len(), 2);
+    }
+
     #[test]
     fn register_and_reopen_live_project_without_duplicates() {
         let temp = tempfile::tempdir().unwrap();

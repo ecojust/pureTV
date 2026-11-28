@@ -176,14 +176,15 @@ def verify_local_game(client, root):
     game_html = (Path(__file__).resolve().parents[1] / 'docs/examples/button-race/index.html').read_text()
     # A browser-side observer requests a same-origin asset only after the sample
     # actually advances. This checks rendering in the real management window.
-    (folder / 'index.html').write_text(game_html + """
+    observer = """
     <script>
       const progress = document.getElementById('track');
       new MutationObserver(() => {
         if (progress.value === 1) fetch('first-step.txt');
       }).observe(progress, {attributes: true, attributeFilter: ['value']});
     </script>
-    """)
+    """
+    (folder / 'index.html').write_text(game_html.replace('</html>', observer + '</html>'))
     marker = folder / 'first-step.txt'
     marker.write_text('step')
     game = client.call('register_local_game', {'directory': str(folder), 'title': 'Button race'})
