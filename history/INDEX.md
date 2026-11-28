@@ -6,6 +6,7 @@
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
+| [2026-11-28-007](2026-11-28-007.md) | in_progress | 线上游戏统一从 apps.b14f 下载 | 核对桌面游戏目录、下载与启动流程。 |
 | [2026-11-28-006](2026-11-28-006.md) | completed | 本地网页游戏、手柄 MCP 与游戏卡片发布 | 0.8.4 和 0.9.0 已发布。五个 0.9.0 下载均已校验，正式 Linux 客户端实测 MCP 按键可驱动自制网页游戏。[下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.9.0) · [验收](../desktop/docs/release-0.9.0-evidence/README.md) |
 | [2026-11-28-005](2026-11-28-005.md) | completed | 统一桌面游戏列表 | 封面点击游玩并显示下载状态，卡片可部署到电视。191 个界面场景通过。[PR #103](https://github.com/ecojust/pureTV/pull/103) |
 | [2026-11-28-004](2026-11-28-004.md) | completed | 合并电视应用 | 同一分类支持下载、安装、设为默认与自定义桌面，界面回归通过。[PR #102](https://github.com/ecojust/pureTV/pull/102) |
