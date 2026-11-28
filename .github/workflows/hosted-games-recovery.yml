@@ -1,53 +1,103 @@
-name: Retrieve redacted TV test diagnostics for build 46104774692
+name: Recover the signed TV package and per-game runtime diagnostics
 on:
   push:
     branches: [recover-hosted-46104774692]
     paths: ['.github/workflows/hosted-games-recovery.yml']
 permissions:
-  contents: write
   actions: read
+  contents: write
 jobs:
-  diagnostics:
+  preserve:
     if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/recover-hosted-46104774692'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kind: signed
+            run: '46105928279'
+            source: f23e13df65206fa84bfa315356bfb57ee53d9606
+            id: '15247207215'
+            digest: '86798b0283eca1f47e7fe863b7476e4e96c39233981619827017fe584f9071b1'
+            name: hosted-games-tv-signed
+          - kind: bus
+            run: '46105512858'
+            source: b50b26858645f3b708e885121704fc05a9957c32
+            id: '15247323212'
+            digest: '9935fd3890169572f3cf4d0fc88d0a6c6f3953cc08b4e1b1dc3aab4b5c9dc3c8'
+            name: hosted-games-tv-case-struggle-bus
+          - kind: fish-loop
+            run: '46105512858'
+            source: b50b26858645f3b708e885121704fc05a9957c32
+            id: '15247268404'
+            digest: 'fc5788fab119cafb9caee2cca66f44d296aa3be856b0194f0bc38de368bb66ce'
+            name: hosted-games-tv-case-fish-loop
+          - kind: noir-extreme
+            run: '46105512858'
+            source: b50b26858645f3b708e885121704fc05a9957c32
+            id: '15247686484'
+            digest: '79f6b1f16dcef66dea7e42f74ae8973ea99fd4263b2199842489db48508a6f6f'
+            name: hosted-games-tv-case-noir-extreme
+          - kind: controllers
+            run: '46105512858'
+            source: b50b26858645f3b708e885121704fc05a9957c32
+            id: '15246918919'
+            digest: 'a0c2c72dc5974683348870150592080c6921f9e93530ba47dae420bff8bf30f9'
+            name: hosted-games-tv-case-controllers
     env:
       GH_TOKEN: ${{ github.token }}
+      ORIGINAL: ${{ matrix.run }}
+      SOURCE: ${{ matrix.source }}
+      ARTIFACT: ${{ matrix.id }}
+      DIGEST: ${{ matrix.digest }}
+      NAME: ${{ matrix.name }}
+      KIND: ${{ matrix.kind }}
     steps:
-      - name: Extract and sanitize the XML from the recorded runtime
+      - name: Verify and preserve only the requested artifact entries
         shell: bash
         run: |
           set -euo pipefail
-          artifact=15247605792
-          gh api "repos/ecojust/pureTV/actions/artifacts/$artifact" > metadata.json
-          jq -e '.name=="hosted-games-tv-runtime" and .workflow_run.id==46104774692 and .workflow_run.head_sha=="81de663df4e3de8e72138921d2703a187a87cecd"' metadata.json
-          gh api "repos/ecojust/pureTV/actions/artifacts/$artifact/zip" > input.zip
-          echo '5cffece1f040929049828aa966ce85752c5a37b792b32cdd3731e9fd4e4ba106  input.zip' | sha256sum --check
-          mkdir diagnostics
+          prefix=repos/ecojust/pureTV/actions
+          gh api "$prefix/artifacts/$ARTIFACT" > selected.json
+          jq -e --arg sha "$SOURCE" --arg name "$NAME" --argjson run "$ORIGINAL" '.workflow_run.id==$run and .workflow_run.head_sha==$sha and .name==$name and (.expired|not) and .size_in_bytes>0 and .size_in_bytes<10000000' selected.json
+          gh api "$prefix/artifacts/$ARTIFACT/zip" > input.zip
+          echo "$DIGEST  input.zip" | sha256sum --check
+          mkdir -p export/release-staging/hosted-games
           python3 - <<'PY'
           from pathlib import Path
-          import re, zipfile, xml.etree.ElementTree as ET
-          with zipfile.ZipFile('input.zip') as archive:
-              for entry in archive.infolist():
-                  name = entry.filename
-                  if not re.fullmatch(r'(bandit|fish-loop|noir-extreme|struggle-bus|vespertine|daejeon-campus)-(card|author|guide|failure)\.xml', name):
-                      continue
-                  assert entry.file_size < 1024 * 1024
-                  xml = ET.fromstring(archive.read(entry))
-                  for node in xml.iter():
-                      for attr, value in node.attrib.items():
-                          if re.search(r'https?://|[?&](?:room|token|key)=|room=|bearer\s+|邀请码[:：]|加入码[:：]',value,re.I):
-                              node.set(attr, '[omitted]')
-                  ET.ElementTree(xml).write(Path('diagnostics')/name,encoding='utf-8')
-          assert list(Path('diagnostics').glob('*-failure.xml'))
+          import hashlib,json,os,re,zipfile,xml.etree.ElementTree as ET
+          env=os.environ
+          dest=Path('export/release-staging/hosted-games')
+          case='struggle-bus' if env['KIND']=='bus' else env['KIND']
+          signed=(case=='signed')
+          files=['hosted-games-0.1.0.apk','SHA256SUMS.txt'] if signed else ['report.json',case+'-played.png']+[case+'-'+stage+'.xml' for stage in ('card','author','guide','failure')]
+          if case=='fish-loop': files+=['fish-loop-before.png','fish-loop-after.png']
+          with zipfile.ZipFile('input.zip') as z:
+              for name in files:
+                  if not signed and name!='report.json' and name not in z.namelist(): continue
+                  assert 0<z.getinfo(name).file_size<10000000 and z.namelist().count(name)==1
+                  data=z.read(name)
+                  if name.endswith('.xml'):
+                      xml=ET.fromstring(data)
+                      for node in xml.iter():
+                          for attr, value in node.attrib.items():
+                              if re.search(r'https?://|[?&](?:room|token|key)=|room=|bearer\s+|邀请码[:：]|加入码[:：]',value,re.I): node.set(attr,'[omitted]')
+                      data=ET.tostring(xml,encoding='utf-8')
+                  (dest/name).write_bytes(data)
+          if env['KIND']=='signed':
+              file=dest/files[0]
+              assert (dest/files[1]).read_text().strip()==hashlib.sha256(file.read_bytes()).hexdigest()+'  '+file.name
+          meta=dict(runId=env['ORIGINAL'],sourceSha=env['SOURCE'],attempt='1',artifactId=int(env['ARTIFACT']),artifactDigest='sha256:'+env['DIGEST'],copyRun=env['GITHUB_RUN_ID'])
+          (dest/'build.json').write_text(json.dumps(meta,indent=2)+'\n')
           PY
-          cd diagnostics
+          cd export
           git init -q
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -- '*.xml'
-          git commit -qm "Redacted accessibility diagnostics from artifact $artifact"
+          git add .
+          git commit -qm "Recover $NAME for $ORIGINAL at $SOURCE"
           git remote add origin https://github.com/ecojust/pureTV.git
           gh auth setup-git
-          branch=build-assets/recovered-hosted-46104774692-xml
+          branch="build-assets/recovered-hosted-$ORIGINAL-$KIND"
           git push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
