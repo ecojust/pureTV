@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#061319"><title>光球挑战 · ZOF//RANGE</title><link rel="stylesheet" href="game.css"></head>
+<body>
+<canvas id="world" aria-label="三层轨道上的青、橙和金色光球"></canvas>
+<header><div class="brand"><i aria-hidden="true"></i><b>光球挑战</b><span>ZOF//RANGE</span></div><button id="pause" hidden aria-label="暂停游戏">Ⅱ 暂停</button></header>
+<main id="menu"><section class="card" aria-labelledby="title">
+  <p class="series">ZOF<span>//</span>RANGE</p>
+  <h1 id="title">光球挑战</h1>
+  <p id="description">点亮近、中、远三层轨道上的 15 颗光球。连续命中，得分逐次提高。</p>
+  <div id="values" class="values"><span><i></i>青色 <b>100</b></span><span><i></i>橙色 <b>150</b></span><span><i></i>金色 <b>250–300</b></span></div>
+  <dl id="results" hidden><div><dt>得分</dt><dd id="resultScore"></dd></div><div><dt>最佳连击</dt><dd id="resultCombo"></dd></div><div><dt>命中率</dt><dd id="resultHit"></dd></div><div><dt>用时</dt><dd id="resultTime"></dd></div></dl>
+  <button id="primary">开始挑战 <span aria-hidden="true">→</span></button>
+  <p class="guide">方向键移动光标，A／空格发出脉冲，B 按住微调，X 切换视野，START 暂停。</p>
+</section></main>
+<section id="hud" hidden aria-label="本轮成绩"><div><small>得分</small><b id="score">0</b></div><div><small>点亮</small><b id="count">0 / 15</b></div><div><small>连击</small><b id="combo">×0</b></div><div><small>用时</small><b id="time">0.0 s</b></div></section>
+<div id="cursor" hidden aria-hidden="true"></div><div id="feedback" aria-live="polite"></div>
+<p id="help" hidden>点击光球或按 A 发出脉冲</p><p id="error" role="alert" hidden></p>
+<script type="module" src="game.js"></script></body></html>

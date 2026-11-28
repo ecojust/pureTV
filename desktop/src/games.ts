@@ -35,7 +35,7 @@ async function browserCatalog():Promise<{catalog:Catalog; base:string}> {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 12000);
     try {
-      const response = await fetch(base + 'catalog.json', {cache:'no-cache', signal:controller.signal});
+      const response = await fetch(base + 'web/catalog.json', {cache:'no-cache', signal:controller.signal});
       if (response.ok) {
         const catalog:Catalog = await response.json();
         if (validCatalog(catalog)) return {catalog, base};

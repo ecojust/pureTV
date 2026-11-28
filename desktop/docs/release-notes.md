@@ -1,4 +1,4 @@
-# pureTV Manager 0.8.2
+# pureTV Manager 0.8.3
 
 ## 简体中文
 
@@ -14,3 +14,5 @@
 
 - The game library is distributed separately. Open Games to load the latest catalog. Choose Download for offline use to save a game in advance. Playing, exporting its TV APK or deploying it also downloads just that game on first use.
 - Downloaded local games remain available offline for play and deployment across Manager updates. Author-hosted games continue to use their existing online players.
+
+- The desktop Manager bundles one compiled Android TV host and builds local APKs from the downloaded web files. Locally generated APKs have a separate package ID and are signed locally.

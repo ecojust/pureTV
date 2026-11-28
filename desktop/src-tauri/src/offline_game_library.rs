@@ -18,10 +18,11 @@ use std::{
 use tauri::Manager;
 use tempfile::NamedTempFile;
 
+const REPOSITORY: &str = "https://raw.githubusercontent.com/ecojust/pureTV/master/game-library/";
 const SOURCE: &str = "https://apps.b14f.com/game-library/";
 const INDEX_LIMIT: u64 = 4 * 1024 * 1024;
-// Receipts for servers still exposing only the original web/ and projects/ directories.
-const ORIGINAL_INDEX: &[u8] = include_bytes!("../../../game-library/catalog.json");
+// Receipts for servers still exposing the web/ directory without a manifest.
+const ORIGINAL_INDEX: &[u8] = include_bytes!("../../../game-library/web/catalog.json");
 const INVALID: &str = "游戏库清单无效";
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -45,8 +46,8 @@ struct Labels {
 #[derive(Debug, Deserialize, Serialize)]
 pub(crate) struct Game {
     pub id: String,
-    zh: String,
-    en: String,
+    pub(crate) zh: String,
+    pub(crate) en: String,
     category: String,
     pub kind: String,
     #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]
@@ -55,7 +56,7 @@ pub(crate) struct Game {
     controls: Option<Labels>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub apk: Option<Apk>,
-    files: Vec<Asset>,
+    pub(crate) files: Vec<Asset>,
 }
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -65,8 +66,8 @@ pub(crate) struct Apk {
     pub sha256: String,
 }
 #[derive(Debug, Deserialize, Serialize)]
-struct Asset {
-    path: String,
+pub(crate) struct Asset {
+    pub(crate) path: String,
     bytes: u64,
     sha256: String,
 }
@@ -154,25 +155,24 @@ impl Catalog {
                 {
                     return Err(INVALID.into());
                 }
-            } else if game.kind != "hosted" {
+            } else if game.kind == "online" {
                 return Err(INVALID.into());
             }
             let overlay = format!("web/{}/", game.id);
-            let project = format!("projects/{}/project.zip", game.id);
-            let signing = format!("projects/{}/signing.bin", game.id);
-            for file in &game.files {
-                if !valid_asset(file)
-                    || !(file.path.starts_with(&overlay)
-                        || (game.kind == "project"
-                            && (file.path == project || file.path == signing)))
-                {
-                    return Err(INVALID.into());
-                }
+            if game
+                .files
+                .iter()
+                .any(|file| !file.path.starts_with(&overlay) || !valid_asset(file))
+            {
+                return Err(INVALID.into());
             }
             if game.kind == "project"
-                && [&project, &signing, &format!("{overlay}tv.html")]
-                    .into_iter()
-                    .any(|path| !game.files.iter().any(|file| &file.path == path))
+                && ["tv.html", "android-entry.html"].iter().any(|name| {
+                    !game
+                        .files
+                        .iter()
+                        .any(|file| file.path == format!("{overlay}{name}"))
+                })
             {
                 return Err(INVALID.into());
             }
@@ -241,7 +241,7 @@ fn remote_catalog(client: &Client, base: &str) -> Result<Catalog, String> {
             .send()
             .map_err(|_| "无法连接游戏库服务器")
     };
-    let response = get("catalog.json")?;
+    let response = get("web/catalog.json")?;
     if response.status() == StatusCode::NOT_FOUND {
         let listing = get("web/")?
             .error_for_status()
@@ -365,11 +365,20 @@ fn verified_copy(
 }
 
 fn response(client: &Client, base: &str, file: &Asset) -> Result<Response, String> {
-    let response = client
-        .get(format!("{base}{}", file.path))
-        .header(reqwest::header::ACCEPT_ENCODING, "identity")
-        .send()
-        .map_err(|_| "无法连接游戏库服务器")?;
+    let get = |origin: &str| {
+        client
+            .get(format!("{origin}{}", file.path))
+            .header(reqwest::header::ACCEPT_ENCODING, "identity")
+            .send()
+            .map_err(|_| "无法连接游戏库服务器")
+    };
+    let response = get(base)?;
+    // The same verified web file may still be syncing to the static host.
+    let response = if base == SOURCE && response.status() == StatusCode::NOT_FOUND {
+        get(REPOSITORY)?
+    } else {
+        response
+    };
     if response.status() != StatusCode::OK {
         return Err(format!(
             "游戏文件下载失败 (HTTP {})",
@@ -433,9 +442,17 @@ fn install(
 
 pub(crate) fn ensure(directory: &Path, id: &str, cancel: &AtomicBool) -> Result<PathBuf, String> {
     check_cancel(cancel)?;
-    let index = catalog(directory)?;
+    ensure_with_catalog(directory, &catalog(directory)?, id, cancel)
+}
+
+pub(crate) fn ensure_with_catalog(
+    directory: &Path,
+    index: &Catalog,
+    id: &str,
+    cancel: &AtomicBool,
+) -> Result<PathBuf, String> {
     let mut connection = None;
-    install(directory, &index, id, cancel, |asset| {
+    install(directory, index, id, cancel, |asset| {
         let connection = match &connection {
             Some(client) => client,
             None => connection.insert(client()?),
@@ -473,7 +490,7 @@ mod tests {
                 .recv_timeout(Duration::from_secs(5))
                 .unwrap()
                 .unwrap();
-            assert_eq!(request.url(), "/game-library/catalog.json");
+            assert_eq!(request.url(), "/game-library/web/catalog.json");
             request
                 .respond(tiny_http::Response::from_data(body))
                 .unwrap();
@@ -530,11 +547,7 @@ mod tests {
         let cancel = AtomicBool::new(false);
         let mut requests = 0;
         let root = install(dir.path(), &catalog, "tetris", &cancel, |asset| {
-            assert!(
-                asset.path.starts_with("web/tetris/")
-                    || asset.path.starts_with("projects/tetris/")
-                    || asset.path.split('/').count() == 2
-            );
+            assert!(asset.path.starts_with("web/tetris/") || asset.path.split('/').count() == 2);
             requests += 1;
             Ok(Box::new(Cursor::new(content(asset))))
         })
@@ -554,7 +567,7 @@ mod tests {
 
         // A partial response cannot overwrite a file. A retry requests only
         // the damaged item and restores the player's original directory.
-        let target = root.join("projects/tetris/project.zip");
+        let target = root.join("web/tetris/android-entry.html");
         fs::write(&target, b"damaged").unwrap();
         assert!(
             install(dir.path(), &offline, "tetris", &cancel, |_| Ok(Box::new(
@@ -564,7 +577,7 @@ mod tests {
         );
         assert_eq!(fs::read(&target).unwrap(), b"damaged");
         let repaired = install(dir.path(), &offline, "tetris", &cancel, |file| {
-            assert_eq!(file.path, "projects/tetris/project.zip");
+            assert_eq!(file.path, "web/tetris/android-entry.html");
             Ok(Box::new(Cursor::new(content(file))))
         })
         .unwrap();

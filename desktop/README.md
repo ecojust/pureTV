@@ -4,7 +4,7 @@
 
 下载：[0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-开发版 0.8.2 的「游戏」从远程游戏库读取列表。可点「下载到本地」提前保存，也可直接游玩或部署。首次使用时，管理器下载并校验该游戏；之后可离线复用，升级客户端也会保留下载。电视已通过 ADB 连接并授权时，可在游戏卡片上点「部署到电视」。管理器用同一份本地游戏项目和正式签名数据组装 APK，再安装到所选电视，完成后提示将游戏添加到启动器主屏幕。「联网游戏」中保留六款由作者托管的作品，以及《Kart Rush》和《CF 运输船》。后两款从原发布地址获取电视安装包。另有 APK 保存入口，以及可搜索、切换版本的「电视游戏市场」。[使用说明](../docs/guide/README.md#在电脑上玩)
+开发版 0.8.3 的「游戏」从远程游戏库读取列表。可点「下载到本地」提前保存，也可直接游玩或部署。首次使用时，管理器下载并校验该游戏；之后可离线复用，升级客户端也会保留下载。电视已通过 ADB 连接并授权时，可在游戏卡片上点「部署到电视」。管理器用同一份已编译的 Android 宿主和网页资源组装 APK，以本机密钥签名，再安装到所选电视，完成后提示将游戏添加到启动器主屏幕。「联网游戏」中保留六款由作者托管的作品，以及《Kart Rush》和《CF 运输船》。后两款从原发布地址获取电视安装包。另有 APK 保存入口，以及可搜索、切换版本的「电视游戏市场」。[使用说明](../docs/guide/README.md#在电脑上玩)
 
 0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.8.1**，旧客户端不会自动切换下载地址。
 
@@ -147,7 +147,7 @@ python3 tools/pc-games/web_index.py /tmp/puretv-site
 python3 -m http.server --directory /tmp/puretv-site 8080
 ```
 
-发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。`tools/pc-games/catalog.json` 和 `hosted-games.json` 提供 56 张卡片及来源。原生客户端按 `online-only.json` 分出两款联网项目和六款作者游戏，将其余 48 款的本地项目及正式签名资料装入应用资源库。浏览器站点和原生客户端分别加载各自的入口。[线上游戏目录](https://ecojust.github.io/pureTV/)
+发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。`tools/pc-games/catalog.json` 和 `hosted-games.json` 提供 56 张卡片及来源。原生客户端区分两款联网项目、六款作者游戏及 48 款可下载游戏。浏览器站点和原生客户端分别加载各自的入口。[线上游戏目录](https://ecojust.github.io/pureTV/)
 
 ## 论坛
 
@@ -186,9 +186,9 @@ APK市场、论坛和操作记录不显示常驻 ADB 提示、设备操作忙碌
 
 ## 开发与验证
 
-游戏库位于仓库根目录的 `game-library/`。更新静态站点时，先用 `git lfs pull --include="game-library/**"` 取齐大文件，再运行 `python3 tools/pc-games/update-library-catalog.py`（Python 3.11+）生成清单。将 `projects/`、`web/` 同步到服务器后，最后发布 `catalog.json`，使清单引用的内容可立即下载。[游戏库](https://apps.b14f.com/game-library/)
+游戏库位于仓库根目录的 `game-library/web/`。运行 `python3 tools/pc-games/update-library-catalog.py`（Python 3.11+）更新清单。同步整个 `web/` 到站点的 `/game-library/web/`，最后发布该目录下的 `catalog.json`。[游戏库](https://apps.b14f.com/game-library/web/)
 
-构建桌面客户端只需游戏清单。安装包和 Windows 便携版均独立于游戏资源发布。
+客户端内置一份已编译的 Android 宿主。生成的 APK 支持 Android 8.0 及以上，并使用本机应用数据目录下的 `game-apk-signing.pem` 签名。同一安装的管理器可更新以前生成的 APK。生成的包使用独立包名，可和原正式版并存。保留签名文件可在迁移管理器时继续为已有生成包签名。[骨架来源与维护方式](web-game-templates/README.md)
 
 ```bash
 npm ci
