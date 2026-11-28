@@ -1,0 +1,338 @@
+{
+  "environment": "Chromium with the production Manager frontend, simulated Tauri window commands, public pureTV Pages and live author documents. The same six cases passed against the staged pages before this deployed-page regression.",
+  "deployment": "https://github.com/ecojust/pureTV/pull/90",
+  "viewports": {
+    "manager": [
+      960,
+      540
+    ],
+    "standalone": [
+      1280,
+      720
+    ]
+  },
+  "command": "GUIDES_ONLY=1 MANAGER_URL=<compiled Manager URL> QA_OUTPUT=<output> CHROMIUM_PATH=<Chromium> node tools/pc-games/qa/manager-hosted.mjs",
+  "sourceSha256": {
+    "tools/pc-games/qa/manager-hosted.mjs": "9f713f1e4bf44a69029c4078b02acf356500e3aa750a010488b9a70753794f71",
+    "tools/pc-games/hosted-games.json": "4113bce65f86903c18c0b495dcdd988159aa5dbdddfa39201aeaf943a1def5a6",
+    "tools/pc-games/hosted-player.js": "b5783a5f50a2bcd87adfa1ad40e44d780551378351ac31bc3c32ff8ef11a7a9c",
+    "tools/pc-games/hosted_games.py": "367e22518d059e503a27bc80cad5c0ac44aa229d6f87f3dd0e8703c2e9aa7de9",
+    "desktop/src/games.ts": "7b40913d1d3ed40b1520e5cf927b5c462d2070293c30b854db8a5a75dc26856e"
+  },
+  "regression": {
+    "game": "fish-loop",
+    "observed": "With the guide open during author navigation, keyboard focus moved into the author iframe when it loaded.",
+    "retest": "The isolated browser delays the live author document until the guide is open, waits for it to finish loading, checks modal focus, then presses Escape and verifies game focus."
+  },
+  "games": [
+    {
+      "scope": "guides and navigation",
+      "game": "bandit",
+      "name": "金库大盗",
+      "category": "action",
+      "manager": "http://127.0.0.1:1432",
+      "checkedAt": "2026-11-28T03:48:23.852Z",
+      "wrapperSource": "public pureTV Pages",
+      "browser": "156.0.8078.79",
+      "hint": "《Bandit》现为多人版《Vault Breakers》。金库模式至少需要两人，可创建或加入房间。原作支持键鼠和标准手柄。",
+      "managerGuide": {
+        "title": "金库大盗",
+        "terms": 7,
+        "steps": 3,
+        "closeMethod": "button",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 539,
+          "height": 389,
+          "overflowX": 0
+        }
+      },
+      "documents": [
+        {
+          "url": "https://ecojust.github.io/pureTV/games/bandit/tv.html?lang=zh",
+          "status": 200
+        },
+        {
+          "url": "https://vault-breakers.onrender.com/",
+          "status": 200
+        }
+      ],
+      "fullscreen": true,
+      "hostCommands": [],
+      "restoredWindow": true,
+      "standaloneGuide": {
+        "title": "金库大盗",
+        "terms": 7,
+        "steps": 3,
+        "closeMethod": "escape",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 539,
+          "height": 539,
+          "overflowX": 0
+        },
+        "openedBeforeAuthorLoad": false
+      },
+      "success": true,
+      "wrapperSha256": "89285ba6dfde3594ea1bcf9d80d13f011281e59c5e1296bc3221ab614297f15d"
+    },
+    {
+      "scope": "guides and navigation",
+      "game": "fish-loop",
+      "name": "鱼群环线",
+      "category": "puzzle",
+      "manager": "http://127.0.0.1:1432",
+      "checkedAt": "2026-11-28T03:48:39.303Z",
+      "wrapperSource": "public pureTV Pages",
+      "browser": "156.0.8078.79",
+      "hint": "点鱼车，把车尾相连的同色鱼放进环形管道。鱼会自动进入车尾同色且有空位的车，没有匹配的车时可进入空车。",
+      "managerGuide": {
+        "title": "鱼群环线",
+        "terms": 6,
+        "steps": 3,
+        "closeMethod": "button",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 437,
+          "height": 389,
+          "overflowX": 0
+        }
+      },
+      "documents": [
+        {
+          "url": "https://ecojust.github.io/pureTV/games/fish-loop/tv.html?lang=zh",
+          "status": 200
+        },
+        {
+          "url": "https://huykc1.github.io/fish-loop-phaser-demo/demo/",
+          "status": 200
+        }
+      ],
+      "readyOrigin": "https://ecojust.github.io",
+      "fullscreen": true,
+      "hostCommands": [],
+      "restoredWindow": true,
+      "standaloneGuide": {
+        "title": "鱼群环线",
+        "terms": 6,
+        "steps": 3,
+        "closeMethod": "escape",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 437,
+          "height": 437,
+          "overflowX": 0
+        },
+        "openedBeforeAuthorLoad": true
+      },
+      "success": true,
+      "wrapperSha256": "cd739126f1bac6fdd73efbb9efb51ffc3451ac60b059117e0f0044bdb9390766"
+    },
+    {
+      "scope": "guides and navigation",
+      "game": "noir-extreme",
+      "name": "黑色侦探：雨夜",
+      "category": "action",
+      "manager": "http://127.0.0.1:1432",
+      "checkedAt": "2026-11-28T03:48:48.767Z",
+      "wrapperSource": "public pureTV Pages",
+      "browser": "156.0.8078.79",
+      "hint": "在「NOIR CITY」标题页开始，进入《NOIR EXTREME》第一章餐馆。WASD 移动、鼠标观察、E 交互。支持标准手柄。",
+      "managerGuide": {
+        "title": "黑色侦探：雨夜",
+        "terms": 8,
+        "steps": 3,
+        "closeMethod": "button",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 545,
+          "height": 389,
+          "overflowX": 0
+        }
+      },
+      "documents": [
+        {
+          "url": "https://ecojust.github.io/pureTV/games/noir-extreme/tv.html?lang=zh",
+          "status": 200
+        },
+        {
+          "url": "https://noircity.vercel.app/?start=diner",
+          "status": 200
+        }
+      ],
+      "fullscreen": true,
+      "hostCommands": [],
+      "restoredWindow": true,
+      "standaloneGuide": {
+        "title": "黑色侦探：雨夜",
+        "terms": 8,
+        "steps": 3,
+        "closeMethod": "escape",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 545,
+          "height": 545,
+          "overflowX": 0
+        },
+        "openedBeforeAuthorLoad": false
+      },
+      "success": true,
+      "wrapperSha256": "acbdb20401a9fac58f8238a2283fd90d020674816986204b823b5916b7226eaa"
+    },
+    {
+      "scope": "guides and navigation",
+      "game": "struggle-bus",
+      "name": "飞天涂色巴士",
+      "category": "flight",
+      "manager": "http://127.0.0.1:1432",
+      "checkedAt": "2026-11-28T03:48:54.778Z",
+      "wrapperSource": "public pureTV Pages",
+      "browser": "156.0.8078.79",
+      "hint": "方向键或 WASD 驾驶，S 爬升，W 俯冲。空格喷漆，长按蓄力，E、Q 换挡。",
+      "managerGuide": {
+        "title": "飞天涂色巴士",
+        "terms": 6,
+        "steps": 3,
+        "closeMethod": "button",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 485,
+          "height": 389,
+          "overflowX": 0
+        }
+      },
+      "documents": [
+        {
+          "url": "https://ecojust.github.io/pureTV/games/struggle-bus/tv.html?lang=zh",
+          "status": 200
+        },
+        {
+          "url": "https://struggle-bus-world.vercel.app/",
+          "status": 200
+        }
+      ],
+      "readyOrigin": "https://ecojust.github.io",
+      "fullscreen": true,
+      "hostCommands": [],
+      "restoredWindow": true,
+      "standaloneGuide": {
+        "title": "飞天涂色巴士",
+        "terms": 6,
+        "steps": 3,
+        "closeMethod": "escape",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 485,
+          "height": 485,
+          "overflowX": 0
+        },
+        "openedBeforeAuthorLoad": false
+      },
+      "success": true,
+      "wrapperSha256": "0b159967eb56a29d5daed9d28a46252ca58d8769ef26d109f54c00e9a7cc9700"
+    },
+    {
+      "scope": "guides and navigation",
+      "game": "vespertine",
+      "name": "暮海点灯人",
+      "category": "action",
+      "manager": "http://127.0.0.1:1432",
+      "checkedAt": "2026-11-28T03:48:59.695Z",
+      "wrapperSource": "public pureTV Pages",
+      "browser": "156.0.8078.79",
+      "hint": "选标题页第一项开始、续玩或重玩，再选「ROW OUT」出航。移动指针划船，靠近微光收集。点击或按空格放出灯火，Esc 回岸。",
+      "managerGuide": {
+        "title": "暮海点灯人",
+        "terms": 7,
+        "steps": 3,
+        "closeMethod": "button",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 515,
+          "height": 389,
+          "overflowX": 0
+        }
+      },
+      "documents": [
+        {
+          "url": "https://ecojust.github.io/pureTV/games/vespertine/tv.html?lang=zh",
+          "status": 200
+        },
+        {
+          "url": "https://sunkencity999.github.io/vespertine/",
+          "status": 200
+        }
+      ],
+      "readyOrigin": "https://ecojust.github.io",
+      "fullscreen": true,
+      "hostCommands": [],
+      "restoredWindow": true,
+      "standaloneGuide": {
+        "title": "暮海点灯人",
+        "terms": 7,
+        "steps": 3,
+        "closeMethod": "escape",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 515,
+          "height": 515,
+          "overflowX": 0
+        },
+        "openedBeforeAuthorLoad": false
+      },
+      "success": true,
+      "wrapperSha256": "7e06260e9aac0b78f7d07a87d5238aa44f8dde66a8d4691c290a706eb18ef92a"
+    },
+    {
+      "scope": "guides and navigation",
+      "game": "daejeon-campus",
+      "name": "大田都市科学高中专业探索",
+      "category": "action",
+      "manager": "http://127.0.0.1:1432",
+      "checkedAt": "2026-11-28T03:49:05.566Z",
+      "wrapperSource": "public pureTV Pages",
+      "browser": "156.0.8078.79",
+      "hint": "选「입장하기」参观学校，「미니게임」体验小游戏。点击、空格或回车推进韩语对白，选「시작」开始小游戏。",
+      "managerGuide": {
+        "title": "大田都市科学高中专业探索",
+        "terms": 12,
+        "steps": 3,
+        "closeMethod": "button",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 811,
+          "height": 389,
+          "overflowX": 0
+        }
+      },
+      "documents": [
+        {
+          "url": "https://ecojust.github.io/pureTV/games/daejeon-campus/tv.html?lang=zh",
+          "status": 200
+        },
+        {
+          "url": "https://kcmjj371-art.github.io/dush-game-site/",
+          "status": 200
+        }
+      ],
+      "fullscreen": true,
+      "hostCommands": [],
+      "restoredWindow": true,
+      "standaloneGuide": {
+        "title": "大田都市科学高中专业探索",
+        "terms": 12,
+        "steps": 3,
+        "closeMethod": "escape",
+        "restoredGameFocus": true,
+        "dimensions": {
+          "scrollHeight": 811,
+          "height": 601,
+          "overflowX": 0
+        },
+        "openedBeforeAuthorLoad": false
+      },
+      "success": true,
+      "wrapperSha256": "2e2bcaea090a554c430c6e7db8c8786b48c87b2c1d654dca84806590f0a3d5fa"
+    }
+  ]
+}

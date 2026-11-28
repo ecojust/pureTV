@@ -1,5 +1,6 @@
 // MANAGER_URL selects a running Manager. LOCAL_GAMES optionally points to the staged games/ directory.
-// GAME_ID limits the run to one catalog entry. QA_OUTPUT receives the per-game screenshots and evidence.
+// GAME_ID limits the run to one catalog entry. GUIDES_ONLY=1 exercises the guides and navigation without entering gameplay.
+// QA_OUTPUT receives the per-game screenshots and evidence.
 import assert from 'node:assert/strict';
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -18,6 +19,7 @@ const output = resolve(process.env.QA_OUTPUT || join(tmpdir(), 'puretv-hosted-ga
 const local = process.env.LOCAL_GAMES && resolve(process.env.LOCAL_GAMES);
 const pages = 'https://ecojust.github.io/pureTV/games/';
 const pagesOrigin = new URL(pages).origin;
+const guidesOnly = process.env.GUIDES_ONLY === '1';
 
 async function mountStagedGames(page, game) {
   // Only pureTV's wrapper and covers are served locally. Author documents and game assets stay live.
@@ -29,6 +31,71 @@ async function mountStagedGames(page, game) {
     if (!(await stat(file).catch(() => null))?.isFile()) return route.fulfill({status:404,body:'Missing staged file'});
     return route.fulfill({path:file});
   });
+}
+
+// Exercise the same guide from the published game's standalone page and inside Manager.
+async function inspectGuide(wrapper, game, closeMethod, screenshot, afterOpen) {
+  const opener = wrapper.getByRole('button', {name:'中文指南', exact:true});
+  const guide = wrapper.locator('#guide');
+  const authorBefore = wrapper.childFrames()[0];
+  assert.ok(authorBefore, 'Missing nested author frame');
+  assert.equal(await guide.isVisible(), false);
+  if (closeMethod === 'button') {
+    await opener.press('Enter');
+  } else {
+    await opener.click();
+  }
+  await guide.waitFor({state:'visible'});
+  if (afterOpen) await afterOpen();
+  assert.equal(await guide.locator('h1').innerText(), game.zh);
+  const body = await guide.innerText();
+  for (const translation of [game.guide.objective, ...game.guide.steps, ...game.guide.terms]) {
+    assert.ok(body.includes(translation.zh), 'Missing Chinese guide text ' + translation.zh);
+  }
+  for (const {label} of game.guide.terms) assert.ok(body.includes(label), 'Missing source term ' + label);
+  const focus = await guide.evaluate(el => el.contains(document.activeElement) ? 'guide' : document.activeElement?.outerHTML.slice(0,150));
+  assert.equal(focus,'guide','Expected keyboard focus inside the open guide');
+  const viewport = wrapper.locator('#guide-body');
+  const dimensions = await viewport.evaluate(el => ({
+    scrollHeight:el.scrollHeight, height:el.clientHeight, overflowX:el.scrollWidth - el.clientWidth,
+  }));
+  assert.ok(dimensions.overflowX <= 1, 'Guide requires horizontal scrolling');
+  if (dimensions.scrollHeight > dimensions.height) {
+    await wrapper.page().keyboard.press('ArrowDown');
+    await wrapper.waitForFunction(() => document.getElementById('guide-body').scrollTop > 0, null, {timeout:2500});
+  }
+  if (screenshot) await wrapper.page().screenshot({path:screenshot});
+  if (closeMethod === 'button') await guide.getByRole('button',{name:'返回游戏', exact:true}).press('Enter');
+  else await wrapper.page().keyboard.press('Escape');
+  await guide.waitFor({state:'hidden'});
+  await wrapper.waitForFunction(() => document.activeElement === document.querySelector('iframe'));
+  assert.equal(wrapper.childFrames()[0], authorBefore, 'Guide recreated the running author frame');
+  return {title:game.zh, terms:game.guide.terms.length, steps:game.guide.steps.length,
+    closeMethod, restoredGameFocus:true, dimensions};
+}
+
+async function inspectStandalone(context, game) {
+  const page = await context.newPage();
+  await page.setViewportSize({width:1280,height:720});
+  // Hold one real author navigation until its guide is open, then test focus after the author is ready.
+  let release;
+  const slowLoad = game.id === 'fish-loop';
+  const gate = new Promise(resolve => { release = resolve; });
+  try {
+    if (slowLoad) await page.route(game.url, async route => { await gate; await route.continue(); }, {times:1});
+    if (local) await mountStagedGames(page, game);
+    await page.goto(pages + game.id + '/tv.html', {waitUntil:'domcontentloaded'});
+    await page.waitForFunction(() => document.querySelector('iframe')?.src);
+    const result = await inspectGuide(page.mainFrame(), game, 'escape', undefined, slowLoad && (async () => {
+      const ready = page.waitForLoadState('load');
+      release();
+      await ready;
+    }));
+    return {...result, openedBeforeAuthorLoad:slowLoad};
+  } finally {
+    release();
+    await page.close();
+  }
 }
 
 async function inspectOriginal(game, frame) {
@@ -170,7 +237,7 @@ async function verify(browser, game) {
   const context = await browser.newContext({locale:'zh-CN', viewport:{width:960,height:540}, ignoreHTTPSErrors:true});
   const page = await context.newPage();
   page.setDefaultTimeout(90000);
-  const evidence = {game:game.id, name:game.zh, category:game.category, manager, checkedAt:new Date().toISOString(),
+  const evidence = {scope:guidesOnly ? 'guides and navigation' : 'guides, navigation and original game', game:game.id, name:game.zh, category:game.category, manager, checkedAt:new Date().toISOString(),
     wrapperSource:local ? 'local staged wrapper at Pages URL' : 'public pureTV Pages', browser:browser.version()};
   const authorErrors = [];
   page.on('pageerror', error => {
@@ -208,16 +275,17 @@ async function verify(browser, game) {
     assert.equal(outerResponse.status(),200);
     const dialog = page.locator('dialog.game-player[open]');
     assert.equal(await dialog.locator('h2').innerText(),game.zh);
-    await page.waitForFunction(() => window.__windowFullscreen && window.__hostedReady.length > 0 &&
+    await page.waitForFunction(() => window.__windowFullscreen);
+    if (!guidesOnly) await page.waitForFunction(() => window.__hostedReady.length > 0 &&
       document.querySelector('[data-frame-status]')?.textContent === '');
     const status = dialog.getByRole('status');
     assert.equal(await status.count(),1);
-    evidence.hint = await status.innerText();
+    evidence.hint = await status.locator('[data-socket-status]').innerText();
     assert.equal(evidence.hint.trim(),game.controls.zh);
     const wrapper = outerResponse.frame();
     const frameElement = wrapper.locator('iframe');
     assert.equal(await frameElement.getAttribute('src'),game.url);
-    assert.equal(await wrapper.locator('details').isHidden(),true);
+    evidence.managerGuide = await inspectGuide(wrapper, game, 'button', join(dir, 'guide.png'));
     const author = innerResponse.frame();
     assert.equal(author.parentFrame(),wrapper);
     assert.equal(wrapper.parentFrame(),page.mainFrame());
@@ -225,26 +293,29 @@ async function verify(browser, game) {
     evidence.documents = [outerResponse,innerResponse].map(r => ({url:r.url(),status:r.status()}));
     evidence.readyOrigin = await page.evaluate(() => window.__hostedReady[0]);
     evidence.fullscreen = true;
-    evidence.authorTitle = await author.title();
-    console.log(game.id, 'received ready from wrapper with author page:', evidence.authorTitle);
-    if (game.id === 'bandit') {
-      await author.locator('#play-btn').waitFor({state:'visible'});
-      await captureSource(page,frameElement,join(dir,'title.png'));
+    if (!guidesOnly) {
+      evidence.authorTitle = await author.title();
+      console.log(game.id, 'received ready from wrapper with author page:', evidence.authorTitle);
+      if (game.id === 'bandit') {
+        await author.locator('#play-btn').waitFor({state:'visible'});
+        await captureSource(page,frameElement,join(dir,'title.png'));
+      }
+      evidence.visibleUI = await inspectOriginal(game,author);
+      evidence.pixels = await captureSource(page,frameElement,join(dir,'manager.png'));
+      if (game.id === 'vespertine') evidence.visibleUI.savedProgress = await inspectSavedNights(page,author,game.url);
     }
-    evidence.visibleUI = await inspectOriginal(game,author);
-    evidence.pixels = await captureSource(page,frameElement,join(dir,'manager.png'));
     assert.equal(page.context().pages().length,1);
-    if (game.id === 'vespertine') evidence.visibleUI.savedProgress = await inspectSavedNights(page,author,game.url);
     await dialog.locator('[data-close-game]').click();
     await page.waitForFunction(() => !window.__windowFullscreen && !document.querySelector('dialog.game-player[open]'));
     assert.equal(await card.evaluate(el => el === document.activeElement),true);
     evidence.hostCommands = await page.evaluate(() => window.__gameCommands);
     assert.deepEqual(evidence.hostCommands,[], 'A hosted game started or queried the Wi-Fi controller service');
     evidence.restoredWindow = true;
+    evidence.standaloneGuide = await inspectStandalone(context, game);
     evidence.success = true;
   } catch (error) {
     const original = page.frames().find(f => f.parentFrame()?.parentFrame() === page.mainFrame());
-    if (original) evidence.observedUI = await original.evaluate(() => ({
+    if (!guidesOnly && original) evidence.observedUI = await original.evaluate(() => ({
       title:document.title, text:document.body?.innerText.slice(0,600), canvases:document.querySelectorAll('canvas').length,
     })).catch(() => null);
     evidence.failure = String(error);
