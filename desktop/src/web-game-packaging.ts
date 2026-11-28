@@ -17,7 +17,7 @@ export class WebGamePackaging {
     dialog.className = 'modal game-apk-dialog';
     dialog.setAttribute('aria-labelledby', 'game-apk-heading');
     dialog.innerHTML = `<div class="modal-heading"><h2 id="game-apk-heading"></h2>
-      <button type="button" class="text-button" data-apk-close autofocus>${t('关闭')}</button></div>
+      <button type="button" class="text-button" data-apk-close autofocus>${t('取消')}</button></div>
       <p role="status" aria-live="polite" data-apk-status></p>
       <div class="game-apk-progress" data-apk-progress hidden>
         <progress aria-label="${t('下载进度')}"></progress><span></span>
@@ -38,7 +38,18 @@ export class WebGamePackaging {
     const retry = dialog.querySelector<HTMLButtonElement>('[data-apk-retry]')!;
     const save = dialog.querySelector<HTMLButtonElement>('[data-apk-save]')!;
     const queue = dialog.querySelector<HTMLButtonElement>('[data-apk-queue]')!;
+    const closeButton = dialog.querySelector<HTMLButtonElement>('[data-apk-close]')!;
+    let preparing:Channel<MarketProgress> | undefined;
     let apk:GameApk | undefined;
+
+    function cancelChannel(channelId:number) {
+      void invoke('cancel_web_game_apk', {channelId}).catch(error => console.warn('APK cancellation failed', error));
+    }
+
+    function dismiss() {
+      if (preparing) cancelChannel(preparing.id);
+      dialog.close();
+    }
 
     function showError(prefix:string, error:unknown) {
       status.textContent = prefix + ' · ' + message(error instanceof Error ? error.message : String(error));
@@ -47,11 +58,17 @@ export class WebGamePackaging {
 
     async function prepare() {
       retry.hidden = true;
+      closeButton.textContent = t('取消');
       status.classList.remove('error');
       status.textContent = generate ? t('正在生成电视 APK…') : t('正在准备电视 APK…');
       try {
-        const onProgress = new Channel<MarketProgress>(event => {
-          if (generate || !dialog.open || apk) return;
+        let firstProgress = true;
+        const onProgress:Channel<MarketProgress> = new Channel(event => {
+          if (preparing !== onProgress) return;
+          // Closing may precede native registration. Its first progress event acknowledges ownership.
+          if (firstProgress && !dialog.open) cancelChannel(onProgress.id);
+          firstProgress = false;
+          if (generate || !dialog.open) return;
           const label = event.stage === 'verifying' ? t('正在校验安装包…') : t('正在下载安装包…');
           if (status.textContent !== label) status.textContent = label;
           transfer.hidden = event.stage !== 'downloading';
@@ -65,6 +82,7 @@ export class WebGamePackaging {
           const received = (event.downloaded / 1048576).toFixed(1);
           bytes.textContent = event.total ? received + ' / ' + (event.total / 1048576).toFixed(1) + ' MiB' : received + ' MiB';
         });
+        preparing = onProgress;
         const result = await invoke<GameApk>('build_web_game_apk', {gameId, onProgress});
         if (!dialog.open) return;
         transfer.hidden = true;
@@ -82,6 +100,9 @@ export class WebGamePackaging {
         transfer.hidden = true;
         showError(generate ? t('生成失败') : t('获取失败'), error);
         retry.hidden = false;
+      } finally {
+        preparing = undefined;
+        closeButton.textContent = t('关闭');
       }
     }
 
@@ -108,7 +129,11 @@ export class WebGamePackaging {
     retry.addEventListener('click', () => void prepare());
     save.addEventListener('click', () => void useApk('save'));
     queue.addEventListener('click', () => void useApk('queue'));
-    dialog.querySelector('[data-apk-close]')!.addEventListener('click', () => dialog.close());
+    closeButton.addEventListener('click', dismiss);
+    dialog.addEventListener('cancel', event => {
+      event.preventDefault();
+      dismiss();
+    });
     dialog.addEventListener('close', () => {
       dialog.remove();
       if (this.dialog !== dialog) return;
