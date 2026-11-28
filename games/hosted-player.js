@@ -18,9 +18,23 @@
 
   if (guide) {
     const body = document.getElementById('guide-body');
-    openGuide.addEventListener('click', () => guide.showModal());
-    document.getElementById('close-guide').addEventListener('click', () => guide.close());
-    guide.addEventListener('close', () => frame.focus());
+    const closeGuide = document.getElementById('close-guide');
+    openGuide.addEventListener('click', () => {
+      frame.inert = true;
+      guide.showModal();
+    });
+    closeGuide.addEventListener('click', () => guide.close());
+    guide.addEventListener('close', () => {
+      frame.inert = false;
+      frame.focus();
+    });
+    // A game engine can request focus from its own document after loading.
+    // In Chromium that can blur the host even while its modal is open.
+    window.addEventListener('blur', () => {
+      if (guide.open) requestAnimationFrame(() => {
+        if (guide.open && document.activeElement === frame) closeGuide.focus();
+      });
+    });
     guide.addEventListener('keydown', event => {
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault();
@@ -39,6 +53,7 @@
   frame.addEventListener('load', () => {
     const keepFocus = Boolean(guide?.open || (openGuide && document.activeElement === openGuide));
     if (parent !== window) parent.postMessage({type: 'puretv:game-ready', keepFocus}, '*');
+    if (guide?.open && !guide.contains(document.activeElement)) document.getElementById('close-guide').focus();
     if (!keepFocus) frame.focus();
   }, {once: true});
   frame.src = src;
