@@ -50,8 +50,8 @@ export class WebGamePackaging {
       status.classList.remove('error');
       status.textContent = generate ? t('正在生成电视 APK…') : t('正在准备电视 APK…');
       try {
-        const onProgress = generate ? undefined : new Channel<MarketProgress>(event => {
-          if (!dialog.open || apk) return;
+        const onProgress = new Channel<MarketProgress>(event => {
+          if (generate || !dialog.open || apk) return;
           const label = event.stage === 'verifying' ? t('正在校验安装包…') : t('正在下载安装包…');
           if (status.textContent !== label) status.textContent = label;
           transfer.hidden = event.stage !== 'downloading';
@@ -65,7 +65,7 @@ export class WebGamePackaging {
           const received = (event.downloaded / 1048576).toFixed(1);
           bytes.textContent = event.total ? received + ' / ' + (event.total / 1048576).toFixed(1) + ' MiB' : received + ' MiB';
         });
-        const result = await invoke<GameApk>('build_web_game_apk', onProgress ? {gameId, onProgress} : {gameId});
+        const result = await invoke<GameApk>('build_web_game_apk', {gameId, onProgress});
         if (!dialog.open) return;
         transfer.hidden = true;
         apk = result;
