@@ -6,7 +6,7 @@ pureTV Manager runs on your computer and manages Android TV and Google TV device
 
 ## Install or upgrade the desktop manager
 
-Download **pureTV Manager 0.8.0** for your computer. The release lists file sizes and SHA256 checksums. [Download 0.8.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0)
+Download **pureTV Manager 0.8.1** for your computer. The release lists file sizes and SHA256 checksums. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
 
 | Platform | Installation |
 | --- | --- |
@@ -14,9 +14,9 @@ Download **pureTV Manager 0.8.0** for your computer. The release lists file size
 | macOS 11 or later | Choose the Apple Silicon ARM64 or Intel x86_64 DMG. Drag `pureTV Manager.app` to Applications and open it there. The manager uses an ad-hoc signature and has no Apple notarization. [First launch and file verification (Chinese)](../../desktop/README.md#macos-安装与首次打开) |
 | Linux x64 | Download the DEB. The in-app updater uses the system's `pkexec` and `dpkg`. |
 
-**When upgrading from 0.5.7 or earlier, install 0.8.0 manually.** Quit the old manager and replace it. You can keep its settings and the apps on your TV. The older client retains its original download address. Version 0.5.9 uses `apps.b14f.com` for the APK market and client updates. It checks once after startup or when you choose **Check for updates** next to the version in the sidebar. **Download and install** downloads and verifies the selected package before handing it to the installer and restarting the manager. In-app availability depends on which packages the update server provides for your platform. [Client directory](https://apps.b14f.com/client/) · [Update behavior and troubleshooting](../../desktop/docs/client-updates.md#update-behavior-english)
+**When upgrading from 0.5.7 or earlier, install 0.8.1 manually.** Quit the old manager and replace it. You can keep its settings and the apps on your TV. The older client retains its original download address. Version 0.5.9 uses `apps.b14f.com` for the APK market and client updates. It checks once after startup or when you choose **Check for updates** next to the version in the sidebar. **Download and install** downloads and verifies the selected package before handing it to the installer and restarting the manager. In-app availability depends on which packages the update server provides for your platform. [Client directory](https://apps.b14f.com/client/) · [Update behavior and troubleshooting](../../desktop/docs/client-updates.md#update-behavior-english)
 
-Version 0.8.0 includes the offline game library. Earlier updaters have a 256 MiB file limit. If the updater rejects the file size, download the installer for your platform directly from the release and install it over your current copy.
+Version 0.8.1 includes the offline game library. Earlier updaters have a 256 MiB file limit. If the updater rejects the file size, download the installer for your platform directly from the release and install it over your current copy.
 
 ![pureTV Manager in the Sky theme with simulated device data](../previews/manager-en.png)
 
@@ -50,7 +50,7 @@ The TV store and the desktop manager read the same Media, Games and Launchers di
 
 ### Play on a computer
 
-Open **Games** in Manager 0.8.0 and choose **Play on computer** on a local game card. All 48 local games include their code and essential assets in the installer. You can play offline on first launch without connecting a TV. [Download 0.8.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0)
+Open **Games** in Manager 0.8.1 and choose **Play on computer** on a local game card. All 48 local games include their code and essential assets in the installer. You can play offline on first launch without connecting a TV. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
 
 **Online games** retains eight entries. Kart Rush and CF Transport Ship use an online player on desktop and download the original TV package on first deployment. The following six games load from their authors’ sites on both desktop and TV.
 

@@ -15,7 +15,7 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="docs/guide/README.en.md#install-or-upgrade-the-desktop-manager"><img src="docs/previews/manager-en.png" width="180" alt=""><br>pureTV Manager</a><br>Manage TV apps and launchers from a computer<br>Windows, macOS, Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0">Download 0.8.0</a></td>
+    <td align="center" valign="top" width="207"><a href="docs/guide/README.en.md#install-or-upgrade-the-desktop-manager"><img src="docs/previews/manager-en.png" width="180" alt=""><br>pureTV Manager</a><br>Manage TV apps and launchers from a computer<br>Windows, macOS, Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1">Download 0.8.1</a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/hosted-games/"><img src="docs/previews/en/app-hosted-games.png" width="180" alt=""><br>pureTV Online Games</a><br>Play six games from the authors’ websites with Chinese guides and TV controls<br>Android TV<br><a href="resource/apps/hosted-games/hosted-games-0.1.0.apk?raw=1">Download 0.1.0 APK</a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt=""><br>putrtv Store</a><br>Browse, install and check TV app updates directly on your television<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1">Download 0.1.3 APK</a></td>
     <td align="center" valign="top" width="207"></td>
@@ -82,7 +82,7 @@
 
 [Six new or updated controller games · browser builds and controls](joystick-games/README.md#game-expansion)
 
-Open **Games** in pureTV Manager 0.8.0. The client includes 48 local games for offline play and TV packaging, including on first launch. Choose **Deploy to TV** on a card to install the game, then add it to your TV launcher’s home screen. [Desktop play and TV deployment](docs/guide/README.en.md#prepare-a-tv-apk-from-a-web-game) · [Play in a browser](https://ecojust.github.io/pureTV/)
+Open **Games** in pureTV Manager 0.8.1. The client includes 48 local games for offline play and TV packaging, including on first launch. Choose **Deploy to TV** on a card to install the game, then add it to your TV launcher’s home screen. [Desktop play and TV deployment](docs/guide/README.en.md#prepare-a-tv-apk-from-a-web-game) · [Play in a browser](https://ecojust.github.io/pureTV/)
 
 Standalone game packages start in Simplified Chinese. The six games hosted by their authors retain their original in-game languages.
 

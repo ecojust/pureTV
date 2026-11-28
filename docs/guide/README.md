@@ -6,7 +6,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ## 安装与升级电脑管理器
 
-从 **pureTV Manager 0.8.0** 发布页下载与电脑匹配的文件。发布页提供文件大小及 SHA256 校验清单。[下载 0.8.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0)
+从 **pureTV Manager 0.8.1** 发布页下载与电脑匹配的文件。发布页提供文件大小及 SHA256 校验清单。[下载 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
 
 | 电脑系统 | 安装方式 |
 | --- | --- |
@@ -14,9 +14,9 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 | macOS 11 及以上 | 按芯片选择 Apple Silicon ARM64 或 Intel x86_64 DMG。将 `pureTV Manager.app` 拖入「应用程序」，再从那里打开。管理器使用 ad-hoc 签名，尚未经过 Apple 公证。[首次打开与校验](../../desktop/README.md#macos-安装与首次打开) |
 | Linux x64 | 下载 DEB。客户端自动安装更新时使用系统的 `pkexec` 和 `dpkg`。 |
 
-**从 0.5.7 及更早版本升级，请手动安装 0.8.0。** 退出旧管理器后覆盖安装即可，电视上的应用和管理器配置可以保留。旧客户端继续使用原下载地址，0.5.9 将 APK 市场和客户端更新迁移到了 `apps.b14f.com`。新管理器在启动后检查一次更新，也可点击左下角版本旁的「检查更新」。选择「下载并安装」后，它才下载、校验并交给更新助手安装、重启。应用内可更新的版本以服务器实际提供的对应平台文件为准。[客户端目录](https://apps.b14f.com/client/) · [分平台更新与旧版故障处理](../../desktop/docs/client-updates.md)
+**从 0.5.7 及更早版本升级，请手动安装 0.8.1。** 退出旧管理器后覆盖安装即可，电视上的应用和管理器配置可以保留。旧客户端继续使用原下载地址，0.5.9 将 APK 市场和客户端更新迁移到了 `apps.b14f.com`。新管理器在启动后检查一次更新，也可点击左下角版本旁的「检查更新」。选择「下载并安装」后，它才下载、校验并交给更新助手安装、重启。应用内可更新的版本以服务器实际提供的对应平台文件为准。[客户端目录](https://apps.b14f.com/client/) · [分平台更新与旧版故障处理](../../desktop/docs/client-updates.md)
 
-0.8.0 内置完整游戏资源，较早版本更新器的单文件上限为 256 MiB。若提示文件过大，可直接从发布页下载对应平台的安装文件并覆盖安装。
+0.8.1 内置完整游戏资源，较早版本更新器的单文件上限为 256 MiB。若提示文件过大，可直接从发布页下载对应平台的安装文件并覆盖安装。
 
 ![pureTV 管理器的晴空主题，画面使用模拟设备数据](../previews/manager-zh.png)
 
@@ -50,7 +50,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ### 在电脑上玩
 
-打开 Manager 0.8.0 左侧「游戏」，在本地游戏卡片上点「电脑游玩」。48 款游戏的画面、程序和必要素材随安装包提供，首次启动就可以断网游玩，无需连接电视。[下载 0.8.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0)
+打开 Manager 0.8.1 左侧「游戏」，在本地游戏卡片上点「电脑游玩」。48 款游戏的画面、程序和必要素材随安装包提供，首次启动就可以断网游玩，无需连接电视。[下载 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
 
 「联网游戏」保留八个入口。其中《Kart Rush》和《CF 运输船》在电脑上联网打开，首次部署需获取其原发布包。下面六款在电脑和电视上均由作者网站提供游戏内容。
 

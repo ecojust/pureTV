@@ -1,4 +1,4 @@
-# pureTV Manager 0.8.0
+# pureTV Manager 0.8.1
 
 ## 简体中文
 

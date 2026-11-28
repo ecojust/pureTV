@@ -1,14 +1,14 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.8.0** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.8.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.8.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
+下载：[0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
 打开「游戏」，即可从安装包内的本地资源游玩 48 款游戏。电视已通过 ADB 连接并授权时，可在游戏卡片上点「部署到电视」。管理器用同一份本地游戏项目和正式签名数据组装 APK，再安装到所选电视，完成后提示将游戏添加到启动器主屏幕。「联网游戏」中保留六款由作者托管的作品，以及《Kart Rush》和《CF 运输船》。后两款从原发布地址获取电视安装包。另有 APK 保存入口，以及可搜索、切换版本的「电视游戏市场」。[使用说明](../docs/guide/README.md#在电脑上玩)
 
-0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.8.0**，旧客户端不会自动切换下载地址。
+0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.8.1**，旧客户端不会自动切换下载地址。
 
-0.8.0 内置完整游戏资源，较早版本更新器的单文件上限为 256 MiB。若提示文件过大，可直接从发布页下载对应平台的安装文件并覆盖安装。
+0.8.1 内置完整游戏资源，较早版本更新器的单文件上限为 256 MiB。若提示文件过大，可直接从发布页下载对应平台的安装文件并覆盖安装。
 
 0.5.6 在 APK 市场的应用名右侧直接显示 `provider` 名称，去掉「作者」标签。过长的应用名优先省略，为右侧名称保留显示空间；完整内容可悬停查看。「已下载」状态移到文件信息行。名称来自 APK 同目录 `manifest.json`，缺失信息显示「未提供」。
 
@@ -51,14 +51,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.8.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.8.0-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.8.1-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.8.0-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.8.1-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
