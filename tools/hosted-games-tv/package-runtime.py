@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 import socketserver
@@ -49,10 +50,13 @@ def resumed(device):
 def activity_state(device, package):
     summary = device.shell('dumpsys', 'activity', 'activities')
     foreground = [line.strip() for line in summary.splitlines()
-                  if 'topResumedActivity=' in line or 'mResumedActivity=' in line]
+                  if re.search(r'\b(?:topResumedActivity|mResumedActivity|ResumedActivity)\s*[=:]', line)]
+    windows = device.shell('dumpsys', 'window')
+    focus = [line.strip() for line in windows.splitlines()
+             if re.search(r'\bmCurrentFocus=Window\{', line)]
     records = [line.strip() for line in summary.splitlines()
                if 'Hist #' in line and package + '/' in line]
-    return {'resumed': foreground[:4], 'gameHistory': records[:4]}
+    return {'resumed': foreground[:4], 'focusedWindow': focus[:2], 'gameHistory': records[:4]}
 
 
 def probe(device, proxy, record, game, entry):
@@ -66,6 +70,7 @@ def probe(device, proxy, record, game, entry):
         first = len(proxy.requests)
     device.shell('am', 'force-stop', package)
     device.shell('am', 'start', '-W', '-a', 'android.settings.SETTINGS')
+    entry['previousActivity'] = activity_state(device, package)
     device.shell('am', 'start', '-W', '-a', 'android.intent.action.MAIN', '-c',
                  'android.intent.category.LEANBACK_LAUNCHER', '-n', component)
     origin = urlsplit(game['url'])
@@ -92,7 +97,8 @@ def probe(device, proxy, record, game, entry):
     deadline = time.monotonic() + 15
     while time.monotonic() < deadline:
         state = activity_state(device, package)
-        if not state['gameHistory'] and all(package + '/' not in line for line in state['resumed']):
+        visible = state['resumed'] + state['focusedWindow']
+        if not state['gameHistory'] and any('/' in line for line in visible) and all(package + '/' not in line for line in visible):
             entry.update(exited=True, finalActivity=state)
             return
         time.sleep(0.5)
@@ -153,6 +159,10 @@ def main():
                     probe(device, proxy, record, games[record['id']], entry)
                 except Exception as error:
                     entry['error'] = str(error)
+                    try:
+                        entry['failureActivity'] = activity_state(device, record['packageName'])
+                    except (OSError, subprocess.SubprocessError):
+                        pass
                     if isinstance(error, subprocess.CalledProcessError):
                         entry['adbError'] = (error.stderr or error.stdout or b'').decode(errors='replace')[:600]
                 finally:
