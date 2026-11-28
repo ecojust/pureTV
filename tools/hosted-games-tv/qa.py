@@ -16,6 +16,7 @@ import zipfile
 from PIL import Image, ImageChops, ImageDraw, ImageStat
 
 from controllers import phone_input, wifi_input, wifi_play
+from window_snapshot import install_sampler, read_snapshot
 
 
 PACKAGE = 'com.ecojust.hostedgames'
@@ -51,6 +52,7 @@ class Device:
             self.prefix += ['-s', serial]
         self.out = out
         self.last_xml = None
+        self.sampler_ready = False
 
     def adb(self, *args, binary=False):
         result = subprocess.run([*self.prefix, *map(str, args)], capture_output=True, timeout=45, check=True)
@@ -85,8 +87,19 @@ class Device:
         self.shell('input', 'keyevent', *keys)
 
     def tree(self):
+        if self.sampler_ready:
+            try:
+                raw = read_snapshot(self)
+                tree = ET.fromstring(raw)
+                self.last_xml = raw
+                return tree
+            except (ET.ParseError, OSError, subprocess.SubprocessError) as error:
+                print('Live accessibility sampler unavailable; retrying Android system dump:', str(error)[:250], flush=True)
+        # Native catalog trees can also be captured with the SDK's stock command.
         self.shell('rm', '-f', REMOTE_XML)
-        self.shell('uiautomator', 'dump', REMOTE_XML)
+        message = self.shell('uiautomator', 'dump', REMOTE_XML)
+        if 'ERROR:' in message:
+            raise RuntimeError(message[:300])
         raw = self.adb('exec-out', 'cat', REMOTE_XML, binary=True)
         tree = ET.fromstring(raw)
         self.last_xml = raw
@@ -94,24 +107,29 @@ class Device:
 
     def until(self, description, check, timeout=40):
         deadline = time.monotonic() + timeout
+        last_issue = ''
+        captures = 0
         while time.monotonic() < deadline:
             try:
                 tree = self.tree()
-            except (ET.ParseError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            except (ET.ParseError, RuntimeError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+                last_issue = str(error)[:250]
                 time.sleep(.5)
                 continue
+            captures += 1
             result = check(tree)
             if result is not None and result is not False:
                 return result
             time.sleep(.4)
-        raise RuntimeError('Android UI did not show ' + description)
+        detail = f'{captures} fresh snapshots' + (', last capture failure: ' + last_issue if last_issue else '')
+        raise RuntimeError(f'Android UI did not show {description} ({detail})')
 
     def label(self, text, timeout=40):
         return self.until(text, lambda tree: find_label(tree, text), timeout)
 
     def select_dialog_button(self, text):
         for _ in range(5):
-            tree = self.tree()
+            tree = self.until('fresh dialog hierarchy', lambda tree: tree)
             focus = next((n for n in tree.iter('node') if n.get('focused') == 'true'), None)
             target = find_label(tree, text)
             if focus is None or target is None:
@@ -168,7 +186,7 @@ class Device:
             # Pairing addresses and QR codes can appear in the launcher and the native guide.
             # Obtain fresh bounds and mask the full view of each code or address.
             draw = ImageDraw.Draw(image)
-            for node in self.tree().iter('node'):
+            for node in self.until('fresh pairing bounds', lambda tree: tree).iter('node'):
                 label = node.get('content-desc', '') + ' ' + node.get('text', '')
                 if '二维码' in label or 'room=' in label:
                     draw.rectangle(box(node), fill='black')
@@ -351,6 +369,14 @@ def main():
             games = json.loads(archive.read('assets/hosted-games.json'))
         if [g['id'] for g in games] != list(AUTHOR_MARKERS):
             raise ValueError('APK catalog must contain the six requested author games, in menu order')
+        try:
+            install_sampler(device)
+            device.sampler_ready = True
+            report['accessibilitySampler'] = 'Android UiDevice.dumpWindowHierarchy'
+        except (OSError, subprocess.SubprocessError, KeyError) as error:
+            report['accessibilitySampler'] = 'stock uiautomator dump; sampler setup failed: ' + str(error)[:250]
+            print(report['accessibilitySampler'], flush=True)
+        save()
         device.adb('install', '-r', args.apk.resolve())
         if args.case in ('all', 'controllers'):
             for transport, probe in [('phone', phone_input), ('wifi', wifi_input)]:

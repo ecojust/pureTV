@@ -109,12 +109,7 @@ public class HostedLifecycleTest {
             HostedLobbyInput lobby = getField(activity, "lobby");
             java.util.function.IntConsumer navigate = getField(lobby, "action");
             navigate.accept(KeyEvent.KEYCODE_DPAD_DOWN);
-            Button fish = findButton(root, "鱼群环线");
-            View focused = activity.getCurrentFocus();
-            assertTrue("LAN Down should move focus to Fish Loop. Current focus: " + focused
-                + ", next: " + (focused == null ? null : focused.focusSearch(View.FOCUS_DOWN))
-                + ", expected: " + fish + ", touch mode: " + fish.isInTouchMode()
-                + ", rect: "+ fish.getWidth() + "x"+fish.getHeight(), fish.hasFocus());
+            assertTrue("LAN Down should move focus to Fish Loop", findButton(root, "鱼群环线").hasFocus());
             navigate.accept(KeyEvent.KEYCODE_DPAD_CENTER);
             WebView web = getField(activity, "web");
             assertEquals("https://huykc1.github.io/fish-loop-phaser-demo/demo/", shadowOf(web).getLastLoadedUrl());

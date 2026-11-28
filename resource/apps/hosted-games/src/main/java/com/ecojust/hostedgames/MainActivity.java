@@ -131,15 +131,9 @@ public final class MainActivity extends Activity {
         detail.addView(original);
         detail.addView(instructions);
         detail.addView(new ConnectionPanel());
-        Button selected = null, previous = null;
+        Button selected = null;
         for (Game item : games) {
             Button entry = button(item.title, () -> play(item));
-            entry.setId(View.generateViewId());
-            if (previous != null) {
-                previous.setNextFocusDownId(entry.getId());
-                entry.setNextFocusUpId(previous.getId());
-            }
-            previous = entry;
             entry.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             buttons.addView(entry, new LinearLayout.LayoutParams(-1, -2));
             Runnable describe = () -> {
@@ -385,7 +379,8 @@ public final class MainActivity extends Activity {
             else if (key == KeyEvent.KEYCODE_BACK) onBackPressed();
             return;
         }
-        View focused = helpDialog == null ? getCurrentFocus() : helpDialog.getCurrentFocus();
+        View panel = helpDialog == null ? root : helpDialog.getWindow().getDecorView();
+        View focused = panel.findFocus();
         if (focused == null) return;
         if (key == KeyEvent.KEYCODE_DPAD_CENTER) {
             if (focused.isEnabled()) focused.performClick();
