@@ -100,7 +100,8 @@ def key(*names):
 
 def enter(label, value):
     field = wait(label, lambda: next((n for r, name, _, n in entries()
-                                     if r in ("entry", "text", "spin button") and name == label), None), 20)
+                                     if r in ("entry", "text", "spin button") and
+                                     (name == label or name.startswith(label + " "))), None), 20)
     field.queryComponent().grabFocus()
     key("ctrl+a")
     command("xdotool", "type", "--clearmodifiers", value)
