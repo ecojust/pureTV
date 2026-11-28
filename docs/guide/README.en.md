@@ -50,11 +50,13 @@ The TV store and the desktop manager read the same Media, Games and Launchers di
 
 ### Play on a computer
 
-Open **Games → Online games** and select a card to play on your computer. For games that support offline play, the manager automatically downloads and verifies the files the first time you play. When **Downloaded** appears in the lower-right corner of the cover, you can open the game again offline. Playing on the computer needs no TV connection.
+These instructions describe builds from source after 0.9.0. The published 0.9.0 installers still open remote pages for eight titles.
+
+Open **Games → Online games** and select a playable cover. On first launch, the manager downloads the game files from `apps.b14f.com/game-library/web/`, verifies them and starts the game from your computer. When **Downloaded** appears in the lower-right corner of the cover, you can open the game again offline. Playing on the computer needs no TV connection.
 
 To play your own web game, open **Games → Local games**, add the folder containing its `index.html`, and select the new card. The game can read pureTV controller input over WebSocket. Copy the MCP configuration from the same tab to send test button presses and inspect the session from your development tool. [Controller protocol and MCP tools](../../desktop/docs/mcp.md)
 
-Eight games in the list require an internet connection to play. Kart Rush and CF Transport Ship use an online player on desktop and download the original TV package on first deployment. The following six games load from their authors’ sites on both desktop and TV.
+Kart Rush and CF Transport Ship have separate downloads for desktop play and the official TV APK. **Downloaded** refers to the desktop files. The game library currently supplies only covers for the six author-hosted titles below. Their cards show that desktop play is unavailable. You can still play them on the project’s web game site or choose **Deploy to TV** on a card.
 
 | Category | Games |
 | --- | --- |
@@ -62,7 +64,7 @@ Eight games in the list require an internet connection to play. Kart Rush and CF
 | Flight simulation | Struggle Bus |
 | Puzzles and brainteasers | Fish Loop |
 
-Choose **Game guide** for objectives, controls and the meaning of on-screen terms. These six games use the input devices supported by each author. The other 50 games support pureTV Wi-Fi controllers. Connect the controller to the same LAN as the computer and press its search button while the game is open. Choose **Back to games** to return to the catalog.
+When playing these six games on the web game site, choose **Game guide** for objectives, controls and the meaning of on-screen terms. Each game supports the input devices chosen by its author. To use a pureTV Wi-Fi controller with a compatible game in the manager, connect it to the same LAN as the computer and press its search button while the game is open. Choose **Back to games** to return to the catalog.
 
 To play from the project homepage, select **Play in browser** on a game card. The browser version supports keyboard play without installing the manager. [Browse web games](https://ecojust.github.io/pureTV/)
 

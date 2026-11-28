@@ -196,7 +196,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           window.__gameLibraryRequests.push({command, gameId:args.gameId});
           await holdOperation(command);
           const entry = window.__gameCatalog.games.find(game => game.id === args.gameId);
-          if (!entry || entry.kind !== 'project') throw new Error('游戏不可下载');
+          if (!entry?.files.some(file => file.path === `web/${entry.id}/tv.html` && file.bytes > 0)) throw new Error('游戏不可下载');
           entry.downloaded = true;
           if (command === 'local_game_base') return options.localGameBase || 'http://127.0.0.1:48731/games/';
           return;

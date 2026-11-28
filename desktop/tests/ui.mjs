@@ -61,8 +61,8 @@ async function check(name, run, state = snapshot(), options = {}) {
   p.on('pageerror', e => errors.push(e.message));
   try {
     if (state) await mockBridge(p, state, options);
-    else await p.route('https://apps.b14f.com/game-library/web/catalog.json', route => route.fulfill({
-      json:gameLibrary, headers:{'Access-Control-Allow-Origin':'*'}
+    else await p.route(url + '/game-library/web/catalog.json', route => route.fulfill({
+      json:gameLibrary
     }));
     await p.route('https://apps.b14f.com/game-library/web/**/thumb.*', route => route.fulfill({status:204}));
     await p.goto(url);
@@ -88,9 +88,8 @@ try {
     assert.equal(await act(p,'download-adb').isDisabled(), true);
     await nav(p,'apps'); assert.equal(await p.locator('input[data-select-package]').count(),0);
   }, null);
-  const gamesOrigin = 'https://ecojust.github.io';
   const gamePage = 'http://127.0.0.1:48731/games/tetris/tv.html';
-  const browserGamePage = gamesOrigin + '/pureTV/games/tetris/tv.html';
+  const browserGamePage = 'https://apps.b14f.com/game-library/web/tetris/tv.html';
   // The message exchange crosses origins even offline. The staged game site has its own gameplay checks.
   const gameFrameHtml = `<!doctype html><html><body><script>
     window.received = [];
@@ -228,6 +227,7 @@ try {
     assert.equal(await badge.count(), 0);
     await release(p, 'local_game_base', {error:'测试网络中断'});
     await dialog.getByText('测试网络中断', {exact:false}).waitFor();
+    assert.equal(await dialog.locator('iframe').getAttribute('src'), null);
     await dialog.locator('[data-close-game]').click();
     assert.equal(await badge.count(), 0);
 
@@ -270,59 +270,76 @@ try {
     await dialog.getByRole('status').getByText(/无线手柄服务不可用，仍可使用键盘游玩/).waitFor();
     assert.equal(await dialog.locator('iframe').isVisible(), true);
   }, withoutAdb(), {gameControllerError:'TCP 63485: bind failed'});
-  await check('games retain the Pages player and wireless controller for both online-only Android titles', async p => {
-    const ids = gameLibrary.games.filter(game => game.kind === 'online').map(game => game.id);
+  await check('games with online Android APKs download the web package and play locally with wireless controllers', async p => {
+    const ids = ['cf-transport-ship', 'kart-rush'];
     await nav(p, 'games');
-    assert.deepEqual([...ids].sort(), ['cf-transport-ship','kart-rush']);
     for (const id of ids) {
       const card = p.locator(`[data-play-game="${id}"]`);
       assert.equal(await card.locator('img').getAttribute('src'), `https://apps.b14f.com/game-library/web/${id}/thumb.png`);
       assert.equal(await card.locator('[data-downloaded-game]').count(), 0);
-      const source = gamesOrigin + '/pureTV/games/' + id + '/tv.html';
-      await p.route(source+'*', route=>route.fulfill({contentType:'text/html',body:gameFrameHtml}));
+      const source = `http://127.0.0.1:48731/games/${id}/tv.html`;
+      await p.route(source + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
       await card.click();
       const player = p.locator('dialog.game-player[open]');
-      assert.equal(await player.locator('iframe').getAttribute('src'),source+'?lang=zh');
-      const frame = p.frame({url:u=>u.href.startsWith(source)}) || await p.waitForEvent('framenavigated',{predicate:f=>f.url().startsWith(source)});
-      await frame.waitForFunction(()=>window.received?.some(state=>state.revision===0));
+      await player.locator('iframe[src]').waitFor();
+      assert.equal(await player.locator('iframe').getAttribute('src'), source + '?lang=zh');
+      const frame = p.frame({url:u => u.href.startsWith(source)}) || await p.waitForEvent('framenavigated', {predicate:f => f.url().startsWith(source)});
+      await frame.waitForFunction(() => window.received?.some(state => state.revision === 0));
       await player.locator('[data-close-game]').click();
+      assert.equal(await card.locator('[data-downloaded-game]').innerText(), '已下载');
     }
-    await p.waitForFunction(()=>window.__gameCommands.filter(item=>item.command==='stop_game_controllers').length===2);
+    await p.waitForFunction(() => window.__gameCommands.filter(item => item.command === 'stop_game_controllers').length === 2);
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests.filter(r => r.command === 'local_game_base')),
+      ids.map(gameId => ({command:'local_game_base', gameId})));
   }, withoutAdb());
-  await check('games hosted by the author open from their category with Chinese controls and return to the selected card', async p => {
-    const hosted = gameLibrary.games.filter(game => game.kind === 'hosted');
-    const categories = {
-      bandit: 'action', 'fish-loop': 'puzzle', 'noir-extreme': 'action',
-      'struggle-bus': 'flight', vespertine: 'action', 'daejeon-campus': 'action',
-    };
+  await check('game covers without a published web entry are disabled and keep the TV action', async p => {
+    // Include an old cached Android-only listing as well as a hosted title.
+    const ids = ['kart-rush', 'bandit'];
+    await p.evaluate(ids => {
+      for (const game of window.__gameCatalog.games.filter(game => ids.includes(game.id))) {
+        game.files = game.files.filter(file => file.path.includes('/thumb.'));
+      }
+    }, ids);
     await nav(p, 'games');
-    assert.equal(await p.locator('html').getAttribute('lang'), 'zh-CN');
-    const group = p.getByRole('combobox', {name:'游戏分类'});
-    for (const [id, category] of Object.entries(categories)) {
-      const game = hosted.find(item => item.id === id);
-      assert.ok(game, id);
-      const target = `${gamesOrigin}/pureTV/games/${id}/tv.html?lang=zh`;
-      await p.route(target, route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
-      await group.selectOption(category);
-      const card = p.getByRole('button', {name:game.zh, exact:true});
-      assert.equal(await card.getAttribute('data-play-game'), id);
-      await card.click();
-      const dialog = p.locator('dialog.game-player[open]');
-      await dialog.getByRole('heading', {name:game.zh, exact:true}).waitFor();
-      const frame = dialog.locator('iframe');
-      assert.equal(await frame.getAttribute('title'), game.zh);
-      assert.equal(await frame.getAttribute('src'), target);
-      await p.waitForFunction(() => window.__windowFullscreen && !document.querySelector('[data-frame-status]').textContent);
-      assert.equal(await dialog.getByRole('status').count(), 1);
-      assert.equal(await dialog.locator('[data-socket-status]').innerText(), game.controls.zh);
-      await dialog.locator('[data-close-game]').click();
-      await p.waitForFunction(() => !window.__windowFullscreen);
-      assert.equal(await group.inputValue(), category);
-      assert.equal(await card.evaluate(button => document.activeElement === button), true, id);
+    for (const id of ids) {
+      const cover = p.locator(`[data-play-game="${id}"]`);
+      await cover.waitFor();
+      assert.ok(await cover.isDisabled());
+      assert.match(await cover.locator('..').innerText(), /暂无可下载的游戏包/);
+      assert.ok(await p.locator(`[data-deploy-game="${id}"]`).isEnabled());
     }
-    const commands = await p.evaluate(() => window.__gameCommands.map(item => item.command));
-    assert.ok(!commands.includes('start_game_controllers'));
-    assert.deepEqual(await requests(p), [], 'Hosted games do not send device operations');
+    assert.equal(await p.locator('dialog.game-player[open]').count(), 0);
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests), [{command:'game_library_catalog'}]);
+  }, withoutAdb());
+  await check('hosted games with a published web entry use the local player and retain their controls', async p => {
+    const game = gameLibrary.games.find(game => game.id === 'bandit');
+    await p.evaluate(id => {
+      const catalog = window.__gameCatalog;
+      const target = catalog.games.find(game => game.id === id);
+      const source = catalog.games.find(game => game.id === 'tetris');
+      target.files = source.files.map(file => ({...file, path:file.path.replace('/tetris/', '/' + id + '/')}));
+    }, game.id);
+    const target = `http://127.0.0.1:48731/games/${game.id}/tv.html?lang=zh`;
+    await p.route(target, route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+    await nav(p, 'games');
+    const group = p.getByRole('combobox', {name:'游戏分类'});
+    await group.selectOption(game.category);
+    const card = p.getByRole('button', {name:game.zh, exact:true});
+    await card.click();
+    const dialog = p.locator('dialog.game-player[open]');
+    await dialog.locator('iframe[src]').waitFor();
+    assert.equal(await dialog.locator('iframe').getAttribute('src'), target);
+    await p.waitForFunction(() => window.__windowFullscreen && !document.querySelector('[data-frame-status]').textContent);
+    assert.equal(await dialog.locator('[data-socket-status]').innerText(), game.controls.zh);
+    await dialog.locator('[data-close-game]').click();
+    await p.waitForFunction(() => !window.__windowFullscreen);
+    assert.equal(await group.inputValue(), game.category);
+    assert.equal(await card.evaluate(button => document.activeElement === button), true);
+    assert.equal(await card.locator('[data-downloaded-game]').innerText(), '已下载');
+    assert.deepEqual(await p.evaluate(() => window.__gameCommands), []);
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests), [
+      {command:'game_library_catalog'}, {command:'local_game_base', gameId:game.id}
+    ]);
   }, withoutAdb());
   await check('game deployment can retry failed APK preparation and install the requested title', async p => {
     await nav(p, 'games');

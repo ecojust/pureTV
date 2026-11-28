@@ -18,7 +18,6 @@ use std::{
 use tauri::Manager;
 use tempfile::NamedTempFile;
 
-const REPOSITORY: &str = "https://raw.githubusercontent.com/ecojust/pureTV/master/game-library/";
 const SOURCE: &str = "https://apps.b14f.com/game-library/";
 const INDEX_LIMIT: u64 = 4 * 1024 * 1024;
 // Receipts for servers still exposing the web/ directory without a manifest.
@@ -70,6 +69,15 @@ pub(crate) struct Asset {
     pub(crate) path: String,
     bytes: u64,
     sha256: String,
+}
+
+impl Game {
+    fn has_web_entry(&self) -> bool {
+        let entry = format!("web/{}/tv.html", self.id);
+        self.files
+            .iter()
+            .any(|file| file.path == entry && file.bytes > 0)
+    }
 }
 
 fn safe_id(id: &str) -> bool {
@@ -289,7 +297,7 @@ fn revision_directory(directory: &Path, shared: &[Asset], game: &Game) -> Result
 
 fn with_download_status(directory: &Path, mut catalog: Catalog) -> Result<Catalog, String> {
     for game in &mut catalog.games {
-        if game.kind == "project" {
+        if game.has_web_entry() {
             let root = revision_directory(directory, &catalog.shared, game)?;
             // Downloads publish verified files by rename. Inspect their sizes
             // here; the player and APK builder verify hashes on actual use.
@@ -364,21 +372,12 @@ fn verified_copy(
     Ok(bytes == asset.bytes && format!("{:x}", sha.finalize()) == asset.sha256)
 }
 
-fn response(client: &Client, base: &str, file: &Asset) -> Result<Response, String> {
-    let get = |origin: &str| {
-        client
-            .get(format!("{origin}{}", file.path))
-            .header(reqwest::header::ACCEPT_ENCODING, "identity")
-            .send()
-            .map_err(|_| "无法连接游戏库服务器")
-    };
-    let response = get(base)?;
-    // The same verified web file may still be syncing to the static host.
-    let response = if base == SOURCE && response.status() == StatusCode::NOT_FOUND {
-        get(REPOSITORY)?
-    } else {
-        response
-    };
+fn response(client: &Client, file: &Asset) -> Result<Response, String> {
+    let response = client
+        .get(format!("{SOURCE}{}", file.path))
+        .header(reqwest::header::ACCEPT_ENCODING, "identity")
+        .send()
+        .map_err(|_| "无法连接游戏库服务器")?;
     if response.status() != StatusCode::OK {
         return Err(format!(
             "游戏文件下载失败 (HTTP {})",
@@ -415,8 +414,8 @@ fn install(
     mut fetch: impl FnMut(&Asset) -> Result<Box<dyn Read>, String>,
 ) -> Result<PathBuf, String> {
     let game = catalog.game(id)?;
-    if game.kind != "project" {
-        return Err("该游戏需要联网游玩".into());
+    if !game.has_web_entry() {
+        return Err("暂无可下载的游戏包".into());
     }
     let root = revision_directory(directory, &catalog.shared, game)?;
     for asset in catalog.shared.iter().chain(&game.files) {
@@ -457,7 +456,7 @@ pub(crate) fn ensure_with_catalog(
             Some(client) => client,
             None => connection.insert(client()?),
         };
-        Ok(Box::new(response(connection, SOURCE, asset)?))
+        Ok(Box::new(response(connection, asset)?))
     })
 }
 
@@ -522,6 +521,53 @@ mod tests {
             assert!(
                 Catalog::parse(&serde_json::to_vec(&catalog).unwrap()).is_err(),
                 "{path}"
+            );
+        }
+    }
+
+    #[test]
+    fn download_requires_a_web_entry_independent_of_apk_kind() {
+        let directory = tempfile::tempdir().unwrap();
+        let mut catalog =
+            from_listing(br#"<a href="kart-rush/">K</a><a href="fish-loop/">F</a>"#).unwrap();
+        catalog.shared.clear();
+        assert_eq!(catalog.games.len(), 2);
+        for game in &mut catalog.games {
+            let path = format!("web/{}/tv.html", game.id);
+            game.files = vec![Asset {
+                path,
+                bytes: 4,
+                sha256: format!("{:x}", Sha256::digest(b"game")),
+            }];
+        }
+        let catalog = with_download_status(directory.path(), catalog).unwrap();
+        let cancel = AtomicBool::new(false);
+        for game in &catalog.games {
+            assert_eq!(game.downloaded, Some(false));
+            install(directory.path(), &catalog, &game.id, &cancel, |_| {
+                Ok(Box::new(Cursor::new(b"game")))
+            })
+            .unwrap();
+        }
+        let mut catalog = with_download_status(directory.path(), catalog).unwrap();
+        for game in &mut catalog.games {
+            assert_eq!(game.downloaded, Some(true));
+            // Previous online/hosted catalog revisions listed only the cover.
+            game.files[0].path = format!("web/{}/thumb.png", game.id);
+        }
+        let legacy = with_download_status(
+            directory.path(),
+            Catalog::parse(&serde_json::to_vec(&catalog).unwrap()).unwrap(),
+        )
+        .unwrap();
+        for game in &legacy.games {
+            assert_eq!(game.downloaded, None);
+            assert_eq!(
+                install(directory.path(), &legacy, &game.id, &cancel, |_| panic!(
+                    "cover-only download"
+                ))
+                .unwrap_err(),
+                "暂无可下载的游戏包"
             );
         }
     }

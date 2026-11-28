@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>const pureTVPCConfig={"alias": null, "gameKit": false};</script><script src="../web-host.js"></script><script src="../pc-bridge.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- not black-translucent: in portrait iOS then sizes the app a status bar short and leaves an empty band at the bottom -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Kart Rush">
+  <meta name="theme-color" content="#1b1f3a">
+  <title>Kart Rush</title>
+
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tv.css">
+
+  <script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "Loading…": "正在加载…",
+    "Turbo": "涡轮",
+    "KART": "卡丁车",
+    "kart": "卡丁车",
+    "Kart": "卡丁车",
+    "RUSH": "冲刺",
+    "Rush": "冲刺",
+    "Kart Rush": "卡丁车冲刺",
+    "GRAND PRIX": "大奖赛",
+    "Grand Prix": "大奖赛",
+    "CHOOSE A TRACK": "选择赛道",
+    "CHOOSE YOUR DRIVER": "选择车手",
+    "GAS": "油门",
+    "gas": "油门",
+    "Gas": "油门",
+    "Brake / Reverse": "刹车 / 倒车",
+    "Steer": "转向",
+    "STEER": "转向",
+    "steer": "转向",
+    "STEERING": "转向",
+    "Use item": "使用道具",
+    "Pause": "暂停",
+    "pause": "暂停",
+    "Mute": "静音",
+    "START RACE": "开始比赛",
+    "RACE!": "开始比赛",
+    "DIFFICULTY": "难度",
+    "easy": "简单",
+    "Easy": "简单",
+    "normal": "普通",
+    "Normal": "普通",
+    "hard": "困难",
+    "Hard": "困难",
+    "PRO": "专业",
+    "Speed": "速度",
+    "speed": "速度",
+    "Weight": "重量",
+    "banana": "香蕉皮",
+    "mushroom": "加速蘑菇",
+    "STAR": "无敌星",
+    "star": "无敌星",
+    "tip": "提示",
+    "GO!": "出发！",
+    "GO": "出发！",
+    "go": "出发！",
+    "FINAL LAP!": "最后一圈！",
+    "WRONG WAY": "逆行",
+    "FINISH": "终点",
+    "finish": "终点",
+    "FINISH!": "冲线！",
+    "YOU": "你",
+    "PLACE": "名次",
+    "place": "名次",
+    "LAP": "圈数",
+    "lap": "圈数",
+    "TIME": "用时",
+    "time": "用时",
+    "RACE AGAIN": "再赛一次",
+    "MENU": "主菜单",
+    "menu": "主菜单",
+    "RESUME": "继续",
+    "RESTART": "重新比赛",
+    "restart": "重新比赛",
+    "PAUSED": "已暂停",
+    "paused": "已暂停",
+    "START": "开始",
+    "Start": "开始",
+    "DRIFT": "漂移",
+    "BACK": "返回",
+    "back": "返回",
+    "BEST": "最佳",
+    "best": "最佳",
+    "Best": "最佳",
+    "BEST LAP": "最佳圈速",
+    "START GRAND PRIX": "开始大奖赛",
+    "Single Race": "单场比赛",
+    "HELLO, RACER!": "车手，你好！",
+    "YOUR NAME": "你的名字",
+    "Name": "名字",
+    "name": "名字",
+    "Keyboard": "键盘",
+    "Let's race": "开始比赛",
+    "TRACKS": "赛道",
+    "tracks": "赛道",
+    "TRACK": "赛道",
+    "track": "赛道",
+    "DRIVER": "车手",
+    "driver": "车手",
+    "RACER": "车手",
+    "Racer": "车手",
+    "Body": "车身",
+    "body": "车身",
+    "Paint": "涂装",
+    "paint": "涂装",
+    "DONE": "完成",
+    "done": "完成",
+    "NEXT RACE": "下一场",
+    "NEXT TRACK": "下一条赛道",
+    "NEW CUP": "新锦标赛",
+    "CONTROLS": "操作",
+    "controls": "操作",
+    "Controls": "操作",
+    "HOW TO PLAY": "玩法说明",
+    "SETTINGS": "设置",
+    "Settings": "设置",
+    "Close settings": "关闭设置",
+    "Close how to play": "关闭玩法说明",
+    "RIVALS": "对手",
+    "AI ITEMS": "电脑对手道具",
+    "Aggressive": "激进",
+    "Classic": "经典",
+    "BRAKE": "刹车",
+    "brake": "刹车",
+    "BRK": "刹车",
+    "REV": "倒车",
+    "YOU WIN": "你赢了！",
+    "YOU WIN!": "你赢了！",
+    "WINNER": "冠军",
+    "SOUND": "声音",
+    "MUSIC": "音乐",
+    "music": "音乐",
+    "EFFECTS": "音效",
+    "GORE SOUNDS": "夸张音效",
+    "HOLD PHONE": "持机方向",
+    "FLIP SCREEN": "翻转屏幕",
+    "RESET": "重置",
+    "reset": "重置",
+    "Reset kart": "复位赛车",
+    "Reset lap time": "重置圈速",
+    "LAPS": "圈数",
+    "POINTS": "积分",
+    "SELF DRIVE": "自动驾驶",
+    "DEBUG": "调试",
+    "debug": "调试",
+    "START DEBUG RACE": "开始调试比赛",
+    "FINAL TABLE": "最终排名",
+    "YOUR KART": "你的赛车",
+    "Sideways": "横屏",
+    "Upright": "竖屏",
+    "Upright uses Easy difficulty. Hold ↑ / W to accelerate in every view.": "竖屏使用简单难度。任何视角均可按住 ↑ / W 加速。",
+    "Low": "低",
+    "Mid": "中",
+    "mid": "中",
+    "Medium": "中",
+    "medium": "中",
+    "High": "高",
+    "Full": "满",
+    "On": "开",
+    "on": "开",
+    "Off": "关",
+    "off": "关",
+    "Items": "道具",
+    "ITEMS": "道具",
+    "items": "道具",
+    "ITEM BOX": "道具箱",
+    "ITEM": "道具",
+    "item": "道具",
+    "BOOST PAD": "加速带",
+    "Hold a turn, let go to boost": "持续转弯，松开即可加速",
+    "Speed boost": "速度提升",
+    "Three speed boosts": "三次加速",
+    "Free speed": "免费加速",
+    "Spin out": "失控打转",
+    "Hold to go": "按住前进",
+    "Slow down, hold to reverse": "减速，按住可倒车",
+    "Tap it": "轻触使用",
+    "Tap, or slide GAS onto it": "轻触，或从油门滑到这里",
+    "Drive through for an item": "穿过即可取得道具",
+    "Drop it, they slide out": "放下后可让后车打滑",
+    "Drop it, blasts anyone close": "放下后可炸飞附近车手",
+    "Hunts the leader": "追踪领先车手",
+    "Homes in on the kart ahead": "追踪前方赛车",
+    "Bounces twice, then pops": "弹跳两次后爆开",
+    "Blocks one hit": "抵挡一次攻击",
+    "Flies you ahead": "快速飞向前方",
+    "Invincible and fast": "无敌且加速",
+    "Throw the other way": "向相反方向投掷",
+    "GAS as it shows 1": "倒计时为 1 时踩油门",
+    "Arrows or joystick": "方向键或摇杆",
+    "Left and right buttons": "左右按钮",
+    "Joystick": "摇杆",
+    "joystick": "摇杆",
+    "Buttons": "按钮",
+    "buttons": "按钮",
+    "Steer left": "向左转",
+    "Steer right": "向右转",
+    "Steering joystick": "转向摇杆",
+    "JET": "喷射！",
+    "JET!": "喷射！",
+    "BOMB": "炸弹",
+    "bomb": "炸弹",
+    "GOO": "黏液",
+    "SHIELD": "护盾",
+    "shield": "护盾",
+    "BLUE": "蓝色冰球",
+    "blue": "蓝色冰球",
+    "BLUE PUCK!": "蓝色冰球",
+    "GREEN": "绿色",
+    "green": "绿色",
+    "RED": "红色",
+    "red": "红色",
+    "ROCKET": "火箭",
+    "TRIPLE NITRO": "三连氮气",
+    "NITRO": "氮气",
+    "SUPER": "超级",
+    "SUPER!": "超级加速",
+    "BOOST!": "加速",
+    "Boost": "加速",
+    "OUCH!": "撞到了！",
+    "BLOCKED!": "已格挡！",
+    "TOO EARLY!": "太早了！",
+    "ROCKET START!": "火箭起步！",
+    "RECORD": "纪录",
+    "record": "纪录",
+    "RACE": "比赛",
+    "race": "比赛",
+    "Race": "比赛",
+    "START AT": "起跑位置",
+    "GO TO": "前往",
+    "NOW": "现在",
+    "TILT": "倾斜",
+    "Auto": "自动",
+    "Head": "视角",
+    "Left": "左",
+    "LEFT": "左",
+    "left": "左",
+    "Right": "右",
+    "RIGHT": "右",
+    "right": "右",
+    "Fire": "发射",
+    "Light": "轻",
+    "Lap": "圈数",
+    "Total": "总计",
+    "REC": "录制",
+    "Hit": "命中",
+    "hit": "命中",
+    "Slide": "滑行",
+    "slide": "滑行",
+    "Half": "一半",
+    "St": "名",
+    "st": "名",
+    "nd": "名",
+    "rd": "名",
+    "Th": "名",
+    "th": "名",
+    "Type your name": "请输入名字",
+    "Canyon Run": "峡谷疾驰",
+    "Green Valley": "绿谷",
+    "Spiral Run": "螺旋赛道",
+    "Frost Peak": "冰峰",
+    "Harbour Run": "港口赛道",
+    "Temple Run": "神庙赛道",
+    "Moon Base": "月球基地",
+    "Test Lab": "测试场",
+    "All engine, no manners": "引擎够劲，脾气也大",
+    "Born at full throttle": "天生就是全油门",
+    "Half the car, twice the fun": "车身小一半，乐趣翻一倍",
+    "Held together by rope and optimism": "靠绳子和乐观精神拼起的赛车",
+    "It does not go round things": "遇到障碍也勇往直前",
+    "Low, loud and always late on the brakes": "底盘低，声浪大，刹车总是慢半拍",
+    "Night-sky racer": "穿梭夜空的车手",
+    "Nobody has seen the engine": "谁也没见过它的引擎",
+    "Nobody knows what is under the hood": "没人知道引擎盖下藏了什么",
+    "Small, round and very pleased": "小巧圆润，自得其乐",
+    "Smallest kart in the paddock": "整座车场最小的卡丁车",
+    "The one that started it": "一切的起点",
+    "The red panda": "小熊猫",
+    "The rookie": "新手",
+    "The shark": "鲨鱼",
+    "The veteran": "老将",
+    "Back on the road": "重返赛道",
+    "Grid": "发车阵列",
+    "Chicane": "连续急弯",
+    "Landing": "落地区",
+    "Straight": "直道",
+    "Sweeper": "高速弯",
+    "Corner 90": "直角弯",
+    "Deep Shaft": "深井",
+    "Eye pop": "弹眼音效",
+    "Eye splat": "飞溅音效",
+    "Parked": "已停放",
+    "Team": "车队",
+    "Blast": "爆破",
+    "blast": "爆破",
+    "Bolt": "闪电",
+    "bolt": "闪电",
+    "Bones": "白骨",
+    "Bubble": "泡泡",
+    "Buggy": "越野车",
+    "Cherry": "樱红",
+    "Chrome": "镀铬银",
+    "Coal": "煤黑",
+    "Comet": "彗星",
+    "Formula": "方程式",
+    "Hot Rod": "改装车",
+    "Junker": "旧铁皮",
+    "Lime": "青柠",
+    "Midnight": "午夜",
+    "Mint": "薄荷",
+    "Monster": "巨兽",
+    "Sunset": "日落",
+    "Mini": "初级",
+    "★ NEW RECORD": "★ 新纪录",
+    "★ NEW BEST LAP": "★ 最佳圈速",
+    "★ BEST GRAND PRIX": "★ 大奖赛最佳成绩",
+    "racing…": "比赛中…",
+    "1 lap": "1 圈",
+    "3 laps": "3 圈",
+    "No record yet": "暂无纪录",
+    "Press START to race": "按 START 开始比赛",
+    "★ GO! ★": "★ 出发！"
+  },
+  patterns: [
+    [/^(\d+) races$/i, "$1 场比赛"],
+    [/^RACE (\d+) OF (\d+)$/i, "第 $1 场，共 $2 场"],
+    [/^Record ([\d:.]+) · best lap ([\d:.]+)$/i, "纪录 $1 · 最佳圈速 $2"],
+    [/^Record ([\d:.]+)$/i, "纪录 $1"],
+    [/^Hi, (.+)!$/i, "你好，$1！"],
+    [/^([\d.]+) m · (\d+) laps?$/i, "$1 米 · $2 圈"],
+    [/^(\d+) laps?$/i, "$1 圈"],
+    [/^(.+)'s kart$/i, "$1 的赛车"],
+    [/^(.+) WINS!?$/i, "$1 获胜！"],
+    [/^Best Grand Prix: (\d+)(?:st|nd|rd|th)$/i, "大奖赛最佳：第 $1 名"],
+    [/^(\d+)(?:st|nd|rd|th)$/i, "第 $1 名"],
+    [/^LAP ([\d\/ ]+)$/i, "圈数 $1"],
+    [/^BEST ([\d:.]+)$/i, "最佳 $1"],
+  ],
+});
+
+</script>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js",
+      "cannon-es": "./vendor/cannon-es.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- #app is always laid out landscape; in portrait it is rotated 90deg -->
+  <div id="vp-probe" aria-hidden="true"></div>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <!-- ===== HUD (non-interactive) ===== -->
+    <div id="hud">
+      <canvas id="minimap"></canvas>
+      <div id="mirror-frame"></div>
+      <div id="lapbox"><span class="label">LAP</span><span id="lap">1/3</span></div>
+
+      <div id="hud-top">
+        <div class="pill"><span class="label">TIME</span><span id="time">0:00.00</span></div>
+        <div class="pill"><span class="label">BEST</span><span id="best">--:--.--</span></div>
+      </div>
+
+      <div id="place" hidden><span id="place-num">6</span><span id="place-suffix">th</span><small id="place-of">/6</small></div>
+
+      <div id="gore-vig" aria-hidden="true"></div><div id="gore-flash" aria-hidden="true"></div>
+      <div id="message"></div>
+      <div id="split"></div>
+      <div id="tip"></div>
+      <div id="wrongway" hidden>WRONG WAY</div>
+      <div id="warn" hidden>!</div>
+      <div id="perf" hidden></div>
+      <div id="countdown"></div>
+
+      <div id="speedo">
+        <span id="speed">0</span><small>km/h</small>
+        <div id="drift-bar"><div id="drift-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- ===== Touch controls ===== -->
+    <div id="controls">
+      <!-- Vertical view: touch the left / right half to steer -->
+      <div id="vsteer"><div id="vl"></div><div id="vr"></div></div>
+      <div id="steer">
+        <button id="btn-left" class="ctl steer-btn" aria-label="Steer left">&#9664;</button>
+        <button id="btn-right" class="ctl steer-btn" aria-label="Steer right">&#9654;</button>
+      </div>
+      <!-- Joystick steering (Settings): shown instead of the arrows -->
+      <div id="joystick" aria-label="Steering joystick"><div id="stick-base"><div id="stick-knob"></div></div></div>
+
+      <button id="btn-item" class="ctl" aria-label="Use item" data-item=""></button>
+      <button id="btn-item-b" class="ctl" aria-label="Throw the other way" hidden></button>
+
+      <div id="pedals">
+        <button id="btn-brake" class="ctl pedal" aria-label="Brake / Reverse">BRAKE<small>REV</small></button>
+        <button id="btn-gas" class="ctl pedal" aria-label="Gas">GAS</button>
+      </div>
+
+      <button id="btn-reset" aria-label="Reset kart">&#x21BB;</button>
+      <button id="btn-pause" class="round-btn" aria-label="Pause"></button>
+    </div>
+
+    <div id="cine-title" aria-hidden="true"></div>
+
+    <!-- ===== Menu / results overlay ===== -->
+    <div id="overlay">
+      <!-- Until main.js has finished booting (all runtime dependencies are bundled locally): just this, not the unlaid-out lobby -->
+      <div id="boot"><h1>KART<span>RUSH</span></h1><p>Loading&hellip;</p></div>
+      <!-- Lobby: header (profile, settings), logo + START on the left, the open middle frames the player's kart
+           (lobby camera, updateCamera), RACE SETUP on the right (each card opens #pick-screen) -->
+      <div id="menu-screen" class="screen lobby">
+        <div class="lobby-top">
+          <button id="hello-edit" class="chip" hidden></button>
+          <button class="chip btn-help" aria-label="How to play">?</button>
+          <button class="chip btn-settings"><i data-icon="gear"></i>SETTINGS</button>
+          <button class="chip btn-debug" hidden>DEBUG</button>
+        </div>
+        <div class="lobby-main">
+          <div class="lobby-cta">
+            <h1>KART<span>RUSH</span></h1>
+            <div class="cta-go">
+              <div id="mode-pick" class="mode-pick">
+                <button class="mode-btn" data-mode="race">Single Race</button>
+                <button class="mode-btn" data-mode="cup">Grand Prix</button>
+              </div>
+              <p id="mode-pill" class="mode-info"></p>
+              <button id="btn-start" class="btn-primary btn-start">START RACE</button>
+            </div>
+          </div>
+          <div class="lobby-stage"></div>
+          <!-- Three equal tiles. Grand Prix swaps the first for its tracks, in the same spot at the same size: nothing on this screen moves between modes -->
+          <div class="setup">
+            <button class="setup-tile" data-pick="track"><small>TRACK</small><span class="pick-art"></span><b></b></button>
+            <div id="setup-cup" class="setup-tile cup-tile" hidden><small>TRACKS</small><span id="cup-maps" class="pick-art cup-maps"></span><b></b></div>
+            <button class="setup-tile" data-pick="driver"><small>DRIVER</small><span class="pick-art"></span><b></b></button>
+            <button class="setup-tile" data-pick="kart"><small>KART</small><span class="pick-art"></span><b></b></button>
+          </div>
+        </div>
+        <p id="build"></p>
+      </div>
+
+      <!-- First launch (or EDIT from the title): the name, saved per device (kartrush.profile) -->
+      <div id="hello-screen" class="screen screen-col" hidden>
+        <div class="pick-title">HELLO, RACER!</div>
+        <!-- readonly + inputmode none: the iOS keyboard would open upright while the game is turned sideways
+             (portrait lock), so typing goes through the in-game keyboard #kbd (built by buildKeyboard) -->
+        <form id="hello-form" class="hello-form" autocomplete="off" novalidate>
+          <label class="field"><span class="setting-label">YOUR NAME</span>
+            <input id="hello-name" type="text" maxlength="12" readonly inputmode="none" placeholder="Name"></label>
+          <button id="btn-hello" type="button" class="btn-primary btn-go" aria-label="Let's race"><i data-icon="go"></i></button>
+        </form>
+        <p id="hello-error" class="hello-error"></p>
+        <div id="kbd" class="kbd" aria-label="Keyboard"></div>
+      </div>
+
+      <!-- Track / driver / kart picker (filled by openPicker). Driver + paint: split stage (.staged): the live 3D
+           kart on the open left (#pick-stage: drag to turn it), the cards on the right -->
+      <div id="pick-screen" class="screen screen-col" hidden>
+        <div id="pick-stage" class="pick-stage">
+          <div class="stage-label"><b id="stage-name"></b><small id="stage-tag"></small></div>
+        </div>
+        <!-- Track picker: the selected track big (a 2D map for now; .tp-view is the slot for the 3D overview later) -->
+        <div id="track-preview" class="track-preview">
+          <div id="tp-view" class="tp-view"></div>
+          <div class="tp-info"><b id="tp-name"></b><small id="tp-meta"></small><em id="tp-record"></em></div>
+        </div>
+        <div class="pick-panel">
+          <div id="pick-title" class="pick-title"></div>
+          <div id="pick-tabs" class="mode-pick pick-tabs" hidden>
+            <button class="mode-btn" data-tab="body">Body</button>
+            <button class="mode-btn" data-tab="paint">Paint</button>
+          </div>
+          <div id="pick-list" class="pick-list"></div>
+          <div class="pick-actions">
+            <button id="btn-pick-done" class="btn-secondary">DONE</button>
+            <button id="btn-pick-go" class="btn-primary">RACE!</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- After the race -->
+      <div id="results-screen" class="screen" hidden>
+        <div class="side">
+          <div id="res-place" class="big-place"></div>
+          <div class="stats">
+            <div><span id="res-time-label">TIME</span><b id="res-time"></b></div>
+            <div><span id="res-lap-label">BEST LAP</span><b id="res-lap"></b></div>
+          </div>
+          <p id="res-record" class="record"></p>
+          <div class="btn-row">
+            <button id="btn-again" class="btn-primary">RACE AGAIN</button>
+            <button id="btn-next" class="btn-secondary">NEXT TRACK</button>
+            <button id="btn-menu" class="btn-secondary">MENU</button>
+          </div>
+        </div>
+        <div class="card"><table id="standings" class="standings"></table></div>
+      </div>
+      <!-- Paused -->
+      <div id="pause-screen" class="screen" hidden>
+        <div class="side">
+          <div class="paused">PAUSED</div>
+          <button id="btn-resume" class="btn-primary">RESUME</button>
+          <div class="btn-row">
+            <button id="btn-restart" class="btn-secondary">RESTART</button>
+            <button id="btn-quit" class="btn-secondary">MENU</button>
+          </div>
+          <div class="pause-tools">
+            <button class="btn-small btn-help" aria-label="How to play">?</button>
+            <button class="btn-small btn-settings" aria-label="Settings"><i data-icon="gear"></i></button>
+            <button class="btn-small btn-debug" hidden>DEBUG</button>
+          </div>
+        </div>
+      </div>
+      <!-- How to play (from the title or pause screen) -->
+      <div id="help-screen" class="screen screen-col" hidden>
+        <div class="help-head">
+          <div class="pick-title">HOW TO PLAY</div>
+          <button id="btn-help-back" class="btn-close" aria-label="Close how to play"><i data-icon="close"></i></button>
+        </div>
+        <div id="help-tabs" class="track-pick help-tabs">
+          <button class="trk on" data-tab="controls">Controls</button>
+          <button class="trk" data-tab="items">Items</button>
+        </div>
+        <div id="help-card" class="card help-card show-controls">
+          <div class="help-col help-controls">
+            <h3>CONTROLS</h3>
+            <div class="help-grid g3">
+              <div class="tile ls"><span class="hi hb hb-gas">GAS</span><b>GAS</b><small>Hold to go</small></div><div class="tile ls"><span class="hi hb hb-brake">BRK</span><b>BRAKE</b><small>Slow down, hold to reverse</small></div><div class="tile"><span class="hi hb hb-steer"><i data-icon="arrows"></i></span><b>STEER</b><small class="ls">Arrows or joystick</small><small class="up">Left and right buttons</small></div><div class="tile"><span class="hi hb hb-item">?</span><b>ITEM</b><small class="ls">Tap, or slide GAS onto it</small><small class="up">Tap it</small></div><div class="tile"><span class="hi hb hb-reset">&#x21BB;</span><b>RESET</b><small>Back on the road</small></div><div class="tile"><span class="hi hbar"><i></i></span><b>DRIFT</b><small>Hold a turn, let go to boost</small></div><div class="tile ls"><span class="hi hb hb-one">1</span><b>ROCKET</b><small>GAS as it shows 1</small></div><div class="tile"><span class="hi hpad">&#9654;&#9654;</span><b>BOOST PAD</b><small>Free speed</small></div><div class="tile"><span class="hi hbox"></span><b>ITEM BOX</b><small>Drive through for an item</small></div>
+            </div>
+          </div>
+          <div class="help-col help-items">
+            <h3>ITEMS</h3>
+            <div class="help-grid g4">
+              <div class="tile"><span class="hi hs hs-green"></span><b>GREEN</b><small>Bounces twice, then pops</small></div><div class="tile"><span class="hi hs hs-red"></span><b>RED</b><small>Homes in on the kart ahead</small></div><div class="tile"><span class="hi hs hs-blue"></span><b>BLUE</b><small>Hunts the leader</small></div><div class="tile"><span class="hi"><i data-icon="banana"></i></span><b>GOO</b><small>Drop it, they slide out</small></div><div class="tile"><span class="hi"><i data-icon="mushroom"></i></span><b>NITRO</b><small>Speed boost</small></div><div class="tile"><span class="hi hi-triple"><i data-icon="mushroom"></i><em>x3</em></span><b>TRIPLE NITRO</b><small>Three speed boosts</small></div><div class="tile"><span class="hi"><i data-icon="shield"></i></span><b>SHIELD</b><small>Blocks one hit</small></div><div class="tile"><span class="hi"><i data-icon="star"></i></span><b>SUPER</b><small>Invincible and fast</small></div><div class="tile"><span class="hi hs hs-bullet"></span><b>JET</b><small>Flies you ahead</small></div><div class="tile"><span class="hi hs hs-bomb"></span><b>BOMB</b><small>Drop it, blasts anyone close</small></div>
+            </div>
+          </div>
+          <!-- AI Built Games listing badge (their rule: an image link in the page's HTML, as given, not added by JS) -->
+          
+        </div>
+      </div>
+      <!-- Debug panel (LAN http server only): track, rivals, start spot, items, effects -->
+      <div id="debug-screen" class="screen screen-col" hidden>
+        <div class="pick-title">DEBUG</div>
+        <div id="debug-card" class="card settings-card dbg"></div>
+        <div class="btn-row"><button id="btn-debug-start" class="btn-primary">START DEBUG RACE</button><button id="btn-debug-back" class="btn-secondary">BACK</button></div>
+      </div>
+      <!-- Settings (from the title or pause screen; saved per device) -->
+      <div id="settings-screen" class="screen screen-col" hidden>
+        <div class="settings-head">
+          <div class="pick-title">SETTINGS</div>
+          <button id="btn-settings-back" class="btn-close" aria-label="Close settings"><i data-icon="close"></i></button>
+        </div>
+        <div class="card settings-card">
+          <div class="set-col">
+            <section class="set-group">
+              <h3>CONTROLS</h3>
+              <!-- the upright view always uses the buttons, and only the sideways view can flip: hidden there -->
+              <div class="set-row sideways-only">
+                <span class="setting-label">STEERING</span>
+                <div id="steer-pick" class="track-pick">
+                  <button class="trk" data-steer="buttons"><i data-icon="arrows"></i>Buttons</button>
+                  <button class="trk" data-steer="joystick"><i data-icon="joystick"></i>Joystick</button>
+                </div>
+              </div>
+              <div class="set-row">
+                <span class="setting-label">HOLD PHONE</span>
+                <div id="view-pick" class="track-pick">
+                  <button class="trk" data-view="0">Sideways</button>
+                  <button class="trk" data-view="1">Upright</button>
+                </div>
+              </div>
+              <div class="set-row sideways-only">
+                <span class="setting-label">FLIP SCREEN</span>
+                <div id="flip-pick" class="track-pick">
+                  <button class="trk" data-flip="0">Off</button>
+                  <button class="trk" data-flip="1">On</button>
+                </div>
+              </div>
+            </section>
+          </div>
+          <div class="set-col">
+            <section class="set-group">
+              <h3>SOUND</h3>
+              <div class="set-row">
+                <span class="setting-label">MUSIC</span>
+                <div class="track-pick vol-pick" data-bus="music"><button class="trk" data-vol="0">Off</button><button class="trk" data-vol="0.35">Low</button><button class="trk" data-vol="0.65">Mid</button><button class="trk" data-vol="1">Full</button></div>
+              </div>
+              <div class="set-row">
+                <span class="setting-label">EFFECTS</span>
+                <div class="track-pick vol-pick" data-bus="sfx"><button class="trk" data-vol="0">Off</button><button class="trk" data-vol="0.35">Low</button><button class="trk" data-vol="0.65">Mid</button><button class="trk" data-vol="1">Full</button></div>
+              </div>
+            </section>
+            <section class="set-group">
+              <h3>RACE</h3>
+              <div class="set-row">
+                <span class="setting-label">DIFFICULTY</span>
+                <div id="diff-pick" class="track-pick">
+                  <button class="trk" data-diff="easy">Easy</button>
+                  <button class="trk" data-diff="medium">Medium</button>
+                  <button class="trk" data-diff="hard">Hard</button>
+                </div>
+              </div>
+              <p class="set-note upright-only">Upright uses Easy difficulty. Hold ↑ / W to accelerate in every view.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div id="confetti" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

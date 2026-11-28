@@ -24,7 +24,8 @@ def receipt(root, path):
 
 def build(root):
     catalog = {game['id']: game for game in read_json(TOOLS / 'catalog.json')}
-    online = set(read_json(TOOLS / 'online-only.json'))
+    # These games use their original signed APK for TV deployment.
+    prebuilt_apks = set(read_json(TOOLS / 'online-only.json'))
     hosted = read_json(TOOLS / 'hosted-games.json')
     shared = [receipt(root, path) for path in sorted((root / 'web').iterdir()) if path.is_file() and path.name != 'catalog.json']
     groups = []
@@ -46,7 +47,9 @@ def build(root):
             entry['category'] = category
             files = list((root / 'web' / ident).rglob('*'))
             if ident in catalog:
-                entry['kind'] = 'online' if ident in online else 'project'
+                if not (root / 'web' / ident / 'tv.html').is_file():
+                    raise ValueError(f'Missing desktop entry: {ident}')
+                entry['kind'] = 'online' if ident in prebuilt_apks else 'project'
                 if entry['kind'] == 'online':
                     entry['apk'] = {'fileName': game['url'].rsplit('/', 1)[1],
                                     'bytes': game['bytes'], 'sha256': game['sha256']}

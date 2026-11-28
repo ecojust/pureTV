@@ -24,7 +24,6 @@ def revision():
 
 def build(output, cache):
     catalog = json.loads((TOOLS / 'catalog.json').read_text(encoding='utf-8'))
-    online_only = set(json.loads((TOOLS / 'online-only.json').read_text(encoding='utf-8')))
     rev = revision()
     if output.exists():
         raise FileExistsError(f'Choose a new staging directory: {output}')
@@ -35,8 +34,6 @@ def build(output, cache):
         pending = stage / 'library'
         for game in catalog:
             ident = game['id']
-            if ident in online_only:
-                continue
             name = game['url'].rsplit('/', 1)[-1]
             if not re.fullmatch(r'[a-z0-9-]+', ident) or not re.fullmatch(r'[a-zA-Z0-9_.-]+\.apk', name):
                 raise ValueError(f'Invalid game file: {ident}/{name}')

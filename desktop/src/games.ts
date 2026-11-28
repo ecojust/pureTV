@@ -5,18 +5,20 @@ import {desktop, type McpInfo} from './bridge';
 import {locale, message, t} from './i18n';
 import {WebGamePackaging, type GameKind, type GameDeployment} from './web-game-packaging';
 
-const gamesBase = 'https://ecojust.github.io/pureTV/games/';
 const localOrigins = new Set([48731, 48732, 48733, 48734].map(port => 'http://127.0.0.1:' + port));
 const twoPlayerGames = new Set(['tank', 'super-mario', 'jackal', 'tetris', 'jewel', 'used-car-racing']);
-const libraryBase = 'https://apps.b14f.com/game-library/';
-const repositoryBase = 'https://raw.githubusercontent.com/ecojust/pureTV/master/game-library/';
+const libraryWeb = 'https://apps.b14f.com/game-library/web/';
 
 type Group = {id:string; zh:string; en:string};
 type Asset = {path:string; bytes:number; sha256:string};
 type Game = Group & {category:string; kind:GameKind; files:Asset[]; downloaded?:boolean; controls?:{zh:string; en:string}};
 type Catalog = {version:number; groups:Group[]; shared:Asset[]; games:Game[]};
 
-function projectRevision(catalog:Catalog, game:Game):string {
+function hasWebPackage(game:Game):boolean {
+  return game.files.some(file => file.path === `web/${game.id}/tv.html` && file.bytes > 0);
+}
+
+function packageRevision(catalog:Catalog, game:Game):string {
   return JSON.stringify([catalog.shared, game.files]);
 }
 
@@ -24,25 +26,22 @@ function validCatalog(catalog:Catalog):boolean {
   const named = (entry:Group) => entry && typeof entry.id === 'string' && /^[a-z0-9-]+$/.test(entry.id) &&
     typeof entry.zh === 'string' && typeof entry.en === 'string';
   return catalog?.version === 1 && Array.isArray(catalog.groups) && catalog.groups.every(named) &&
-    Array.isArray(catalog.games) && catalog.games.every(game => named(game) &&
+    Array.isArray(catalog.shared) && Array.isArray(catalog.games) && catalog.games.every(game => named(game) &&
+      Array.isArray(game.files) && game.files.every(file => file && typeof file.path === 'string' && Number.isSafeInteger(file.bytes)) &&
       catalog.groups.some(group => group.id === game.category) &&
       ['project', 'online', 'hosted'].includes(game.kind) && (!game.controls ||
         typeof game.controls.zh === 'string' && typeof game.controls.en === 'string'));
 }
 
-async function browserCatalog():Promise<{catalog:Catalog; base:string}> {
-  for (const base of [libraryBase, repositoryBase]) {
-    const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 12000);
-    try {
-      const response = await fetch(base + 'web/catalog.json', {cache:'no-cache', signal:controller.signal});
-      if (response.ok) {
-        const catalog:Catalog = await response.json();
-        if (validCatalog(catalog)) return {catalog, base};
-      }
-    } catch { /* The repository also serves the published catalog. */ }
-    finally { window.clearTimeout(timer); }
-  }
+async function browserCatalog():Promise<Catalog> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 12000);
+  try {
+    // Vite proxies this catalog from apps.b14f for browser previews (cross-origin reads are disabled there).
+    const response = await fetch('/game-library/web/catalog.json', {cache:'no-cache', signal:controller.signal});
+    if (response.ok) return await response.json();
+  } catch { /* Show the same retry message for network and parsing errors. */ }
+  finally { window.clearTimeout(timer); }
   throw new Error(t('无法读取游戏列表，请检查网络后重试。'));
 }
 
@@ -81,7 +80,6 @@ export class Games {
   private active?:ActiveGame;
   private readyTimeout?:number;
   private catalog?:Catalog;
-  private coverBase = libraryBase;
   private loading = false;
   private catalogError = '';
   private completedDuringRefresh = new Map<string,string>();
@@ -191,15 +189,14 @@ export class Games {
     this.loading = true;
     this.catalogError = '';
     try {
-      const result = desktop ? {catalog:await invoke<Catalog>('game_library_catalog'), base:libraryBase} : await browserCatalog();
-      if (!validCatalog(result.catalog)) throw new Error(t('游戏列表格式无效。'));
+      const catalog = desktop ? await invoke<Catalog>('game_library_catalog') : await browserCatalog();
+      if (!validCatalog(catalog)) throw new Error(t('游戏列表格式无效。'));
       // A download may finish after the native command snapshots its cache status.
-      for (const game of result.catalog.games) {
+      for (const game of catalog.games) {
         const completed = this.completedDuringRefresh.get(game.id);
-        if (completed && completed === projectRevision(result.catalog, game)) game.downloaded = true;
+        if (completed && completed === packageRevision(catalog, game)) game.downloaded = true;
       }
-      this.catalog = result.catalog;
-      this.coverBase = result.base;
+      this.catalog = catalog;
       if (!this.catalog.groups.some(group => group.id === this.group)) this.group = '';
     } catch (error) {
       this.catalogError = error instanceof Error ? error.message : String(error);
@@ -218,7 +215,7 @@ export class Games {
     if (this.loading) this.completedDuringRefresh.set(game.id, revision);
     const catalog = this.catalog;
     const current = catalog?.games.find(entry => entry.id === game.id);
-    if (!catalog || current?.kind !== 'project' || projectRevision(catalog, current) !== revision || current.downloaded) return;
+    if (!catalog || !current || !hasWebPackage(current) || packageRevision(catalog, current) !== revision || current.downloaded) return;
     current.downloaded = true;
     const cover = document.querySelector<HTMLButtonElement>(`[data-play-game="${CSS.escape(game.id)}"]`);
     cover?.querySelector('.web-game-image')?.insertAdjacentHTML('beforeend', this.downloadedBadge(current));
@@ -247,12 +244,14 @@ export class Games {
       const cover = game.kind === 'hosted' ? 'thumb.webp' : 'thumb.png';
       const imagePath = encodeURIComponent(game.id) + '/' + cover;
       const name = escape(gameName(game));
-      const downloaded = desktop && game.kind === 'project' && game.downloaded;
+      const playable = hasWebPackage(game);
+      const downloaded = desktop && playable && game.downloaded;
+      const availability = playable ? '' : `<small class="web-game-unavailable" id="unavailable-${id}">${t('暂无可下载的游戏包')}</small>`;
       const deploy = desktop ? `<div class="web-game-actions"><button type="button" class="primary" data-deploy-game="${id}"
         aria-label="${name} · ${t('部署到电视')}">${t('部署到电视')}</button></div>` : '';
-      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${id}" aria-label="${name}"${downloaded ? ` aria-describedby="downloaded-${id}"` : ''}>
-        <span class="web-game-image"><img loading="lazy" src="${escape(this.coverBase + 'web/' + imagePath)}" alt="">${downloaded ? this.downloadedBadge(game) : ''}</span>
-        <strong>${name}</strong></button>${deploy}</article>`;
+      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${id}" aria-label="${name}"${playable ? '' : ` disabled aria-describedby="unavailable-${id}"`}${downloaded ? ` aria-describedby="downloaded-${id}"` : ''}>
+        <span class="web-game-image"><img loading="lazy" src="${escape(libraryWeb + imagePath)}" alt="">${downloaded ? this.downloadedBadge(game) : ''}</span>
+        <strong>${name}</strong></button>${availability}${deploy}</article>`;
     };
     return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${listed.length}</span>${reload}</div>${error}<div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${listed.map(card).join('')}</div>`;
   }
@@ -263,7 +262,7 @@ export class Games {
     const catalog = this.catalog;
     const game = catalog?.games.find(entry => entry.id === id);
     if (!desktop || !catalog || !game || this.active) return;
-    const revision = projectRevision(catalog, game);
+    const revision = packageRevision(catalog, game);
     this.packaging.open(id, gameName(game), game.kind, opener, () => this.markDownloaded(game, revision));
   }
 
@@ -344,14 +343,13 @@ export class Games {
 
   open(id:string):void {
     const game = this.catalog?.games.find(entry => entry.id === id);
-    if (!game || this.active) return;
-    const local = desktop && game.kind === 'project';
-    const loading = local && !game.downloaded ? t('正在准备本地游戏，首次使用需要下载…') : t('正在加载游戏…');
+    if (!game || this.active || !hasWebPackage(game)) return;
+    const loading = desktop && !game.downloaded ? t('正在准备本地游戏，首次使用需要下载…') : t('正在加载游戏…');
     const hint = game.controls ? game.controls[gameLanguage()] : desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。');
     const active = this.createPlayer(id, gameName(game), loading, hint);
     const frame = active.frame;
-    if (local) {
-      const revision = projectRevision(this.catalog!, game);
+    if (desktop) {
+      const revision = packageRevision(this.catalog!, game);
       void invoke<string>('local_game_base', {gameId:id}).then(base => {
         const url = new URL(base);
         if (!localOrigins.has(url.origin) || !url.pathname.startsWith('/games/') || !url.pathname.endsWith('/')) {
@@ -369,12 +367,12 @@ export class Games {
         }
       });
     } else {
-      active.origin = new URL(gamesBase).origin;
-      frame.src = gameUrl(gamesBase, id);
+      active.origin = new URL(libraryWeb).origin;
+      frame.src = gameUrl(libraryWeb, id);
+      this.readyTimeout = window.setTimeout(() => {
+        this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
+      }, 25000);
     }
-    if (!local) this.readyTimeout = window.setTimeout(() => {
-      this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
-    }, 25000);
     if (desktop && game.kind !== 'hosted') {
       this.socketWork = this.socketWork.then(() => this.startControllers(active)).catch(() => {
         if (this.active === active) this.status('[data-socket-status]', t('无线手柄服务不可用，仍可使用键盘游玩。'));

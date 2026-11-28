@@ -10,8 +10,8 @@ from pathlib import PurePosixPath
 from host import ALIASES
 from hosted_games import hosted_cover, hosted_games
 from launcher import matching_file
-from prepare_standalone import ROOT, source_revision, tracked_file
-from stage_web_games import write_player_assets, write_player_cover
+from prepare_standalone import source_revision, tracked_file
+from stage_web_games import write_player_assets
 
 
 def adapt_android_entry(slug, target):
@@ -41,7 +41,6 @@ def adapt_android_entry(slug, target):
 def stage(apks, output):
     source = Path(__file__).resolve().parent
     catalog = json.loads((source / 'catalog.json').read_text(encoding='utf-8'))
-    online_only = set(json.loads((source / 'online-only.json').read_text(encoding='utf-8')))
     revision = source_revision()
     output.mkdir(parents=True, exist_ok=True)
     for name in ('pc-bridge.js', 'web-host.js', 'web-host.css'):
@@ -58,9 +57,6 @@ def stage(apks, output):
         target = output / slug
         target.mkdir()
         directory = 'joystick-games/' + slug
-        if slug in online_only:
-            write_player_cover(directory, target)
-            continue
         filename = game['url'].rsplit('/', 1)[1]
         apk = apks / slug / filename
         if not matching_file(apk, game):

@@ -4,7 +4,7 @@
 
 下载：[0.9.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.9.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-在「游戏 → 线上游戏」可浏览网站游戏库。点击卡片在电脑上游玩。支持离线的游戏会在首次游玩或部署时自动下载并校验，封面右下角的「已下载」表示可以离线使用。升级管理器会保留下载。卡片上的「部署到电视」会准备 APK 并安装到已连接并授权的电视。六款由作者托管的游戏和《Kart Rush》《CF 运输船》需要联网游玩，后两款首次部署时从原发布地址获取电视安装包。[使用说明](../docs/guide/README.md#在电脑上玩)
+**0.9.0 之后的源码版**统一从游戏库下载后游玩。在「游戏 → 线上游戏」中点击可玩的封面，管理器会从 `apps.b14f.com/game-library/web/` 下载游戏文件，校验后从本机启动。封面右下角出现「已下载」后可离线重玩，升级管理器会保留下载。尚未提供桌面游戏包的卡片会提示暂不可玩。「部署到电视」可准备 APK 并安装到已授权的电视。《Kart Rush》和《CF 运输船》首次部署时会另行下载正式电视安装包。[使用说明](../docs/guide/README.md#在电脑上玩)
 
 0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.9.0**，旧客户端不会自动切换下载地址。
 
@@ -146,7 +146,7 @@ python3 tools/pc-games/web_index.py /tmp/puretv-site
 python3 -m http.server --directory /tmp/puretv-site 8080
 ```
 
-发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。`tools/pc-games/catalog.json` 和 `hosted-games.json` 提供 56 张卡片及来源。原生客户端区分两款联网项目、六款作者游戏及 48 款可下载游戏。浏览器站点和原生客户端分别加载各自的入口。[线上游戏目录](https://ecojust.github.io/pureTV/)
+发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。`tools/pc-games/catalog.json` 和 `hosted-games.json` 提供 56 张卡片及来源。桌面客户端根据 `apps.b14f.com` 游戏清单中的 `web/<id>/tv.html` 判断能否下载游玩。桌面界面的浏览器预览可从同一游戏库预览已提供的游戏。[线上游戏目录](https://ecojust.github.io/pureTV/)
 
 ## 论坛
 
