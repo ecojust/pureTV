@@ -1,0 +1,38 @@
+/* Keep the opening screens centered when they fit and scrollable when the
+   manager toolbar or browser zoom leaves less vertical space. */
+html #boot, .ow-hud .ow-attract {
+  align-items: flex-start;
+  overflow-y: auto;
+}
+#boot .boot-inner, .ow-hud .ow-att-inner {
+  margin-block: auto;
+}
+
+@media (max-height: 400px) {
+  #boot .boot-bar, #boot .boot-tip { margin-top: 3vh; }
+  #boot .boot-foot { margin-top: 2vh; }
+  .ow-hud .ow-att-jobsel, .ow-hud .ow-att-hint { margin-top: 2vh; }
+  .ow-hud .ow-att-title { margin-block: 1vh; }
+  .ow-hud .ow-att-card { padding-block: 1vh; }
+  .ow-hud .ow-card-cta { margin-top: 1vh; }
+  .ow-menu .ow-row { padding-block: 1vh; }
+  .ow-menu .rule, .ow-menu .ow-btns, .ow-menu .hint { margin-top: 2vh; }
+  .ow-hud .ow-menu-inner {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+}
+
+/* The web host shows connection status outside the game menu. */
+.ow-hud .ow-att-inner {
+  width: min(850px, calc(100% - 24px));
+  margin-right: 0;
+}
+.ow-hud .ow-menu-inner {
+  max-width: calc(100% - 24px);
+  margin-right: 0;
+}
+
+@media (max-width: 640px) {
+  .ow-hud .ow-menu-inner { left: 12px; }
+}

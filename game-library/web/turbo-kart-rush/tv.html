@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en"><head><script>const pureTVPCConfig={"alias": null, "gameKit": false};</script><script src="../web-host.js"></script><script src="../pc-bridge.js"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Turbo Kart Rush</title><link rel="stylesheet" href="game.css"><script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "TURBO": "涡轮",
+    "Turbo": "涡轮",
+    "KART": "卡丁车",
+    "Kart": "卡丁车",
+    "RUSH": "冲刺",
+    "Rush": "冲刺",
+    "Turbo Kart Rush": "涡轮卡丁车冲刺",
+    "TURBO KART RUSH": "涡轮卡丁车冲刺",
+    "Kart Rush": "卡丁车冲刺",
+    "ARCADE GRAND PRIX": "街机大奖赛",
+    "GRAND PRIX": "大奖赛",
+    "Grand Prix": "大奖赛",
+    "PRESS ENTER / CLICK TO START": "按回车或点击开始",
+    "CONTINUE →": "继续 →",
+    "← BACK": "← 返回",
+    "STEP 1 / 2": "第 1 步，共 2 步",
+    "STEP 2 / 2": "第 2 步，共 2 步",
+    "CHOOSE YOUR RACER": "选择车手",
+    "PICK A CIRCUIT": "选择赛道",
+    "Throttle": "油门",
+    "Brake / Reverse": "刹车 / 倒车",
+    "Steer": "转向",
+    "Hop · Drift": "跳跃 / 漂移",
+    "Use item": "使用道具",
+    "Use item (hold BRAKE to throw back)": "使用道具（按住刹车可向后投掷）",
+    "Look back": "向后看",
+    "Pause": "暂停",
+    "Mute": "静音",
+    "v1.0 · Three.js · 100% procedural · gamepad supported": "v1.0 · Three.js · 全程序生成 · 支持手柄",
+    "START RACE": "开始比赛",
+    "DIFFICULTY": "难度",
+    "difficulty": "难度",
+    "EASY": "简单",
+    "easy": "简单",
+    "NORMAL": "普通",
+    "normal": "普通",
+    "Normal": "普通",
+    "HARD": "困难",
+    "hard": "困难",
+    "ROOKIE": "新手",
+    "PRO": "专业",
+    "EXPERT": "专家",
+    "Relaxed rivals, generous rubber-banding.": "对手节奏轻松，落后时较易追上。",
+    "The classic Grand Prix challenge.": "经典的大奖赛挑战。",
+    "Ruthless AI, near-perfect lines, no mercy.": "对手紧追不舍，走线精准，毫不留情。",
+    "SPD": "速度",
+    "Speed": "速度",
+    "speed": "速度",
+    "ACC": "加速",
+    "ACCEL": "加速",
+    "HND": "操控",
+    "handling": "操控",
+    "WGT": "重量",
+    "Weight": "重量",
+    "weight": "重量",
+    "MT": "迷你加速",
+    "BANANA": "香蕉皮",
+    "banana": "香蕉皮",
+    "BANANA ×3": "三连香蕉皮",
+    "GREEN SHELL": "绿龟壳",
+    "GREEN ×3": "三连绿壳",
+    "RED SHELL": "红龟壳",
+    "RED ×3": "三连红壳",
+    "BLUE SHELL": "蓝龟壳",
+    "BOB-OMB": "炸弹",
+    "MUSHROOM": "加速蘑菇",
+    "mushroom": "加速蘑菇",
+    "MUSHROOM ×3": "三连蘑菇",
+    "GOLDEN": "黄金蘑菇",
+    "golden": "黄金蘑菇",
+    "LIGHTNING": "闪电",
+    "lightning": "闪电",
+    "STAR": "无敌星",
+    "star": "无敌星",
+    "TIP": "提示",
+    "A star makes you invincible and destroys any hazard you touch.": "拾取星星即可无敌，还能撞毁碰到的障碍。",
+    "Boost pads (glowing chevrons) give a free +45% speed burst. Line them up.": "对准发光箭头冲上加速带，车速可瞬间提升 45%。",
+    "Heavy karts bump light karts around. Pick your weight class wisely.": "重型车能撞开轻型车，挑选车重时要多留心。",
+    "Hold BRAKE while using a shell to throw it backwards.": "按住刹车使用龟壳，即可向后投掷。",
+    "Hop off jump crests for a small landing boost.": "在坡顶起跳，落地时可短暂加速。",
+    "Item odds depend on your place. Trailing racers get stars, lightning and blue shells.": "排名会影响道具概率。落后的车手有机会得到无敌星、闪电和蓝龟壳。",
+    "Press M to mute the audio at any time.": "随时按 M 静音。",
+    "Press Q to look behind you. Check what is coming before dropping a banana.": "按 Q 回头看，扔香蕉皮前先确认后方来车。",
+    "Staying on the road matters: off-road cuts your top speed almost in half.": "尽量留在赛道上。驶出赛道后极速几乎减半。",
+    "Tap the throttle just as the countdown hits 1 for a rocket start. Hold it too early and you will spin out.": "倒计时到 1 时踩下油门即可火箭起步，太早踩会打滑。",
+    "Use a mushroom on the long straight, or to recover after a hit.": "在长直道或受击后使用蘑菇，加速追回时间。",
+    "No tracks are available yet.": "暂无可用赛道。",
+    "NOW LOADING": "正在加载…",
+    "LOADING": "正在加载…",
+    "loading": "正在加载…",
+    "DNF": "未完赛",
+    "GO!": "出发！",
+    "GO": "出发！",
+    "FINAL LAP!": "最后一圈！",
+    "WRONG WAY": "逆行",
+    "FINISH": "终点",
+    "you": "你",
+    "YOU": "你",
+    "PLACE": "名次",
+    "LAP": "圈数",
+    "TIME": "用时",
+    "RACE AGAIN": "再赛一次",
+    "CHANGE TRACK": "更换赛道",
+    "MAIN MENU": "主菜单",
+    "MENU": "主菜单",
+    "menu": "主菜单",
+    "RESUME": "继续",
+    "RESTART": "重新比赛",
+    "RESTART RACE": "重新比赛",
+    "QUIT TO MENU": "回到主菜单",
+    "RACE COMPLETE": "比赛结束",
+    "RACE PAUSED": "已暂停",
+    "PAUSED": "已暂停",
+    "paused": "已暂停",
+    "VICTORY!": "胜利！",
+    "Podium finish. Champagne is on ice.": "站上领奖台，香槟已经备好！",
+    "Rough race. Time for revenge.": "这场不太顺，下一场扳回来吧。",
+    "Solid run. The podium is within reach.": "跑得不错，领奖台就在前方。",
+    "Untouchable. The crowd goes wild.": "遥遥领先，观众为你沸腾！",
+    "ESC / P  resume   ·   ↑↓  navigate   ·   ENTER  select": "ESC / P 继续 · ↑↓ 选择 · 回车确认",
+    "Dune Drift": "沙丘漂移",
+    "Neon Nexus": "霓虹枢纽",
+    "Frostbite Falls": "冰瀑赛道",
+    "FROSTBITE FALLS": "冰瀑赛道",
+    "Sunny Circuit": "晴空赛道",
+    "Sunset sweepers, a canyon run between towering sandstone walls and two hairpins that punish greed.": "沿夕阳下的长弯穿过砂岩峡谷，切勿在两个发卡弯贪快。",
+    "Rolling green hills, a long start straight and one tricky hairpin. The perfect warm-up.": "起伏的绿丘、漫长的起跑直道和一个刁钻发卡弯，正适合热身。",
+    "A plunging descent onto a frozen lake causeway with nothing but ice between you and the drop.": "俯冲驶上冰湖堤道，轮胎与断崖之间只有冰面。",
+    "Three hairpins, a rooftop jump and a flat-out neon straight under a violet sky. Experts only.": "紫色天空下的三处发卡弯、屋顶飞跃与霓虹直道，只等高手挑战。",
+    "Big ears, bigger mini-turbos.": "耳朵大，漂移加速更猛。",
+    "Blink and she is already two corners ahead.": "一眨眼，她已领先两个弯道。",
+    "Charges every drift like a thunderstorm.": "每一次漂移都蓄满雷霆之力。",
+    "Cool as the deep end, smooth as a swell.": "像深海一样冷静，过弯如波浪般流畅。",
+    "Eighteen wheels of attitude in a four-wheel kart.": "开着四轮小车，气势堪比重型卡车。",
+    "Slow to wake up. Impossible to shove.": "起步虽慢，一旦上路便推不动。",
+    "Sugar-rush handling. Corners are her candy.": "过弯像吃糖，越弯越甜。",
+    "The all-rounder. Every lap is a highlight reel.": "全能型车手，每一圈都值得回放。",
+    "FAILED TO START": "启动失败",
+    "RELOAD": "重新加载",
+    "WEBGL2 REQUIRED": "需要 WebGL 2",
+    "Turbo Kart Rush needs a browser with WebGL 2 and hardware acceleration enabled.": "此游戏需要支持 WebGL 2 且开启硬件加速的浏览器。",
+    "Try the latest Chrome, Edge, Firefox or Safari, and make sure GPU acceleration is switched on.": "请更新浏览器并开启 GPU 硬件加速。",
+    "Something went wrong while starting the game. Open the developer console for details, then reload.": "游戏启动异常。请查看开发者控制台，随后重新加载。",
+    "Could not build the race. Check the console for details.": "无法创建比赛，请查看控制台。",
+    "🔇 MUTED": "🔇 已静音",
+    "DRIFT  •  BOOST  •  WIN": "漂移 · 加速 · 夺冠",
+    "Sunny": "晴空",
+    "SUNNY": "晴空",
+    "Weight class": "重量级别",
+    "START": "开始",
+    "start": "开始",
+    "Start": "开始",
+    "DRIFT": "漂移",
+    "drift": "漂移",
+    "BACK": "返回",
+    "Name": "名字",
+    "Keyboard": "键盘",
+    "TRACKS": "赛道",
+    "tracks": "赛道",
+    "TRACK": "赛道",
+    "driver": "车手",
+    "RACER": "车手",
+    "Body": "车身",
+    "body": "车身",
+    "BRAKE": "刹车",
+    "REV": "倒车",
+    "MUSIC": "音乐",
+    "LAPS": "圈数",
+    "Low": "低",
+    "Mid": "中",
+    "Medium": "中",
+    "medium": "中",
+    "High": "高",
+    "Full": "满",
+    "On": "开",
+    "on": "开",
+    "Off": "关",
+    "Items": "道具",
+    "ITEM": "道具",
+    "Joystick": "摇杆",
+    "Buttons": "按钮",
+    "BOMB": "炸弹",
+    "BLUE": "蓝色冰球",
+    "blue": "蓝色冰球",
+    "GREEN": "绿色",
+    "green": "绿色",
+    "RED": "红色",
+    "red": "红色",
+    "NITRO": "氮气",
+    "Boost": "加速",
+    "boost": "加速",
+    "RACE": "比赛",
+    "race": "比赛",
+    "NOW": "现在",
+    "MINI": "初级",
+    "RESULTS": "比赛成绩",
+    "results": "比赛成绩",
+    "Auto": "自动",
+    "auto": "自动",
+    "Hand": "惯用手",
+    "Head": "视角",
+    "Left": "左",
+    "LEFT": "左",
+    "Right": "右",
+    "RIGHT": "右",
+    "Fire": "发射",
+    "Light": "轻",
+    "light": "轻",
+    "Lap": "圈数",
+    "Total": "总计",
+    "REC": "录制",
+    "Hit": "命中",
+    "Half": "一半",
+    "St": "名",
+    "st": "名",
+    "nd": "名",
+    "rd": "名",
+    "Th": "名",
+    "th": "名",
+    "START  ·  FINISH": "起点 · 终点",
+    "Grid": "发车阵列",
+    "grid": "发车阵列",
+    "Bolt": "闪电",
+    "bolt": "闪电",
+    "Chrome": "镀铬银",
+    "Sunset": "日落",
+    "Mini": "初级",
+    "LIGHT": "轻型",
+    "MEDIUM": "中型",
+    "HEAVY": "重型",
+    "LIGHTWEIGHT": "轻量级",
+    "HEAVYWEIGHT": "重量级",
+    "MIDDLEWEIGHT": "中量级",
+    "SUNNY CIRCUIT": "晴空赛道",
+    "NEON NEXUS": "霓虹枢纽",
+    "DUNE DRIFT": "沙丘漂移",
+    "Zippy Nova": "疾风诺瓦",
+    "ZIPPY NOVA": "疾风诺瓦",
+    "Pixel Pop": "像素波普",
+    "PIXEL POP": "像素波普",
+    "Fennec Flash": "闪电耳廓狐",
+    "FENNEC FLASH": "闪电耳廓狐",
+    "Max Vortex": "旋风马克斯",
+    "MAX VORTEX": "旋风马克斯",
+    "Juno Bolt": "雷霆朱诺",
+    "JUNO BOLT": "雷霆朱诺",
+    "Kai Tidewater": "潮汐凯",
+    "KAI TIDEWATER": "潮汐凯",
+    "Boulder Bram": "磐石布拉姆",
+    "BOULDER BRAM": "磐石布拉姆",
+    "Big Rig Rosa": "重卡罗莎",
+    "BIG RIG ROSA": "重卡罗莎"
+  },
+  patterns: [
+    [/^(\d+) LAPS?\s*·\s*(.*?)\s*·\s*NEON$/i, "$1 圈 · $2 · 霓虹"],
+    [/^(\d+) LAPS?\s*·\s*(.*?)\s*·\s*GRASSLAND$/i, "$1 圈 · $2 · 草原"],
+    [/^(\d+) LAPS?\s*·\s*(.*?)\s*·\s*SNOW$/i, "$1 圈 · $2 · 冰雪"],
+    [/^(\d+) LAPS?\s*·\s*(.*?)\s*·\s*DESERT$/i, "$1 圈 · $2 · 沙漠"],
+    [/^(\d+)(?:st|nd|rd|th) place$/i, "第 $1 名"],
+    [/^(\d+) LAPS?\s*·\s*(.*?)\s*·\s*(.+)$/i, "$1 圈 · $2 · $3"],
+    [/^(\d+) LAPS?$/i, "$1 圈"],
+    [/^(\d+)(?:st|nd|rd|th)$/i, "第 $1 名"],
+  ],
+});
+
+</script>
+</head><body><div id="app"></div><script src="game.js"></script></body></html>
