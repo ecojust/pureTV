@@ -147,7 +147,7 @@ python3 tools/pc-games/web_index.py /tmp/puretv-site
 python3 -m http.server --directory /tmp/puretv-site 8080
 ```
 
-发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。管理器在构建时读取 `tools/pc-games/catalog.json` 中的 50 款手柄游戏，按 `tools/readme-app-games.json` 排列，再将 `tools/pc-games/hosted-games.json` 中的六款作者在线游戏加入各自分类。[线上游戏目录](https://ecojust.github.io/pureTV/)
+发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。`tools/pc-games/catalog.json` 和 `hosted-games.json` 提供 56 张卡片及来源。原生客户端按 `online-only.json` 分出两款联网项目和六款作者游戏，将其余 48 款的本地项目及正式签名资料装入应用资源库。浏览器站点和原生客户端分别加载各自的入口。[线上游戏目录](https://ecojust.github.io/pureTV/)
 
 ## 论坛
 
