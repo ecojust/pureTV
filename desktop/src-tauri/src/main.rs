@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app_logos;
+mod android_game_host;
 mod app_store;
 mod client_install;
 mod client_updates;

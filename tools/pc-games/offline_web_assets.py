@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import shutil
 from zipfile import ZipFile
+from pathlib import PurePosixPath
 
 from hosted_games import hosted_cover, hosted_games
 from launcher import matching_file
@@ -40,6 +41,19 @@ def stage(apks, output):
             raise ValueError(f'{slug}: missing or incorrect signed APK in {apks}')
         pinned = {**game, 'url': game['url'].replace('/refs/heads/master/', '/' + revision + '/')}
         with ZipFile(apk) as archive:
+            for member in archive.infolist():
+                if member.is_dir() or not member.filename.startswith('assets/'):
+                    continue
+                name = member.filename.removeprefix('assets/')
+                path = PurePosixPath(name)
+                if path.is_absolute() or '..' in path.parts or '\\' in name:
+                    raise ValueError(f'Invalid asset path: {name}')
+                if name == 'assets-index.json':
+                    continue
+                destination = target / ('android-entry.html' if name == 'tv.html' else name)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                with archive.open(member) as source, destination.open('xb') as output_file:
+                    shutil.copyfileobj(source, output_file)
             write_player_assets(archive, pinned, directory, target)
 
 

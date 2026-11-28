@@ -19,6 +19,9 @@ out, manager_pid, metadata = sys.argv[1:]
 out = Path(out)
 game = json.loads(Path(metadata).read_text())
 title, package = game["name"], game["packageName"]
+shared_host = os.environ.get("PURETV_QA_SHARED_HOST") == "1"
+if shared_host:
+    package = "com.puretv.g" + hashlib.sha256(b"neon-rush").hexdigest()[:10]
 endpoint = "127.0.0.1:15555"
 install_message = "游戏已安装。可前往启动器，将游戏添加到电视主屏幕。"
 report = {"game": title}
@@ -372,7 +375,16 @@ def deploy():
     assert re.fullmatch(r"package:/data/app/[^\n]+/base\.apk", path), path
     installed = subprocess.check_output(["adb", "-s", endpoint, "exec-out", "cat", path[8:]], timeout=45)
     digest = hashlib.sha256(installed).hexdigest()
-    assert digest == game["sha256"] and len(installed) == game["apkBytes"]
+    if shared_host:
+        path = out / "installed-tail.apk"
+        path.write_bytes(installed)
+        try:
+            verifier = Path(os.environ["ANDROID_HOME"]) / "build-tools/34.0.0/apksigner"
+            assert "APK Signature Scheme v2): true" in command(verifier, "verify", "--verbose", path)
+        finally:
+            path.unlink()
+    else:
+        assert digest == game["sha256"] and len(installed) == game["apkBytes"]
     component = adb(endpoint, "shell", "cmd", "package", "resolve-activity", "--brief", "-a",
                     "android.intent.action.MAIN", "-c", "android.intent.category.LEANBACK_LAUNCHER", package).splitlines()[-1]
     assert component.startswith(package + "/"), component
@@ -387,7 +399,7 @@ def deploy():
     click(button("前往启动器"))
     see("电视启动器")
     record("installed", {"package": package, "user": 0, "size": len(installed), "sha256": digest,
-                         "matchesPublishedApk": True, "launcherGuidance": install_message,
+                         "matchesPublishedApk": not shared_host, "verifiedLocalSignature": shared_host, "launcherGuidance": install_message,
                          "displayedSteps": steps, "launcherPageOpened": True, "leanbackComponent": component, "foregroundAfter5s": True})
 
 

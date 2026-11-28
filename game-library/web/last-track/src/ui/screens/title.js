@@ -1,0 +1,64 @@
+// Title screen over the live 3D showroom: logo, Continue / New Game / Hero Slice / Settings.
+import { h, attachMenuKeys, fmtMoney, confirmChoice } from '../dom.js';
+import { icon } from '../icons.js';
+import { getCar } from '../../data/cars.js';
+import { GAME_TRACKS } from '../../data/tracks/index.js';
+import { STORY } from '../../data/story.js';
+import { VERSION } from '../../version.js';
+
+/** Pure: one-line save summary for the Continue button. */
+export function saveSummary(save) {
+  if (!save) return '';
+  const car = getCar(save.carId);
+  const passed = GAME_TRACKS.filter((t) => (save.passedTracks || []).includes(t.id)).length;
+  return `${fmtMoney(save.cash)} · ${car ? car.name : 'No car'} · ${passed}/${GAME_TRACKS.length} passed`;
+}
+
+function menuButton(label, sub, onClick, cls = '', key = '') {
+  const b = h('button.btn' + (cls ? '.' + cls.split(' ').join('.') : ''), { type: 'button', onclick: onClick },
+    h('span.lbl', label, sub ? h('span.sub', sub) : null), key ? h('span.k', key) : null, h('span.arrow', icon('play', { size: 16 })));
+  return b;
+}
+
+export function createTitleScreen({ game, flow, openSettings }) {
+  const cont = menuButton('CONTINUE', '', () => flow.transition('garage'), 'btn-primary btn-continue');
+  const ng = menuButton('NEW GAME', 'Pick a car, start with $5,000', async () => {
+    if (game.hasSavedGame() && !(await confirmChoice('Your current save will be erased.'))) return;
+    game.newGame();
+    flow.transition('carSelect');
+  }, 'btn-new');
+  const setBtn = menuButton('SETTINGS', 'Graphics · audio · controls', () => openSettings(), 'btn-settings');
+  const menu = h('nav.menu', { 'aria-label': 'Main menu' }, cont, ng, setBtn);
+  const keys = h('p.keys',
+    ...[['WASD', 'drive'], ['SPACE', 'fire'], ['E', 'weapon'], ['1-4', 'select'], ['SHIFT', 'drift'], ['C', 'camera'], ['P', 'pause'], ['M', 'mute']].map(([k, t]) => h('span', h('kbd', k), t)),
+    h('span', h('kbd', '↑↓←→'), 'menus'), h('span', h('kbd', 'GAMEPAD'), 'supported'));
+  const el = h('section.screen.screen-title.screen-3d',
+    h('div.ver-badge', { title: 'Game version' }, h('i'), h('span', `v${VERSION}`)),
+    h('div.title-main',
+      h('div.eyebrow', 'Vehicular combat league'),
+      h('h1.logo', { 'aria-label': 'Last Track' }, h('span', 'LAST'), h('span.alt', 'TRACK')),
+      h('p.tag', 'Race for money. Race for your life.'),
+      h('p.story-premise', { style: { maxWidth: '40rem', margin: '0.6rem auto 0', lineHeight: '1.5', fontSize: '0.95rem', opacity: '0.85' } }, STORY.premise),
+      menu),
+    h('div.title-foot', keys, h('span.ver', 'three.js')),
+    h('footer.credits',
+      h('span', '© 2026 Alexander Uspenskiy · MIT'),
+      h('a', { href: 'mailto:alexander.uspensky@gmail.com' }, 'alexander.uspensky@gmail.com'),
+      h('a', { href: 'https://github.com/alexander-uspenskiy/LastTrack', target: '_blank', rel: 'noopener noreferrer' }, 'github.com/alexander-uspenskiy/LastTrack')));
+  let detach = null;
+  return {
+    el,
+    show() {
+      detach = attachMenuKeys(el);
+      const saved = game.hasSavedGame();
+      cont.disabled = !saved;
+      cont.classList.toggle('btn-primary', saved);
+      ng.classList.toggle('btn-primary', !saved);
+      const lbl = cont.querySelector('.lbl');
+      lbl.querySelector('.sub')?.remove();
+      lbl.append(h('span.sub', saved ? saveSummary(game.getSave()) : 'No saved game yet'));
+      if (!saved) setTimeout(() => ng.focus({ preventScroll: true }), 80);
+    },
+    hide() { detach?.(); detach = null; },
+  };
+}

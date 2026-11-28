@@ -61,7 +61,7 @@ async function check(name, run, state = snapshot(), options = {}) {
   p.on('pageerror', e => errors.push(e.message));
   try {
     if (state) await mockBridge(p, state, options);
-    else await p.route('https://apps.b14f.com/game-library/catalog.json', route => route.fulfill({
+    else await p.route('https://apps.b14f.com/game-library/web/catalog.json', route => route.fulfill({
       json:gameLibrary, headers:{'Access-Control-Allow-Origin':'*'}
     }));
     await p.route('https://apps.b14f.com/game-library/web/**/thumb.*', route => route.fulfill({status:204}));

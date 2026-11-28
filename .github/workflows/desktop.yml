@@ -6,6 +6,7 @@ on:
     tags: ['desktop-v*']
     paths:
       - 'desktop/**'
+      - 'game-library/web/catalog.json'
       - 'tools/pc-games/catalog.json'
       - 'tools/pc-games/online-only.json'
       - 'tools/pc-games/hosted-games.json'
@@ -19,6 +20,7 @@ on:
   pull_request:
     paths:
       - 'desktop/**'
+      - 'game-library/web/catalog.json'
       - 'tools/pc-games/catalog.json'
       - 'tools/pc-games/online-only.json'
       - 'tools/pc-games/hosted-games.json'
@@ -72,6 +74,7 @@ jobs:
       BUILD_TARGET: ${{ matrix.target }}
       BUNDLE_FORMAT: ${{ matrix.bundle }}
       CARGO_TERM_COLOR: always
+      OPENSSL_NO_ASM: '1'
       PYTHONUTF8: '1'
       MACOSX_DEPLOYMENT_TARGET: '11.0'
     steps:

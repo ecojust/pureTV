@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>NERD OF DUTY — A Fintech NerdCon Game</title>
+    <!-- Inline data-URI favicon: Void Black square, Loot Gold ledger book with a
+         dark spine. Self-contained so it never 404s. -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Crect%20width='16'%20height='16'%20fill='%23050505'/%3E%3Crect%20x='4'%20y='3'%20width='8'%20height='10'%20rx='1'%20fill='%23FFD700'/%3E%3Crect%20x='7.3'%20y='3'%20width='1.4'%20height='10'%20fill='%23050505'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root { color-scheme: dark; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; overflow: hidden; background: #050505; }
+      body {
+        font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+        -webkit-font-smoothing: antialiased;
+      }
+      #game { display: block; width: 100vw; height: 100vh; touch-action: none; cursor: none; }
+
+      /* ================================================================ boot
+         PRE-ENGINE LOADING SCREEN.
+
+         This markup is parsed and painted before /src/main.js has even been
+         fetched, so the ~2.9 s engine.init() long task no longer happens behind
+         a black screen. The inline script at the bottom of <body> owns this DOM
+         until main.js subscribes to `boot:progress` and drives it.
+
+         Palette is the Arcade Terminal contract, exact hexes: Void Black
+         #050505 field, Panel Dark #0D0D0D bar track, Loot Gold #FFD700 fill,
+         Cyan Pulse #00E5FF phase caption. Nothing here is loaded from the
+         network except the two webfonts, which degrade through the mono stack.
+      */
+      #boot {
+        position: fixed; inset: 0; z-index: 9000;
+        display: flex; align-items: center; justify-content: center;
+        background:
+          radial-gradient(ellipse 90% 60% at 50% 22%, rgba(53, 104, 255, 0.13), transparent 62%),
+          radial-gradient(ellipse 80% 70% at 50% 106%, rgba(255, 45, 120, 0.1), transparent 64%),
+          #050505;
+        color: #f0f0f0; text-transform: uppercase;
+        opacity: 1; transition: opacity 0.42s ease-out;
+        will-change: opacity;
+      }
+      /* CRT scanlines — same cabinet substrate as the attract screen. */
+      #boot::before {
+        content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.45;
+        background: repeating-linear-gradient(0deg,
+          rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.22) 3px);
+        background-size: 100% 3px; mix-blend-mode: multiply;
+      }
+      #boot::after {
+        content: ''; position: absolute; inset: 0; pointer-events: none;
+        box-shadow: inset 0 0 260px 44px rgba(0, 0, 0, 0.72);
+      }
+      #boot.gone { opacity: 0; pointer-events: none; }
+      .boot-inner {
+        position: relative; z-index: 1;
+        width: min(720px, 88vw);
+        display: flex; flex-direction: column; align-items: center; text-align: center;
+      }
+      .boot-mode {
+        font-size: 10px; letter-spacing: 0.5em; padding-left: 0.5em; color: #00e5ff;
+        text-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+      }
+      /* The one Press Start 2P element on this screen (contract: max 2). */
+      .boot-title {
+        font-family: "Press Start 2P", "JetBrains Mono", ui-monospace, monospace;
+        font-size: clamp(20px, 3.4vw, 40px); line-height: 1.1; letter-spacing: 0.02em;
+        margin: 22px 0 16px;
+        text-shadow: 3px 3px 0 #ff2d78, -2px -1px 0 #00e5ff, 0 0 32px rgba(53, 104, 255, 0.5);
+      }
+      .boot-sub {
+        font-size: 11px; letter-spacing: 0.42em; padding-left: 0.42em;
+        color: rgba(240, 240, 240, 0.6);
+      }
+      .boot-bar {
+        position: relative; width: 100%; height: 8px; margin: 46px 0 0;
+        background: #0d0d0d;
+        box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.3), 0 0 22px rgba(0, 229, 255, 0.06);
+        overflow: hidden;
+      }
+      .boot-bar > i {
+        display: block; height: 100%; width: 100%;
+        transform: scaleX(0); transform-origin: left center;
+        background: linear-gradient(90deg, #b38f00 0%, #ffd700 78%, #fff3a8 100%);
+        box-shadow: 0 0 14px rgba(255, 215, 0, 0.45);
+        will-change: transform;
+      }
+      .boot-row {
+        display: flex; justify-content: space-between; align-items: baseline;
+        width: 100%; margin-top: 12px;
+        font-size: 11px; letter-spacing: 0.24em;
+      }
+      #boot-phase { color: #00e5ff; }
+      #boot-pct { color: rgba(240, 240, 240, 0.6); font-variant-numeric: tabular-nums; }
+      .boot-tip {
+        margin-top: 56px; min-height: 1.4em;
+        font-size: 11px; letter-spacing: 0.2em; color: #888888;
+        transition: opacity 0.3s linear;
+      }
+      .boot-foot {
+        margin-top: 22px; font-size: 9.5px; letter-spacing: 0.34em;
+        color: rgba(240, 240, 240, 0.24);
+      }
+    </style>
+  <style>
+      [hidden]{display:none!important}
+      body .ow-att-inner{width:min(850px,calc(100vw - 220px));margin-right:195px}
+      body .ow-att-hint,body .ow-att-footer,body .ow-menu .hint{font:600 clamp(11px,1.45vw,17px)/1.5 system-ui,sans-serif;letter-spacing:.06em;animation:none}
+      body .ow-att-footer{color:#d8e7ec;margin-top:8px}
+      body .ow-att-card:focus,body .ow-menu button:focus,body .ow-screen button:focus,body .ow-slider:focus-within{outline:3px solid #ffd64a;outline-offset:2px}
+      body .ow-menu-inner{max-width:calc(100vw - 220px);margin-right:180px}
+    </style>
+  <script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "NERD OF DUTY — A Fintech NerdCon Game": "账本保卫战 · 金融科技大会游戏",
+    "HOLD THE LEDGER": "守住账本",
+    "NERD OF DUTY": "账本保卫战",
+    "A FINTECH NERDCON GAME": "金融科技大会游戏",
+    "OPENING THE BOOKS": "正在打开账本",
+    "T+2 IS NOT A FEATURE.": "T+2 可不算什么卖点。",
+    "NOV 19–20 · SAN DIEGO · FINTECHNERDCON.COM": "11 月 19–20 日 · 圣迭戈 · FINTECHNERDCON.COM",
+    "AUTO": "自动",
+    "RULES ENGINE MK4": "规则引擎 MK4",
+    "RELOADING": "换弹中",
+    "PRESS R TO RELOAD": "按 R 换弹",
+    "GLOBAL": "全球",
+    "TODAY": "今日",
+    "FRAUD": "反欺诈",
+    "PAYMENTS": "支付",
+    "COMPLIANCE": "合规",
+    "TOP 100 · ALL TIME · EVERY JOB": "历史百强 · 全职业",
+    "TOP 100 · TODAY IN SAN DIEGO": "圣迭戈今日百强",
+    "TOP 100 · FRAUD ANALYST": "反欺诈分析师百强",
+    "TOP 100 · PAYMENTS ENGINEER": "支付工程师百强",
+    "TOP 100 · COMPLIANCE OFFICER": "合规官百强",
+    "THE BOARD": "排行榜",
+    "OPERATOR": "玩家",
+    "JOB": "职业",
+    "WAVE": "波次",
+    "SCORE": "得分",
+    "LOADING THE LEDGER…": "正在载入账本…",
+    "BACK": "返回",
+    "READING THE LEDGER…": "正在读取账本…",
+    "BOARD UNREACHABLE — THE WIFI IS THE REAL BOSS FIGHT": "连不上排行榜，看来无线网络才是真正的首领",
+    "NOBODY HAS POSTED TODAY. BE FIRST.": "今天还没人提交，来当第一个吧！",
+    "NO ENTRIES YET. THE LEDGER IS BLANK.": "暂无记录，账本还是空的。",
+    "PRESS ANY BUTTON": "按任意键",
+    "WAVE 1": "第 1 波",
+    "LEGACY CORE SECURITY": "旧系统安保部队",
+    "YOU": "你",
+    "ENFORCER": "执行者",
+    "AUDITOR": "审计员",
+    "MAINFRAME": "主机",
+    "CONSULTANT": "顾问",
+    "THE LEDGER": "账本",
+    "SPAWN": "出生点",
+    "VAULT": "金库",
+    "Defend · The Ledger": "保护账本",
+    "CARD DECLINED": "交易被拒",
+    "SAR FILED": "已提交可疑活动报告",
+    "Health": "生命",
+    "Armour": "护甲",
+    "THREE LETTERS A–Z.": "输入三个英文字母 A–Z。",
+    "NOT ON A CONFERENCE SCREEN. PICK ANOTHER THREE.": "会议大屏上不宜显示，请换三个字母。",
+    "RUN DATA CORRUPT — RUN IT BACK.": "本局数据损坏，请重新开始。",
+    "THE LEDGER DOES NOT BALANCE. THIS RUN WAS NOT FILED.": "账目不平，本局未能登记。",
+    "TOO MANY FILINGS THIS HOUR. COOL OFF.": "本小时提交过于频繁，请稍后再试。",
+    "RUN TOKEN EXPIRED — RUN IT BACK.": "本局凭证已过期，请重新开始。",
+    "ALREADY FILED.": "已登记。",
+    "THE BOARD IS DOWN. TRY AGAIN.": "排行榜暂不可用，请重试。",
+    "BATCH PROCESSED ×": "批量处理 ×",
+    "BATCH PROCESSED": "批量处理",
+    "LEGACY CORE SECURITY INBOUND": "旧系统安保部队正在接近",
+    "SIDECAR": "边车手枪",
+    "THE BOARD REFUSED IT. TRY AGAIN.": "排行榜拒绝了提交，请重试。",
+    "CARD SAVED TO YOUR DOWNLOADS.": "成绩卡已保存到下载目录。",
+    "COULD NOT BUILD THE CARD.": "无法生成成绩卡。",
+    "LINK COPIED.": "已复制链接。",
+    "COPY BLOCKED — SELECT THE URL BY HAND.": "复制受阻，请手动选择网址。",
+    "ENTER YOUR INITIALS": "输入姓名缩写",
+    "FILE IT WITH THE BOARD": "提交到排行榜",
+    "KEEP IT OFF THE RECORD": "跳过登记",
+    "PLAYER": "玩家",
+    "ENEMY": "敌人",
+    "UNKNOWN": "未知",
+    "GRENADE": "手榴弹",
+    "DANGER CLOSE": "危险逼近",
+    "On Hold": "已暂停",
+    "ON HOLD": "已暂停",
+    "SETTLEMENT ON HOLD · HOLD THE LEDGER": "结算已暂停 · 守住账本",
+    "Graphics Preset": "画质预设",
+    "Mouse Sensitivity": "鼠标灵敏度",
+    "Field Of View": "视野",
+    "Invert Look": "反转视角",
+    "Resume": "继续",
+    "Defaults": "恢复默认设置",
+    "LEDGER PLAZA": "账本广场",
+    "INTERACT": "互动",
+    "FRAUD ANALYST": "反欺诈分析师",
+    "RIFLE · RANGE": "步枪 · 远程",
+    "Balanced rifle. Reads the pattern and declines the fraud at range.": "均衡型步枪。看清规律，在远处拦截欺诈。",
+    "PAYMENTS ENGINEER": "支付工程师",
+    "SMG · ASSAULT": "冲锋枪 · 突击",
+    "Full-auto SMG. High throughput, sub-second settlement up close.": "全自动冲锋枪。近距离高吞吐，瞬间结算。",
+    "COMPLIANCE OFFICER": "合规官",
+    "PISTOL · TANK": "手枪 · 重装",
+    "Sidearm and max armour. Slow, audited, and very hard to put down.": "配备手枪和满额护甲。行动较慢，办事严谨，很难被击倒。",
+    "SELECT YOUR JOB": "选择职业",
+    "DEPLOY ▸": "出击 ▸",
+    "SEE THE BOARD ▸": "查看排行榜 ▸",
+    "SETTLEMENT FAILED": "结算失败",
+    "INSUFFICIENT FUNDS": "余额不足",
+    "The ledger came up short. File a dispute to reopen the position — one continue per run — or accept the loss and settle.": "账面出现缺口。你可以提出异议并继续战斗，每局限一次；也可以认亏结算。",
+    "FILE A DISPUTE — CONTINUE": "提出异议并继续",
+    "ACCEPT THE LOSS": "接受亏损",
+    "SETTLE THE RUN": "结算本局",
+    "THE LEDGER HELD": "成功守住账本",
+    "RUN SETTLED": "本局已结算",
+    "KILLS": "击败数",
+    "ACCURACY": "命中率",
+    "BEST": "最高纪录",
+    "COMPLIANCE OFFICER — REACH WAVE 8 TO PREVIEW": "合规官 · 到达第 8 波可预览",
+    "SHARE THE CARD": "分享成绩卡",
+    "COPY LINK": "复制链接",
+    "RUN IT BACK": "再来一局",
+    "SEE THE BOARD": "查看排行榜",
+    "FILED": "已登记",
+    "QUEUED — IT SETTLES WHEN THE WIFI DOES": "已排队，网络恢复后将提交",
+    "YOU MOVED THE MARKET": "你撬动了市场",
+    "NEW BEST": "新纪录",
+    "MATCHED YOUR BEST ·": "追平个人纪录 ·",
+    "PTS": "分",
+    "FINTECH NERDCON": "金融科技大会",
+    "LOW": "低",
+    "MEDIUM": "中",
+    "HIGH": "高",
+    "EPIC": "极高",
+    "LOWER": "较低",
+    "OFF": "关",
+    "ON": "开",
+    "▲▼ LETTER · ◀▶ SLOT · OR JUST TYPE · ENTER TO FILE": "▲▼ 选字母 · ◀▶ 换位置 · 也可直接输入 · 回车提交",
+    "SETTLING…": "结算中…",
+    "VELOCITY-9": "疾速九号",
+    "SEMI": "半自动",
+    "RAISING THE PIPELINE": "正在准备渲染管线",
+    "STAMPING TEXTURES": "正在绘制纹理",
+    "CLEARING THE SKY": "正在清理天空",
+    "ENFORCING GRAVITY": "正在启用重力",
+    "BUILDING THE PLAZA": "正在搭建广场",
+    "RACKING WEAPONS": "正在准备装备",
+    "MIXING PYRO": "正在调配特效",
+    "ONBOARDING LEGACY CORE SECURITY": "旧系统安保正在报到",
+    "ISSUING YOUR BADGE": "正在发放通行证",
+    "PROVISIONING THE HUD": "正在配置游戏界面",
+    "TUNING THE EXPO FLOOR": "正在调试会场音效",
+    "OPENING THE LEDGER": "正在打开账本",
+    "THE LEDGER DOES NOT RECONCILE ITSELF.": "账本可不会自己对账。",
+    "REAL-TIME MEANS TUESDAY, IN PRACTICE.": "所谓实时，实际上要等到星期二。",
+    "COBOL DOES NOT NEGOTIATE.": "COBOL 可不讨价还价。",
+    "A CHARGEBACK IS A REFUND WITH LAWYERS.": "拒付就是带着律师来退款。",
+    "THE FAX IS STILL IN THE PAYMENT FLOW.": "支付流程里居然还用传真。",
+    "COMPLIANCE IS A CONTACT SPORT.": "合规可是一场对抗赛。",
+    "EVERY OUTAGE IS A BATCH JOB SOMEBODY LOVED.": "每次宕机背后，都有一个曾被人钟爱的批处理作业。",
+    "COMPILING SHADERS": "正在编译着色器",
+    "FINAL RECONCILIATION": "正在最终对账",
+  },
+  patterns: [
+    [/^WAVE (\d+)$/, "第 $1 波"],
+    [/^WAVE (\d+) SETTLED$/, "第 $1 波结算完成"],
+    [/^BATCH PROCESSED ×(\d+)$/, "批量处理 ×$1"],
+    [/^RANK #([\d,]+) OF ([\d,]+) · ON THE BOARD$/, "排行榜第 $1 名，共 $2 名"],
+  ],
+});
+
+</script>
+</head>
+  <body>
+    <canvas id="game"></canvas>
+    <div id="ui"></div>
+
+    <div id="boot">
+      <div class="boot-inner">
+        <div class="boot-mode">HOLD THE LEDGER</div>
+        <div class="boot-title">NERD OF DUTY</div>
+        <div class="boot-sub">A FINTECH NERDCON GAME</div>
+        <div class="boot-bar"><i id="boot-fill"></i></div>
+        <div class="boot-row">
+          <span id="boot-phase">OPENING THE BOOKS</span>
+          <span id="boot-pct">0%</span>
+        </div>
+        <div class="boot-tip" id="boot-tip">T+2 IS NOT A FEATURE.</div>
+        <div class="boot-foot">NOV 19–20 · SAN DIEGO · FINTECHNERDCON.COM</div>
+      </div>
+    </div>
+
+    <script>
+      /**
+       * Loading-screen driver. Deliberately a classic (non-module) inline
+       * script: it runs during parse, before the deferred module graph is even
+       * fetched, so the bar exists and the tips rotate while the engine module
+       * is still evaluating. `main.js` takes over by calling window.__BOOT__.set
+       * from every `boot:progress` event; nothing else here talks to the engine.
+       *
+       * No RNG anywhere — the tip order is a fixed rotation, so a capture is
+       * reproducible and two players see the same first line.
+       */
+      (function () {
+        var root = document.getElementById('boot');
+        var fill = document.getElementById('boot-fill');
+        var phase = document.getElementById('boot-phase');
+        var pctEl = document.getElementById('boot-pct');
+        var tipEl = document.getElementById('boot-tip');
+
+        /* Dry, fintech-literate, all caps. Rotated in this exact order. */
+        var TIPS = [
+          'T+2 IS NOT A FEATURE.',
+          'THE LEDGER DOES NOT RECONCILE ITSELF.',
+          'REAL-TIME MEANS TUESDAY, IN PRACTICE.',
+          'COBOL DOES NOT NEGOTIATE.',
+          'A CHARGEBACK IS A REFUND WITH LAWYERS.',
+          'THE FAX IS STILL IN THE PAYMENT FLOW.',
+          'COMPLIANCE IS A CONTACT SPORT.',
+          'EVERY OUTAGE IS A BATCH JOB SOMEBODY LOVED.',
+        ];
+
+        var capture = false;
+        try {
+          capture = /(^|[?&])capture=1(&|$)/.test(location.search);
+        } catch (e) {
+          /* no location (never in a browser, but keep the driver total) */
+        }
+
+        // Capture harness: the screenshot must frame the game, never a loading
+        // overlay, and the deterministic frame budget must not pay for a fade.
+        // Gone before the first byte of engine work.
+        if (capture) {
+          root.style.display = 'none';
+          window.__BOOT__ = { set: function () {}, done: function () {}, fail: function () {} };
+          return;
+        }
+
+        var shown = 0;
+        var tipTimer = setInterval(function () {
+          shown = (shown + 1) % TIPS.length;
+          tipEl.style.opacity = '0';
+          setTimeout(function () {
+            tipEl.textContent = TIPS[shown];
+            tipEl.style.opacity = '1';
+          }, 300);
+        }, 2500);
+
+        var last = 0;
+        var lastPhase = '';
+        var finished = false;
+
+        function stop() {
+          if (tipTimer) clearInterval(tipTimer);
+          tipTimer = null;
+        }
+
+        window.__BOOT__ = {
+          /** @param {number} pct 0..1, monotonic. @param {string} [detail] caption */
+          set: function (pct, detail) {
+            if (finished) return;
+            var p = pct > 1 ? 1 : pct < 0 ? 0 : pct;
+            if (p > last) {
+              last = p;
+              fill.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+              pctEl.textContent = Math.round(p * 100) + '%';
+            }
+            if (detail && detail !== lastPhase) {
+              lastPhase = detail;
+              phase.textContent = detail;
+            }
+          },
+          /** Boot finished: land on 100%, fade out, drop the node. */
+          done: function () {
+            if (finished) return;
+            finished = true;
+            stop();
+            fill.style.transform = 'scaleX(1)';
+            pctEl.textContent = '100%';
+            phase.textContent = 'CLEARED FOR DEPLOY';
+            root.classList.add('gone');
+            setTimeout(function () {
+              if (root.parentNode) root.parentNode.removeChild(root);
+            }, 500);
+          },
+          /** Boot threw: get out of the way so the error is legible. */
+          fail: function () {
+            finished = true;
+            stop();
+            root.style.display = 'none';
+          },
+        };
+      })();
+    </script>
+
+    <script src="nerd-of-duty.js"></script>
+  </body>
+</html>

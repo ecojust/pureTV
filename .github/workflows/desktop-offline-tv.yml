@@ -32,6 +32,11 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /tools/desktop-offline-qa/
+            /game-library/web/catalog.json
+            /game-library/web/*.js
+            /game-library/web/*.css
+            /game-library/web/neon-rush/
+            /game-library/web/tetris/
             /joystick-games/neon-rush/resource.json
             /desktop/package.json
       - name: Retrieve the existing Linux installer
@@ -69,7 +74,7 @@ jobs:
           sudo locale-gen zh_CN.UTF-8
           sudo chmod a+rw /dev/kvm
           sdktools="$ANDROID_HOME/cmdline-tools/latest/bin"
-          "$sdktools/sdkmanager" 'emulator' 'platform-tools' 'system-images;android-36;android-tv;x86_64'
+          "$sdktools/sdkmanager" 'emulator' 'platform-tools' 'build-tools;34.0.0' 'system-images;android-36;android-tv;x86_64'
           export ANDROID_AVD_HOME="$RUNNER_TEMP/manager-avds"
           mkdir -p "$ANDROID_AVD_HOME"
           echo no | "$sdktools/avdmanager" create avd -n offlineTV -k 'system-images;android-36;android-tv;x86_64' -d tv_1080p --force
@@ -83,7 +88,10 @@ jobs:
           runtime=$(mktemp -d)
           # Exercise first use over HTTPS. The next launch uses the same data directory
           # with loopback only, so it must reuse both the catalog and the two games.
-          if dpkg --compare-versions "$VERSION" ge 0.8.2; then
+          if dpkg --compare-versions "$VERSION" ge 0.8.3; then
+            python3 tools/desktop-offline-qa/seed-game-cache.py game-library "$runtime/data/com.ecojust.puretv.manager"
+            export PURETV_QA_SHARED_HOST=1
+          elif dpkg --compare-versions "$VERSION" ge 0.8.2; then
             env XDG_RUNTIME_DIR="$runtime" PURETV_QA_DOWNLOAD_GAMES=1 \
               LANG=zh_CN.UTF-8 LANGUAGE=zh_CN LC_MESSAGES=C.UTF-8 GDK_BACKEND=x11 GTK_MODULES=atk-bridge NO_AT_BRIDGE=0 \
               WEBKIT_DISABLE_COMPOSITING_MODE=1 WEBKIT_DISABLE_DMABUF_RENDERER=1 LIBGL_ALWAYS_SOFTWARE=1 \
@@ -92,13 +100,13 @@ jobs:
           fi
           sudo unshare --net -- bash -eu -c '
             ip link set lo up
-            exec sudo -u "$1" -- env HOME="$2" ANDROID_AVD_HOME="$8" ANDROID_EMULATOR_HOME="$2/.android" ANDROID_HOME="$3" ANDROID_SDK_ROOT="$3" \
+            exec sudo -u "$1" -- env PURETV_QA_SHARED_HOST="$9" HOME="$2" ANDROID_AVD_HOME="$8" ANDROID_EMULATOR_HOME="$2/.android" ANDROID_HOME="$3" ANDROID_SDK_ROOT="$3" \
               PATH="$3/platform-tools:$3/emulator:/usr/sbin:/usr/bin:/sbin:/bin" XDG_RUNTIME_DIR="$4" \
               LANG=zh_CN.UTF-8 LANGUAGE=zh_CN LC_MESSAGES=C.UTF-8 GDK_BACKEND=x11 GTK_MODULES=atk-bridge \
               NO_AT_BRIDGE=0 WEBKIT_DISABLE_COMPOSITING_MODE=1 WEBKIT_DISABLE_DMABUF_RENDERER=1 LIBGL_ALWAYS_SOFTWARE=1 \
               xvfb-run -a -s "-screen 0 1500x980x24 -nolisten tcp" dbus-run-session -- \
               bash "$5/tools/desktop-offline-qa/session.sh" "$6" "$5" "$7"
-          ' -- "$(id -un)" "$HOME" "$ANDROID_HOME" "$runtime" "$GITHUB_WORKSPACE" "$exe" "$RUNNER_TEMP/evidence" "$RUNNER_TEMP/manager-avds"
+          ' -- "$(id -un)" "$HOME" "$ANDROID_HOME" "$runtime" "$GITHUB_WORKSPACE" "$exe" "$RUNNER_TEMP/evidence" "$RUNNER_TEMP/manager-avds" "${PURETV_QA_SHARED_HOST:-0}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

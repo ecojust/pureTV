@@ -1,7 +1,7 @@
 import {readFileSync} from 'node:fs';
 const managerVersion=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')).version;
 
-export const gameLibrary = JSON.parse(readFileSync(new URL('../../game-library/catalog.json', import.meta.url), 'utf8'));
+export const gameLibrary = JSON.parse(readFileSync(new URL('../../game-library/web/catalog.json', import.meta.url), 'utf8'));
 
 export function snapshot() {
   return {

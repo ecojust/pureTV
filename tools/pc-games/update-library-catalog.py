@@ -26,7 +26,7 @@ def build(root):
     catalog = {game['id']: game for game in read_json(TOOLS / 'catalog.json')}
     online = set(read_json(TOOLS / 'online-only.json'))
     hosted = read_json(TOOLS / 'hosted-games.json')
-    shared = [receipt(root, path) for path in sorted((root / 'web').iterdir()) if path.is_file()]
+    shared = [receipt(root, path) for path in sorted((root / 'web').iterdir()) if path.is_file() and path.name != 'catalog.json']
     groups = []
     games = []
     for section in read_json(TOOLS.parent / 'readme-app-games.json'):
@@ -47,15 +47,11 @@ def build(root):
             files = list((root / 'web' / ident).rglob('*'))
             if ident in catalog:
                 entry['kind'] = 'online' if ident in online else 'project'
-                entry['apk'] = {'fileName': game['url'].rsplit('/', 1)[1],
-                                'bytes': game['bytes'], 'sha256': game['sha256']}
-                if entry['kind'] == 'project':
-                    project = root / 'projects' / ident
-                    for name in ('project.zip', 'signing.bin'):
-                        path = project / name
-                        if not path.is_file():
-                            raise ValueError(f'Missing project resource: {path}')
-                        files.append(path)
+                if entry['kind'] == 'online':
+                    entry['apk'] = {'fileName': game['url'].rsplit('/', 1)[1],
+                                    'bytes': game['bytes'], 'sha256': game['sha256']}
+                elif not (root / 'web' / ident / 'android-entry.html').is_file():
+                    raise ValueError(f'Missing Android entry: {ident}')
             else:
                 entry['kind'] = 'hosted'
                 entry['controls'] = game['controls']
@@ -66,8 +62,8 @@ def build(root):
             games.append(entry)
     if sorted(game['id'] for game in games) != sorted([*catalog, *(game['id'] for game in hosted)]):
         raise ValueError('Every game must appear in exactly one category')
-    expected = {path.relative_to(root).as_posix() for dirname in ('projects', 'web')
-                for path in (root / dirname).rglob('*') if path.is_file()}
+    expected = {path.relative_to(root).as_posix() for path in (root / 'web').rglob('*')
+                if path.is_file() and path != root / 'web' / 'catalog.json'}
     indexed = {item['path'] for item in shared}
     indexed.update(item['path'] for game in games for item in game['files'])
     if indexed != expected:
@@ -80,7 +76,7 @@ if __name__ == '__main__':
     parser.add_argument('--library', type=Path, default=LIBRARY)
     parser.add_argument('--check', action='store_true', help='Verify the existing catalog without writing it')
     args = parser.parse_args()
-    catalog_path = args.library / 'catalog.json'
+    catalog_path = args.library / 'web' / 'catalog.json'
     data = (json.dumps(build(args.library), indent=2, ensure_ascii=False) + '\n').encode('utf-8')
     if args.check:
         if catalog_path.read_bytes() != data:

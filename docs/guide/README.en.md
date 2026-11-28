@@ -50,7 +50,7 @@ The TV store and the desktop manager read the same Media, Games and Launchers di
 
 ### Play on a computer
 
-Open **Games** and choose **Play on computer**. The 0.8.2 development build reads the catalog online and downloads the selected game on first use. Choose **Download for offline use** to save it in advance. You can play downloaded games offline without connecting a TV. The published 0.8.1 installer includes all 48 local games. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
+Open **Games** and choose **Play on computer**. The 0.8.3 development build reads the catalog online and downloads the selected game on first use. Choose **Download for offline use** to save it in advance. You can play downloaded games offline without connecting a TV. The published 0.8.1 installer includes all 48 local games. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
 
 **Online games** retains eight entries. Kart Rush and CF Transport Ship use an online player on desktop and download the original TV package on first deployment. The following six games load from their authors’ sites on both desktop and TV.
 

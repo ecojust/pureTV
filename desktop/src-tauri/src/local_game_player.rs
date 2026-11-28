@@ -1,18 +1,11 @@
 //! Serve the downloaded game's web assets on a separate, stable loopback origin.
-//! Desktop overlays and TV package assembly share the same cached game project.
+//! Desktop overlays and TV package assembly share the same cached web files.
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufReader, Read};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::AtomicBool;
 use std::sync::{Arc, Mutex, RwLock};
 use tauri::Manager;
 use tiny_http::{Header, Method, Request, Response, Server};
-use zip::{
-    read::{ArchiveOffset, Config},
-    ZipArchive,
-};
-
 const PORTS: [u16; 4] = [48731, 48732, 48733, 48734];
 const GAME_CSP: &str = "default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'none'";
 
@@ -110,35 +103,18 @@ fn start(preference: &Path) -> Result<GameServer, String> {
 }
 
 fn asset(game: &MountedGame, relative: &str) -> Option<Vec<u8>> {
-    // Only expose web overlays and the assets/ subtree of the requested project.
-    let path = relative.split_once('/');
-    if let Some((id, _)) = path {
-        if id != game.id {
-            return None;
-        }
+    if relative
+        .split_once('/')
+        .is_some_and(|(id, _)| id != game.id)
+    {
+        return None;
     }
-    let overlay = game.root.join("web").join(relative);
-    match std::fs::symlink_metadata(&overlay) {
-        Ok(metadata) if metadata.is_file() => return std::fs::read(overlay).ok(),
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => (),
-        _ => return None,
-    }
-    let (id, name) = path?;
-    let project = File::open(game.root.join("projects").join(id).join("project.zip")).ok()?;
-    let mut archive = ZipArchive::with_config(
-        Config {
-            archive_offset: ArchiveOffset::Known(0),
-        },
-        BufReader::new(project),
-    )
-    .ok()?;
-    let mut bytes = Vec::new();
-    archive
-        .by_name(&format!("assets/{name}"))
+    let file = game.root.join("web").join(relative);
+    std::fs::symlink_metadata(&file)
         .ok()?
-        .read_to_end(&mut bytes)
-        .ok()?;
-    Some(bytes)
+        .is_file()
+        .then(|| std::fs::read(file).ok())
+        .flatten()
 }
 
 fn mime(path: &str) -> &'static str {

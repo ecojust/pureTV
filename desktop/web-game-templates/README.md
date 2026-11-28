@@ -1,4 +1,10 @@
-# 单款网页游戏的 Android TV 安装包模板
+# Android TV 游戏模板
+
+可下载游戏共用 `android-host.zip`。它包含 Game Kit 的编译产物、Android 清单及资源表。客户端写入所选游戏的网页文件、标题、图标和独立包名，再用管理器本机保存的密钥作 APK v2 签名。
+
+维护者可用仓库正式《霓虹飞车》APK 运行 `python3 desktop/scripts/prepare-android-game-host.py /path/to/neon-rush-0.1.6.apk` 复现该骨架。脚本核对正式目录的 SHA-256，保留宿主许可。[Game Kit 源码和构建](../../resource/game-kit/BUILD.md)
+
+## 六款作者托管游戏的正式 APK 模板
 
 Manager 在用户选择「生成电视 APK」时按游戏 ID 从 `parts.bin` 取出 `index.rs` 列出的片段，按顺序写入 APK 并核对整包 SHA-256。各款共用的 DEX、手柄资源等内容只存一份。Android 签名块、清单与每款独有的内容按原始字节保存，组装后与该款正式签名 APK 完全一致。用户的电脑无需安装 Android SDK 或持有签名密钥。启动生成的电视应用时需要联网加载作者游戏。
 
