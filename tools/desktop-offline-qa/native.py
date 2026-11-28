@@ -186,13 +186,24 @@ def disconnected_and_play():
 
 def boot_tv():
     scratch = Path(os.environ["XDG_RUNTIME_DIR"])
+    avds = command("emulator", "-list-avds").splitlines()
+    assert "offlineTV" in avds, f"Prepared AVD unavailable: {avds}"
+    emulator_log = scratch / "emulator.log"
+
+    def emulator_failure():
+        text = emulator_log.read_text(errors="replace").splitlines()
+        diagnostics = [line[:400] for line in text if re.search(
+            r"error|failed|fatal|panic|missing|unknown|not found|not enough|does not exist|not supported", line, re.I)
+            and not re.search(r"token|credential|password|adbkey|api.key|jwt|grpc", line, re.I)]
+        return " | ".join(diagnostics[-8:]) or f"emulator exited with code {emulator.poll()}"
+
     emulator = subprocess.Popen(["emulator", "-avd", "offlineTV", "-port", "5554", "-no-window",
                                  "-gpu", "lavapipe", "-memory", "2048", "-cores", "2", "-noaudio",
-                                 "-no-boot-anim", "-no-snapshot"], stdout=(scratch / "emulator.log").open("w"),
+                                 "-no-boot-anim", "-no-snapshot"], stdout=emulator_log.open("w"),
                                 stderr=subprocess.STDOUT)
     def booted():
         if emulator.poll() is not None:
-            raise RuntimeError("Android TV emulator exited during boot")
+            raise RuntimeError("Android TV emulator exited during boot: " + emulator_failure())
         try:
             return adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
         except (subprocess.SubprocessError, OSError):
