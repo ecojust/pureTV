@@ -14,6 +14,7 @@ mod mcp;
 mod offline_game_library;
 mod package_insights;
 mod platform_tools;
+mod remote_game_apk;
 mod ui_preferences;
 mod web_game_apk;
 mod web_game_template;
