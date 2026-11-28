@@ -188,6 +188,12 @@ def boot_tv():
     scratch = Path(os.environ["XDG_RUNTIME_DIR"])
     avds = command("emulator", "-list-avds").splitlines()
     assert "offlineTV" in avds, f"Prepared AVD unavailable: {avds}"
+    free = os.statvfs(os.environ["ANDROID_AVD_HOME"])
+    emulator_version = command("emulator", "-version").splitlines()
+    version = next((line.strip() for line in emulator_version if "emulator version" in line.lower()), "unknown")
+    record("emulatorEnvironment", {"availableAvds": avds, "version": version,
+                                   "avdFreeMiB": free.f_bavail * free.f_frsize // 1048576})
+    print(command("df", "-h", os.environ["ANDROID_AVD_HOME"]), flush=True)
     emulator_log = scratch / "emulator.log"
 
     def emulator_failure():
@@ -203,7 +209,9 @@ def boot_tv():
                                 stderr=subprocess.STDOUT)
     def booted():
         if emulator.poll() is not None:
-            raise RuntimeError("Android TV emulator exited during boot: " + emulator_failure())
+            failure = emulator_failure()
+            record("emulatorExit", {"code": emulator.returncode, "reason": failure})
+            raise RuntimeError("Android TV emulator exited during boot: " + failure)
         try:
             return adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
         except (subprocess.SubprocessError, OSError):
@@ -212,7 +220,6 @@ def boot_tv():
     assert os.readlink("/proc/self/ns/net") == os.readlink(f"/proc/{emulator.pid}/ns/net")
     adb("emulator-5554", "shell", "input", "keyevent", "KEYCODE_WAKEUP")
     adb("emulator-5554", "shell", "wm", "dismiss-keyguard")
-    adb("emulator-5554", "shell", "svc", "power", "stayon", "true")
     assert "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features")
     # A QEMU port redirection survives Manager restarting the host ADB daemon during connection.
     # Expose real guest adbd over guest Ethernet as on a network-enabled television.
