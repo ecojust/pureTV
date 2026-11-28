@@ -199,10 +199,18 @@ try {
     const card = p.locator('.web-game-card').filter({has:download});
     await card.getByText('测试网络中断', {exact:false}).waitFor();
     assert.match(await download.innerText(), /重新下载/);
+    await p.evaluate(() => {
+      window.__holdNextOperation('download_library_game');
+      window.__gameCatalog.games.find(game => game.id === 'tetris').zh = '更新后的标题';
+    });
     await download.click();
+    await p.waitForFunction(() => window.__pendingOperations.some(op => op.action === 'download_library_game'));
+    await p.locator('[data-refresh-games]').click();
+    await p.locator('[data-play-game="tetris"]').filter({hasText:'更新后的标题'}).waitFor();
+    await release(p, 'download_library_game');
     await download.filter({hasText:'已下载'}).waitFor();
     await p.locator('[data-refresh-games]').click();
-    await p.waitForFunction(() => window.__gameLibraryRequests.filter(r => r.command === 'game_library_catalog').length === 2);
+    await p.waitForFunction(() => window.__gameLibraryRequests.filter(r => r.command === 'game_library_catalog').length === 3);
     assert.match(await download.innerText(), /已下载/);
     assert.equal(await download.isDisabled(), true);
     assert.match(await p.locator('[data-download-game="jewel"]').innerText(), /下载到本地/);

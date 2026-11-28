@@ -12,8 +12,13 @@ const libraryBase = 'https://apps.b14f.com/game-library/';
 const repositoryBase = 'https://raw.githubusercontent.com/ecojust/pureTV/master/game-library/';
 
 type Group = {id:string; zh:string; en:string};
-type Game = Group & {category:string; kind:GameKind; downloaded?:boolean; controls?:{zh:string; en:string}};
-type Catalog = {version:number; groups:Group[]; games:Game[]};
+type Asset = {path:string; bytes:number; sha256:string};
+type Game = Group & {category:string; kind:GameKind; files:Asset[]; downloaded?:boolean; controls?:{zh:string; en:string}};
+type Catalog = {version:number; groups:Group[]; shared:Asset[]; games:Game[]};
+
+function projectRevision(catalog:Catalog, game:Game):string {
+  return JSON.stringify([catalog.shared, game.files]);
+}
 
 function validCatalog(catalog:Catalog):boolean {
   const named = (entry:Group) => entry && typeof entry.id === 'string' && /^[a-z0-9-]+$/.test(entry.id) &&
@@ -70,6 +75,7 @@ export class Games {
   private catalogError = '';
   private downloading = new Set<string>();
   private downloadErrors = new Map<string,string>();
+  private completedDuringRefresh = new Map<string,string>();
   // Finish late starts and stops in order when a player exits and opens another title.
   private socketWork = Promise.resolve();
 
@@ -108,6 +114,11 @@ export class Games {
     try {
       const result = desktop ? {catalog:await invoke<Catalog>('game_library_catalog'), base:libraryBase} : await browserCatalog();
       if (!validCatalog(result.catalog)) throw new Error(t('游戏列表格式无效。'));
+      // A download may finish after the native command snapshots its cache status.
+      for (const game of result.catalog.games) {
+        const completed = this.completedDuringRefresh.get(game.id);
+        if (completed && completed === projectRevision(result.catalog, game)) game.downloaded = true;
+      }
       this.catalog = result.catalog;
       this.coverBase = result.base;
       if (!this.catalog.groups.some(group => group.id === this.group)) this.group = '';
@@ -115,6 +126,7 @@ export class Games {
       this.catalogError = error instanceof Error ? error.message : String(error);
     } finally {
       this.loading = false;
+      this.completedDuringRefresh.clear();
       this.changed();
     }
   }
@@ -137,15 +149,26 @@ export class Games {
     if (focused) slot.querySelector('button')?.focus({preventScroll:true});
   }
 
+  private markDownloaded(game:Game, revision:string):void {
+    if (this.loading) this.completedDuringRefresh.set(game.id, revision);
+    const catalog = this.catalog;
+    const current = catalog?.games.find(entry => entry.id === game.id);
+    if (catalog && current && projectRevision(catalog, current) === revision) {
+      current.downloaded = true;
+      this.downloadErrors.delete(game.id);
+    }
+  }
+
   async download(id:string):Promise<void> {
     const game = this.catalog?.games.find(entry => entry.id === id);
     if (!desktop || game?.kind !== 'project' || game.downloaded || this.downloading.has(id)) return;
+    const revision = projectRevision(this.catalog!, game);
     this.downloading.add(id);
     this.downloadErrors.delete(id);
     this.updateDownloadControl(id);
     try {
       await invoke('download_library_game', {gameId:id});
-      game.downloaded = true;
+      this.markDownloaded(game, revision);
     } catch (error) {
       this.downloadErrors.set(id, error instanceof Error ? error.message : String(error));
     } finally {
@@ -226,13 +249,13 @@ export class Games {
     this.status('[data-socket-status]', hint);
     this.player.showModal();
     if (local) {
+      const revision = projectRevision(this.catalog!, game);
       void invoke<string>('local_game_base', {gameId:id}).then(base => {
         const url = new URL(base);
         if (!localOrigins.has(url.origin) || !url.pathname.startsWith('/games/') || !url.pathname.endsWith('/')) {
           throw new Error(t('本地游戏资源暂不可用。'));
         }
-        game.downloaded = true;
-        this.downloadErrors.delete(id);
+        this.markDownloaded(game, revision);
         this.updateDownloadControl(id);
         if (this.active === active) {
           active.origin = url.origin;
