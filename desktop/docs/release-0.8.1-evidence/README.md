@@ -13,3 +13,17 @@
 另外六款作者游戏通过各自的独立电视客户端加载作者站点。在线合作玩法、作者原作及素材的分发范围见[游戏来源](../../../joystick-games/catalog/hosted-originals.md)。
 
 在逐款隔离的 Chromium 浏览器会话中核对了 48 款本地游戏的冷启动。对俄罗斯方块的方块移动、光球挑战的得分、OpenAero 的起飞和倾斜、Backroad Rally 的快速赛段及油门分别做了实际操作。《Backroad Rally》使用原作提供的低画质设置，软件 GPU 在默认画质下未于测试时限内驶出起跑位。[逐款操作和画面记录](../offline-games-gameplay.json)
+
+## 实际安装和部署
+
+0.8.0 发布前预检使用实际安装的 Linux 管理器和 Android TV 36 模拟器。两者只有回环网络，电视安装前没有《霓虹飞车》。点击卡片部署后，测试从 Android 安装目录读回了 566,855 字节的 APK，SHA-256 与原件一致，并验证了电视启动器入口和打开后的前台状态。[断网预检](https://github.com/ecojust/pureTV/actions/runs/46118410846)
+
+0.8.0 候选在 Windows 上发现两个进程同时修复损坏缓存时的文件共享冲突，因此未公开发布。0.8.1 会复查另一进程已写好的缓存，并重试临时的 Windows 文件共享错误。[缓存修复](https://github.com/ecojust/pureTV/commit/3519e72018c6cb41fd3abfb569d7e7dfbb87d131)
+
+使用 0.8.1 正式构建生成的 Linux DEB 独立重跑了同一流程。无公网路由时，先用已安装的管理器在电脑上打开《Tetris》，实际开局、移动方块和暂停。再在设备连接页连接 Android TV 36 模拟器，通过《霓虹飞车》卡片部署，读回核对 APK 并启动游戏。管理器的成功弹窗显示三个完成标记及「前往启动器」。电视端验证使用模拟器，未使用实体电视。[原生窗口与设备记录](linux-native.json) · [安装包来源](linux-installer.json) · [成功弹窗](deployment.png) · [同包独立实测](https://github.com/ecojust/pureTV/actions/runs/46119607785)
+
+## 下载与升级
+
+0.8.1 于 2026-11-28 07:17 UTC 公开发布。四个原生平台构建均验证了安装文件，Windows 同时验证了没有随附文件的单个便携 EXE。旧版更新器对文件大小的限制会影响本次升级，0.7.0 及更早版本请从发布页下载对应平台安装包。[下载 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1) · [正式构建与部署验收](https://github.com/ecojust/pureTV/actions/runs/46118763989)
+
+从公开链接匿名读取了全部五个安装文件，共 1,621,779,121 字节。每个文件均返回 HTTP 200，长度、SHA-256 与发布清单和 GitHub 的文件摘要相符。公开 Linux DEB 的字节也与上述两次 Android TV 部署使用的安装包一致。[逐包地址、大小和 SHA-256](public-downloads.json)
