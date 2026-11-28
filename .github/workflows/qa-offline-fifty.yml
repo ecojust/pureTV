@@ -8,7 +8,7 @@ permissions:
 jobs:
   collect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,6 +19,12 @@ jobs:
           GH_REPO: ecojust/pureTV
         run: |
           set -euo pipefail
+          for i in $(seq 1 80); do
+            count=$(gh api "repos/$GH_REPO/actions/runs/46115580251/artifacts" --jq '.total_count')
+            test "$count" -eq 5 && break
+            sleep 6
+          done
+          test "$count" -eq 5
           gh run download 46115580251 -p 'offline-shard-*' -D "$RUNNER_TEMP/results"
           out=tools/desktop-offline-qa/shard-receipts.json
           python - "$RUNNER_TEMP/results" "$out" <<'PY'
