@@ -35,7 +35,7 @@ The connected home page shows the model, Android and SDK versions, security patc
 | Manage installed apps | Search or filter **Apps**. Enable or disable apps in batches, uninstall them for the current user, or restore system apps whose APKs are still present. Uninstalling a system app for that user preserves its data and the APK on the system partition. The manager protects core components and the current default launcher. |
 | Identify packages and check their size | Select the circled **i** to see the package's purpose, uninstall risk, source and retrieval time. Unknown packages are marked. Sizes cover the main APK and split APKs and exclude private data, caches and optimized files. Unreadable sizes are shown as unknown. |
 | Install a local APK | Import APKs under **Pending apps**. Install from a row or select items for a batch. Successful items leave the queue. Failed and unprocessed items remain. The list scrolls with fixed headers and batch actions. |
-| Install from the market | Find launchers and media apps in **TV Apps**, or games under **Games → TV game market**. Download to the pending list or install directly on a connected TV. Each card offers up to five versions, most recent first. [Browse the game directory](https://apps.b14f.com/game/) |
+| Install from the market | Find APKs for launchers, media apps and games in **TV Apps**. Download to the pending list or install directly on a connected TV. Each card offers up to five versions, most recent first. [Browse the game directory](https://apps.b14f.com/game/) |
 | Change the home screen | Import and install launcher APKs from **Launchers**. Choose the default launcher or restore the previous one, then press Home on the remote. An active launcher that supports the layout protocol shows **Adjust layout**. |
 
 Connecting, refreshing, batch operations and applying a layout show progress followed by a result dialog. Batch results distinguish successful, failed and unprocessed items. Automatic background reads run without repeated dialogs.
@@ -44,15 +44,15 @@ Under **TV Apps → Launchers**, set the installed launcher as the default and c
 
 Cards for compatible launchers display their Home background even when inactive. Change that background in **Adjust layout**. The pending-APK preview reads the embedded Home background and falls back to a sibling `thumb.png` or `APK-name.thumb.png` if it cannot read one.
 
-The TV store and the desktop manager read the same Media, Games and Launchers directories. On the computer, games are listed under **Games → TV game market**. Open a card to choose from up to five versions. The TV store works with updated launchers to let you choose the position of an app on the home screen. To use English on supported launchers and first-party TV apps, select English in the TV system settings. User-provided app names, playlists and media titles retain their original text. [TV store guide](../../resource/apps/putrtv-store/README.en.md) · [Full resource catalog](../../resource/README.md)
+The TV store and the desktop manager read the same Media, Games and Launchers directories. On the computer, game APKs are listed under **TV Apps → Games**. Open a card to choose from up to five versions. The TV store works with updated launchers to let you choose the position of an app on the home screen. To use English on supported launchers and first-party TV apps, select English in the TV system settings. User-provided app names, playlists and media titles retain their original text. [TV store guide](../../resource/apps/putrtv-store/README.en.md) · [Full resource catalog](../../resource/README.md)
 
 ## Install a game and connect a controller
 
 ### Play on a computer
 
-Open **Games** and choose **Play on computer**. The 0.8.3 development build reads the catalog online and downloads the selected game on first use. Choose **Download for offline use** to save it in advance. You can play downloaded games offline without connecting a TV. The published 0.8.1 installer includes all 48 local games. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
+In the current development build, open **Games** just above **Forum** in the sidebar. Select a card in the online catalog to play on your computer. For games that support offline play, the manager automatically downloads and verifies the files the first time you play. When **Downloaded** appears in the lower-right corner of the cover, you can open the game again offline. Playing on the computer needs no TV connection.
 
-**Online games** retains eight entries. Kart Rush and CF Transport Ship use an online player on desktop and download the original TV package on first deployment. The following six games load from their authors’ sites on both desktop and TV.
+Eight games in the list require an internet connection to play. Kart Rush and CF Transport Ship use an online player on desktop and download the original TV package on first deployment. The following six games load from their authors’ sites on both desktop and TV.
 
 | Category | Games |
 | --- | --- |
@@ -67,12 +67,8 @@ To play from the project homepage, select **Play in browser** on a game card. Th
 #### Prepare a TV APK from a web game
 
 1. Connect and authorize your TV under **Device connection** and check the selected Android user. A local network with no internet access is sufficient for an established ADB connection.
-2. Under **Games**, choose **Deploy to TV** on a local game card. The dialog shows the local APK preparation step, then installation on the selected TV. The development build downloads the selected game on first use. Once downloaded, you can prepare its APK offline without installing the Android SDK.
+2. Choose **Deploy to TV** on the game card. The manager prepares the APK and shows installation progress. For games that support offline play, it downloads any missing files the first time you deploy. Once downloaded, you can deploy the game over your local network without internet access or the Android SDK.
 3. When installation succeeds, open the TV launcher’s app list, choose the game and add it to the home screen. You can also open it directly from the app list.
-
-To keep an APK for another device, use the card’s APK export action and save it to your computer. Saving works without a connected TV.
-
-To browse other games or versions on the market server, switch to **TV game market** in the same section. It provides the market’s previews, version selector, downloads and installation controls.
 
 #### Use a standalone installer
 

@@ -30,18 +30,16 @@ async function observeDeployment(page, {holdBuild=false, incomplete=false}={}) {
 }
 
 export async function checkGameDeployment(check, snapshot, withoutAdb) {
-  await check('game deployment without an authorized TV explains the connection and keeps export available', async page=>{
+  await check('game deployment without an authorized TV explains the connection before preparing a package', async page=>{
     await openGames(page);
     await deploy(page).waitFor();
     assert.equal(await page.locator('[data-deploy-game]').count(),await page.locator('[data-play-game]').count());
     await deploy(page).click();
     assert.match(await dialog(page).innerText(),/请先连接电视并完成 ADB 授权/);
     assert.equal((await page.evaluate(()=>window.__gameApkRequests)).length,0);
+    assert.deepEqual(await page.evaluate(()=>window.__gameLibraryRequests),[{command:'game_library_catalog'}]);
     await dialog(page).locator('[data-apk-connect]').click();
     assert.ok(await page.locator('[data-act="connect"]').isVisible());
-    await openGames(page);
-    await page.locator('[data-build-game="tetris"]').click();
-    await dialog(page).locator('[data-apk-save]').waitFor();
     assert.equal((await page.evaluate(()=>window.__requests.filter(r=>r.action==='install'))).length,0);
   },withoutAdb());
 
@@ -70,6 +68,7 @@ export async function checkGameDeployment(check, snapshot, withoutAdb) {
     await feedback(page).getByRole('button',{name:'前往启动器'}).waitFor();
     assert.match(await feedback(page).innerText(),/将游戏添加到电视主屏幕/);
     assert.deepEqual(await feedback(page).locator('[data-deploy-step]').evaluateAll(steps=>steps.map(s=>s.dataset.state)),['done','done','done']);
+    assert.equal(await page.locator('[data-downloaded-game="tetris"]').innerText(),'已下载');
     await feedback(page).getByRole('button',{name:'前往启动器'}).click();
     await page.locator('.launcher-toolbar').waitFor();
     assert.equal((await page.evaluate(()=>window.__gameApkRequests.filter(r=>r.command==='build_web_game_apk'))).length,1);
@@ -80,7 +79,6 @@ export async function checkGameDeployment(check, snapshot, withoutAdb) {
     await openGames(page);
     await page.evaluate(()=>window.__holdNextOperation('install'));
     const card=page.locator('[data-deploy-game="kart-rush"]');
-    assert.match(await card.getAttribute('aria-describedby'),/kart-rush/);
     await card.click();
     await page.waitForFunction(()=>!!window.__resumeGameBuild);
     const preparation=dialog(page);
