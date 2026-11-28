@@ -142,6 +142,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     let clientUpdateCancelled=false;
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
+    window.__localGames = [];
     window.__gameCommands = [];
     window.__gameLibraryRequests = [];
     window.__gameCatalog = options.gameCatalog ?? defaultGameLibrary;
@@ -177,6 +178,15 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           if (command === 'save_web_game_apk') return options.gameApkDestination || null;
           return {path:`/cache/games/${id}-0.1.0.apk`, packageName:null, sha256:'a'.repeat(64)};
         }
+        if (command === 'choose_local_game') {
+          const game = {id:'my-game', title:'My game', directory:'/games/My game'};
+          window.__localGames = [game];
+          window.__emitMcp('local-games-changed', null);
+          return game;
+        }
+        if (command === 'list_local_games') return structuredClone(window.__localGames);
+        if (command === 'release_local_game') { window.__releasedGame = args.url; return; }
+        if (command === 'play_local_game') return 'http://127.0.0.1:48735/games/' + 'a'.repeat(32) + '/index.html';
         if (command === 'game_library_catalog') {
           window.__gameLibraryRequests.push({command});
           await holdOperation(command);

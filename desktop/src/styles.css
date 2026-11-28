@@ -1857,7 +1857,15 @@ select { box-sizing:border-box; height:38px; min-height:38px; line-height:normal
 .web-game-tools label { display:flex; align-items:center; gap:10px; font-weight:600; }
 .web-game-tools select { padding:7px 10px; color:var(--text); border:1px solid var(--line); border-radius:8px; background:var(--surface); }
 .web-game-tools span { font-size:13px; color:var(--muted); }
-.list-page #page-content > .web-game-grid {
+.list-page #page-content > .game-source-panel {
+  flex:1; display:flex; flex-direction:column; min-height:0;
+}
+.local-games-scroll { overflow:auto; min-height:0; }
+.local-games-scroll .panel { margin-bottom:14px; }
+.local-games-list { display:grid; gap:8px; }
+.local-game-entry { display:flex; justify-content:space-between; text-align:start; padding:12px 16px; }
+.local-game-entry small { display:block; font-weight:normal; color:var(--muted); overflow-wrap:anywhere; }
+.game-source-panel > .web-game-grid {
   flex:1; min-height:0; overflow:auto; overscroll-behavior:contain;
   display:grid; align-content:start; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; padding:6px 10px 8px 6px;
 }

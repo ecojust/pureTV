@@ -9,6 +9,7 @@ mod forum;
 mod game_controllers;
 mod launcher_covers;
 mod local_game_player;
+mod local_games;
 mod market;
 mod market_seen;
 mod mcp;
@@ -1133,6 +1134,52 @@ fn mcp_call(
     if bridge.closing.load(Ordering::Acquire) {
         return Err("管理器正在退出".into());
     }
+    match name {
+        "list_local_games" => return Ok(json!(local_games::list(app)?)),
+        "register_local_game" => {
+            return Ok(json!(local_games::register(
+                app,
+                args["directory"].as_str().ok_or("缺少游戏目录")?,
+                args["title"].as_str(),
+            )?));
+        }
+        "open_local_game" => {
+            let id = args["id"].as_str().ok_or("缺少本地游戏标识")?;
+            if !local_games::list(app)?.iter().any(|game| game.id == id) {
+                return Err("找不到已登记的本地游戏".into());
+            }
+            let controllers = app.state::<GameControllers>();
+            let active = controllers.0.lock().map_err(|_| "手柄服务不可用")?;
+            if let Some(server) = active.as_ref() {
+                if server.info.local_game_id.as_deref() == Some(id) {
+                    return Ok(json!({"requested":false,"alreadyOpen":true,"id":id}));
+                }
+                return Err("另一个游戏正在运行，请先退出当前游戏".into());
+            }
+            app.emit_to("main", "play-local-game", json!({"id":id}))
+                .map_err(|error| error.to_string())?;
+            return Ok(json!({"requested":true,"id":id}));
+        }
+        "get_gamepad_protocol" => return Ok(mcp::gamepad_protocol()),
+        "get_gamepad_state" | "test_gamepad_button" => {
+            let controllers = app.state::<GameControllers>();
+            let active = controllers.0.lock().map_err(|_| "手柄服务不可用")?;
+            let server = active.as_ref().filter(|s| s.info.web_socket_url.is_some());
+            if name == "get_gamepad_state" {
+                let Some(server) = server else {
+                    return Ok(json!({"active":false}));
+                };
+                let mut state = server.snapshot();
+                state["active"] = json!(true);
+                return Ok(state);
+            }
+            return server.ok_or("请先打开本地游戏")?.test_button(
+                args["session"].as_str().ok_or("缺少手柄会话")?,
+                args["key"].as_str().ok_or("缺少按键")?,
+            );
+        }
+        _ => {}
+    }
     if name == "close_manager" {
         if args["confirmShutdown"] != true {
             return Err("请先确认关闭管理器会停止当前 ADB 服务".into());
@@ -1335,6 +1382,8 @@ impl GameControllers {
 #[tauri::command]
 fn start_game_controllers(
     players: usize,
+    game_origin: Option<String>,
+    local_game_id: Option<String>,
     app: tauri::AppHandle,
     controllers: tauri::State<'_, GameControllers>,
 ) -> Result<game_controllers::Info, String> {
@@ -1345,7 +1394,12 @@ fn start_game_controllers(
         .into_iter()
         .map(|address| address.ip)
         .collect();
-    let server = game_controllers::Server::start(players, addresses, move |state| {
+    let local_game = match (local_game_id.as_deref(), game_origin.as_deref()) {
+        (None, None) => None,
+        (Some(id), Some(origin)) => Some((id, origin)),
+        _ => return Err("Missing local game ID or origin".into()),
+    };
+    let server = game_controllers::Server::start(players, addresses, local_game, move |state| {
         let _ = app.emit_to("main", "game-controller-state", state);
     })?;
     let info = server.info.clone();
@@ -1405,10 +1459,12 @@ fn main() {
         .plugin(tauri_plugin_opener::init())
         .manage(GameControllers::default())
         .manage(local_game_player::Player::default())
+        .manage(local_games::Library::default())
         .on_page_load(|webview, load| {
             // A reload can discard the page before its async cleanup reaches the shell.
             if webview.label() == "main" && load.event() == tauri::webview::PageLoadEvent::Started {
                 webview.state::<GameControllers>().close();
+                webview.state::<local_games::Library>().close_player();
             }
         })
         .setup(|app| {
@@ -1498,6 +1554,10 @@ fn main() {
             offline_game_library::game_library_catalog,
             offline_game_library::download_library_game,
             local_game_player::local_game_base,
+            local_games::list_local_games,
+            local_games::choose_local_game,
+            local_games::play_local_game,
+            local_games::release_local_game,
             start_game_controllers,
             stop_game_controllers,
             game_controller_state,

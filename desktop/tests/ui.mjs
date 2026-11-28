@@ -155,6 +155,36 @@ try {
     await nav(p, 'apps');
     assert.equal(await p.locator('iframe').count(), 0);
   }, withoutAdb());
+  await check('local games import a web folder, show MCP setup and launch with the controller socket', async p => {
+    await nav(p, 'games');
+    await p.getByRole('tab', {name:'线上游戏'}).press('ArrowRight');
+    await p.getByRole('button', {name:'添加游戏文件夹'}).click();
+    const play = p.locator('[data-play-local="my-game"]');
+    await play.waitFor();
+    assert.equal(await p.locator('[data-deploy-game], [data-play-game]').count(), 0);
+    await p.getByRole('button', {name:'MCP · 游戏开发'}).click();
+    assert.match(await p.locator('#game-mcp-config').innerText(), /--mcp/);
+    const url = 'http://127.0.0.1:48735/games/' + 'a'.repeat(32) + '/index.html';
+    await p.route(url + '*', route => route.fulfill({contentType:'text/html', body:'<button>Play</button>'}));
+    const dialog = p.locator('dialog.game-player[open]');
+    await play.click();
+    await p.frameLocator('dialog iframe').getByRole('button', {name:'Play'}).waitFor();
+    const frame = new URL(await dialog.locator('iframe').getAttribute('src'));
+    assert.equal(frame.searchParams.get('puretvSocket'), 'ws://127.0.0.1:49201/test');
+    assert.ok(await dialog.locator('iframe').getAttribute('sandbox'));
+    assert.deepEqual(await p.evaluate(() => window.__gameCommands[0]), {
+      command:'start_game_controllers', players:2, localGameId:'my-game', gameOrigin:frame.origin
+    });
+    await dialog.locator('[data-close-game]').click();
+    assert.equal(await play.evaluate(button => document.activeElement === button), true);
+    assert.equal(await p.evaluate(() => window.__releasedGame), url);
+    await nav(p, 'apps');
+    await p.evaluate(() => window.__emitMcp('play-local-game', {id:'my-game'}));
+    await p.frameLocator('dialog iframe').getByRole('button', {name:'Play'}).waitFor();
+    await dialog.locator('[data-close-game]').click();
+    await p.getByRole('tab', {name:'线上游戏'}).click();
+    assert.equal(await p.locator('[data-play-local]').count(), 0);
+  }, withoutAdb(), {gameControllerInfo:{webSocketUrl:'ws://127.0.0.1:49201/test'}});
   await check('game library retries a failed catalog and displays the entries returned by the server', async p => {
     await p.evaluate(() => window.__holdNextOperation('game_library_catalog'));
     await nav(p, 'games');
