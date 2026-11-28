@@ -6,7 +6,7 @@
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
-| [2026-11-28-003](2026-11-28-003.md) | in_progress | 游戏库移到仓库根目录并按需下载 | 618 个资源与原版一致，0.8.2 五个安装文件为 3.48–11.07 MiB，已验证下载后断网游玩和部署。[PR #100](https://github.com/ecojust/pureTV/pull/100) · [构建产物](https://github.com/ecojust/pureTV/actions/runs/46125620890) |
+| [2026-11-28-003](2026-11-28-003.md) | completed | 游戏库按需下载，统一 Android 宿主 | 0.8.3 的游戏库仅保留 web/，48 款用共享宿主生成的 APK 通过官方签名校验。跨平台构建和断网电视部署通过。[PR #101](https://github.com/ecojust/pureTV/pull/101) |
 | [2026-11-28-002](2026-11-28-002.md) | blocked | 游戏卡片一键部署到电视，电脑游玩和打包都使用内置本地项目 | 0.8.1 已发布，48 款用同一份内置项目断网游玩和生成 APK，Android TV 模拟器已实际安装并启动。另八款等待整作分发许可，保留联网入口。[下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1) · [验收](../desktop/docs/release-0.8.1-evidence/README.md) |
 | [2026-11-28-001](2026-11-28-001.md) | completed | 网页游戏统一打包安卓、游戏栏目整合市场游戏功能 | Manager 0.7.0 已发布。六款可离线生成独立 APK，50 款可获取正式包。游戏市场支持版本选择、下载与安装，共用待安装队列。已用公开 Linux 客户端和 Android TV 模拟器复核。[下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0) · [验收](../desktop/docs/release-0.7.0-evidence/README.md) |
 | [2026-11-27-005](2026-11-27-005.md) | completed | 新增八款游戏，并将六款在线游戏接入中文网页、手柄、电视与客户端游戏栏目 | 两款离线中文版及六款在线游戏均已发布。Manager 0.6.1 内置 56 张卡，六款在 Linux 正式版均验证了从游戏栏目全屏打开、查看中文指南与退出返回原卡。[桌面版下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.1) · [客户端实测](../desktop/docs/release-0.6.1-evidence/README.md) · [电视安装包与说明](../resource/apps/hosted-games/README.md) |
