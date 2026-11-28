@@ -271,8 +271,11 @@ async function verify(browser, game) {
     assert.equal(await group.locator('option:checked').innerText(), categories.find(c => c.id === game.category)?.zh);
     const card = page.locator('[data-play-game="' + game.id + '"]');
     assert.equal(await card.count(), 1);
-    assert.equal(await card.innerText(), game.zh);
-    assert.equal(await card.locator('xpath=..').getByRole('button').count(), 1);
+    assert.equal(await card.locator('strong').innerText(), game.zh);
+    assert.equal(await card.getAttribute('aria-label'), game.zh);
+    const apkButton = card.locator('xpath=..').locator('[data-build-game]');
+    assert.equal(await apkButton.getAttribute('data-build-game'), game.id);
+    assert.equal(await apkButton.innerText(), '生成电视 APK');
     assert.equal(await page.evaluate(() => window.__windowFullscreen), false);
     const wrapperUrl = pages + game.id + '/tv.html?lang=zh';
     const authorOrigin = new URL(game.url).origin;

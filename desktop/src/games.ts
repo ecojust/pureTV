@@ -6,6 +6,7 @@ import hosted from '../../tools/pc-games/hosted-games.json';
 import sections from '../../tools/readme-app-games.json';
 import {desktop} from './bridge';
 import {locale, t} from './i18n';
+import {WebGamePackaging, type QueueGameApk} from './web-game-packaging';
 
 const gamesBase = 'https://ecojust.github.io/pureTV/games/';
 const gamesOrigin = new URL(gamesBase).origin;
@@ -47,7 +48,10 @@ export class Games {
 
   private windowWork = Promise.resolve();
 
-  constructor() {
+  private readonly packaging:WebGamePackaging;
+
+  constructor(enqueue:QueueGameApk) {
+    this.packaging = new WebGamePackaging(enqueue);
     this.player.className = 'game-player';
     this.player.setAttribute('aria-labelledby', 'game-player-title');
     document.body.append(this.player);
@@ -76,12 +80,23 @@ export class Games {
     const cards = shown.flatMap(section => section.games).map(game => {
       const id = game.id;
       const cover = 'controls' in game ? 'thumb.webp' : 'thumb.png';
-      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}"><img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/${cover}" alt=""><strong>${escape(gameName(game))}</strong></button></article>`;
+      const name = escape(gameName(game));
+      const play = desktop ? `<span class="web-game-play-label">${t('电脑游玩')}</span>` : '';
+      const action = 'controls' in game ? t('生成电视 APK') : t('获取电视 APK');
+      const pack = desktop ? `<button type="button" class="web-game-apk" data-build-game="${escape(id)}"
+        aria-label="${name} · ${action}">${action}</button>` : '';
+      return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}" aria-label="${name}">
+        <img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/${cover}" alt=""><strong>${name}</strong>${play}</button>${pack}</article>`;
     });
     return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${cards.length}</span></div><div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards.join('')}</div>`;
   }
 
   setGroup(group:string):void { this.group = group; }
+
+  packageGame(id:string, opener:HTMLButtonElement):void {
+    const game = games.get(id);
+    if (desktop && game && !this.active) this.packaging.open(id, gameName(game), 'controls' in game, opener);
+  }
 
   open(id:string):void {
     const game = games.get(id);

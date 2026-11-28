@@ -23,7 +23,7 @@ const pages: Record<Page, [string, string, string]> = {
   launchers: ['启动器', '选择电视的默认桌面，随时回到原来的启动器', 'home'],
   market: ['APK市场', '发现电视应用与启动器，下载或安装到你的电视', 'store'],
   forum: ['论坛', '浏览社区帖子，交流使用体验与反馈', 'forum'],
-  games: ['游戏', '选择游戏，用键盘或手柄开始游玩', 'gamepad'],
+  games: ['游戏', '在电脑上游玩网页游戏，或下载游戏安装到电视', 'gamepad'],
   install: ['应用管理', '导入本地安装包，安装后可用于启动器排布', 'download'],
   history: ['操作记录', '逐项查看操作结果，确认电视上的实际变化', 'list'],
   info: ['兼容性方案', '查看每项操作的 ADB 命令、参数与 Android 兼容性', 'info'],
@@ -52,7 +52,18 @@ let toolsInfo: PlatformToolsInfo | null = null, toolsInfoError = '', toolsPrepar
 let toolsProgress: DownloadProgress | null = null;
 let launcherLayout: LauncherLayoutInfo | null = null;
 let covers:Record<string,string> = {}, launcherApks:{path:string;cover?:string|null;homeBackground?:string|null;homeBackgroundColor?:string|null}[]=[];
-let marketCatalog: MarketCatalog | null = null, marketCategory: MarketCategory = 'media', marketQuery = '', marketError = '';
+type GamesView = 'web' | 'market';
+let gamesView: GamesView = 'web';
+const apkMarketFilter: {category: MarketCategory; query: string} = {category: 'media', query: ''};
+const gameMarketFilter = {category: 'game' as const, query: ''};
+
+function marketActive(): boolean {
+  return page === 'market' || (page === 'games' && gamesView === 'market');
+}
+function marketFilter(): {category: MarketCategory; query: string} {
+  return page === 'games' ? gameMarketFilter : apkMarketFilter;
+}
+let marketCatalog: MarketCatalog | null = null, marketError = '';
 const marketCategories = ['launcher', 'media', 'game'] as const;
 const marketCategoryLabels: Record<MarketCategory, string> = {media: '影音', game: '游戏', launcher: '启动器'};
 const marketCategoryIcons: Record<MarketCategory, string> = {media: 'video', game: 'gamepad', launcher: 'home'};
@@ -127,7 +138,11 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 const dialog = document.createElement('dialog');
 dialog.className = 'modal'; document.body.append(dialog);
 const packageInfo = new PackageInfoDialog(() => snapshot);
-const games = new Games();
+const games = new Games(path => {
+  queueAppApk(path);
+  page = 'install';
+  render();
+});
 const forum = new Forum(() => { if (page === 'forum') render(); });
 const clientUpdater = new ClientUpdater({
   busy: () => busy,
@@ -310,7 +325,7 @@ function adbPanel(): string {
 }
 function shell(): string {
   const [label, status] = deviceStatus();
-  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${page === 'info' || page === 'games' ? '' : api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>${page === 'games' ? 'pureTV · GitHub Pages' : page === 'info' ? t('本地命令说明') : !needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : page === 'market' ? 'apps.b14f.com' : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
+  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${page === 'info' || (page === 'games' && gamesView === 'web') ? '' : api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>${page === 'games' && gamesView === 'web' ? 'pureTV · GitHub Pages' : page === 'info' ? t('本地命令说明') : !needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : marketActive() ? 'apps.b14f.com' : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
 }
 function syncSceneScale():void {const canvas=layoutDialog.querySelector<HTMLElement>('.scene-canvas');if(canvas)canvas.style.setProperty('--scene-unit',`${canvas.clientWidth/960}px`);}
 function scrollAreas():HTMLElement[]{return [...root.querySelectorAll<HTMLElement>('[data-scroll]'),...layoutDialog.querySelectorAll<HTMLElement>('[data-scroll]')];}
@@ -328,7 +343,7 @@ function render(): void {
   }
   rendering = true;
   try {
-    if (page !== 'games') games.close();
+    if (page !== 'games' || gamesView !== 'web') games.close();
     syncMarketVisit();
     forum.syncActive(page === 'forum');
     for (const area of scrollAreas()) scrollPositions.set(area.dataset.scroll!, { top: area.scrollTop, left: area.scrollLeft });
@@ -348,7 +363,7 @@ function content(): string {
     case 'apps': return appTabs() + appsPage();
     case 'launchers': return launchersPage();
     case 'market': return marketPage();
-    case 'games': return games.render();
+    case 'games': return gamesPage();
     case 'forum': return forum.render();
     case 'install': return appTabs() + installPage();
     case 'history': return historyPage();
@@ -357,6 +372,11 @@ function content(): string {
 }
 function appTabs(): string {
   return ui`<div class="application-tabs" aria-label="应用管理视图">${actionButton('go-apps',ui`已安装应用 · ${snapshot.packages.filter(app=>app.installed).length}`,'',page==='apps'?'primary':'')}${actionButton('go-install',ui`待安装应用 · ${apkPaths.length}`,'',page==='install'?'primary':'')}</div>`;
+}
+function gamesPage(): string {
+  const views: [GamesView, string][] = [['web', '网页游戏'], ['market', '电视游戏市场']];
+  const buttons = views.map(([view, label]) => `<button type="button" id="games-view-${view}" data-games-view="${view}" aria-pressed="${gamesView === view}" class="${gamesView === view ? 'primary' : ''}">${t(label)}</button>`).join('');
+  return `<div class="application-tabs" role="group" aria-label="${t('游戏栏目')}">${buttons}</div>${gamesView === 'web' ? games.render() : marketPage()}`;
 }
 function marketSubmission(): void {
   if (dialog.open) dialog.close();
@@ -370,7 +390,7 @@ function marketDiagnostic(value: string): string {
   return value.startsWith(prefix) ? t(prefix) + ' ' + message(value.slice(prefix.length)) : message(value);
 }
 function syncMarketVisit(): void {
-  if (page !== 'market') { marketVisit = null; return; }
+  if (!marketActive()) { marketVisit = null; return; }
   if (!marketVisit) {
     marketVisit = {pending: true, baseline: undefined, newIds: new Set(), readWarning: '', saveWarning: ''};
     // A new visit should reveal the newly promoted cards at the top.
@@ -380,7 +400,7 @@ function syncMarketVisit(): void {
   // Navigation remains available during other work. Defer this visit's check
   // until the existing operation finishes; never reuse a previous visit's result.
   if (visit.pending && !busy && !marketLoading && (api.desktop || api.demo)) queueMicrotask(() => {
-    if (marketVisit === visit && page === 'market' && visit.pending && !busy && !marketLoading) {
+    if (marketVisit === visit && marketActive() && visit.pending && !busy && !marketLoading) {
       visit.pending = false;
       void loadMarketCatalog(false, visit);
     }
@@ -394,18 +414,19 @@ function compareMarketVisit(visit: MarketVisit, catalog: MarketCatalog): void {
 }
 async function rememberMarketVisit(visit: MarketVisit, entries: MarketSeenEntry[]): Promise<void> {
   const write = marketSeenWrite.then(async () => {
-    if (marketVisit !== visit || page !== 'market') return;
+    if (marketVisit !== visit || !marketActive()) return;
     try { await api.setMarketSeenApps(entries); visit.saveWarning = ''; }
     catch (error) { visit.saveWarning = error instanceof Error ? error.message : String(error); }
   });
   marketSeenWrite = write.catch(() => {});
   await write;
-  if (marketVisit === visit && page === 'market') render();
+  if (marketVisit === visit && marketActive()) render();
 }
 function marketSeenWarning(): string {
   return [marketVisit?.readWarning, marketVisit?.saveWarning].filter(Boolean).join(' ');
 }
 function visibleMarketGroups(): MarketGroup[] {
+  const {category: marketCategory, query: marketQuery} = marketFilter();
   const needle = marketQuery.trim().toLocaleLowerCase();
   const groups = marketGroups.filter(group => group.category === marketCategory && (!needle || group.versions.some(item => `${item.name} ${item.fileName} ${item.version || ''}`.toLocaleLowerCase().includes(needle))));
   return groups.filter(group => marketVisit?.newIds.has(group.id)).concat(groups.filter(group => !marketVisit?.newIds.has(group.id)));
@@ -420,6 +441,7 @@ function marketCard(group: MarketGroup): string {
 }
 function marketCards(): string {
   const groups = visibleMarketGroups();
+  const marketQuery = marketFilter().query;
   if (!groups.length) {
     const heading = marketLoading ? t('正在读取市场目录…') : marketError && !marketCatalog ? t('暂时无法读取市场') : marketQuery ? t('没有匹配的安装包') : t('市场暂时没有安装包');
     const detail = marketError && !marketCatalog ? message(marketError) : marketQuery ? t('试试其他名称或版本。') : t('刷新后会自动发现服务器中新加入的 APK。');
@@ -428,14 +450,17 @@ function marketCards(): string {
   return groups.map(marketCard).join('');
 }
 function marketCount(): string {
+  const marketCategory = marketFilter().category;
   const total = marketGroups.filter(group => group.category === marketCategory).length;
   return ui`显示 ${visibleMarketGroups().length} / ${total} ${marketCategory === 'launcher' ? t('个启动器') : t('个应用')}`;
 }
 function marketPage(): string {
+  const {category: marketCategory, query: marketQuery} = marketFilter();
   const pendingKind = marketCategory === 'launcher' ? 'launcher' : 'app';
   const pending = pendingKind === 'launcher' ? launcherApks.length : apkPaths.length;
   const count = (category: MarketCategory) => marketGroups.filter(group => group.category === category).length;
-  return ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${marketCategories.map(category => `<button type="button" role="tab" id="market-tab-${category}" aria-controls="market-panel" data-market-category="${category}" aria-selected="${marketCategory === category}" class="${marketCategory === category ? 'primary' : ''}">${icon(marketCategoryIcons[category])}${t(marketCategoryLabels[category])}<span>${count(category)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请直接提交 PR'), '', 'text-button small')}</div><section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (pendingKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${pendingKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div id="market-panel" class="market-grid" data-scroll="market-${marketCategory}" tabindex="0" role="tabpanel" aria-labelledby="market-tab-${marketCategory}">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 apps.b14f.com')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
+  const heading = page === 'games' ? '' : ui`<div class="market-heading"><div class="application-tabs market-tabs" role="tablist" aria-label="市场分类">${marketCategories.map(category => `<button type="button" role="tab" id="market-tab-${category}" aria-controls="market-panel" data-market-category="${category}" aria-selected="${marketCategory === category}" class="${marketCategory === category ? 'primary' : ''}">${icon(marketCategoryIcons[category])}${t(marketCategoryLabels[category])}<span>${count(category)}</span></button>`).join('')}</div>${actionButton('market-submission', t('软件上架请直接提交 PR'), '', 'text-button small')}</div>`;
+  return ui`${heading}<section class="panel market-panel"><div class="apps-toolbar market-toolbar"><label class="search">${icon('search')}<input name="marketSearch" aria-label="搜索市场名称或版本" placeholder="搜索市场名称或版本" value="${esc(marketQuery)}"></label><div class="toolbar-buttons">${actionButton('market-pending', (pendingKind === 'launcher' ? t('待安装启动器') : t('待安装应用')) + ` · ${pending}`, ` data-kind="${pendingKind}"`, 'small')}${actionButton('refresh-market', icon('refresh') + t('刷新市场'), disabled(busy || marketLoading || (!api.desktop && !api.demo)))}</div></div>${marketCatalog?.stale || marketError ? `<p class="market-warning" role="status">${esc(marketCatalog ? t('当前显示上次成功读取的目录。') : '')} ${esc(marketDiagnostic(marketError || marketCatalog?.warning || ''))}</p>` : ''}${marketSeenWarning() ? `<p class="market-warning market-seen-warning" role="status">${esc(message(marketSeenWarning()))}</p>` : ''}<div id="market-panel" class="market-grid" data-scroll="${page === 'games' ? 'games-market' : `market-${marketCategory}`}" tabindex="0" role="${page === 'games' ? 'region' : 'tabpanel'}" aria-labelledby="${page === 'games' ? 'games-view-market' : `market-tab-${marketCategory}`}">${marketCards()}</div><div class="list-count market-list-count"><span id="market-count">${marketCount()}</span><span>${marketCatalog?.fetchedAt ? ui`更新于 ${esc(new Date(marketCatalog.fetchedAt).toLocaleString(locale()))}` : t('目录来自 apps.b14f.com')}</span></div></section><p class="hint market-note">${t('下载的安装包会保存到电脑。')}${api.demo ? ' ' + t('演示目录仅用于预览，不代表在线市场内容。') : ''}</p>`;
 }
 function updateMarketList(): void {
   const list = root.querySelector<HTMLElement>('.market-grid');
@@ -467,6 +492,10 @@ function acceptMarketCatalog(value: MarketCatalog): void {
     if (!marketGroups.some(group => group.id === id && group.versions.some(item => item.id === selected))) marketSelections.delete(id);
   }
 }
+function queueAppApk(path: string): void {
+  if (!apkPaths.includes(path)) apkPaths.push(path);
+  selectedApks.add(path);
+}
 function adoptMarketResult(result: MarketResult): void {
   const {item, path, homeBackground, homeBackgroundColor} = result.download;
   marketDownloads.set(item.id, {blobSha: item.blobSha, path});
@@ -475,7 +504,7 @@ function adoptMarketResult(result: MarketResult): void {
     if (result.installed) launcherApks = launcherApks.filter(item => item.path !== path);
     else if (!launcherApks.some(item => item.path === path)) launcherApks.push({path, homeBackground, homeBackgroundColor});
   } else if (result.installed) { apkPaths = apkPaths.filter(item => item !== path); selectedApks.delete(path); }
-  else { if (!apkPaths.includes(path)) apkPaths.push(path); selectedApks.add(path); }
+  else queueAppApk(path);
   if (result.operation === 'install') layoutDirty = true;
 }
 function marketResultMessage(result: MarketResult): string {
@@ -486,7 +515,7 @@ function marketResultMessage(result: MarketResult): string {
 }
 async function loadMarketCatalog(refresh = false, visit = marketVisit): Promise<void> {
   if (busy || marketLoading || (!api.desktop && !api.demo)) return;
-  if (!visit || page !== 'market') return;
+  if (!visit || !marketActive()) return;
   visit.pending = false;
   marketLoading = true; marketWorking = true; localBusy = true; busy = true; cancelling = false; marketError = '';
   marketProgress = {stage: 'catalog', downloaded: 0, total: 0};
@@ -501,11 +530,11 @@ async function loadMarketCatalog(refresh = false, visit = marketVisit): Promise<
         visit.baseline = previous.entries; visit.readWarning = previous.warning || '';
       } catch { visit.baseline = null; visit.readWarning = '无法读取本地 APK 市场浏览记录，本次无法比较更新。'; }
     }
-    if (marketVisit !== visit || page !== 'market') return;
+    if (marketVisit !== visit || !marketActive()) return;
     if (cancelling) throw new Error(t('市场检查已取消。'));
     const catalog = await api.getMarketCatalog(true, updateMarketProgress);
     if (cancelling) throw new Error(t('市场检查已取消。'));
-    if (marketVisit === visit && page === 'market') {
+    if (marketVisit === visit && marketActive()) {
       acceptMarketCatalog(catalog);
       compareMarketVisit(visit, catalog);
       render();
@@ -1053,12 +1082,21 @@ document.addEventListener('click', event => {
   if (target.closest('.brand')) { event.preventDefault(); page = 'connect'; render(); return; }
   const nav = target.closest<HTMLButtonElement>('[data-page]');
   if (nav) { page = nav.dataset.page as Page; render(); if(page==='launchers' && online() && !busy)void launcherOperation({action:'getLayout'},true); return; }
+  const viewButton = target.closest<HTMLButtonElement>('[data-games-view]');
+  if (viewButton) {
+    gamesView = viewButton.dataset.gamesView === 'market' ? 'market' : 'web';
+    render();
+    root.querySelector<HTMLButtonElement>(`[data-games-view="${gamesView}"]`)?.focus({preventScroll: true});
+    return;
+  }
+  const buildGame = target.closest<HTMLButtonElement>('[data-build-game]');
+  if (buildGame) { games.packageGame(buildGame.dataset.buildGame!, buildGame); return; }
   const playGame = target.closest<HTMLButtonElement>('[data-play-game]');
   if (playGame) { games.open(playGame.dataset.playGame!); return; }
   const forumButton = target.closest<HTMLButtonElement>('[data-forum-action]');
   if (forumButton) { void forum.action(forumButton); return; }
   const marketTab = target.closest<HTMLButtonElement>('[data-market-category]');
-  if (marketTab) { marketCategory = marketTab.dataset.marketCategory as MarketCategory; marketQuery = ''; render(); return; }
+  if (marketTab) { apkMarketFilter.category = marketTab.dataset.marketCategory as MarketCategory; apkMarketFilter.query = ''; render(); return; }
   const node=target.closest<HTMLElement>('[data-scene-node]');if(node){layoutNode=node.dataset.sceneNode || null;layoutSelected=-1;render();return;}
   const tile=target.closest<HTMLElement>('[data-layout-tile]');if(tile){layoutNode=null;layoutSelected=Number(tile.dataset.layoutTile);render();return;}
   const tab = target.closest<HTMLButtonElement>('[data-filter]');
@@ -1075,7 +1113,7 @@ document.addEventListener('input', event => {
     case 'port': port = input.value; connectionEdited=true; break;
     case 'adbPath': adbPath = input.value; break;
     case 'search': query = input.value; updateList(); break;
-    case 'marketSearch': marketQuery = input.value; updateMarketList(); break;
+    case 'marketSearch': marketFilter().query = input.value; updateMarketList(); break;
   }
 });
 document.addEventListener('change', event => {
@@ -1158,7 +1196,7 @@ void api.watchMcp(value => {
     if (value.marketResult.operation === 'catalog') {
       const catalog = value.marketResult.catalog;
       acceptMarketCatalog(catalog);
-      if (!value.running && !value.error && !wasCancelling && !localBusy && !catalog.stale && page === 'market' && marketVisit?.baseline !== undefined) {
+      if (!value.running && !value.error && !wasCancelling && !localBusy && !catalog.stale && marketActive() && marketVisit?.baseline !== undefined) {
         compareMarketVisit(marketVisit, catalog);
         seenCatalog = {visit: marketVisit, entries: marketSeenEntries(marketGroups)};
       }

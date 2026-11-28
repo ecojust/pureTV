@@ -6,7 +6,7 @@ pureTV Manager runs on your computer and manages Android TV and Google TV device
 
 ## Install or upgrade the desktop manager
 
-Download **pureTV Manager 0.6.1** for your computer. The release lists file sizes and SHA256 checksums. [Download 0.6.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.1)
+Download **pureTV Manager 0.7.0** for your computer. The release lists file sizes and SHA256 checksums. [Download 0.7.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0)
 
 | Platform | Installation |
 | --- | --- |
@@ -14,7 +14,7 @@ Download **pureTV Manager 0.6.1** for your computer. The release lists file size
 | macOS 11 or later | Choose the Apple Silicon ARM64 or Intel x86_64 DMG. Drag `pureTV Manager.app` to Applications and open it there. The manager uses an ad-hoc signature and has no Apple notarization. [First launch and file verification (Chinese)](../../desktop/README.md#macos-安装与首次打开) |
 | Linux x64 | Download the DEB. The in-app updater uses the system's `pkexec` and `dpkg`. |
 
-**When upgrading from 0.5.7 or earlier, install 0.6.1 manually.** Quit the old manager and replace it. You can keep its settings and the apps on your TV. The older client retains its original download address. Version 0.5.9 uses `apps.b14f.com` for the APK market and client updates. It checks once after startup or when you choose **Check for updates** next to the version in the sidebar. **Download and install** downloads and verifies the selected package before handing it to the installer and restarting the manager. In-app availability depends on which packages the update server provides for your platform. [Client directory](https://apps.b14f.com/client/) · [Update behavior and troubleshooting](../../desktop/docs/client-updates.md#update-behavior-english)
+**When upgrading from 0.5.7 or earlier, install 0.7.0 manually.** Quit the old manager and replace it. You can keep its settings and the apps on your TV. The older client retains its original download address. Version 0.5.9 uses `apps.b14f.com` for the APK market and client updates. It checks once after startup or when you choose **Check for updates** next to the version in the sidebar. **Download and install** downloads and verifies the selected package before handing it to the installer and restarting the manager. In-app availability depends on which packages the update server provides for your platform. [Client directory](https://apps.b14f.com/client/) · [Update behavior and troubleshooting](../../desktop/docs/client-updates.md#update-behavior-english)
 
 ![pureTV Manager in the Sky theme with simulated device data](../previews/manager-en.png)
 
@@ -30,10 +30,10 @@ The connected home page shows the model, Android and SDK versions, security patc
 
 | Task | Where to find it |
 | --- | --- |
-| Manage installed apps | Search or filter **App management**. Enable or disable apps in batches, uninstall them for the current user, or restore system apps whose APKs are still present. Uninstalling a system app for that user preserves its data and the APK on the system partition. The manager protects core components and the current default launcher. |
+| Manage installed apps | Search or filter **Apps**. Enable or disable apps in batches, uninstall them for the current user, or restore system apps whose APKs are still present. Uninstalling a system app for that user preserves its data and the APK on the system partition. The manager protects core components and the current default launcher. |
 | Identify packages and check their size | Select the circled **i** to see the package's purpose, uninstall risk, source and retrieval time. Unknown packages are marked. Sizes cover the main APK and split APKs and exclude private data, caches and optimized files. Unreadable sizes are shown as unknown. |
-| Install a local APK | Import APKs under **Pending installations**. Install from a row or select items for a batch. Successful items leave the queue. Failed and unprocessed items remain. The list scrolls with fixed headers and batch actions. |
-| Install from the market | Browse, search or preview the server's `launcher/`, `media/` and `game/` directories. Download to the pending list or install on a connected TV. Each card groups the latest five versions and selects the newest by default. Refresh to find newly uploaded APKs. [Browse the server](https://apps.b14f.com/launcher/) |
+| Install a local APK | Import APKs under **Pending apps**. Install from a row or select items for a batch. Successful items leave the queue. Failed and unprocessed items remain. The list scrolls with fixed headers and batch actions. |
+| Install from the market | Find launchers and media apps in **APK Market**, or games under **Games → TV game market**. Download to the pending list or install directly on a connected TV. Each card offers up to five versions, most recent first. [Browse the game directory](https://apps.b14f.com/game/) |
 | Change the home screen | Import and install launcher APKs from **Launchers**. Choose the default launcher or restore the previous one, then press Home on the remote. An active launcher that supports the layout protocol shows **Adjust layout**. |
 
 Connecting, refreshing, batch operations and applying a layout show progress followed by a result dialog. Batch results distinguish successful, failed and unprocessed items. Automatic background reads run without repeated dialogs.
@@ -42,13 +42,13 @@ In **Adjust layout**, add installed user apps with launchable activities to Home
 
 Cards for compatible launchers display their Home background even when inactive. Change that background in **Adjust layout**. The pending-APK preview reads the embedded Home background and falls back to a sibling `thumb.png` or `APK-name.thumb.png` if it cannot read one.
 
-The TV store uses the same Media, Games and Launchers directories as the desktop APK market. Open a card to choose from up to five versions. The TV store works with updated launchers to let you choose the position of an app on the home screen. To use English on supported launchers and first-party TV apps, select English in the TV system settings. User-provided app names, playlists and media titles retain their original text. [TV store guide](../../resource/apps/putrtv-store/README.en.md) · [Full resource catalog](../../resource/README.md)
+The TV store and the desktop manager read the same Media, Games and Launchers directories. On the computer, games are listed under **Games → TV game market**. Open a card to choose from up to five versions. The TV store works with updated launchers to let you choose the position of an app on the home screen. To use English on supported launchers and first-party TV apps, select English in the TV system settings. User-provided app names, playlists and media titles retain their original text. [TV store guide](../../resource/apps/putrtv-store/README.en.md) · [Full resource catalog](../../resource/README.md)
 
 ## Install a game and connect a controller
 
 ### Play on a computer
 
-Connect your computer to the internet and open **Games** in the sidebar of Manager 0.6.1. Choose a cover to play full screen. The 56 games can be opened without installing ADB or connecting a TV. If you use Manager 0.6.0, install 0.6.1 from the [release page](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.1).
+Connect your computer to the internet, open **Games → Web games** in the sidebar of Manager 0.7.0, then choose **Play on computer** on a card to open it full screen. All 56 games can be played without installing ADB or connecting a TV. If you use an older version, download the installer from the [0.7.0 release page](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0).
 
 Use **Category** to find the six games hosted by their authors.
 
@@ -61,6 +61,17 @@ Use **Category** to find the six games hosted by their authors.
 Choose **Game guide** for objectives, controls and the meaning of on-screen terms. These six games use the input devices supported by each author. The other 50 games support pureTV Wi-Fi controllers. Connect the controller to the same LAN as the computer and press its search button while the game is open. Choose **Back to games** to return to the catalog.
 
 To play from the project homepage, select **Play in browser** on a game card. The browser version supports keyboard play without installing the manager. [Browse web games](https://ecojust.github.io/pureTV/)
+
+#### Prepare a TV APK from a web game
+
+Open **Games → Web games** and find the game you want to install on your TV.
+
+- For the 50 games with official signed TV packages, choose **Get TV APK** to download the original package on first use. A verified local copy can be reused offline.
+- For the six games hosted by their authors, choose **Build TV APK**. Manager assembles the selected game’s package offline using a built-in, pre-signed template. You can install all six side by side. The TV needs internet access to play each game on its author’s site.
+
+Once the APK is ready, check its SHA-256 and, when available, its package name. Choose **Save to computer** to export it without connecting a TV. To install it, choose **Add to install queue** and open **Pending apps** under **Apps**. Connect the TV, authorize ADB and install individual items or a batch. Only games already in **Web games** are available for packaging.
+
+To browse other games or versions on the market server, switch to **TV game market** in the same section. It provides the market’s previews, version selector, downloads and installation controls.
 
 #### Use a standalone installer
 
@@ -84,7 +95,7 @@ python3 -m venv .venv
 
 Choose a game on the homepage, select its TV icon to download the signed APK, and install it on the television. If you downloaded the source archive, extract it and install the APK from `joystick-games/<game-id>/`. [Browse the homepage game catalog](../../README.en.md#games) · [Download the six updated and new games](../../joystick-games/README.md#game-expansion)
 
-The six author-hosted games share one Android TV app. Open pureTV Online Games and select a title with the remote or scan the code with a phone on the same network. Press Back during play to see the Chinese guide and controls. [TV app and controls](../../resource/apps/hosted-games/)
+The six author-hosted games are also available together in one Android TV app, linked from the homepage. Open pureTV Online Games and select a title with the remote or scan the code with a phone on the same network. Press Back during play to see the Chinese guide and controls. [TV app and controls](../../resource/apps/hosted-games/)
 
 Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
 

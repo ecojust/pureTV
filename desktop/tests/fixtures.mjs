@@ -141,6 +141,8 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
     window.__gameCommands = [];
+    window.__gameApkRequests = [];
+    window.__gameApkError = options.gameApkError || null;
     window.__windowFullscreen = false;
     let gameSession = 0;
     window.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
@@ -159,6 +161,18 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         if (command === 'plugin:event|unlisten') return;
         if (command === 'plugin:window|is_fullscreen') return window.__windowFullscreen;
         if (command === 'plugin:window|set_fullscreen') { window.__windowFullscreen = args.value; return; }
+        if (command === 'cancel_web_game_apk') {
+          window.__gameApkRequests.push({command, channelId:args.channelId});
+          return;
+        }
+        if (command === 'build_web_game_apk' || command === 'save_web_game_apk') {
+          const id = args.gameId;
+          if (command === 'build_web_game_apk' && !args.onProgress) throw new Error('Missing progress channel');
+          window.__gameApkRequests.push({command, id});
+          if (window.__gameApkError) throw new Error(window.__gameApkError);
+          if (command === 'save_web_game_apk') return options.gameApkDestination || null;
+          return {path:`/cache/games/${id}-0.1.0.apk`, packageName:null, sha256:'a'.repeat(64)};
+        }
         if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers'].includes(command)) {
           window.__gameCommands.push({command, ...args});
           if (command === 'start_game_controllers') {

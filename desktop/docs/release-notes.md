@@ -1,19 +1,22 @@
-# pureTV Manager 0.6.1
+# pureTV Manager 0.7.0
 
 ## 简体中文
 
-- 电脑端「游戏」栏目现有 56 款游戏。新增的六款作者在线游戏分别是《金库大盗》《鱼群环线》《黑色侦探：雨夜》《飞天涂色巴士》《暮海点灯人》和《大田都市科学高中专业探索》。
-- 联网后选择封面，即可在管理器内全屏打开作者的游戏。游玩指南提供中文操作说明、游戏目标和原文菜单对照。各款沿用原作支持的输入方式。
+- 左侧「游戏」整合「网页游戏」和「电视游戏市场」。在网页游戏卡片上可选择「电脑游玩」，也可为目录中已有的 56 款游戏准备电视 APK。
+- 其中 50 款通过「获取电视 APK」取得官方签名包。六款作者在线游戏通过「生成电视 APK」在电脑上用内置的预签名模板离线组装，各款独立安装，游玩时由电视联网加载作者网站。
+- 在弹窗核对包名和 SHA-256 后，可将 APK 保存到电脑，无需连接电视。也可加入安装队列，在「待安装应用」中通过 ADB 安装到已连接的电视。
 
 ## 繁體中文
 
-- 電腦版「遊戲」欄目現有 56 款遊戲。新增六款由作者提供的線上遊戲，分別為《金庫大盜》《魚群環線》《黑色偵探：雨夜》《飛天塗色巴士》《暮海點燈人》和《大田都市科學高中專業探索》。
-- 連上網路後選取封面，即可在管理器內以全螢幕開啟作者的遊戲。遊玩指南提供中文操作說明、遊戲目標與原文選單對照。各款沿用原作支援的輸入方式。
+- 左側「遊戲」整合「網頁遊戲」和「電視遊戲市場」。在網頁遊戲卡片上可選擇「在電腦上遊玩」，也可以為目錄中已有的 56 款遊戲準備電視 APK。
+- 其中 50 款透過「取得電視 APK」取得官方簽署的安裝檔。六款由作者代管的遊戲可透過「產生電視 APK」，在電腦上使用內建且預先簽署的範本離線組裝。各款可獨立安裝，遊玩時電視需要連線至作者網站。
+- 核對套件名稱與 SHA-256 後，可將 APK 儲存至電腦，無須連接電視。也可加入安裝佇列，在待安裝清單中透過 ADB 安裝到已連線的電視。
 
 ## English
 
-- The desktop **Games** section now lists 56 games, including six new titles hosted by their authors. Choose from Vault Breakers, Fish Loop, NOIR EXTREME, Struggle Bus, Vespertine and the Daejeon Urban Science High School Department Tour.
-- With an internet connection, select a cover to play full screen inside the manager. Each guide explains the original controls and objectives and translates menu terms. Input support varies by title.
+- Open **Games** in the sidebar for both **Web games** and the **TV game market**. Each of the 56 web game cards lets you play on your computer or prepare a TV APK.
+- Choose **Get TV APK** to retrieve an official signed package for 50 games. For the six games hosted by their authors, **Build TV APK** assembles a standalone package offline using a built-in, pre-signed template. Each installs separately and connects to the author’s site to play.
+- Check the package name and SHA-256, then save the APK to your computer without connecting a TV. To install it, add it to the install queue and use **Pending apps** with an authorized ADB connection.
 
 ---
 
