@@ -12,7 +12,7 @@ import time
 
 import pyatspi as at
 from gi.repository import GLib
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageOps
 
 
 out, manager_pid, metadata = sys.argv[1:]
@@ -109,6 +109,89 @@ def enter(label, value):
 
 def photo(filename):
     command("import", "-window", "root", str(out / (filename + ".png")))
+
+
+def deployment_photo():
+    # Capture real X11 pixels after the success dialog has been painted. In addition
+    # to AT-SPI semantics, OCR verifies its contents in the actual submitted frame.
+    target = out / "deployed.png"
+    heading = wait("success heading", lambda: next((node for role, name, _, node in entries()
+                   if role == "heading" and name.strip() == "操作成功"), None), 10)
+    action = button("前往启动器")
+    xid = command("xdotool", "getactivewindow")
+    command("xdotool", "windowactivate", "--sync", xid)
+    window_class = command("xprop", "-id", xid, "WM_CLASS")
+    print("Active window", window_class, command("xprop", "-id", xid, "_NET_WM_PID"), flush=True)
+    lookup = subprocess.run(["xdotool", "search", "--onlyvisible", "--pid", manager_pid],
+                            capture_output=True, text=True, timeout=8)
+    windows = lookup.stdout.splitlines()
+    initial_active = xid in windows
+    print("Manager window count", len(windows), "active belongs to Manager", initial_active, flush=True)
+    if not initial_active and windows:
+        xid = windows[-1]
+        command("xdotool", "windowactivate", "--sync", xid)
+    words = []
+    for attempt in range(4):
+        if attempt == 1:
+            command("xdotool", "windowsize", "--sync", xid, "1380", "910")
+        if attempt == 2:
+            action.queryComponent().grabFocus()
+            from shutil import which
+            if which("xrefresh"):
+                subprocess.run(["xrefresh"], timeout=4, check=False)
+        if attempt == 3:
+            key("alt+F10")
+        time.sleep(1)
+        left = top_offset = 0
+        if attempt < 2:
+            photo("deployed")
+            surface = "X11 root"
+        else:
+            surface = "X11 application window"
+            command("import", "-window", xid, str(target))
+            geometry = command("xwininfo", "-id", xid)
+            left = int(re.search(r"Absolute upper-left X:\s*(-?\d+)", geometry)[1])
+            top_offset = int(re.search(r"Absolute upper-left Y:\s*(-?\d+)", geometry)[1])
+        with Image.open(target) as captured:
+            read = []
+            for node in (heading, action):
+                box = node.queryComponent().getExtents(at.DESKTOP_COORDS)
+                top = max(0, box.y - top_offset - 4)
+                crop = captured.crop((max(0, box.x - left - 4), top, min(captured.width, box.x - left + box.width + 4),
+                                      min(captured.height, box.y - top_offset + box.height + 4)))
+                if crop.width == 0 or crop.height == 0:
+                    read.append("")
+                    continue
+                from io import BytesIO
+                stream = BytesIO()
+                crop = crop.resize((crop.width * 3, crop.height * 3))
+                crop.save(stream, "PNG")
+                ocr = subprocess.run(["tesseract","stdin","stdout","-l","chi_sim","--psm","7"],
+                                     input=stream.getvalue(), capture_output=True, timeout=12, check=True)
+                read.append(re.sub(r"\s+", "", ocr.stdout.decode(errors="replace")))
+            # Read the full central panel at text-recognition resolution. The saved
+            # PNG remains the original frame; the crop is only used for verification.
+            w, h = captured.size
+            panel = captured.crop((int(w*.30),int(h*.20),int(w*.70),int(h*.80)))
+            panel = ImageOps.autocontrast(panel.convert("L"))
+            from io import BytesIO
+            stream = BytesIO()
+            panel.resize((panel.width*2,panel.height*2), Image.Resampling.LANCZOS).save(stream, "PNG")
+            full = subprocess.run(["tesseract","stdin","stdout","-l","chi_sim","--psm","6"],
+                                  input=stream.getvalue(), capture_output=True, timeout=25, check=True)
+            text = re.sub(r"\s+", "", full.stdout.decode(errors="replace"))
+        words = read
+        print("Screenshot attempt", attempt, surface, "heading/action OCR", read,
+              "full OCR success markers", [mark for mark in ("操作成功", "游戏已安装", "前往启动器", "设备连接") if mark in text], flush=True)
+        if ("成功" in read[0] and "启动器" in read[1]) or (
+                ("操作成功" in text or "游戏已安装" in text) and "前往启动器" in text):
+            record("visibleResult", {"ocrConfirmed": True, "window": surface,
+                                     "initialActiveWasManager": initial_active, "initialWindowClass": window_class,
+                                     "captureAfter": ["activation", "resize", "focus and refresh", "maximize"][attempt],
+                                     "recognizedPanelMarkers": [m for m in ("操作成功","打包APK","安装到电视","完成","游戏已安装","前往启动器") if m in text.upper()],
+                                     "expected": ["操作成功", "前往启动器"]})
+            return
+    raise RuntimeError("Could not verify success dialog in screenshot: " + repr(words[:2]))
 
 
 def host_isolation():
@@ -214,14 +297,17 @@ def boot_tv():
             record("emulatorExit", {"code": emulator.returncode, "reason": failure})
             raise RuntimeError("Android TV emulator exited during boot: " + failure)
         try:
-            return adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
+            return (adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
+                    and "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features", timeout=8))
         except (subprocess.SubprocessError, OSError):
             return False
     wait("Android TV boot", booted, 420)
     assert os.readlink("/proc/self/ns/net") == os.readlink(f"/proc/{emulator.pid}/ns/net")
-    adb("emulator-5554", "shell", "input", "keyevent", "KEYCODE_WAKEUP")
-    adb("emulator-5554", "shell", "wm", "dismiss-keyguard")
-    assert "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features")
+    for args in (["input", "keyevent", "KEYCODE_WAKEUP"], ["wm", "dismiss-keyguard"]):
+        try:
+            subprocess.run(["adb", "-s", "emulator-5554", "shell", *args], capture_output=True, timeout=10)
+        except subprocess.TimeoutExpired:
+            pass
     # A QEMU port redirection survives Manager restarting the host ADB daemon during connection.
     # Expose real guest adbd over guest Ethernet as on a network-enabled television.
     adb("emulator-5554", "emu", "redir", "add", "tcp:15555:5555")
@@ -269,7 +355,7 @@ def deploy():
     steps = ["打包 APK", "安装到电视", "完成"]
     for step in steps:
         see(step)
-    photo("deployed")
+    deployment_photo()
     path = adb(endpoint, "shell", "pm", "path", "--user", "0", package)
     assert re.fullmatch(r"package:/data/app/[^\n]+/base\.apk", path), path
     installed = subprocess.check_output(["adb", "-s", endpoint, "exec-out", "cat", path[8:]], timeout=45)

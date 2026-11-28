@@ -65,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y xvfb openbox xdotool python3-pyatspi python3-pil libatk-adaptor dbus-x11 xauth x11-utils imagemagick libgl1-mesa-dri fonts-noto-cjk locales "$RUNNER_TEMP"/installer/*.deb
+          sudo apt-get install -y xvfb openbox xdotool python3-pyatspi python3-pil tesseract-ocr tesseract-ocr-chi-sim libatk-adaptor dbus-x11 xauth x11-utils imagemagick libgl1-mesa-dri fonts-noto-cjk locales "$RUNNER_TEMP"/installer/*.deb
           sudo locale-gen zh_CN.UTF-8
           sudo chmod a+rw /dev/kvm
           sdktools="$ANDROID_HOME/cmdline-tools/latest/bin"
@@ -86,8 +86,8 @@ jobs:
             exec sudo -u "$1" -- env HOME="$2" ANDROID_AVD_HOME="$8" ANDROID_EMULATOR_HOME="$2/.android" ANDROID_HOME="$3" ANDROID_SDK_ROOT="$3" \
               PATH="$3/platform-tools:$3/emulator:/usr/sbin:/usr/bin:/sbin:/bin" XDG_RUNTIME_DIR="$4" \
               LANG=zh_CN.UTF-8 LANGUAGE=zh_CN LC_MESSAGES=C.UTF-8 GDK_BACKEND=x11 GTK_MODULES=atk-bridge \
-              NO_AT_BRIDGE=0 WEBKIT_DISABLE_DMABUF_RENDERER=1 LIBGL_ALWAYS_SOFTWARE=1 \
-              dbus-run-session -- xvfb-run -a -s "-screen 0 1500x980x24 -nolisten tcp" \
+              NO_AT_BRIDGE=0 WEBKIT_DISABLE_COMPOSITING_MODE=1 WEBKIT_DISABLE_DMABUF_RENDERER=1 LIBGL_ALWAYS_SOFTWARE=1 \
+              xvfb-run -a -s "-screen 0 1500x980x24 -nolisten tcp" dbus-run-session -- \
               bash "$5/tools/desktop-offline-qa/session.sh" "$6" "$5" "$7"
           ' -- "$(id -un)" "$HOME" "$ANDROID_HOME" "$runtime" "$GITHUB_WORKSPACE" "$exe" "$RUNNER_TEMP/evidence" "$RUNNER_TEMP/manager-avds"
       - uses: actions/upload-artifact@v4
