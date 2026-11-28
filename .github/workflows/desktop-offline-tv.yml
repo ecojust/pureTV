@@ -87,7 +87,7 @@ jobs:
               PATH="$3/platform-tools:$3/emulator:/usr/sbin:/usr/bin:/sbin:/bin" XDG_RUNTIME_DIR="$4" \
               LANG=zh_CN.UTF-8 LANGUAGE=zh_CN LC_MESSAGES=C.UTF-8 GDK_BACKEND=x11 GTK_MODULES=atk-bridge \
               NO_AT_BRIDGE=0 WEBKIT_DISABLE_COMPOSITING_MODE=1 WEBKIT_DISABLE_DMABUF_RENDERER=1 LIBGL_ALWAYS_SOFTWARE=1 \
-              dbus-run-session -- xvfb-run -a -s "-screen 0 1500x980x24 -nolisten tcp" \
+              xvfb-run -a -s "-screen 0 1500x980x24 -nolisten tcp" dbus-run-session -- \
               bash "$5/tools/desktop-offline-qa/session.sh" "$6" "$5" "$7"
           ' -- "$(id -un)" "$HOME" "$ANDROID_HOME" "$runtime" "$GITHUB_WORKSPACE" "$exe" "$RUNNER_TEMP/evidence" "$RUNNER_TEMP/manager-avds"
       - uses: actions/upload-artifact@v4

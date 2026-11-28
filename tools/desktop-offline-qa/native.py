@@ -120,6 +120,12 @@ def deployment_photo():
     action = button("前往启动器")
     xid = command("xdotool", "getactivewindow")
     command("xdotool", "windowactivate", "--sync", xid)
+    print("Active window class", command("xprop", "-id", xid, "WM_CLASS", "_NET_WM_PID"), flush=True)
+    windows = command("xdotool", "search", "--onlyvisible", "--pid", manager_pid).splitlines()
+    print("Manager window count", len(windows), "active belongs to Manager", xid in windows, flush=True)
+    if xid not in windows and windows:
+        xid = windows[-1]
+        command("xdotool", "windowactivate", "--sync", xid)
     words = []
     for attempt in range(4):
         if attempt == 1:
@@ -130,14 +136,23 @@ def deployment_photo():
         if attempt == 3:
             key("alt+F10")
         time.sleep(1)
-        photo("deployed")
+        left = top_offset = 0
+        if attempt < 2:
+            photo("deployed")
+            surface = "X11 root"
+        else:
+            surface = "X11 application window"
+            command("import", "-window", xid, str(target))
+            geometry = command("xwininfo", "-id", xid)
+            left = int(re.search(r"Absolute upper-left X:\s*(-?\d+)", geometry)[1])
+            top_offset = int(re.search(r"Absolute upper-left Y:\s*(-?\d+)", geometry)[1])
         with Image.open(target) as captured:
             read = []
             for node in (heading, action):
                 box = node.queryComponent().getExtents(at.DESKTOP_COORDS)
-                top = max(0, box.y - 4)
-                crop = captured.crop((max(0, box.x - 4), top, min(captured.width, box.x + box.width + 4),
-                                      min(captured.height, box.y + box.height + 4)))
+                top = max(0, box.y - top_offset - 4)
+                crop = captured.crop((max(0, box.x - left - 4), top, min(captured.width, box.x - left + box.width + 4),
+                                      min(captured.height, box.y - top_offset + box.height + 4)))
                 if crop.width == 0 or crop.height == 0:
                     read.append("")
                     continue
@@ -154,7 +169,7 @@ def deployment_photo():
         words = read
         if ("成功" in read[0] and "启动器" in read[1]) or (
                 ("操作成功" in text or "游戏已安装" in text) and "前往启动器" in text):
-            record("visibleResult", {"ocrConfirmed": True, "window": "X11 root",
+            record("visibleResult", {"ocrConfirmed": True, "window": surface,
                                      "expected": ["操作成功", "前往启动器"]})
             return
     raise RuntimeError("Could not verify success dialog in screenshot: " + repr(words[:2]))
@@ -263,14 +278,17 @@ def boot_tv():
             record("emulatorExit", {"code": emulator.returncode, "reason": failure})
             raise RuntimeError("Android TV emulator exited during boot: " + failure)
         try:
-            return adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
+            return (adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
+                    and "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features", timeout=8))
         except (subprocess.SubprocessError, OSError):
             return False
     wait("Android TV boot", booted, 420)
     assert os.readlink("/proc/self/ns/net") == os.readlink(f"/proc/{emulator.pid}/ns/net")
-    adb("emulator-5554", "shell", "input", "keyevent", "KEYCODE_WAKEUP")
-    adb("emulator-5554", "shell", "wm", "dismiss-keyguard")
-    assert "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features")
+    for args in (["input", "keyevent", "KEYCODE_WAKEUP"], ["wm", "dismiss-keyguard"]):
+        try:
+            subprocess.run(["adb", "-s", "emulator-5554", "shell", *args], capture_output=True, timeout=10)
+        except subprocess.TimeoutExpired:
+            pass
     # A QEMU port redirection survives Manager restarting the host ADB daemon during connection.
     # Expose real guest adbd over guest Ethernet as on a network-enabled television.
     adb("emulator-5554", "emu", "redir", "add", "tcp:15555:5555")
