@@ -4,8 +4,8 @@
 
 ## 配置
 
-1. 打开支持 MCP 的 pureTV 管理器，进入「设备连接」。
-2. 在「MCP · Agent 调试」中复制完整 JSON，加入 Agent 客户端的 MCP 配置。
+1. 打开支持 MCP 的 pureTV 管理器，进入「游戏 → 本地游戏」或「设备连接」。
+2. 展开 MCP 配置，复制完整 JSON，加入 Agent 客户端的 MCP 配置。
 3. 在客户端重新连接 `puretv` 服务。管理器需要保持打开。
 
 配置使用标准 **stdio**，示例（实际路径以窗口显示为准）：
@@ -25,7 +25,7 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 
 `--mcp` 是当前窗口的代理，不创建第二套电视连接或管理状态。管理器内部仅监听 `127.0.0.1` 的随机端口，每次启动生成随机凭据；代理自动读取受保护的本机会话文件，不需要把令牌放到 Agent 配置。拒绝浏览器 Origin 请求，不允许跨电脑访问。重启窗口后请重新连接 MCP；关闭窗口后调用会明确报错。
 
-## 全部工具（34 个）
+## 工具列表
 
 | 工具 | 参数 | 行为 |
 | --- | --- | --- |
@@ -90,6 +90,55 @@ Windows 的 `command` 是已安装的管理器 EXE 或便携 EXE。Linux 使用�
 下载返回 `{ operation: "download", download: { item, path, ... }, installed: false }`。安装返回同样的 `download`，加上 `operation: "install"`、`snapshot` 和 `installed`。如果下载成功但安装失败，MCP 返回 `isError: true`，同时保留 `structuredContent.result` 中的下载结果、错误和设备快照；窗口保留待安装 APK，可修复连接后用现有 `install { paths: [...] }` 重试。`installed: false` 对单纯下载是正常结果。为限制响应大小，MCP 下载结果不内嵌 `homeBackground` 图片；窗口仍会显示下载 APK 提供的 Home 背景。
 
 应用筛选、搜索、查看记录可基于 `get_state` 的 `packages`、`launchers`、`history` 完成；Agent 可直接提交选定的包名或 APK 路径，不需要模拟勾选界面。文件选择器需要用户在窗口操作，自动化时直接提供本机完整路径更方便。
+
+## 接入自制网页游戏
+
+准备一个可以直接打开的静态站点目录，根目录放 `index.html`。使用打包工具时，登记构建后的网页目录（例如 `dist`）。HTML、脚本和图片使用相对 URL，例如 `./assets/game.js`；Vite 项目可设 `base: "./"`。管理器记录目录路径，重新打开游戏就能读取最新文件。
+
+| 工具 | 参数 | 结果 |
+| --- | --- | --- |
+| `register_local_game` | `directory` 本机绝对路径，可选 `title` | 登记游戏并刷新本地游戏列表，返回 `id`、`title`、`directory`。同一目录再次登记会沿用 ID |
+| `list_local_games` | 无 | 返回本机已登记的游戏 |
+| `open_local_game` | `id` | 请求管理器打开已登记的游戏。返回 `requested: true` 表示请求已发出；相同游戏已打开会返回 `alreadyOpen: true`。切换游戏前请先退出当前游戏 |
+| `get_gamepad_protocol` | 无 | 返回 WebSocket 接入方式、按钮名及 JS 示例 |
+| `get_gamepad_state` | 无 | 返回 `active`；手柄服务就绪后还包含 `localGameId`、`session`、`players`、`revision`、TCP 手柄数 `connections` 与网页订阅数 `webSocketClients` |
+| `test_gamepad_button` | 当前 `session` 和 `key` | 占用一个空闲玩家位，通过 TCP 测试一次按下与释放，然后断开。返回服务实际观察到的 `afterPress`、`afterRelease` |
+
+游戏页通过启动 URL 的 `puretvSocket` 参数连接本次手柄服务。收到的每条 JSON 消息都带有当前玩家状态。下面的页面可以直接保存成 `index.html` 来检查按键、计数与断开。
+
+```html
+<!doctype html>
+<meta charset="utf-8">
+<pre id="status">请从 pureTV 的本地游戏页启动</pre>
+<script>
+const status = document.getElementById("status");
+const url = new URLSearchParams(location.search).get("puretvSocket");
+if (url) {
+  const socket = new WebSocket(url);
+  socket.onmessage = ({data}) => {
+    const message = JSON.parse(data);
+    if (message.type !== "puretv:controller-state") return;
+    status.textContent = message.state.players.map(player => {
+      const held = Object.keys(player.buttons).filter(key => player.buttons[key]);
+      const input = player.connected ? held.join(" + ") || "已连接" : "已断开";
+      return "P" + player.id + "  " + input + "  A × " + player.buttonCounters.A;
+    }).join("\n") || "等待连接手柄";
+  };
+  socket.onclose = () => { status.textContent = "手柄服务已断开"; };
+}
+</script>
+```
+
+方向和持续动作读取 `buttons`。单次动作可以比较同一玩家会话相邻的 `buttonCounters`，避免遗漏两帧之间的轻触。玩家断开或会话改变时清除本地按住状态并重置计数基线。支持 `UP`、`DOWN`、`LEFT`、`RIGHT`、`START`、`A`、`B`、`X`、`Y`。
+
+```text
+register_local_game {"directory":"/absolute/path/to/dist","title":"我的游戏"}
+open_local_game {"id":"<上一步返回的 id>"}
+get_gamepad_state {}
+test_gamepad_button {"session":"<本次游戏的 session>","key":"A"}
+```
+
+确认 `localGameId` 对应刚打开的游戏，并等到 `webSocketClients` 大于零，再运行按键测试。`afterPress` 和 `afterRelease` 可用于复查手柄服务收到的输入；要验证游戏消费了该输入，还需检查游戏本身的画面或状态。接入 pureTV Wi-Fi 手柄后，也可以通过 `get_gamepad_state` 查看实际按键和计数。
 
 ## 调试示例
 

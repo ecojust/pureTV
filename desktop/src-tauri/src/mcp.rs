@@ -1,4 +1,5 @@
 //! Local MCP transport. The stdio process relays to the running GUI's service.
+use crate::game_controllers::KEYS as GAMEPAD_BUTTONS;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::{
@@ -52,6 +53,18 @@ fn market_tool(
     value["annotations"]["destructiveHint"] = json!(destructive);
     value
 }
+pub fn gamepad_protocol() -> Value {
+    json!({
+        "version":1,
+        "transport":"websocket",
+        "urlParameter":"puretvSocket",
+        "messageType":"puretv:controller-state",
+        "buttons":GAMEPAD_BUTTONS,
+        "description":"Open the URL supplied in the game's puretvSocket query parameter. Receive JSON snapshots in message.state. For each connected player use id (1-based seat), buttons (held booleans), and buttonCounters (press counters). Clear held input when disconnected or the socket closes. A new player session resets the counters.",
+        "example":"const ws = new WebSocket(new URLSearchParams(location.search).get('puretvSocket')); ws.onmessage = ({data}) => { const msg = JSON.parse(data); if (msg.type === 'puretv:controller-state') console.log(msg.state.players); };"
+    })
+}
+
 pub fn tools() -> Vec<Value> {
     let packages = json!({"type":"array","items":{"type":"string"},"minItems":1,"maxItems":100});
     let market_item = json!({
@@ -59,6 +72,12 @@ pub fn tools() -> Vec<Value> {
         "revision":{"type":"string","minLength":64,"maxLength":64,"description":"Optional 64-character lowercase hexadecimal catalog snapshot identifier. Pass catalog.revision unchanged to reject a selection if the catalog has changed. This is an opaque HTTP metadata fingerprint, not a Git commit or APK checksum."}
     });
     vec![
+        tool("register_local_game","Add a static web game from an absolute directory on this computer containing index.html and relative asset URLs. It appears in Games > Local games. Use the built web assets directory, not a project containing secrets.",json!({"directory":{"type":"string","minLength":1},"title":{"type":"string","minLength":1,"maxLength":120}}),&["directory"],false),
+        tool("list_local_games","List this computer's registered local web games with their id, title and directory.",json!({}),&[],true),
+        tool("open_local_game","Request playback of a registered id in the open manager. The window preserves a game already in progress. Poll get_gamepad_state until localGameId matches the requested id.",json!({"id":{"type":"string","minLength":1}}),&["id"],false),
+        tool("get_gamepad_protocol","Describe the local game's browser WebSocket API, supported buttons, message format and JavaScript usage.",json!({}),&[],true),
+        tool("get_gamepad_state","Inspect the active local game's controller session, player inputs, press counters and number of subscribed game WebSockets. Returns active=false if no local game controller session is running.",json!({}),&[],true),
+        tool("test_gamepad_button","Connect a temporary test controller to the active local game's TCP receiver, press and release one button, then disconnect. Requires a free player seat. Match localGameId and pass its current session from get_gamepad_state. Returns observed input snapshots.",json!({"session":{"type":"string","minLength":1},"key":{"type":"string","enum":GAMEPAD_BUTTONS}}),&["session","key"],false),
         tool("close_manager","Close the open manager after cancelling pending work and stopping the configured ADB server. In-flight mutations finish first. This interrupts connections using that ADB server; explicit user confirmation is required. A stdio disconnection during shutdown is expected.",json!({"confirmShutdown":{"type":"boolean","const":true}}),&["confirmShutdown"],false),
         tool("get_local_network","Refresh this computer's active LAN IPv4 addresses, adapter names and subnet prefixes. Returns the shared snapshot; no ADB or TV connection required.",json!({}),&[],true),
         tool("get_interface_preferences","Get the open manager's interface language and theme preferences.",json!({}),&[],true),
@@ -211,7 +230,7 @@ pub fn dispatch(
             } else {
                 "2025-06-18"
             };
-            json!({"protocolVersion":version,"capabilities":{"tools":{"listChanged":false}},"serverInfo":{"name":"pureTV Manager","version":env!("CARGO_PKG_VERSION")},"instructions":"Controls the open pureTV Manager. All operations use its current TV and Android user; get_state/get_status show actual results. Protected core components cannot be disabled/uninstalled. SDK download requires user license acceptance."})
+            json!({"protocolVersion":version,"capabilities":{"tools":{"listChanged":false}},"serverInfo":{"name":"pureTV Manager","version":env!("CARGO_PKG_VERSION")},"instructions":"Controls the open pureTV Manager. Local web games and controller tests run on this computer without a TV. Device operations use the current TV and Android user; get_state/get_status show actual results. Protected core components cannot be disabled/uninstalled. SDK download requires user license acceptance."})
         }
         "ping" => json!({}),
         "tools/list" => json!({"tools":tools()}),
@@ -458,7 +477,7 @@ mod tests {
         let call = |name: &str, args: Value| Ok(json!({"tool":name,"arguments":args}));
         let response=dispatch(json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26"}}),&call).unwrap();
         assert_eq!(response["result"]["protocolVersion"], "2025-03-26");
-        assert_eq!(tools().len(), 34);
+        assert_eq!(tools().len(), 40);
         for tool in tools() {
             let mut args = json!({});
             for key in tool["inputSchema"]["required"].as_array().unwrap() {
@@ -466,8 +485,8 @@ mod tests {
                 let rule = &tool["inputSchema"]["properties"][key];
                 args[key] = match rule["type"].as_str().unwrap() {
                     "string" => {
-                        if key == "resource" {
-                            json!("releases")
+                        if let Some(allowed) = rule["enum"].as_array() {
+                            allowed[0].clone()
                         } else {
                             json!("test")
                         }
@@ -524,6 +543,24 @@ mod tests {
         .unwrap();
         assert_eq!(r["result"]["isError"], true);
     }
+    #[test]
+    fn local_game_tools_reject_invalid_arguments_before_dispatch() {
+        for (name, args) in [
+            ("open_local_game", json!({})),
+            ("register_local_game", json!({"directory":""})),
+            ("register_local_game", json!({"directory":"game","command":"build"})),
+            ("test_gamepad_button", json!({"key":"A"})),
+            ("test_gamepad_button", json!({"session":"abc","key":"unknown"})),
+            ("get_gamepad_state", json!({"host":"192.0.2.1"})),
+        ] {
+            let result = dispatch(
+                json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":name,"arguments":args}}),
+                &|_, _| panic!("invalid arguments reached the operation handler"),
+            ).unwrap();
+            assert_eq!(result["error"]["code"], -32602, "{name}");
+        }
+    }
+
     #[test]
     fn market_protocol_validates_selection_and_retains_partial_results() {
         let revision = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";

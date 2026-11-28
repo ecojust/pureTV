@@ -4,12 +4,14 @@
 Linux CI runs this inside Xvfb. No real TV, network downloads, or user data.
 """
 import argparse
+import ctypes
 import hashlib
 import io
 import json
 import os
 from pathlib import Path
 import queue
+import select
 import subprocess
 import tempfile
 import threading
@@ -166,6 +168,61 @@ class Client:
         except subprocess.TimeoutExpired: self.process.kill(); self.process.wait()
 
 
+
+def verify_local_game(client, root):
+    folder = root / 'Local game 本地'
+    folder.mkdir()
+    client.call('register_local_game', {'directory': str(folder)}, failure=True)
+    game_html = (Path(__file__).resolve().parents[1] / 'docs/examples/button-race/index.html').read_text()
+    # A browser-side observer requests a same-origin asset only after the sample
+    # actually advances. This checks rendering in the real management window.
+    (folder / 'index.html').write_text(game_html + """
+    <script>
+      const progress = document.getElementById('track');
+      new MutationObserver(() => {
+        if (progress.value === 1) fetch('first-step.txt');
+      }).observe(progress, {attributes: true, attributeFilter: ['value']});
+    </script>
+    """)
+    marker = folder / 'first-step.txt'
+    marker.write_text('step')
+    game = client.call('register_local_game', {'directory': str(folder), 'title': 'Button race'})
+    assert game['title'] == 'Button race' and Path(game['directory']) == folder
+    assert client.call('list_local_games') == [game]
+    assert client.call('get_gamepad_state') == {'active': False}
+    protocol = client.call('get_gamepad_protocol')
+    assert protocol['urlParameter'] == 'puretvSocket' and 'A' in protocol['buttons']
+    client.call('open_local_game', {'id': 'missing'}, failure=True)
+
+    # Linux CI runs the WebKit GUI in Xvfb. Observe the fixture file being
+    # opened by the built-in HTTP server without exposing another network API.
+    libc = ctypes.CDLL(None, use_errno=True)
+    watch = libc.inotify_init1(os.O_CLOEXEC)
+    assert watch >= 0, os.strerror(ctypes.get_errno())
+    try:
+        assert libc.inotify_add_watch(watch, os.fsencode(marker), 0x20) >= 0, os.strerror(ctypes.get_errno())  # IN_OPEN
+        opened = client.call('open_local_game', {'id': game['id']})
+        assert opened['requested'] and opened['id'] == game['id']
+        deadline = time.monotonic() + 20
+        while time.monotonic() < deadline:
+            state = client.call('get_gamepad_state')
+            if state.get('webSocketClients') and state.get('localGameId') == game['id']:
+                break
+            time.sleep(.2)
+        else:
+            raise AssertionError(f'Game did not subscribe to its controller socket: {state}')
+        client.call('test_gamepad_button', {'session': 'expired', 'key': 'A'}, failure=True)
+        assert not select.select([watch], [], [], 0)[0], 'Game advanced without a valid press'
+        result = client.call('test_gamepad_button', {'session': state['session'], 'key': 'A'})
+        for field, held in [('afterPress', True), ('afterRelease', False)]:
+            player = next(p for p in result[field]['players'] if p['controllerId'] == result['controllerId'])
+            assert player['buttons']['A'] is held and player['buttonCounters']['A'] == 1, player
+        assert select.select([watch], [], [], 5)[0], 'Browser game did not advance after the MCP test press'
+    finally:
+        os.close(watch)
+    print('PASS: registered local HTML game advanced inside WebKit from a stdio MCP test button via WebSocket', flush=True)
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--binary',required=True)
     binary=Path(parser.parse_args().binary).resolve()
@@ -193,7 +250,7 @@ def main():
                 assert init['result']['serverInfo']['name']=='pureTV Manager',init
                 catalog={t['name']:t for t in client.rpc('tools/list')['result']['tools']}
                 names=set(catalog)
-                assert len(names)==34,names
+                assert len(names)==40,names
                 for name in ['get_market_catalog','download_market_item','install_market_item']:
                     assert name in names and catalog[name]['annotations']['openWorldHint'],name
                 assert not catalog['download_market_item']['annotations']['destructiveHint']
@@ -341,6 +398,7 @@ def main():
                 assert client.call('get_state')['history']==[]
                 client.call('disconnect')
                 assert client.call('get_state')['device'] is None
+                verify_local_game(client, root)
                 # Pairing code never reaches saved state.
                 saved=(session.parent/'state.json').read_text();assert '123456' not in saved
                 denied=client.rpc('tools/call',{'name':'close_manager','arguments':{'confirmShutdown':False}})

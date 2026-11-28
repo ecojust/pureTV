@@ -1,4 +1,6 @@
 //! One LAN receiver for the active game. Wire format is shared with puretv-joystick.
+mod websocket;
+
 use mdns_sd::{ServiceDaemon, ServiceInfo};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -10,7 +12,7 @@ use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
 const PORT: u16 = 63485;
-const KEYS: [&str; 9] = ["UP", "DOWN", "LEFT", "RIGHT", "START", "A", "B", "X", "Y"];
+pub const KEYS: [&str; 9] = ["UP", "DOWN", "LEFT", "RIGHT", "START", "A", "B", "X", "Y"];
 const MAX_LINE: usize = 1024;
 const IDLE_LIMIT: Duration = Duration::from_secs(15);
 
@@ -222,6 +224,10 @@ pub struct Info {
     pub session: String,
     pub addresses: Vec<String>,
     pub discovery: bool,
+    #[serde(rename = "webSocketUrl", skip_serializing_if = "Option::is_none")]
+    pub web_socket_url: Option<String>,
+    #[serde(rename = "localGameId", skip_serializing_if = "Option::is_none")]
+    pub local_game_id: Option<String>,
 }
 
 struct Discovery {
@@ -264,6 +270,7 @@ impl Drop for Discovery {
 pub struct Server {
     pub info: Info,
     room: Arc<Mutex<Room>>,
+    browser: Option<Arc<Mutex<websocket::BrowserSocket>>>,
     stop: std::sync::mpsc::Sender<()>,
     worker: Option<JoinHandle<()>>,
     _discovery: Option<Discovery>,
@@ -273,15 +280,17 @@ impl Server {
     pub fn start(
         players: usize,
         addresses: Vec<String>,
+        local_game: Option<(&str, &str)>,
         publish: impl Fn(Value) + Send + 'static,
     ) -> Result<Self, String> {
-        Self::listen(players, addresses, PORT, publish)
+        Self::listen(players, addresses, PORT, local_game, publish)
     }
 
     fn listen(
         players: usize,
         addresses: Vec<String>,
         port: u16,
+        local_game: Option<(&str, &str)>,
         publish: impl Fn(Value) + Send + 'static,
     ) -> Result<Self, String> {
         if !(1..=2).contains(&players) {
@@ -314,6 +323,8 @@ impl Server {
             addresses,
             session: session.clone(),
             discovery: false,
+            web_socket_url: None,
+            local_game_id: local_game.map(|(id, _)| id.to_owned()),
         };
         let discovery = Discovery::announce(&info);
         info.discovery = discovery.is_some();
@@ -322,6 +333,14 @@ impl Server {
             revision: 0,
             seats: (0..players).map(|_| Seat::default()).collect(),
         }));
+        let browser = local_game
+            .map(|(_, origin)| {
+                websocket::BrowserSocket::start(origin, room.lock().unwrap().snapshot())
+            })
+            .transpose()?;
+        info.web_socket_url = browser.as_ref().map(|b| b.url.clone());
+        let browser = browser.map(|b| Arc::new(Mutex::new(b)));
+        let subscribers = browser.clone();
         let state = room.clone();
         let (stop, stopping) = std::sync::mpsc::channel();
         let worker = thread::Builder::new()
@@ -355,6 +374,13 @@ impl Server {
                         });
                         (revision != room.revision).then(|| room.snapshot())
                     };
+                    if let Some(ref subscribers) = subscribers {
+                        let mut subscribers = subscribers.lock().unwrap();
+                        if let Some(ref snapshot) = changed {
+                            subscribers.publish(snapshot.clone());
+                        }
+                        subscribers.poll();
+                    }
                     if let Some(snapshot) = changed {
                         publish(snapshot);
                     }
@@ -370,6 +396,7 @@ impl Server {
         Ok(Self {
             info,
             room,
+            browser,
             stop,
             worker: Some(worker),
             _discovery: discovery,
@@ -377,7 +404,67 @@ impl Server {
     }
 
     pub fn snapshot(&self) -> Value {
-        self.room.lock().unwrap().snapshot()
+        let mut state = self.room.lock().unwrap().snapshot();
+        if let Some(ref browser) = self.browser {
+            state["webSocketClients"] = json!(browser.lock().unwrap().count());
+            state["localGameId"] = json!(self.info.local_game_id);
+        }
+        state
+    }
+
+    /// Exercise the same socket, seat assignment and state broadcast as a wireless pad.
+    pub fn test_button(&self, session: &str, key: &str) -> Result<Value, String> {
+        use std::io::{BufRead, BufReader};
+        if session != self.info.session || self.browser.is_none() {
+            return Err("Local game controller session is no longer active".into());
+        }
+        if !KEYS.contains(&key) {
+            return Err("Invalid controller key".into());
+        }
+        let mut random = [0u8; 16];
+        getrandom::fill(&mut random).map_err(|e| e.to_string())?;
+        let id = format!("mcp-test-{:032x}", u128::from_be_bytes(random));
+        let timeout = Duration::from_secs(2);
+        let address = SocketAddrV4::new(Ipv4Addr::LOCALHOST, self.info.port);
+        let stream =
+            TcpStream::connect_timeout(&address.into(), timeout).map_err(|e| e.to_string())?;
+        stream
+            .set_read_timeout(Some(timeout))
+            .map_err(|e| e.to_string())?;
+        stream
+            .set_write_timeout(Some(timeout))
+            .map_err(|e| e.to_string())?;
+        let mut pad = BufReader::new(stream);
+        let mut send = |seq: u64, mut msg: Value| -> Result<(), String> {
+            msg["controller_id"] = json!(id);
+            msg["seq"] = json!(seq);
+            writeln!(pad.get_mut(), "{msg}").map_err(|e| e.to_string())?;
+            let mut line = String::new();
+            pad.read_line(&mut line).map_err(|e| e.to_string())?;
+            let reply: Value = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+            if reply["type"] == "ack" && reply["seq"] == seq {
+                Ok(())
+            } else {
+                Err(reply["message"]
+                    .as_str()
+                    .unwrap_or("Missing controller acknowledgement")
+                    .into())
+            }
+        };
+        send(1, json!({"type":"hello"}))?;
+        send(
+            2,
+            json!({"type":"button","key":key,"pressed":true,"action":"down"}),
+        )?;
+        let after_press = self.snapshot();
+        send(
+            3,
+            json!({"type":"button","key":key,"pressed":false,"action":"up"}),
+        )?;
+        let after_release = self.snapshot();
+        Ok(
+            json!({"controllerId":id,"key":key,"afterPress":after_press,"afterRelease":after_release}),
+        )
     }
 }
 
@@ -425,7 +512,7 @@ mod tests {
     #[test]
     fn two_controllers_quick_taps_reconnect_and_shutdown() {
         let (tx, events) = std::sync::mpsc::channel();
-        let server = Server::listen(2, vec![], 0, move |state| {
+        let server = Server::listen(2, vec![], 0, None, move |state| {
             let _ = tx.send(state);
         })
         .unwrap();
@@ -468,10 +555,60 @@ mod tests {
     }
 
     #[test]
+    fn browser_receives_test_pad_over_the_real_socket() {
+        use tungstenite::client::IntoClientRequest;
+        let origin = "http://127.0.0.1:48735";
+        let server = Server::listen(1, vec![], 0, Some(("custom", origin)), |_| {}).unwrap();
+        let url = server.info.web_socket_url.clone().unwrap();
+        let request = |url: &str, source: &str| {
+            let mut req = url.into_client_request().unwrap();
+            req.headers_mut().insert("Origin", source.parse().unwrap());
+            req
+        };
+        assert!(tungstenite::connect(request(&url, "https://other.example")).is_err());
+        assert!(tungstenite::connect(request(&(url.clone() + "x"), origin)).is_err());
+        let req = request(&url, origin);
+        let stream = TcpStream::connect(req.uri().authority().unwrap().as_str()).unwrap();
+        stream
+            .set_read_timeout(Some(Duration::from_secs(3)))
+            .unwrap();
+        let (mut ws, _) = tungstenite::client(req, stream).unwrap();
+        let mut state = || {
+            let event: Value = serde_json::from_str(ws.read().unwrap().to_text().unwrap()).unwrap();
+            assert_eq!(event["type"], "puretv:controller-state");
+            event["state"].clone()
+        };
+        assert_eq!(state()["connections"], 0);
+        assert_eq!(server.snapshot()["webSocketClients"], 1);
+        let session = &server.info.session;
+        assert!(server.test_button("old-session", "A").is_err());
+        assert!(server.test_button(session, "Z").is_err());
+        let tested = server.test_button(session, "A").unwrap();
+        assert_eq!(tested["afterPress"]["players"][0]["buttons"]["A"], true);
+        assert_eq!(tested["afterRelease"]["players"][0]["buttons"]["A"], false);
+        let joined = state();
+        assert_eq!(joined["players"][0]["controllerId"], tested["controllerId"]);
+        let down = state();
+        assert_eq!(down["players"][0]["buttons"]["A"], true);
+        let up = state();
+        assert_eq!(up["players"][0]["buttons"]["A"], false);
+        assert_eq!(up["players"][0]["buttonCounters"]["A"], 1);
+        assert_eq!(state()["connections"], 0);
+        let mut real_pad = Pad::connect(server.info.port);
+        assert_eq!(real_pad.join("physical")["type"], "ack");
+        assert_eq!(state()["connections"], 1);
+        assert_eq!(
+            server.test_button(session, "A").unwrap_err(),
+            "controller_busy"
+        );
+        assert_eq!(server.snapshot()["players"][0]["controllerId"], "physical");
+    }
+
+    #[test]
     fn preferred_port_busy_reports_the_actual_listener() {
         let occupied = TcpListener::bind((Ipv4Addr::UNSPECIFIED, 0)).unwrap();
         let preferred = occupied.local_addr().unwrap().port();
-        let server = Server::listen(1, vec![], preferred, |_| {}).unwrap();
+        let server = Server::listen(1, vec![], preferred, None, |_| {}).unwrap();
         assert_ne!(server.info.port, preferred);
         let mut pad = Pad::connect(server.info.port);
         assert_eq!(pad.join("pad-1")["type"], "ack");
