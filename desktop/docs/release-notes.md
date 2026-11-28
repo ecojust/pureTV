@@ -1,22 +1,22 @@
-# pureTV Manager 0.7.0
+# pureTV Manager 0.8.0
 
 ## 简体中文
 
-- 左侧「游戏」整合「网页游戏」和「电视游戏市场」。在网页游戏卡片上可选择「电脑游玩」，也可为目录中已有的 56 款游戏准备电视 APK。
-- 其中 50 款通过「获取电视 APK」取得官方签名包。六款作者在线游戏通过「生成电视 APK」在电脑上用内置的预签名模板离线组装，各款独立安装，游玩时由电视联网加载作者网站。
-- 在弹窗核对包名和 SHA-256 后，可将 APK 保存到电脑，无需连接电视。也可加入安装队列，在「待安装应用」中通过 ADB 安装到已连接的电视。
+- 游戏卡片新增「部署到电视」。连接并授权目标电视后，点一次即可从本地准备 APK、安装到电视。安装成功后，管理器会提示你在电视启动器中把游戏添加到主屏幕。
+- 客户端内置 50 款游戏的程序、图像、音效和相应的电视签名包。电脑首次游玩、保存 APK 以及通过已连接的 ADB 部署都能在没有互联网的情况下完成。
+- 安装文件变大。0.7.0 及更早版本的内置更新器对安装包有大小限制，从本页下载对应平台的新版覆盖安装即可保留现有配置。
 
 ## 繁體中文
 
-- 左側「遊戲」整合「網頁遊戲」和「電視遊戲市場」。在網頁遊戲卡片上可選擇「在電腦上遊玩」，也可以為目錄中已有的 56 款遊戲準備電視 APK。
-- 其中 50 款透過「取得電視 APK」取得官方簽署的安裝檔。六款由作者代管的遊戲可透過「產生電視 APK」，在電腦上使用內建且預先簽署的範本離線組裝。各款可獨立安裝，遊玩時電視需要連線至作者網站。
-- 核對套件名稱與 SHA-256 後，可將 APK 儲存至電腦，無須連接電視。也可加入安裝佇列，在待安裝清單中透過 ADB 安裝到已連線的電視。
+- 遊戲卡片新增「部署到電視」。連線並授權目標電視後，按一下即可從本機準備 APK、安裝到電視。安裝成功後，管理器會提示你在電視啟動器將遊戲加入主畫面。
+- 用戶端內建 50 款遊戲的程式、圖像、音效和對應的電視簽署安裝檔。電腦首次遊玩、儲存 APK，以及透過已連線的 ADB 部署，都可在沒有網際網路的環境下完成。
+- 安裝檔較大。0.7.0 和更舊版本的更新器有安裝檔大小限制，請從本頁下載新版並覆蓋安裝，保留既有設定。
 
 ## English
 
-- Open **Games** in the sidebar for both **Web games** and the **TV game market**. Each of the 56 web game cards lets you play on your computer or prepare a TV APK.
-- Choose **Get TV APK** to retrieve an official signed package for 50 games. For the six games hosted by their authors, **Build TV APK** assembles a standalone package offline using a built-in, pre-signed template. Each installs separately and connects to the author’s site to play.
-- Check the package name and SHA-256, then save the APK to your computer without connecting a TV. To install it, add it to the install queue and use **Pending apps** with an authorized ADB connection.
+- Choose **Deploy to TV** on a game card after connecting and authorizing your TV. Manager prepares the APK locally, installs it on that TV and, on success, explains how to add the game to the launcher’s home screen.
+- The client includes 50 local games and their signed TV packages. Play on your computer for the first time, export an APK or deploy to a connected TV over ADB without internet access.
+- Because the game library increases installer size, the updater in 0.7.0 and earlier may reject the download. Install the package for your platform from this release to keep your settings.
 
 ---
 
