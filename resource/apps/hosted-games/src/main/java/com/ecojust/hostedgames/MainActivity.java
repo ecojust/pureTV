@@ -69,6 +69,10 @@ public final class MainActivity extends Activity {
         }
         room = new HostedControllerRoom(getApplicationContext());
         lobby = new HostedLobbyInput(room, this::navigate);
+        if (games.size() == 1) {
+            play(games.get(0));
+            return;
+        }
         selection = state == null ? games.get(0).id : state.getString("selection", games.get(0).id);
         if (state != null && state.getBoolean("playing")) {
             for (Game item : games) if (item.id.equals(selection)) {
@@ -105,6 +109,15 @@ public final class MainActivity extends Activity {
         button.setFocusableInTouchMode(true);
         button.setOnClickListener(view -> action.run());
         return button;
+    }
+
+    private String exitLabel() {
+        return games.size() == 1 ? "退出游戏" : "返回游戏列表";
+    }
+
+    private void leaveGame() {
+        if (games.size() == 1) finish();
+        else showCatalog();
     }
 
     private void showCatalog() {
@@ -244,7 +257,7 @@ public final class MainActivity extends Activity {
         panel.addView(label(detail, 18, MUTED));
         Button retry = button("重试", () -> play(game));
         panel.addView(retry);
-        panel.addView(button("返回游戏列表", this::showCatalog));
+        panel.addView(button(exitLabel(), this::leaveGame));
         retry.requestFocus();
         syncInput();
     }
@@ -290,7 +303,7 @@ public final class MainActivity extends Activity {
                 .setTitle(game.title + " · 操作说明").setView(layout)
                 .setPositiveButton("继续游戏", null)
                 .setNeutralButton("重新加载", (dialog, which) -> play(game))
-                .setNegativeButton("返回游戏列表", (dialog, which) -> showCatalog()).create();
+                .setNegativeButton(exitLabel(), (dialog, which) -> leaveGame()).create();
         AlertDialog shown = helpDialog;
         shown.setOnKeyListener((dialog, code, event) -> {
             if (code != KeyEvent.KEYCODE_BUTTON_START && code != KeyEvent.KEYCODE_MENU) return false;
@@ -436,7 +449,7 @@ public final class MainActivity extends Activity {
 
     @Override public void onBackPressed() {
         if (web != null) toggleHelp();
-        else if (game != null) showCatalog();
+        else if (game != null) leaveGame();
         else super.onBackPressed();
     }
 
