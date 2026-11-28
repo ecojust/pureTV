@@ -1,6 +1,8 @@
 # 六款游戏的作者原版入口
 
-pureTV 管理器为这六款游戏提供中文名称和操作说明。打开卡片后，浏览器从作者网站加载游戏，使用原作的语言和输入方式。下表的仓库链接固定到 2026 年 11 月 27 日审查的提交，游戏入口会随作者部署更新。
+六款游戏共用一套中文指南，包括游戏目标、开局步骤和画面词汇。网页版可在游戏画面上方选择「中文指南」。Android TV 版由同一个客户端打开作者网站，可用遥控器、标准手柄或局域网手机手柄游玩。[电视版下载与按键说明](../../resource/apps/hosted-games/)
+
+打开卡片后，浏览器从作者网站加载游戏，使用原作的语言和输入方式。下表的仓库链接固定到 2026 年 11 月 27 日审查的提交，游戏入口会随作者部署更新。
 
 | 编号与游戏 | 作者网站的版本 | 原版操作 | 实际试玩 | 来源 |
 | --- | --- | --- | --- | --- |
@@ -13,6 +15,6 @@ pureTV 管理器为这六款游戏提供中文名称和操作说明。打开卡�
 
 这六个公开仓库的当前版本和可查历史中，均未找到覆盖整部游戏的翻译、改编或再分发许可。飞天涂色巴士为地图、天文数据列出独立条款，大田学校项目中的 SIL OFL 1.1 适用于 Pretendard 字体。pureTV 分发入口和操作说明，游戏程序与美术由作者站点提供。[巴士地图](https://github.com/patrickscaptainslog/Struggle-Bus-World/blob/058217ce441b15e1dc4d93689ea9a53d1b4b709b/public/city/DATA_LICENSE.md) · [巴士天空数据](https://github.com/patrickscaptainslog/Struggle-Bus-World/blob/058217ce441b15e1dc4d93689ea9a53d1b4b709b/public/sky/DATA_LICENSE.md) · [学校项目字体许可](https://github.com/kcmjj371-art/dush-game-site/blob/791ab153bd3a930d979a6965dd5c1b029256b7a1/fonts/Pretendard-LICENSE.txt)
 
-本轮在 Chromium 中核查了六个跨站内嵌入口。表中的标准手柄支持来自金库大盗和黑色侦探的原作实现，实体手柄尚未实测。六款原作均未发现接收 pureTV 手机手柄的接口。
+本轮在 Chromium 中核查了六个跨站内嵌入口。表中的标准手柄支持来自金库大盗和黑色侦探的原作实现，实体手柄尚未实测。2026 年 11 月 27 日检查的六款网页原作均未发现接收 pureTV 手机手柄的接口。电视客户端接收手柄输入后，将它转换为原作使用的指针或按键。
 
-[六款管理器实测记录](hosted-manager-qa.json) · [复现脚本](../../tools/pc-games/qa/manager-hosted.mjs)
+[六款中文指南的网页与管理器验收](hosted-guides-qa.json) · [原作管理器实测记录](hosted-manager-qa.json) · [复现脚本](../../tools/pc-games/qa/manager-hosted.mjs)

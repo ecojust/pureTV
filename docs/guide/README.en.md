@@ -74,6 +74,8 @@ python3 -m venv .venv
 
 Choose a game on the homepage, select its TV icon to download the signed APK, and install it on the television. If you downloaded the source archive, extract it and install the APK from `joystick-games/<game-id>/`. [Browse the homepage game catalog](../../README.en.md#games) · [Download the six updated and new games](../../joystick-games/README.md#game-expansion)
 
+The six author-hosted games share one Android TV app. Open pureTV Online Games and select a title with the remote or scan the code with a phone on the same network. Press Back during play to see the Chinese guide and controls. [TV app and controls](../../resource/apps/hosted-games/)
+
 Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
 
 ### Connect a pureTV Wi-Fi controller

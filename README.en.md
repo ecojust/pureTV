@@ -16,8 +16,8 @@
 <table>
   <tr>
     <td align="center" valign="top" width="207"><a href="docs/guide/README.en.md#install-or-upgrade-the-desktop-manager"><img src="docs/previews/manager-en.png" width="180" alt=""><br>pureTV Manager</a><br>Manage TV apps and launchers from a computer<br>Windows, macOS, Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0">Download 0.6.0</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/hosted-games/"><img src="docs/previews/en/app-hosted-games.png" width="180" alt=""><br>pureTV Online Games</a><br>Play six games from the authors’ websites with Chinese guides and TV controls<br>Android TV<br><a href="resource/apps/hosted-games/hosted-games-0.1.0.apk?raw=1">Download 0.1.0 APK</a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt=""><br>putrtv Store</a><br>Browse, install and check TV app updates directly on your television<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1">Download 0.1.3 APK</a></td>
-    <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
 </table>
@@ -235,6 +235,8 @@ New installations start in Simplified Chinese.
 ### Play the original games online
 
 [Vault Breakers (formerly Bandit)](https://ecojust.github.io/pureTV/games/bandit/tv.html) · [Fish Loop](https://ecojust.github.io/pureTV/games/fish-loop/tv.html) · [NOIR EXTREME](https://ecojust.github.io/pureTV/games/noir-extreme/tv.html) · [Struggle Bus](https://ecojust.github.io/pureTV/games/struggle-bus/tv.html) · [Vespertine](https://ecojust.github.io/pureTV/games/vespertine/tv.html) · [Daejeon Urban Science High School Department Tour](https://ecojust.github.io/pureTV/games/daejeon-campus/tv.html)
+
+[Download the Android TV app for all six games](resource/apps/hosted-games/hosted-games-0.1.0.apk?raw=1) · [TV controls](resource/apps/hosted-games/)
 
 <!-- game-index:end -->
 
