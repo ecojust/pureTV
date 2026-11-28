@@ -16,6 +16,8 @@ on:
       - 'tools/pc-games/web-layouts/**'
       - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
+      - '.github/workflows/desktop-offline-tv.yml'
+      - 'tools/desktop-offline-qa/**'
       - 'resource/launcher/puretv/app/src/main/assets/layout.json'
   pull_request:
     paths:
@@ -30,6 +32,8 @@ on:
       - 'tools/pc-games/web-layouts/**'
       - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
+      - '.github/workflows/desktop-offline-tv.yml'
+      - 'tools/desktop-offline-qa/**'
       - 'resource/launcher/puretv/app/src/main/assets/layout.json'
   workflow_dispatch:
 
@@ -261,9 +265,18 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  offline-tv:
+    needs: build
+    permissions:
+      actions: read
+      contents: read
+    uses: ./.github/workflows/desktop-offline-tv.yml
+    with:
+      build_run: ${{ format('{0}', github.run_id) }}
+
   publish:
     name: Publish desktop release
-    needs: build
+    needs: [build, offline-tv]
     if: startsWith(github.ref, 'refs/tags/desktop-v')
     runs-on: ubuntu-24.04
     permissions:

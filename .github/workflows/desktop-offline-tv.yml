@@ -1,0 +1,96 @@
+name: Desktop offline TV deployment
+on:
+  workflow_call:
+    inputs:
+      build_run:
+        description: The existing Desktop build run with the Linux installer
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Manager version to test
+        required: true
+        type: string
+      build_run:
+        description: Optional Desktop build run ID (empty uses the public release)
+        type: string
+permissions:
+  actions: read
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      VERSION: ${{ inputs.version }}
+      BUILD_RUN: ${{ inputs.build_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/desktop-offline-qa/
+            /joystick-games/neon-rush/resource.json
+            /desktop/package.json
+      - name: Retrieve the existing Linux installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$VERSION" ]]; then VERSION=$(jq -r .version desktop/package.json); fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          mkdir -p "$RUNNER_TEMP/installer" "$RUNNER_TEMP/evidence"
+          cd "$RUNNER_TEMP/installer"
+          deb="pureTV-Manager-$VERSION-linux-x64.deb"
+          if [[ -n "$BUILD_RUN" ]]; then
+            [[ "$BUILD_RUN" =~ ^[0-9]+$ ]]
+            test "$(gh api "repos/$GH_REPO/actions/runs/$BUILD_RUN" --jq .path)" = '.github/workflows/desktop.yml'
+            gh run download "$BUILD_RUN" -R "$GH_REPO" -n puretv-manager-linux-x64
+            manifest=SHA256SUMS-linux-x64.txt
+          else
+            gh release download "desktop-v$VERSION" -R "$GH_REPO" -p "$deb" -p SHA256SUMS.txt
+            manifest=SHA256SUMS.txt
+          fi
+          expected=$(awk -v f="$deb" '$2==f {print $1}' "$manifest")
+          [[ "$expected" =~ ^[a-f0-9]{64}$ ]]
+          echo "$expected  $deb" | sha256sum -c -
+          test "$(dpkg-deb -f "$deb" Version)" = "$VERSION"
+          jq -n --arg name "$deb" --arg sha "$expected" --arg run "$BUILD_RUN" --arg tag "desktop-v$VERSION" \
+            '{installer:$name,sha256:$sha,source:(if $run=="" then {releaseTag:$tag} else {buildRun:$run} end)}' > "$RUNNER_TEMP/evidence/installer.json"
+      - name: Install UI tools, KVM and an Android TV image before disconnecting
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb openbox xdotool python3-pyatspi libatk-adaptor dbus-x11 xauth x11-utils imagemagick libgl1-mesa-dri fonts-noto-cjk locales "$RUNNER_TEMP"/installer/*.deb
+          sudo locale-gen zh_CN.UTF-8
+          sudo chmod a+rw /dev/kvm
+          sdktools="$ANDROID_HOME/cmdline-tools/latest/bin"
+          "$sdktools/sdkmanager" 'emulator' 'platform-tools' 'system-images;android-36;android-tv;x86_64'
+          echo no | "$sdktools/avdmanager" create avd -n offlineTV -k 'system-images;android-36;android-tv;x86_64' -d tv_1080p --force
+      - name: Start the installed Manager and real TV with loopback as their only network
+        run: |
+          set -euo pipefail
+          pkg=$(dpkg-deb -f "$RUNNER_TEMP"/installer/*.deb Package)
+          exe=$(dpkg-query -L "$pkg" | awk '/^\/usr\/bin\/[^/]+$/')
+          test -x "$exe"
+          runtime=$(mktemp -d)
+          sudo unshare --net -- bash -eu -c '
+            ip link set lo up
+            exec sudo -u "$1" -- env HOME="$2" ANDROID_HOME="$3" ANDROID_SDK_ROOT="$3" \
+              PATH="$3/platform-tools:$3/emulator:/usr/bin:/bin" XDG_RUNTIME_DIR="$4" \
+              LANG=zh_CN.UTF-8 LANGUAGE=zh_CN LC_MESSAGES=C.UTF-8 GDK_BACKEND=x11 GTK_MODULES=atk-bridge \
+              NO_AT_BRIDGE=0 WEBKIT_DISABLE_DMABUF_RENDERER=1 LIBGL_ALWAYS_SOFTWARE=1 \
+              dbus-run-session -- xvfb-run -a -s "-screen 0 1500x980x24 -nolisten tcp" \
+              bash "$5/tools/desktop-offline-qa/session.sh" "$6" "$5" "$7"
+          ' -- "$(id -un)" "$HOME" "$ANDROID_HOME" "$runtime" "$GITHUB_WORKSPACE" "$exe" "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: manager-offline-tv-${{ env.VERSION }}
+          path: ${{ runner.temp }}/evidence/
+          retention-days: 14
+          if-no-files-found: error
