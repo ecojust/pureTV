@@ -13,6 +13,8 @@
 | 3266 暮海点灯人 | 英文。*Vespertine* 提供五夜航行，原作在作者站点的浏览器存储中保存进度。嵌入页面能否续玩取决于浏览器是否允许第三方存储。 | 选标题页第一项开始、续玩或重玩，再选 ROW OUT。移动指针或拖动手指划船，靠近微光收集，点击或按空格放出灯火，Esc 回岸。 | 进入第一夜 The Shallow Drift，移动指针、按空格点灯后看到灯火重新充能，Esc 返回标题。 | [固定仓库](https://github.com/sunkencity999/vespertine/tree/4fc5ca2d8f01d2ac8b77e4c73332d321918a7864) · [作者原版](https://sunkencity999.github.io/vespertine/) |
 | 3570 大田都市科学高中专业探索 | 韩文。作者将学校的学科参观和 6 款小游戏发布在公开站点，原始工作仓库为私有。 | 「입장하기」进入参观，点击、空格或回车推进对白。「미니게임」选小游戏，「시작」开始。糕点游戏可点击配料，或按 1–2 选蛋糕胚、3–4 选奶油、5–7 选装饰。 | 进入糕点游戏，依照顾客订单按数字键完成第一件蛋糕，营业额从 0 增至 1,500 韩元。 | [固定仓库](https://github.com/kcmjj371-art/dush-game-site/tree/791ab153bd3a930d979a6965dd5c1b029256b7a1) · [作者原版](https://kcmjj371-art.github.io/dush-game-site/) |
 
+《黑色侦探》在软件渲染环境中首次加载可能需要较长时间。作者页面支持通过 `dpr` 降低渲染分辨率。在 960 × 540、触控输入的 Chromium 中分别实测，默认设置与低分辨率设置均进入餐馆首章。[作者提供的低分辨率餐馆入口](https://noircity.vercel.app/?start=diner&dpr=0.45) · [原作渲染设置](https://github.com/evancodez/noircity/blob/7491535d0307b3ef28387e57c2c8fffec568469e/src/main.js#L40)
+
 这六个公开仓库的当前版本和可查历史中，均未找到覆盖整部游戏的翻译、改编或再分发许可。飞天涂色巴士为地图、天文数据列出独立条款，大田学校项目中的 SIL OFL 1.1 适用于 Pretendard 字体。pureTV 分发入口和操作说明，游戏程序与美术由作者站点提供。[巴士地图](https://github.com/patrickscaptainslog/Struggle-Bus-World/blob/058217ce441b15e1dc4d93689ea9a53d1b4b709b/public/city/DATA_LICENSE.md) · [巴士天空数据](https://github.com/patrickscaptainslog/Struggle-Bus-World/blob/058217ce441b15e1dc4d93689ea9a53d1b4b709b/public/sky/DATA_LICENSE.md) · [学校项目字体许可](https://github.com/kcmjj371-art/dush-game-site/blob/791ab153bd3a930d979a6965dd5c1b029256b7a1/fonts/Pretendard-LICENSE.txt)
 
 本轮在 Chromium 中核查了六个跨站内嵌入口。表中的标准手柄支持来自金库大盗和黑色侦探的原作实现，实体手柄尚未实测。2026 年 11 月 27 日检查的六款网页原作均未发现接收 pureTV 手机手柄的接口。电视客户端接收手柄输入后，将它转换为原作使用的指针或按键。
