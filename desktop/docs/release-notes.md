@@ -1,22 +1,19 @@
-# pureTV Manager 0.6.0
+# pureTV Manager 0.6.1
 
 ## 简体中文
 
-- 左侧新增「游戏」栏目。点击封面，联网后即可在管理器窗口里玩首页收录的 46 款网页游戏，按画面提示使用键盘。
-- 使用 pureTV 无线手柄时，将手柄与电脑接入同一局域网，打开游戏后按手柄搜索键。管理器的 TCP 服务把输入交给当前游戏。
-- 选择「浏览器中打开」，或点击项目首页每款游戏的「网页游玩」，即可在浏览器游玩。[网页游戏目录](https://ecojust.github.io/pureTV/)
+- 电脑端「游戏」栏目现有 56 款游戏。新增的六款作者在线游戏分别是《金库大盗》《鱼群环线》《黑色侦探：雨夜》《飞天涂色巴士》《暮海点灯人》和《大田都市科学高中专业探索》。
+- 联网后选择封面，即可在管理器内全屏打开作者的游戏。游玩指南提供中文操作说明、游戏目标和原文菜单对照。各款沿用原作支持的输入方式。
 
 ## 繁體中文
 
-- 左側新增「遊戲」欄目。點選封面，連上網路後即可在管理器視窗內遊玩首頁收錄的 46 款網頁遊戲，依畫面提示使用鍵盤。
-- 使用 pureTV 無線手把時，讓手把和電腦連上同一個區域網路，開啟遊戲後按手把搜尋鍵。管理器的 TCP 服務會將輸入傳給目前的遊戲。
-- 可在瀏覽器開啟遊戲，也可以直接從專案首頁各遊戲的網頁連結進入。[網頁遊戲目錄](https://ecojust.github.io/pureTV/)
+- 電腦版「遊戲」欄目現有 56 款遊戲。新增六款由作者提供的線上遊戲，分別為《金庫大盜》《魚群環線》《黑色偵探：雨夜》《飛天塗色巴士》《暮海點燈人》和《大田都市科學高中專業探索》。
+- 連上網路後選取封面，即可在管理器內以全螢幕開啟作者的遊戲。遊玩指南提供中文操作說明、遊戲目標與原文選單對照。各款沿用原作支援的輸入方式。
 
 ## English
 
-- Choose **Games** in the sidebar and select a cover to load any of the 46 homepage games over the internet and play inside the manager. Follow each game's on-screen keyboard controls.
-- To use a pureTV Wi-Fi controller, connect it to the same LAN as the computer and press its search button while a game is open. The manager's TCP service delivers input to the active game.
-- Select **Open in browser** in the manager or **Play in browser** on a homepage game card to open the web version directly. [Web game catalog](https://ecojust.github.io/pureTV/)
+- The desktop **Games** section now lists 56 games, including six new titles hosted by their authors. Choose from Vault Breakers, Fish Loop, NOIR EXTREME, Struggle Bus, Vespertine and the Daejeon Urban Science High School Department Tour.
+- With an internet connection, select a cover to play full screen inside the manager. Each guide explains the original controls and objectives and translates menu terms. Input support varies by title.
 
 ---
 

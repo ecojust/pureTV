@@ -162,21 +162,40 @@ try {
     await dialog.getByRole('status').getByText(/无线手柄服务不可用，仍可使用键盘游玩/).waitFor();
     assert.equal(await dialog.locator('iframe').isVisible(), true);
   }, withoutAdb(), {gameControllerError:'TCP 63485: bind failed'});
-  await check('games hosted by the author use the shared status panel and original input', async p => {
-    const hostedPage = gamesOrigin + '/pureTV/games/vespertine/tv.html';
-    await p.route(hostedPage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+  await check('games hosted by the author open from their category with Chinese controls and return to the selected card', async p => {
+    const hosted = JSON.parse(await readFile(new URL('../../tools/pc-games/hosted-games.json', import.meta.url), 'utf8'));
+    const categories = {
+      bandit: 'action', 'fish-loop': 'puzzle', 'noir-extreme': 'action',
+      'struggle-bus': 'flight', vespertine: 'action', 'daejeon-campus': 'action',
+    };
     await nav(p, 'games');
-    const play = p.locator('[data-play-game="vespertine"]');
-    await play.click();
-    const dialog = p.locator('dialog.game-player[open]');
-    await p.waitForFunction(() => window.__windowFullscreen && !document.querySelector('[data-frame-status]').textContent);
-    assert.equal(await dialog.getByRole('status').count(), 1);
-    assert.match(await dialog.getByRole('status').innerText(), /划船/);
+    assert.equal(await p.locator('html').getAttribute('lang'), 'zh-CN');
+    const group = p.getByRole('combobox', {name:'游戏分类'});
+    for (const [id, category] of Object.entries(categories)) {
+      const game = hosted.find(item => item.id === id);
+      assert.ok(game, id);
+      const target = `${gamesOrigin}/pureTV/games/${id}/tv.html?lang=zh`;
+      await p.route(target, route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
+      await group.selectOption(category);
+      const card = p.getByRole('button', {name:game.zh, exact:true});
+      assert.equal(await card.getAttribute('data-play-game'), id);
+      await card.click();
+      const dialog = p.locator('dialog.game-player[open]');
+      await dialog.getByRole('heading', {name:game.zh, exact:true}).waitFor();
+      const frame = dialog.locator('iframe');
+      assert.equal(await frame.getAttribute('title'), game.zh);
+      assert.equal(await frame.getAttribute('src'), target);
+      await p.waitForFunction(() => window.__windowFullscreen && !document.querySelector('[data-frame-status]').textContent);
+      assert.equal(await dialog.getByRole('status').count(), 1);
+      assert.equal(await dialog.locator('[data-socket-status]').innerText(), game.controls.zh);
+      await dialog.locator('[data-close-game]').click();
+      await p.waitForFunction(() => !window.__windowFullscreen);
+      assert.equal(await group.inputValue(), category);
+      assert.equal(await card.evaluate(button => document.activeElement === button), true, id);
+    }
     const commands = await p.evaluate(() => window.__gameCommands.map(item => item.command));
     assert.ok(!commands.includes('start_game_controllers'));
-    await dialog.locator('[data-close-game]').click();
-    await p.waitForFunction(() => !window.__windowFullscreen);
-    assert.equal(await play.evaluate(button => document.activeElement === button), true);
+    assert.deepEqual(await requests(p), [], 'Hosted games do not send device operations');
   }, withoutAdb());
   await check('games open fullscreen in the same browser tab and exit from the game', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
