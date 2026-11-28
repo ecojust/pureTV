@@ -3,6 +3,8 @@
 import argparse
 import hashlib
 import json
+import os
+import subprocess
 from pathlib import Path
 import socketserver
 import threading
@@ -53,12 +55,14 @@ def probe(device, proxy, record, game):
     package = record['packageName']
     expected = package + '/com.ecojust.hostedgames.MainActivity'
     intent = ('-a', 'android.intent.action.MAIN', '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-p', package)
-    if expected not in device.shell('cmd', 'package', 'resolve-activity', '--brief', *intent).splitlines():
+    component = device.shell('cmd', 'package', 'resolve-activity', '--brief', *intent).strip().splitlines()[-1]
+    if component != expected:
         raise RuntimeError('Incorrect leanback activity')
     with proxy.condition:
         first = len(proxy.requests)
     device.shell('am', 'force-stop', package)
-    device.shell('am', 'start', '-W', *intent)
+    device.shell('am', 'start', '-W', '-a', 'android.intent.action.MAIN', '-c',
+                 'android.intent.category.LEANBACK_LAUNCHER', '-n', component)
     origin = urlsplit(game['url'])
     author = f'{origin.hostname}:{origin.port or 443}'
     with proxy.condition:
@@ -93,6 +97,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     receipt = json.loads((args.signed / 'packages.json').read_text())
     report = {'sourceSha': receipt['sourceSha'], 'signingRun': receipt['runId'], 'physicalTvTested': False,
+              'qaSourceSha': os.environ.get('GITHUB_SHA'), 'deviceRun': os.environ.get('GITHUB_RUN_ID'),
               'networkCheck': 'HTTPS CONNECT destination observed through a holding proxy on the emulator',
               'packages': {}}
     device = Device('emulator-5554', args.out)
@@ -135,6 +140,8 @@ def main():
                     entry = probe(device, proxy, record, games[record['id']])
                 except Exception as error:
                     entry = {'error': str(error)}
+                    if isinstance(error, subprocess.CalledProcessError):
+                        entry['adbError'] = (error.stderr or error.stdout or b'').decode(errors='replace')[:600]
                 finally:
                     device.shell('am', 'force-stop', record['packageName'])
                 report['packages'][record['id']] = {**entry, 'apkSha256': record['sha256']}
