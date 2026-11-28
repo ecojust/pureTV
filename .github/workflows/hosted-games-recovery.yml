@@ -1,0 +1,91 @@
+name: Retrieve the verified hosted TV artifacts for build 46104774692
+on:
+  push:
+    branches: [recover-hosted-46104774692]
+    paths: ['.github/workflows/hosted-games-recovery.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  recover:
+    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/recover-hosted-46104774692'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [signed, runtime]
+    env:
+      GH_TOKEN: ${{ github.token }}
+      KIND: ${{ matrix.kind }}
+      SOURCE: 81de663df4e3de8e72138921d2703a187a87cecd
+      ORIGINAL: '46104774692'
+    steps:
+      - name: Verify original run and select its unique artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          prefix="repos/ecojust/pureTV/actions"
+          gh api "$prefix/runs/$ORIGINAL" > run.json
+          jq -e --arg sha "$SOURCE" '.workflow_id==433385330 and .head_sha==$sha and .event=="push" and .run_attempt==1 and .head_repository.full_name=="ecojust/pureTV" and .head_branch=="continue-six-hosted-tv"' run.json
+          name="hosted-games-tv-$KIND"
+          while true; do
+            gh api "$prefix/runs/$ORIGINAL/artifacts" > artifacts.json
+            if jq -e --arg name "$name" '[.artifacts[]|select(.name==$name and (.expired|not))]|length==1' artifacts.json; then break; fi
+            gh api "$prefix/runs/$ORIGINAL/jobs" > jobs.json
+            if [[ "$KIND" == signed ]] || jq -e 'any(.jobs[]; .name=="television" and .status=="completed")' jobs.json; then
+              echo "Original run has no available $name"
+              exit 1
+            fi
+            sleep 20
+          done
+          jq --arg name "$name" '.artifacts[]|select(.name==$name and (.expired|not))' artifacts.json > selected.json
+          id="$(jq -er '.id' selected.json)"
+          if [[ "$KIND" == signed ]]; then
+            test "$id" = 15247055905
+            test "$(jq -r .digest selected.json)" = sha256:65fa4a6ca588260034423fd25666fd068b503216676ebc87a2e43cc8fb8ebc61
+          fi
+          jq -e --arg sha "$SOURCE" --argjson run "$ORIGINAL" '.workflow_run.id==$run and .workflow_run.head_sha==$sha and .size_in_bytes>0 and .size_in_bytes<100000000' selected.json
+          gh api "$prefix/artifacts/$id/zip" > artifact.zip
+          digest="$(jq -er '.digest | split(":")[1]' selected.json)"
+          echo "$digest  artifact.zip" | sha256sum --check
+      - name: Extract only the signed APK or shareable TV evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p export/release-staging/hosted-games
+          python3 - <<'PY'
+          import hashlib, json, os, zipfile
+          from pathlib import Path
+          dest = Path('export/release-staging/hosted-games')
+          kind = os.environ['KIND']
+          if kind == 'signed':
+              files = ['hosted-games-0.1.0.apk', 'SHA256SUMS.txt']
+          else:
+              files = ['report.json', 'catalog-preview.png'] + [g + '-played.png' for g in (
+                  'bandit','fish-loop','noir-extreme','struggle-bus','vespertine','daejeon-campus')]
+          with zipfile.ZipFile('artifact.zip') as archive:
+              for name in files:
+                  if name not in archive.namelist() and kind == 'runtime' and name!='report.json':
+                      continue
+                  entry=archive.getinfo(name)
+                  assert 0<entry.file_size<10000000 and archive.namelist().count(name)==1
+                  (dest/name).write_bytes(archive.read(entry))
+          if kind=='signed':
+              p=dest/files[0]
+              assert (dest/files[1]).read_text().strip()==hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name
+          selected = json.loads(Path('selected.json').read_text())
+          meta = dict(sourceSha=os.environ['SOURCE'],runId=os.environ['ORIGINAL'],attempt='1',
+                      artifactId=selected['id'],artifactDigest=selected['digest'],copyRun=os.environ['GITHUB_RUN_ID'])
+          (dest/'build.json').write_text(json.dumps(meta,indent=2)+'\n')
+          PY
+          cd export
+          git init -q
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add release-staging/hosted-games
+          git commit -qm "Recover $KIND artifact for $ORIGINAL ($SOURCE)"
+          git remote add origin "https://github.com/ecojust/pureTV.git"
+          gh auth setup-git
+          branch="build-assets/recovered-hosted-$ORIGINAL-$KIND"
+          git push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
