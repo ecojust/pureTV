@@ -6,7 +6,7 @@ import hosted from '../../tools/pc-games/hosted-games.json';
 import sections from '../../tools/readme-app-games.json';
 import {desktop} from './bridge';
 import {locale, t} from './i18n';
-import {WebGamePackaging, type GameDeployment, type QueueGameApk} from './web-game-packaging';
+import {needsOnlineApk, WebGamePackaging, type GameDeployment, type QueueGameApk} from './web-game-packaging';
 
 const gamesBase = 'https://ecojust.github.io/pureTV/games/';
 const localOrigins = new Set([48731, 48732, 48733, 48734].map(port => 'http://127.0.0.1:' + port));
@@ -34,6 +34,7 @@ type ActiveGame = {
   snapshot?:ControllerState;
   unlisten?:UnlistenFn;
 };
+function onlineGame(game:Game) { return 'controls' in game || needsOnlineApk(game.id); }
 function gameLanguage() { return locale() === 'en' ? 'en' : 'zh'; }
 function gameName(game:Game) { return gameLanguage() === 'en' ? game.en : game.zh; }
 function gameUrl(base:string, id:string) { return base + encodeURIComponent(id) + '/tv.html?lang=' + gameLanguage(); }
@@ -107,9 +108,11 @@ export class Games {
       const cover = 'controls' in game ? 'thumb.webp' : 'thumb.png';
       const name = escape(gameName(game));
       const play = desktop ? `<span class="web-game-play-label">${t('电脑游玩')}</span>` : '';
-      const action = 'controls' in game ? t('生成电视 APK') : t('获取电视 APK');
-      const pack = desktop ? `<div class="web-game-actions"><button type="button" class="primary" data-deploy-game="${escape(id)}"
-        aria-label="${name} · ${t('部署到电视')}">${t('部署到电视')}</button><button type="button" class="web-game-apk" data-build-game="${escape(id)}"
+      const onlineApk = needsOnlineApk(id);
+      const action = onlineApk ? t('获取正式 APK') : 'controls' in game ? t('生成电视 APK') : t('获取电视 APK');
+      const onlineNote = onlineApk ? `<small id="apk-note-${escape(id)}" class="web-game-network-note">${t('首次获取正式 APK 需要联网。')}</small>` : '';
+      const pack = desktop ? `${onlineNote}<div class="web-game-actions"><button type="button" class="primary" data-deploy-game="${escape(id)}"
+        aria-label="${name} · ${t('部署到电视')}"${onlineApk ? ` aria-describedby="apk-note-${escape(id)}"` : ''}>${t('部署到电视')}</button><button type="button" class="web-game-apk" data-build-game="${escape(id)}"
         aria-label="${name} · ${action}">${action}</button></div>` : '';
       const imagePath = encodeURIComponent(id) + '/' + cover;
       const coverBase = desktop ? this.localBase : gamesBase;
@@ -119,10 +122,10 @@ export class Games {
     };
     let cards:string;
     if (desktop) {
-      const local = listed.filter(game => !('controls' in game));
-      const online = listed.filter(game => 'controls' in game);
+      const local = listed.filter(game => !onlineGame(game));
+      const online = listed.filter(onlineGame);
       cards = [
-        local.length ? `<h3 class="web-game-section">${t('本地游戏')} · ${local.length}</h3>${local.map(card).join('')}` : '',
+        local.length ? `<h3 class="web-game-section">${t('本地游戏')} · ${local.length}<small>${t('游玩和部署这些游戏无需互联网连接。')}</small></h3>${local.map(card).join('')}` : '',
         online.length ? `<h3 class="web-game-section">${t('联网游戏')} · ${online.length}<small>${t('打开联网游戏需要网络连接。')}</small></h3>${online.map(card).join('')}` : ''
       ].join('');
     } else {
@@ -154,7 +157,7 @@ export class Games {
     frame.title = gameName(game);
     frame.allow = 'gamepad; fullscreen; autoplay';
     frame.sandbox.add('allow-scripts', 'allow-same-origin', 'allow-pointer-lock');
-    const local = desktop && !('controls' in game);
+    const local = desktop && !onlineGame(game);
     const active:ActiveGame = {game, frame, ready:false, origin:local ? '' : new URL(gamesBase).origin};
     this.active = active;
     content.append(frame);

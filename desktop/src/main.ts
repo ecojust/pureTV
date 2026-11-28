@@ -24,7 +24,7 @@ const pages: Record<Page, [string, string, string]> = {
   launchers: ['启动器', '选择电视的默认桌面，随时回到原来的启动器', 'home'],
   market: ['APK市场', '发现电视应用与启动器，下载或安装到你的电视', 'store'],
   forum: ['论坛', '浏览社区帖子，交流使用体验与反馈', 'forum'],
-  games: ['游戏', '从本地游玩内置游戏，或一键部署到电视。', 'gamepad'],
+  games: ['游戏', '游玩本地或联网游戏，或将游戏部署到电视。', 'gamepad'],
   install: ['应用管理', '导入本地安装包，安装后可用于启动器排布', 'download'],
   history: ['操作记录', '逐项查看操作结果，确认电视上的实际变化', 'list'],
   info: ['兼容性方案', '查看每项操作的 ADB 命令、参数与 Android 兼容性', 'info'],
@@ -232,7 +232,7 @@ function renderFeedback(): void {
   const description = loading && market ? marketProgressText(marketStatus) : loading && downloadingTools ? progressText() : feedback.description;
   const install = feedback.gameInstall;
   const followup = !loading && install && (install.installed || install.retry) && matchesDeploymentTarget(install.target) ? install : undefined;
-  const steps = install ? `<p class="deployment-target">${esc(install.name)} · ${esc(deploymentDevice(install.target))}</p>${deploymentSteps(install.installed ? 'complete' : 'install', !loading && !install.installed)}` : '';
+  const steps = install ? `<p class="deployment-target">${esc(install.name)} · ${esc(deploymentDevice(install.target))}</p>${deploymentSteps(install.gameId, install.installed ? 'complete' : 'install', !loading && !install.installed)}` : '';
   const gameHint = followup?.installed ? `<p>${esc(t('游戏已安装。可前往启动器，将游戏添加到电视主屏幕。'))}</p>` : '';
   const gameButton = followup ? `<button type="button" data-game-install-next${disabled(busy)}>${esc(followup.installed ? t('前往启动器') : t('重试'))}</button>` : '';
   const html = `<div class="feedback-symbol ${loading ? '' : feedback.outcome}">${loading ? '<span class="spinner" aria-hidden="true"></span>' : icon(feedback.outcome === 'success' ? 'check' : feedback.outcome === 'error' ? 'close' : 'list')}</div><p class="feedback-operation">${esc(feedback.operation)}</p><h2 id="feedback-title">${esc(title)}</h2>${steps}<div class="feedback-live" role="status" aria-live="polite"><p id="feedback-description">${esc(message(description))}</p>${gameHint}${loading && cancelling ? `<p class="hint">${esc(feedback.checkingLayout ? t('正在取消检查…') : downloading ? t('正在取消并清理临时文件') : t('当前修改会完成并复查，后续项将停止'))}</p>` : ''}${feedback.cancelError ? `<p class="feedback-error" role="alert">${esc(feedback.cancelError)}</p>` : ''}${loading && market ? downloadMeter(marketStatus, t('安装包下载进度')) : loading && downloadingTools ? downloadMeter() : ''}</div>${feedback.rows.length ? `<ul class="feedback-results">${feedback.rows.map(row => `<li><div><strong>${esc(row.target)}</strong><span class="feedback-item-status ${row.success === true ? 'success' : row.success === false ? 'error' : ''}">${esc(t(row.success === true ? '成功' : row.success === false ? '失败' : '未执行'))}</span></div><p>${esc(message(row.message))}</p></li>`).join('')}</ul>` : ''}<div class="modal-actions">${gameButton}${loading ? feedback.cancellable ? `<button type="button" data-feedback-cancel${disabled(cancelling)}>${esc(cancelling ? t('正在取消') : feedback.checkingLayout ? t('取消检查') : downloading ? t('取消下载') : t('停止后续操作'))}</button>` : '' : `<button type="button" class="primary" data-feedback-close>${esc(t('确定'))}</button>`}</div>`;

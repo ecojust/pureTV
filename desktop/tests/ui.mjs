@@ -165,6 +165,31 @@ try {
     await dialog.getByRole('status').getByText(/无线手柄服务不可用，仍可使用键盘游玩/).waitFor();
     assert.equal(await dialog.locator('iframe').isVisible(), true);
   }, withoutAdb(), {gameControllerError:'TCP 63485: bind failed'});
+  await check('games retain the Pages player and wireless controller for both online-only Android titles', async p => {
+    const ids = JSON.parse(await readFile(new URL('../../tools/pc-games/online-only.json', import.meta.url), 'utf8'));
+    await nav(p, 'games');
+    const sections = p.locator('.web-game-section');
+    assert.match(await sections.nth(0).innerText(), /本地游戏 · 48/);
+    assert.match(await sections.nth(1).innerText(), /联网游戏 · 8/);
+    assert.equal(await p.locator('.web-game-network-note').count(), ids.length);
+    assert.deepEqual([...ids].sort(), ['cf-transport-ship','kart-rush']);
+    for (const id of ids) {
+      const card = p.locator(`[data-play-game="${id}"]`);
+      const tag = await card.evaluate(button=>Array.from(document.querySelectorAll('.web-game-section')).filter(section=>section.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).at(-1).textContent);
+      assert.match(tag,/联网游戏/);
+      await p.waitForFunction(id => document.querySelector(`[data-play-game="${id}"] img`).src.startsWith('http://127.0.0.1:'), id);
+      assert.equal(await p.locator(`[data-build-game="${id}"]`).innerText(),'获取正式 APK');
+      const source = gamesOrigin + '/pureTV/games/' + id + '/tv.html';
+      await p.route(source+'*', route=>route.fulfill({contentType:'text/html',body:gameFrameHtml}));
+      await card.click();
+      const player = p.locator('dialog.game-player[open]');
+      assert.equal(await player.locator('iframe').getAttribute('src'),source+'?lang=zh');
+      const frame = p.frame({url:u=>u.href.startsWith(source)}) || await p.waitForEvent('framenavigated',{predicate:f=>f.url().startsWith(source)});
+      await frame.waitForFunction(()=>window.received?.some(state=>state.revision===0));
+      await player.locator('[data-close-game]').click();
+    }
+    await p.waitForFunction(()=>window.__gameCommands.filter(item=>item.command==='stop_game_controllers').length===2);
+  }, withoutAdb());
   await check('games hosted by the author open from their category with Chinese controls and return to the selected card', async p => {
     const hosted = JSON.parse(await readFile(new URL('../../tools/pc-games/hosted-games.json', import.meta.url), 'utf8'));
     const categories = {

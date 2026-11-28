@@ -74,6 +74,31 @@ export async function checkGameDeployment(check, snapshot, withoutAdb) {
     assert.equal((await page.evaluate(()=>window.__gameApkRequests.filter(r=>r.command==='build_web_game_apk'))).length,1);
   });
 
+  await check('game deployment fetches an official online APK and keeps its verified installation result',async page=>{
+    await observeDeployment(page,{holdBuild:true});
+    await openGames(page);
+    await page.evaluate(()=>window.__holdNextOperation('install'));
+    const card=page.locator('[data-deploy-game="kart-rush"]');
+    assert.match(await card.getAttribute('aria-describedby'),/kart-rush/);
+    await card.click();
+    await page.waitForFunction(()=>!!window.__resumeGameBuild);
+    const preparation=dialog(page);
+    assert.equal(await preparation.locator('[data-online-apk]').innerText(),'首次获取正式 APK 需要联网。');
+    assert.equal(await preparation.locator('[data-apk-status]').innerText(),'正在获取正式 APK…');
+    assert.doesNotMatch(await preparation.innerText(),/打包 APK/);
+    await page.evaluate(()=>window.__gameBuildProgress());
+    assert.equal(await preparation.locator('[data-apk-status]').innerText(),'正在下载安装包…');
+    assert.equal(await preparation.locator('progress').isVisible(),true);
+    await page.evaluate(()=>window.__resumeGameBuild());
+    await page.waitForFunction(()=>window.__pendingOperations.some(op=>op.action==='install'));
+    assert.match(await feedback(page).locator('[data-deploy-step="pack"]').innerText(),/获取正式 APK/);
+    assert.doesNotMatch(await feedback(page).innerText(),/打包 APK/);
+    await page.evaluate(()=>window.__releaseOperation('install'));
+    await feedback(page).getByRole('button',{name:'前往启动器'}).waitFor();
+    assert.equal(await feedback(page).locator('[data-deploy-step="complete"]').getAttribute('data-state'),'done');
+    assert.deepEqual(await page.evaluate(()=>window.__deployInstalls.map(v=>v.request.paths)),[['/cache/games/kart-rush-0.1.0.apk']]);
+  });
+
   await check('game deployment retries an unconfirmed APK without suggesting a launcher first',async page=>{
     await observeDeployment(page,{incomplete:true});
     await openGames(page);
