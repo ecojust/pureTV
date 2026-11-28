@@ -1,12 +1,12 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.6.0** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.6.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.6.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
+下载：[0.6.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-本分支的「游戏」栏目收录 56 款游戏，点击封面即可在管理器内全屏游玩。50 款使用 pureTV 手柄协议，另有 6 款从作者网站加载，顶部状态栏提供操作提示，「中文指南」可查看游戏目标和画面词汇。电脑版使用原作支持的输入设备。已发布的 0.6.0 安装包使用发行时的 46 款游戏清单。[游玩与连接手柄](../docs/guide/README.md#在电脑上玩)
+电脑联网后，打开左侧「游戏」，点选封面即可在管理器内全屏游玩，无需 ADB 或电视。0.6.1 收录 56 款游戏，其中 50 款支持 pureTV 无线手柄。另有 6 款作者在线原作，使用各自支持的输入设备，点「中文指南」可查看目标、操作和画面词汇。0.6.0 用户可从上方发布页手动升级。[按分类找到六款在线游戏](../docs/guide/README.md#在电脑上玩)
 
-0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.6.0**，旧客户端不会自动切换下载地址。
+0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.6.1**，旧客户端不会自动切换下载地址。
 
 0.5.6 在 APK 市场的应用名右侧直接显示 `provider` 名称，去掉「作者」标签。过长的应用名优先省略，为右侧名称保留显示空间；完整内容可悬停查看。「已下载」状态移到文件信息行。名称来自 APK 同目录 `manifest.json`，缺失信息显示「未提供」。
 
@@ -49,14 +49,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.6.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.6.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.6.0-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.6.1-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.6.0-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.6.1-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -145,7 +145,7 @@ python3 tools/pc-games/web_index.py /tmp/puretv-site
 python3 -m http.server --directory /tmp/puretv-site 8080
 ```
 
-发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。管理器根据 `tools/pc-games/catalog.json` 和 `tools/readme-app-games.json` 展示游戏，两个目录中的游戏及顺序须一致。[线上游戏目录](https://ecojust.github.io/pureTV/)
+发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。管理器在构建时读取 `tools/pc-games/catalog.json` 中的 50 款手柄游戏，按 `tools/readme-app-games.json` 排列，再将 `tools/pc-games/hosted-games.json` 中的六款作者在线游戏加入各自分类。[线上游戏目录](https://ecojust.github.io/pureTV/)
 
 ## 论坛
 
