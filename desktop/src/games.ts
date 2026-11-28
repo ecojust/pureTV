@@ -6,10 +6,10 @@ import hosted from '../../tools/pc-games/hosted-games.json';
 import sections from '../../tools/readme-app-games.json';
 import {desktop} from './bridge';
 import {locale, t} from './i18n';
-import {WebGamePackaging, type QueueGameApk} from './web-game-packaging';
+import {needsOnlineApk, WebGamePackaging, type GameDeployment, type QueueGameApk} from './web-game-packaging';
 
 const gamesBase = 'https://ecojust.github.io/pureTV/games/';
-const gamesOrigin = new URL(gamesBase).origin;
+const localOrigins = new Set([48731, 48732, 48733, 48734].map(port => 'http://127.0.0.1:' + port));
 const twoPlayerGames = new Set(['tank', 'super-mario', 'jackal', 'tetris', 'jewel', 'used-car-racing']);
 type Game = (typeof catalog)[number] | (typeof hosted)[number];
 const games = new Map<string, Game>([...catalog, ...hosted].map(game => [game.id, game]));
@@ -27,15 +27,17 @@ type ControllerState = {session:string; revision:number; connections:number; pla
 type ActiveGame = {
   game:Game;
   frame:HTMLIFrameElement;
+  origin:string;
   ready:boolean;
   enteredFullscreen?:boolean;
   controller?:ControllerSession;
   snapshot?:ControllerState;
   unlisten?:UnlistenFn;
 };
+function onlineGame(game:Game) { return 'controls' in game || needsOnlineApk(game.id); }
 function gameLanguage() { return locale() === 'en' ? 'en' : 'zh'; }
 function gameName(game:Game) { return gameLanguage() === 'en' ? game.en : game.zh; }
-function gameUrl(id:string) { return gamesBase + encodeURIComponent(id) + '/tv.html?lang=' + gameLanguage(); }
+function gameUrl(base:string, id:string) { return base + encodeURIComponent(id) + '/tv.html?lang=' + gameLanguage(); }
 const escape = (value:string) => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!));
 
 export class Games {
@@ -43,6 +45,8 @@ export class Games {
   private player = document.createElement('dialog');
   private active?:ActiveGame;
   private readyTimeout?:number;
+  private localBase?:string;
+  private localStart?:Promise<string>;
   // Finish late starts and stops in order when a player exits and opens another title.
   private socketWork = Promise.resolve();
 
@@ -50,8 +54,8 @@ export class Games {
 
   private readonly packaging:WebGamePackaging;
 
-  constructor(enqueue:QueueGameApk) {
-    this.packaging = new WebGamePackaging(enqueue);
+  constructor(enqueue:QueueGameApk, deployment:GameDeployment) {
+    this.packaging = new WebGamePackaging(enqueue, deployment);
     this.player.className = 'game-player';
     this.player.setAttribute('aria-labelledby', 'game-player-title');
     document.body.append(this.player);
@@ -62,7 +66,7 @@ export class Games {
     window.addEventListener('pagehide', () => this.close());
     window.addEventListener('message', event => {
       const active = this.active;
-      if (!active || event.origin !== gamesOrigin || event.source !== active.frame.contentWindow) return;
+      if (!active || event.origin !== active.origin || event.source !== active.frame.contentWindow) return;
       if (event.data?.type === 'puretv:game-exit') this.close();
       if (event.data?.type === 'puretv:game-ready') {
         active.ready = true;
@@ -74,28 +78,67 @@ export class Games {
     });
   }
 
+  private localLibrary():Promise<string> {
+    if (!this.localStart) {
+      this.localStart = invoke<string>('local_game_base').then(base => {
+        const url = new URL(base);
+        if (!localOrigins.has(url.origin) || !url.pathname.startsWith('/games/') || !url.pathname.endsWith('/')) {
+          throw new Error(t('本地游戏资源暂不可用。'));
+        }
+        this.localBase = url.href;
+        for (const img of document.querySelectorAll<HTMLImageElement>('img[data-local-cover]')) {
+          img.src = url.href + img.dataset.localCover;
+        }
+        return url.href;
+      }).catch(error => {
+        this.localStart = undefined;
+        throw error;
+      });
+    }
+    return this.localStart;
+  }
+
   render():string {
+    if (desktop && !this.localBase) void this.localLibrary().catch(() => {});
     const shown = groups.filter(group => !this.group || this.group === group.id);
     const options = groups.map(group => `<option value="${group.id}"${group.id === this.group ? ' selected' : ''}>${escape(locale() === 'en' ? group.en : t(group.zh))}</option>`).join('');
-    const cards = shown.flatMap(section => section.games).map(game => {
+    const listed = shown.flatMap(section => section.games);
+    const card = (game:Game) => {
       const id = game.id;
       const cover = 'controls' in game ? 'thumb.webp' : 'thumb.png';
       const name = escape(gameName(game));
       const play = desktop ? `<span class="web-game-play-label">${t('电脑游玩')}</span>` : '';
-      const action = 'controls' in game ? t('生成电视 APK') : t('获取电视 APK');
-      const pack = desktop ? `<button type="button" class="web-game-apk" data-build-game="${escape(id)}"
-        aria-label="${name} · ${action}">${action}</button>` : '';
+      const onlineApk = needsOnlineApk(id);
+      const action = onlineApk ? t('获取正式 APK') : 'controls' in game ? t('生成电视 APK') : t('获取电视 APK');
+      const onlineNote = onlineApk ? `<small id="apk-note-${escape(id)}" class="web-game-network-note">${t('首次获取正式 APK 需要联网。')}</small>` : '';
+      const pack = desktop ? `${onlineNote}<div class="web-game-actions"><button type="button" class="primary" data-deploy-game="${escape(id)}"
+        aria-label="${name} · ${t('部署到电视')}"${onlineApk ? ` aria-describedby="apk-note-${escape(id)}"` : ''}>${t('部署到电视')}</button><button type="button" class="web-game-apk" data-build-game="${escape(id)}"
+        aria-label="${name} · ${action}">${action}</button></div>` : '';
+      const imagePath = encodeURIComponent(id) + '/' + cover;
+      const coverBase = desktop ? this.localBase : gamesBase;
+      const image = coverBase ? `src="${escape(coverBase + imagePath)}"` : `data-local-cover="${imagePath}"`;
       return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}" aria-label="${name}">
-        <img loading="lazy" src="${gamesBase}${encodeURIComponent(id)}/${cover}" alt=""><strong>${name}</strong>${play}</button>${pack}</article>`;
-    });
-    return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${cards.length}</span></div><div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards.join('')}</div>`;
+        <img loading="lazy" ${image} alt=""><strong>${name}</strong>${play}</button>${pack}</article>`;
+    };
+    let cards:string;
+    if (desktop) {
+      const local = listed.filter(game => !onlineGame(game));
+      const online = listed.filter(onlineGame);
+      cards = [
+        local.length ? `<h3 class="web-game-section">${t('本地游戏')} · ${local.length}<small>${t('游玩和部署这些游戏无需互联网连接。')}</small></h3>${local.map(card).join('')}` : '',
+        online.length ? `<h3 class="web-game-section">${t('联网游戏')} · ${online.length}<small>${t('打开联网游戏需要网络连接。')}</small></h3>${online.map(card).join('')}` : ''
+      ].join('');
+    } else {
+      cards = listed.map(card).join('');
+    }
+    return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${listed.length}</span></div><div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards}</div>`;
   }
 
   setGroup(group:string):void { this.group = group; }
 
-  packageGame(id:string, opener:HTMLButtonElement):void {
+  packageGame(id:string, opener:HTMLButtonElement, deploy=false):void {
     const game = games.get(id);
-    if (desktop && game && !this.active) this.packaging.open(id, gameName(game), 'controls' in game, opener);
+    if (desktop && game && !this.active) this.packaging.open(id, gameName(game), 'controls' in game, opener, deploy);
   }
 
   open(id:string):void {
@@ -114,8 +157,8 @@ export class Games {
     frame.title = gameName(game);
     frame.allow = 'gamepad; fullscreen; autoplay';
     frame.sandbox.add('allow-scripts', 'allow-same-origin', 'allow-pointer-lock');
-    frame.src = gameUrl(id);
-    const active:ActiveGame = {game, frame, ready:false};
+    const local = desktop && !onlineGame(game);
+    const active:ActiveGame = {game, frame, ready:false, origin:local ? '' : new URL(gamesBase).origin};
     this.active = active;
     content.append(frame);
     this.player.append(content);
@@ -124,6 +167,21 @@ export class Games {
       desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。');
     this.status('[data-socket-status]', hint);
     this.player.showModal();
+    if (local) {
+      void this.localLibrary().then(base => {
+        if (this.active === active) {
+          active.origin = new URL(base).origin;
+          frame.src = gameUrl(base, id);
+        }
+      }).catch(() => {
+        if (this.active === active) {
+          window.clearTimeout(this.readyTimeout);
+          this.status('[data-frame-status]', t('本地游戏资源暂不可用。'));
+        }
+      });
+    } else {
+      frame.src = gameUrl(gamesBase, id);
+    }
     if (desktop) {
       this.windowWork = this.windowWork.then(async () => {
         const appWindow = getCurrentWindow();
@@ -136,7 +194,7 @@ export class Games {
       void content.requestFullscreen?.().catch(() => {});
     }
     this.readyTimeout = window.setTimeout(() => {
-      this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
+      this.status('[data-frame-status]', local ? t('正在加载游戏…') : t('游戏加载较慢，请检查网络。'));
     }, 25000);
     if (desktop && !('controls' in game)) {
       this.socketWork = this.socketWork.then(() => this.startControllers(active)).catch(() => {
@@ -181,7 +239,7 @@ export class Games {
   private forward(active:ActiveGame):void {
     if (active.ready && active.snapshot) {
       const {session:_, ...state} = active.snapshot;
-      active.frame.contentWindow?.postMessage({type:'puretv:controller-state', state}, gamesOrigin);
+      active.frame.contentWindow?.postMessage({type:'puretv:controller-state', state}, active.origin);
     }
   }
 

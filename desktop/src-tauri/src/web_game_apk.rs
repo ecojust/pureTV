@@ -1,20 +1,16 @@
 //! Prepare the TV package for a game in the built-in desktop catalog.
 use crate::market::Progress;
 use crate::web_game_template::{embedded_game, EmbeddedGame};
-use reqwest::{blocking::Response, redirect, Url};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fs::{self, File};
-use std::io::{self, Read, Seek, Write};
+use std::io::{self, BufReader, Read, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 use tempfile::NamedTempFile;
 
 const CATALOG: &str = include_str!("../../../tools/pc-games/catalog.json");
-// The desktop web catalog also feeds the online PC player. Resolve its branch links
-// against the repository revision that contains these exact versioned APKs.
-const APK_REVISION: &str = env!("PURETV_GAME_APK_REVISION");
 const CATALOG_URL_PREFIX: &str =
     "https://github.com/ecojust/pureTV/raw/refs/heads/master/joystick-games/";
 
@@ -27,7 +23,8 @@ struct CatalogGame {
 }
 
 enum Source {
-    Download(Url),
+    Project,
+    Online,
     Embedded(EmbeddedGame),
 }
 
@@ -74,16 +71,119 @@ fn lookup(id: &str) -> Result<Game, String> {
         })
         .map(|(_, name)| name)
         .ok_or("游戏 APK 清单地址无效")?;
-    let url = Url::parse(&format!(
-        "https://github.com/ecojust/pureTV/raw/{APK_REVISION}/joystick-games/{id}/{name}"
-    ))
-    .map_err(|_| "游戏 APK 清单地址无效")?;
     Ok(Game {
         file_name: name.into(),
         sha256: entry.sha256,
         bytes: entry.bytes,
-        source: Source::Download(url),
+        source: if crate::remote_game_apk::is_online_only(id) {
+            Source::Online
+        } else {
+            Source::Project
+        },
     })
+}
+
+pub(crate) fn verify_library(path: &Path) -> Result<(), String> {
+    let mut pack = crate::offline_game_library::open(path)?;
+    if pack
+        .file_names()
+        .flatten()
+        .any(|name| name.ends_with(".apk"))
+    {
+        return Err("本地游戏库中包含成品 APK".into());
+    }
+    let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).map_err(|_| "游戏目录无效")?;
+    for entry in entries {
+        let game = lookup(&entry.id)?;
+        if matches!(game.source, Source::Online) {
+            let prefix = format!("projects/{}/", entry.id);
+            let web = format!("web/{}/", entry.id);
+            if pack.file_names().flatten().any(|name| {
+                name.starts_with(&prefix)
+                    || name
+                        .strip_prefix(&web)
+                        .is_some_and(|file| !matches!(file, "thumb.png" | "thumb.webp"))
+            }) {
+                return Err(format!("离线库中包含未授权的游戏项目: {}", entry.id));
+            }
+            continue;
+        }
+        if !assemble_project(
+            &mut pack,
+            &entry.id,
+            &game,
+            io::sink(),
+            &AtomicBool::new(false),
+            |_| Ok(()),
+        )? {
+            return Err(format!("游戏项目组装后的 APK 校验失败: {}", entry.id));
+        }
+        let page = format!("web/{}/tv.html", entry.id);
+        if pack.by_name(&page).is_err() {
+            return Err(format!("缺少 {page}"));
+        }
+    }
+    Ok(())
+}
+
+// Rebuild the official signed APK from the same unsigned Android project used
+// by the desktop player. Only signatures and central records are held in RAM.
+fn assemble_project(
+    pack: &mut zip::ZipArchive<BufReader<File>>,
+    id: &str,
+    game: &Game,
+    output: impl Write,
+    cancel: &AtomicBool,
+    progress: impl FnMut(u64) -> Result<(), String>,
+) -> Result<bool, String> {
+    const RECORD_LIMIT: u64 = 16 * 1024 * 1024;
+    let invalid = "本地游戏项目或签名资料无效";
+    let mut signature = pack
+        .by_name(&format!("projects/{id}/signing.bin"))
+        .map_err(|_| "缺少游戏的签名资料")?;
+    if !(32..=RECORD_LIMIT).contains(&signature.size()) {
+        return Err(invalid.into());
+    }
+    let mut magic = [0; 8];
+    signature.read_exact(&mut magic).map_err(|_| invalid)?;
+    if &magic != b"PTVSIG01" {
+        return Err(invalid.into());
+    }
+    let mut number = || {
+        let mut bytes = [0; 8];
+        signature.read_exact(&mut bytes).map_err(|_| invalid)?;
+        Ok::<u64, &str>(u64::from_le_bytes(bytes))
+    };
+    let prefix = number()?;
+    let directory_size = number()?;
+    let local_signatures = number()?;
+    let mut records = Vec::new();
+    signature.read_to_end(&mut records).map_err(|_| invalid)?;
+    drop(signature);
+    let signed_bytes = records.len() as u64;
+    if local_signatures > signed_bytes
+        || directory_size > RECORD_LIMIT
+        || prefix
+            .checked_add(directory_size)
+            .and_then(|n| n.checked_add(signed_bytes))
+            != Some(game.bytes)
+    {
+        return Err(invalid.into());
+    }
+    let mut project = pack
+        .by_name_seek(&crate::offline_game_library::project_member(id))
+        .map_err(|_| "未找到可读取的本地游戏项目")?;
+    project.seek(SeekFrom::Start(prefix)).map_err(|_| invalid)?;
+    let mut directory = vec![0; directory_size as usize];
+    project.read_exact(&mut directory).map_err(|_| invalid)?;
+    project.rewind().map_err(|_| invalid)?;
+    let (local, trailer) = records.split_at(local_signatures as usize);
+    let signed = project
+        .take(prefix)
+        .chain(local)
+        .chain(&directory[..])
+        .chain(trailer);
+    copy_verified(signed, output, game, cancel, progress)
 }
 
 pub fn file_name(game_id: &str) -> Result<String, String> {
@@ -105,53 +205,7 @@ fn check_cancel(cancel: &AtomicBool) -> Result<(), String> {
     }
 }
 
-fn allowed_redirect(url: &Url) -> bool {
-    url.scheme() == "https"
-        && url.port().is_none()
-        && url.username().is_empty()
-        && url.password().is_none()
-        && matches!(
-            url.host_str(),
-            Some("raw.githubusercontent.com" | "media.githubusercontent.com")
-        )
-}
-
-fn fetch(url: &Url, expected: u64) -> Result<Response, String> {
-    let client = reqwest::blocking::Client::builder()
-        .https_only(true)
-        .redirect(redirect::Policy::custom(|attempt| {
-            if attempt.previous().len() <= 3 && allowed_redirect(attempt.url()) {
-                attempt.follow()
-            } else {
-                attempt.error("游戏 APK 下载重定向无效")
-            }
-        }))
-        .user_agent(concat!("pureTV-Manager/", env!("CARGO_PKG_VERSION")))
-        .connect_timeout(Duration::from_secs(10))
-        .timeout(Duration::from_secs(20))
-        .build()
-        .map_err(|_| "无法准备游戏下载")?;
-    let response = client
-        .get(url.clone())
-        .header(reqwest::header::ACCEPT_ENCODING, "identity")
-        .send()
-        .map_err(|_| "无法连接游戏 APK 下载服务器")?;
-    if response.status() != reqwest::StatusCode::OK {
-        return Err(format!(
-            "游戏 APK 下载服务器返回 HTTP {}",
-            response.status().as_u16()
-        ));
-    }
-    if response
-        .content_length()
-        .is_some_and(|length| length != expected)
-    {
-        return Err("游戏 APK 大小与清单不符".into());
-    }
-    Ok(response)
-}
-
-// Use the same check during download, cache reuse, and export. A destination
+// Use the same check during extraction, cache reuse, and export. A destination
 // only receives verified bytes when its neighboring temporary file is committed.
 fn copy_verified(
     mut from: impl Read,
@@ -201,19 +255,50 @@ fn cached_file(path: &Path, game: &Game) -> Result<Option<File>, String> {
     }
 }
 
-fn publish(file: NamedTempFile, path: &Path, cancel: &AtomicBool) -> Result<(), String> {
+fn publish(
+    mut file: NamedTempFile,
+    path: &Path,
+    cancel: &AtomicBool,
+    cache: Option<&Game>,
+) -> Result<(), String> {
     file.as_file()
         .sync_all()
         .map_err(|_| "无法写入完整的游戏 APK")?;
-    check_cancel(cancel)?;
-    file.persist(path)
-        .map_err(|_| "无法保存游戏 APK，请检查目录权限")?;
-    Ok(())
+    let mut retries = 0;
+    loop {
+        check_cancel(cancel)?;
+        let conflict = match file.persist(path) {
+            Ok(_) => return Ok(()),
+            Err(err) => err,
+        };
+        let failure = || format!("无法保存游戏 APK: {}", conflict.error);
+        let Some(game) = cache else {
+            return Err(failure());
+        };
+        // Another process can finish repairing this cache entry while we are writing it.
+        if let Ok(Some(winner)) = cached_file(path, game) {
+            if copy_verified(winner, io::sink(), game, cancel, |_| Ok(()))? {
+                return Ok(());
+            }
+        }
+        // On Windows an open destination can temporarily deny MoveFileExW
+        // with ACCESS_DENIED, SHARING_VIOLATION or LOCK_VIOLATION.
+        if !cfg!(windows)
+            || !matches!(conflict.error.raw_os_error(), Some(5 | 32 | 33))
+            || retries == 6
+        {
+            return Err(failure());
+        }
+        file = conflict.file;
+        std::thread::sleep(Duration::from_millis(20 << retries));
+        retries += 1;
+    }
 }
 
 pub fn prepare(
     directory: &Path,
     game_id: &str,
+    library: impl FnOnce() -> Result<PathBuf, String>,
     cancel: &AtomicBool,
     mut report: impl FnMut(Progress) -> Result<(), String>,
 ) -> Result<GameApk, String> {
@@ -250,9 +335,17 @@ pub fn prepare(
                     progress("verifying", n)
                 })?
             }
-            Source::Download(url) => {
+            Source::Project => {
+                progress("preparing", 0)?;
+                let mut archive = crate::offline_game_library::open(&library()?)?;
+                assemble_project(&mut archive, game_id, &game, &mut output, cancel, |n| {
+                    progress("preparing", n)
+                })?
+            }
+            Source::Online => {
                 progress("downloading", 0)?;
-                let response = fetch(url, game.bytes)?;
+                let response =
+                    crate::remote_game_apk::download(game_id, &game.file_name, game.bytes, cancel)?;
                 copy_verified(response, &mut output, &game, cancel, |n| {
                     progress("downloading", n)
                 })?
@@ -261,7 +354,7 @@ pub fn prepare(
         if !matches {
             return Err("游戏 APK 校验失败，请重试".into());
         }
-        publish(output, &target, cancel)?;
+        publish(output, &target, cancel, Some(&game))?;
     }
     check_cancel(cancel)?;
     progress("verifying", game.bytes)?;
@@ -269,7 +362,7 @@ pub fn prepare(
         path: target.to_str().ok_or("游戏 APK 缓存路径无法表示")?.into(),
         package_name: match game.source {
             Source::Embedded(entry) => Some(entry.package_name.into()),
-            Source::Download(_) => crate::app_logos::package_name(&target),
+            Source::Project | Source::Online => crate::app_logos::package_name(&target),
         },
         sha256: game.sha256,
     })
@@ -298,7 +391,7 @@ pub fn export(
     if !copy_verified(source, &mut temp, &game, cancel, |_| Ok(()))? {
         return Err("游戏 APK 缓存校验失败，请重新准备".into());
     }
-    publish(temp, destination, cancel)
+    publish(temp, destination, cancel, None)
 }
 
 #[cfg(test)]
@@ -319,16 +412,9 @@ mod tests {
             assert_eq!(game.sha256.len(), 64);
             assert!(game.sha256.bytes().all(|b| b.is_ascii_hexdigit()));
             assert!(game.bytes > 0);
-            let Source::Download(url) = game.source else {
-                panic!("wrong source for {}", entry.id)
-            };
-            assert_eq!(url.host_str(), Some("github.com"));
             assert_eq!(
-                url.path(),
-                format!(
-                    "/ecojust/pureTV/raw/{APK_REVISION}/joystick-games/{}/{}",
-                    entry.id, game.file_name
-                )
+                matches!(game.source, Source::Online),
+                crate::remote_game_apk::is_online_only(&entry.id)
             );
         }
         for unknown in [
@@ -339,14 +425,6 @@ mod tests {
             "tank/../jackal",
         ] {
             assert!(lookup(unknown).is_err());
-        }
-        for address in [
-            "https://example.org/file.apk",
-            "http://raw.githubusercontent.com/file.apk",
-            "https://raw.githubusercontent.com.example/file",
-            "https://media.githubusercontent.com:123/file",
-        ] {
-            assert!(!allowed_redirect(&Url::parse(address).unwrap()));
         }
     }
 
@@ -366,6 +444,32 @@ mod tests {
     }
 
     #[test]
+    fn failed_cache_rename_accepts_only_a_verified_winner() {
+        let dir = tempdir().unwrap();
+        let target = dir.path().join("game.apk");
+        let game = Game {
+            file_name: "game.apk".into(),
+            bytes: 4,
+            sha256: format!("{:x}", Sha256::digest(b"good")),
+            source: Source::Project,
+        };
+        // A missing temporary pathname forces the rename to fail on every OS.
+        let pending = || {
+            NamedTempFile::from_parts(
+                tempfile::tempfile_in(dir.path()).unwrap(),
+                tempfile::TempPath::try_from_path(dir.path().join("missing")).unwrap(),
+            )
+        };
+        fs::write(&target, b"good").unwrap();
+        assert!(publish(pending(), &target, &cancel(), Some(&game)).is_ok());
+        assert!(publish(pending(), &target, &cancel(), None).is_err());
+        assert!(publish(pending(), &target, &AtomicBool::new(true), Some(&game)).is_err());
+        fs::write(&target, b"evil").unwrap();
+        assert!(publish(pending(), &target, &cancel(), Some(&game)).is_err());
+        assert_eq!(fs::read(&target).unwrap(), b"evil");
+    }
+
+    #[test]
     fn embedded_packages_prepare_offline_and_repair_corrupt_cache() {
         let directory = tempdir().unwrap();
         let root = directory.path();
@@ -378,10 +482,16 @@ mod tests {
             "struggle-bus",
         ] {
             let entry = embedded_game(id).unwrap();
-            let first = prepare(root, id, &cancel(), |p| {
-                assert_ne!(p.stage, "downloading");
-                Ok(())
-            })
+            let first = prepare(
+                root,
+                id,
+                || panic!("standalone template opened the library"),
+                &cancel(),
+                |p| {
+                    assert_ne!(p.stage, "downloading");
+                    Ok(())
+                },
+            )
             .unwrap();
             assert_eq!(first.package_name.as_deref(), Some(entry.package_name));
             let target = root.join(entry.file_name);
@@ -392,7 +502,16 @@ mod tests {
             fs::write(&first.path, vec![0; expected.len()]).unwrap();
             thread::scope(|scope| {
                 for _ in 0..2 {
-                    scope.spawn(|| prepare(root, id, &cancel(), |_| Ok(())).unwrap());
+                    scope.spawn(|| {
+                        prepare(
+                            root,
+                            id,
+                            || panic!("standalone template opened the library"),
+                            &cancel(),
+                            |_| Ok(()),
+                        )
+                        .unwrap()
+                    });
                 }
             });
             assert_eq!(fs::read(first.path).unwrap(), expected);
@@ -400,33 +519,39 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "downloads an official game APK from the frozen public repository"]
-    fn native_catalog_download_cache_and_export() {
-        let directory = tempdir().unwrap();
-        let id = std::env::var("PURETV_TEST_GAME_APK_ID").unwrap_or_else(|_| "tank".into());
-        let first = prepare(directory.path(), &id, &cancel(), |_| Ok(())).unwrap();
-        let cached = prepare(directory.path(), &id, &cancel(), |p| {
-            assert_ne!(p.stage, "downloading");
-            Ok(())
-        })
-        .unwrap();
-        assert_eq!(first.path, cached.path);
-        assert!(first.package_name.is_some());
-        let target = directory.path().join(file_name(&id).unwrap());
-        export(directory.path(), &id, &target, &cancel()).unwrap();
-        let game = lookup(&id).unwrap();
-        assert_eq!(fs::metadata(&target).unwrap().len(), game.bytes);
-        assert!(copy_verified(
-            File::open(&target).unwrap(),
-            io::sink(),
-            &game,
-            &cancel(),
-            |_| Ok(())
-        )
-        .unwrap());
-        println!(
-            "Verified {} ({} bytes), SHA-256 {}",
-            game.file_name, game.bytes, game.sha256
-        );
+    fn catalog_games_prepare_from_local_zip_and_export_exact_bytes() {
+        let archive = Path::new(env!("CARGO_MANIFEST_DIR")).join("offline-assets/game-library.zip");
+        let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).unwrap();
+        for entry in entries {
+            if crate::remote_game_apk::is_online_only(&entry.id) {
+                continue;
+            }
+            let directory = tempdir().unwrap();
+            let game = prepare(
+                directory.path(),
+                &entry.id,
+                || Ok(archive.clone()),
+                &cancel(),
+                |_| Ok(()),
+            )
+            .unwrap();
+            let cached = prepare(
+                directory.path(),
+                &entry.id,
+                || panic!("opened library on cache hit"),
+                &cancel(),
+                |_| Ok(()),
+            )
+            .unwrap();
+            assert_eq!(game.path, cached.path);
+            assert!(game.package_name.is_some(), "{}", entry.id);
+            let target = directory.path().join(file_name(&entry.id).unwrap());
+            export(directory.path(), &entry.id, &target, &cancel()).unwrap();
+            assert_eq!(fs::metadata(&target).unwrap().len(), entry.bytes);
+            assert_eq!(
+                format!("{:x}", Sha256::digest(fs::read(target).unwrap())),
+                entry.sha256
+            );
+        }
     }
 }

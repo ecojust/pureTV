@@ -1,12 +1,14 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.7.0** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.8.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.7.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
+下载：[0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-打开左侧「游戏」后，可在「网页游戏」的 56 张卡片中选择「电脑游玩」，也可以为其中任一款准备电视 APK。50 款提供官方签名包，另外六款使用预签名模板在电脑上组装，各自独立安装并从作者站点加载。保存到电脑无需连接电视。也可加入安装队列，连接电视后在「待安装应用」统一安装。需要查找市场中的游戏版本时，切换到同一栏目里的「电视游戏市场」。[使用说明与六款作者原作分类](../docs/guide/README.md#在电脑上玩)
+打开「游戏」，即可从安装包内的本地资源游玩 48 款游戏。电视已通过 ADB 连接并授权时，可在游戏卡片上点「部署到电视」。管理器用同一份本地游戏项目和正式签名数据组装 APK，再安装到所选电视，完成后提示将游戏添加到启动器主屏幕。「联网游戏」中保留六款由作者托管的作品，以及《Kart Rush》和《CF 运输船》。后两款从原发布地址获取电视安装包。另有 APK 保存入口，以及可搜索、切换版本的「电视游戏市场」。[使用说明](../docs/guide/README.md#在电脑上玩)
 
-0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.7.0**，旧客户端不会自动切换下载地址。
+0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.8.1**，旧客户端不会自动切换下载地址。
+
+0.8.1 内置完整游戏资源，较早版本更新器的单文件上限为 256 MiB。若提示文件过大，可直接从发布页下载对应平台的安装文件并覆盖安装。
 
 0.5.6 在 APK 市场的应用名右侧直接显示 `provider` 名称，去掉「作者」标签。过长的应用名优先省略，为右侧名称保留显示空间；完整内容可悬停查看。「已下载」状态移到文件信息行。名称来自 APK 同目录 `manifest.json`，缺失信息显示「未提供」。
 
@@ -29,7 +31,7 @@
 | 应用管理 · 待安装 | 导入本地 APK、逐项或勾选批量安装；成功项移出队列，失败和未执行项保留 |
 | 启动器 | 设置／恢复默认 HOME，查看包大小、导入和逐项安装启动器 APK；支持时读取和编辑 layout.json 布局及应用图标 |
 | APK市场 | 搜索、预览和下载启动器及影音 APK，按应用查看最近五个版本 |
-| 游戏 | 在「网页游戏」中电脑游玩、获取或生成电视 APK，在「电视游戏市场」中选择市场版本并安装 |
+| 游戏 | 从本地资源游玩、打包并一键部署到电视，也可在「电视游戏市场」中选择其他游戏和版本 |
 | 论坛 | 浏览 Gitee Issues 列表、原帖正文和跟帖；刷新、翻页、外部发帖及前往原帖回复 |
 | 操作记录 | 最近 200 项修改记录，包含目标设备／用户、逐项结果与错误 |
 | 兼容性方案 | 离线说明各操作的 ADB 命令、用法与系统兼容性，支持简体中文、繁体中文和英文 |
@@ -49,14 +51,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.7.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.7.0-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.8.1-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.7.0-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.8.1-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -145,7 +147,7 @@ python3 tools/pc-games/web_index.py /tmp/puretv-site
 python3 -m http.server --directory /tmp/puretv-site 8080
 ```
 
-发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。管理器在构建时读取 `tools/pc-games/catalog.json` 中的 50 款手柄游戏，按 `tools/readme-app-games.json` 排列，再将 `tools/pc-games/hosted-games.json` 中的六款作者在线游戏加入各自分类。[线上游戏目录](https://ecojust.github.io/pureTV/)
+发布时把验证过的站点内容同步到 `gh-pages` 根目录，保留根目录的 `.nojekyll`。`tools/pc-games/catalog.json` 和 `hosted-games.json` 提供 56 张卡片及来源。原生客户端按 `online-only.json` 分出两款联网项目和六款作者游戏，将其余 48 款的本地项目及正式签名资料装入应用资源库。浏览器站点和原生客户端分别加载各自的入口。[线上游戏目录](https://ecojust.github.io/pureTV/)
 
 ## 论坛
 
@@ -184,7 +186,10 @@ APK市场、论坛和操作记录不显示常驻 ADB 提示、设备操作忙碌
 
 ## 开发与验证
 
+构建原生客户端需要 Python 3.11 或更新版及 Pillow，用于生成随客户端发行的本地游戏封面和资源库。`joystick-games/` 应包含目录指定的签名 APK，包括 Backroad Rally 的 Git LFS 实体。源码构建会按清单校验每个文件；已安装的客户端直接使用内置库。
+
 ```bash
+python -m pip install Pillow==11.3.0
 npm ci
 npm run build
 cargo test --locked --manifest-path core/Cargo.toml

@@ -247,6 +247,9 @@ def linux_check(desktop, package, executable, directory, config):
     before = subprocess.run(["/usr/bin/dpkg-query", "--show", "--showformat=${Version} ${Status}",
                              "pure-tv-manager"], capture_output=True)
     verify_deb(package, config["version"])
+    extracted = directory / "installed-deb"
+    run(["/usr/bin/dpkg-deb", "--extract", package, extracted], timeout=180)
+    run([extracted / "usr/bin/puretv-desktop", "--verify-game-library"])
     data_dir = directory / "metadata-profile"
     data_dir.mkdir()
     result = native_prepare(desktop, package, executable, executable, data_dir, directory)
@@ -254,7 +257,7 @@ def linux_check(desktop, package, executable, directory, config):
     after = subprocess.run(["/usr/bin/dpkg-query", "--show", "--showformat=${Version} ${Status}",
                             "pure-tv-manager"], capture_output=True)
     assert (before.returncode, before.stdout) == (after.returncode, after.stdout), "System package state changed"
-    print("Verified actual DEB identity and native metadata preparation; no system installation performed", flush=True)
+    print("Verified the DEB, its bundled offline games and native update preparation", flush=True)
 
 
 def gui_upgrade(desktop, package, helper_executable, target, directory, config):
@@ -324,6 +327,7 @@ def gui_upgrade(desktop, package, helper_executable, target, directory, config):
             expected_digest = nsis_payload_digest(helper_executable) if sys.platform == "win32" else digest(helper_executable)
             assert digest(old_executable) == expected_digest, "Installed executable differs from the current build"
             close_manager(new_session)
+            run([old_executable, "--verify-game-library"])
             print(f"Verified actual {BASELINE_VERSION} -> {config['version']} helper upgrade, normal shutdown, relaunch and retained data", flush=True)
     finally:
         primary_failure = sys.exc_info()[0] is not None

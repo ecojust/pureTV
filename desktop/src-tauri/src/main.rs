@@ -7,11 +7,14 @@ mod client_updates;
 mod forum;
 mod game_controllers;
 mod launcher_covers;
+mod local_game_player;
 mod market;
 mod market_seen;
 mod mcp;
+mod offline_game_library;
 mod package_insights;
 mod platform_tools;
+mod remote_game_apk;
 mod ui_preferences;
 mod web_game_apk;
 mod web_game_template;
@@ -260,8 +263,52 @@ fn wait_for_operation(running: &AtomicBool, timeout: std::time::Duration) -> boo
     true
 }
 
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ExpectedDevice {
+    serial: String,
+    user_id: u32,
+}
+
+impl ExpectedDevice {
+    fn matches(&self, device: Option<&puretv_core::Device>) -> bool {
+        device.is_some_and(|d| {
+            d.status == "device" && d.serial == self.serial && d.user_id == self.user_id
+        })
+    }
+}
+
+#[test]
+fn deployment_requires_the_same_authorized_device_and_user() {
+    let target = ExpectedDevice {
+        serial: "tv-a".into(),
+        user_id: 10,
+    };
+    let mut device = puretv_core::Device {
+        serial: "tv-a".into(),
+        user_id: 10,
+        status: "device".into(),
+        model: String::new(),
+        android_version: String::new(),
+    };
+    assert!(target.matches(Some(&device)));
+    assert!(!target.matches(None));
+    device.status = "unauthorized".into();
+    assert!(!target.matches(Some(&device)));
+    device.status = "device".into();
+    device.user_id = 0;
+    assert!(!target.matches(Some(&device)));
+    device.user_id = 10;
+    device.serial = "tv-b".into();
+    assert!(!target.matches(Some(&device)));
+}
+
 #[tauri::command]
-async fn execute(request: Request, bridge: tauri::State<'_, Bridge>) -> Result<Snapshot, String> {
+async fn execute(
+    request: Request,
+    expected_target: Option<ExpectedDevice>,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<Snapshot, String> {
     if bridge.closing.load(Ordering::Acquire) {
         return Err("管理器正在退出".into());
     }
@@ -287,6 +334,11 @@ async fn execute(request: Request, bridge: tauri::State<'_, Bridge>) -> Result<S
             .map_err(|_| "管理状态不可用，请重新打开程序".to_string())?;
         if closing.load(Ordering::Acquire) {
             return Err("管理器正在退出".into());
+        }
+        if let Some(target) = expected_target {
+            if !target.matches(manager.snapshot().device.as_ref()) {
+                return Err("目标电视已变化，请重新确认安装。".into());
+            }
         }
         let result = manager.execute(request);
         *cache.lock().map_err(|_| "状态缓存不可用")? = manager.snapshot();
@@ -555,11 +607,17 @@ async fn build_web_game_apk(
     let bridge = bridge.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         let _guard = guard;
-        web_game_apk::prepare(&directory, &game_id, &bridge.cancel, |progress| {
-            on_progress
-                .send(progress)
-                .map_err(|_| "游戏窗口已关闭".into())
-        })
+        web_game_apk::prepare(
+            &directory,
+            &game_id,
+            || offline_game_library::path(&app),
+            &bridge.cancel,
+            |progress| {
+                on_progress
+                    .send(progress)
+                    .map_err(|_| "游戏窗口已关闭".into())
+            },
+        )
     })
     .await
     .map_err(|_| "游戏安装包任务异常结束".to_string())?
@@ -1341,10 +1399,22 @@ fn main() {
         }
         return;
     }
+    let context = tauri::generate_context!();
+    if args
+        .get(1)
+        .is_some_and(|arg| arg == "--verify-game-library")
+    {
+        if let Err(error) = offline_game_library::verify(context.package_info()) {
+            eprintln!("{error}");
+            std::process::exit(1);
+        }
+        return;
+    }
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(GameControllers::default())
+        .manage(local_game_player::Player::default())
         .on_page_load(|webview, load| {
             // A reload can discard the page before its async cleanup reaches the shell.
             if webview.label() == "main" && load.event() == tauri::webview::PageLoadEvent::Started {
@@ -1435,12 +1505,13 @@ fn main() {
             client_update_result,
             get_package_insight,
             open_package_resource,
+            local_game_player::local_game_base,
             start_game_controllers,
             stop_game_controllers,
             game_controller_state,
             mcp_info
         ])
-        .build(tauri::generate_context!())
+        .build(context)
         .expect("无法启动 pureTV 电视管理器")
         .run(|app, event| {
             if matches!(event, tauri::RunEvent::Exit) {

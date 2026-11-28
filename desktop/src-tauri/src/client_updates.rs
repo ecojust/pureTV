@@ -20,7 +20,7 @@ use std::{
 
 pub const SOURCE_URL: &str = "https://apps.b14f.com/client/";
 const MAX_JSON: u64 = 16 * 1024 * 1024;
-const MAX_PACKAGE: u64 = 256 * 1024 * 1024;
+const MAX_PACKAGE: u64 = 512 * 1024 * 1024;
 const METADATA_TIMEOUT: Duration = Duration::from_secs(60);
 const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(15 * 60);
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
@@ -854,12 +854,12 @@ mod tests {
             "windows-x64",
             &cancelled(),
             |_| Ok(listing(&["pureTV-Manager-0.4.11-windows-x64-setup.exe"])),
-            |_| Ok(metadata(33 * 1024 * 1024)),
+            |_| Ok(metadata(320 * 1024 * 1024)),
         )
         .unwrap()
         .1
         .unwrap();
-        assert_eq!(value.metadata.bytes, 33 * 1024 * 1024);
+        assert_eq!(value.metadata.bytes, 320 * 1024 * 1024);
         assert!(discover(
             "windows-x64",
             &AtomicBool::new(true),
