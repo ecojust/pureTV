@@ -14,7 +14,7 @@ import zipfile
 
 from PIL import Image, ImageChops, ImageDraw, ImageStat
 
-from controllers import phone_input, wifi_input
+from controllers import phone_input, wifi_input, wifi_play
 
 
 PACKAGE = 'com.ecojust.hostedgames'
@@ -246,6 +246,8 @@ def run_game(device, game, first):
     device.label(AUTHOR_MARKERS[game_id], timeout=110)
     device.xml(game_id + '-author')
     result = {'cursor': device.verify_pointer()}
+    if game_id == 'fish-loop':
+        result['wifiController'] = wifi_play(device, title)
     result.update(author_action(device, game_id))
     device.screenshot(game_id + '-played')
     device.key('KEYCODE_BACK')
