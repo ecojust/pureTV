@@ -1,0 +1,204 @@
+name: Hosted games for Android TV
+on:
+  push:
+    branches: [master, continue-six-hosted-tv]
+    paths: &inputs
+      - resource/apps/hosted-games/src/**
+      - resource/apps/hosted-games/build.py
+      - resource/game-kit/android/src/main/java/com/ecojust/gamekit/LanGameServer.java
+      - resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiController*.java
+      - resource/game-kit/web/controller.*
+      - tools/pc-games/hosted-games.json
+      - tools/puretv-release-certificate-v2.sha256
+      - tools/hosted-games-tv/**
+      - .github/workflows/hosted-games-tv.yml
+  pull_request:
+    paths: *inputs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /resource/apps/hosted-games/
+            /resource/game-kit/android/src/main/java/
+            /resource/game-kit/web/controller.*
+            /tools/pc-games/hosted-games.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-35 build-tools;34.0.0
+      - name: Build the unsigned game launcher
+        run: |
+          curl -fsSL --retry 3 https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar -o "$RUNNER_TEMP/zxing.jar"
+          python3 resource/apps/hosted-games/build.py --sdk "$ANDROID_HOME" --zxing "$RUNNER_TEMP/zxing.jar" --output "$RUNNER_TEMP/unsigned.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hosted-games-tv-unsigned
+          path: ${{ runner.temp }}/unsigned.apk
+          if-no-files-found: error
+          retention-days: 7
+
+  sign:
+    needs: build
+    if: github.event_name != 'pull_request' && github.repository == 'ecojust/pureTV' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/continue-six-hosted-tv')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /tools/puretv-release-certificate-v2.sha256
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: hosted-games-tv-unsigned
+          path: ${{ runner.temp }}
+      - name: Sign and verify the launcher with the pureTV certificate
+        shell: bash
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          umask 077
+          tools="$ANDROID_HOME/build-tools/34.0.0"
+          pin="$(cat "$GITHUB_WORKSPACE/tools/puretv-release-certificate-v2.sha256")"
+          "$tools/aapt" dump badging unsigned.apk > badging.txt
+          grep -Fq "package: name='com.ecojust.hostedgames'" badging.txt
+          grep -q '^leanback-launchable-activity:' badging.txt
+          version="$(sed -n "s/^package: .*versionName='\([0-9]\+\.[0-9]\+\.[0-9]\+\)'.*/\1/p" badging.txt)"
+          test -n "$version"
+          trap 'rm -f hosted-signing.jks' EXIT
+          printf '%s' "$PURETV_KEYSTORE_BASE64" | base64 -d > hosted-signing.jks
+          keytool -exportcert -keystore hosted-signing.jks -alias puretv -storepass:env PURETV_KEYSTORE_PASSWORD > hosted-signing.der
+          echo "$pin  hosted-signing.der" | sha256sum --check
+          mkdir signed
+          apk="hosted-games-$version.apk"
+          "$tools/apksigner" sign --ks hosted-signing.jks --ks-key-alias puretv --ks-pass env:PURETV_KEYSTORE_PASSWORD --key-pass env:PURETV_KEYSTORE_PASSWORD --v4-signing-enabled false --out "signed/$apk" unsigned.apk
+          "$tools/apksigner" verify --verbose --print-certs "signed/$apk" > signer.txt
+          grep -Fxq "Signer #1 certificate SHA-256 digest: $pin" signer.txt
+          "$tools/zipalign" -c 4 "signed/$apk"
+          cd signed
+          sha256sum "$apk" > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hosted-games-tv-signed
+          path: ${{ runner.temp }}/signed/
+          if-no-files-found: error
+          retention-days: 14
+
+  television:
+    needs: sign
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/hosted-games-tv/
+            /tools/pc-games/hosted-games.json
+            /resource/apps/hosted-games/src/
+      - uses: actions/download-artifact@v4
+        with:
+          name: hosted-games-tv-signed
+          path: ${{ runner.temp }}/signed
+      - name: Verify package and enable KVM
+        run: |
+          cd "$RUNNER_TEMP/signed"
+          sha256sum --check SHA256SUMS.txt
+          sudo chmod a+rw /dev/kvm
+      - name: Install runtime test dependencies
+        run: python3 -m pip install Pillow==11.3.0 websocket-client==1.8.0
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: python3 tools/hosted-games-tv/qa.py --apk "$RUNNER_TEMP"/signed/hosted-games-*.apk --out "$RUNNER_TEMP/hosted-games-qa"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hosted-games-tv-runtime
+          path: ${{ runner.temp }}/hosted-games-qa/
+          if-no-files-found: warn
+          retention-days: 14
+
+  export:
+    needs: [sign, television]
+    if: always() && needs.sign.result == 'success'
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /.gitattributes
+      - uses: actions/download-artifact@v4
+        with:
+          name: hosted-games-tv-signed
+          path: ${{ runner.temp }}/signed
+      - uses: actions/download-artifact@v4
+        id: diagnostics
+        continue-on-error: true
+        with:
+          name: hosted-games-tv-runtime
+          path: ${{ runner.temp }}/runtime
+      - name: Export the package and bounded game evidence on a new build-assets branch
+        shell: bash
+        env:
+          TV_RESULT: ${{ needs.television.result }}
+        run: |
+          set -euo pipefail
+          release=release-staging/hosted-games
+          mkdir -p "$release"
+          (cd "$RUNNER_TEMP/signed" && sha256sum --check SHA256SUMS.txt)
+          for input in "$RUNNER_TEMP/signed"/hosted-games-*.apk "$RUNNER_TEMP/signed/SHA256SUMS.txt"; do
+            test -f "$input"
+            test ! -L "$input"
+            test "$(stat -c %s "$input")" -lt 10000000
+            cp "$input" "$release/"
+          done
+          # Export only the report, the redacted catalog and the six gameplay frames.
+          # Controller setup screens include an ephemeral LAN pairing code.
+          for name in report.json catalog-preview.png {bandit,fish-loop,noir-extreme,struggle-bus,vespertine,daejeon-campus}-played.png; do
+            input="$RUNNER_TEMP/runtime/$name"
+            if test -f "$input" && test ! -L "$input" && test "$(stat -c %s "$input")" -lt 5000000; then
+              cp "$input" "$release/$name"
+            fi
+          done
+          jq -n --arg sha "$GITHUB_SHA" --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg result "$TV_RESULT" '{sourceSha:$sha, runId:$run, attempt:$attempt, television:$result}' > "$release/build.json"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --sparse --force -- "$release"
+          git commit -m "Stage hosted games TV build $GITHUB_RUN_ID ($GITHUB_SHA)"
+          branched="build-assets/hosted-games-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git push --force-with-lease="refs/heads/$branched:" origin "HEAD:refs/heads/$branched"
