@@ -197,6 +197,22 @@ public final class MainActivity extends Activity {
             return false;
         }
 
+        @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            checkAuthor(view, url);
+        }
+
+        @Override public void onPageCommitVisible(WebView view, String url) {
+            checkAuthor(view, url);
+        }
+
+        private void checkAuthor(WebView view, String url) {
+            if (view != web || (url != null && source.owns(android.net.Uri.parse(url)))) return;
+            // Some top-level navigations (e.g. form POST) skip shouldOverrideUrlLoading.
+            view.setVisibility(View.INVISIBLE);
+            view.stopLoading();
+            failAfterCallback(view, "游戏离开了作者站点，可重新进入。");
+        }
+
         @Override public void onPageFinished(WebView view, String url) {
             if (view == web && loading != null) loading.setVisibility(View.GONE);
         }
@@ -381,6 +397,7 @@ public final class MainActivity extends Activity {
                 && helpDialog.getWindow().getDecorView().hasWindowFocus();
         if (lobby != null) lobby.setActive(helping || (resumed && hasWindowFocus() && input == null));
         if (input != null) input.setActive(playing);
+        if (web != null) web.setKeepScreenOn(playing);
         if (caption != null) caption.setActive(playing);
         if (playing && pendingAction >= 0) {
             int index = pendingAction;
@@ -437,6 +454,16 @@ public final class MainActivity extends Activity {
         super.onSaveInstanceState(state);
         state.putString("selection", selection);
         state.putBoolean("playing", web != null);
+    }
+
+    @Override protected void onStart() {
+        super.onStart();
+        if (room != null) room.start();
+    }
+
+    @Override protected void onStop() {
+        if (room != null) room.stop();
+        super.onStop();
     }
 
     @Override protected void onResume() {

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Drive the installed APK with Android input. Save screenshots and accessibility evidence."""
 import argparse
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -43,7 +44,11 @@ def box(node):
 
 class Device:
     def __init__(self, serial, out):
-        self.prefix = ['adb', '-s', serial]
+        sdk = os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT')
+        adb = Path(sdk) / 'platform-tools/adb' if sdk else Path('adb')
+        self.prefix = [str(adb)]
+        if serial:
+            self.prefix += ['-s', serial]
         self.out = out
         self.last_xml = None
 
@@ -53,6 +58,28 @@ class Device:
 
     def shell(self, *args):
         return self.adb('shell', *args)
+
+    def wait_for_ready(self, report):
+        # sys.boot_completed may precede an adbd restart. Wait for the package manager
+        # and consecutive, stable transport responses before installing the APK.
+        ready = 0
+        deadline = time.monotonic() + 120
+        issue = 'Android package manager is not ready'
+        while time.monotonic() < deadline:
+            try:
+                booted = self.shell('getprop', 'sys.boot_completed') == '1'
+                if booted and self.shell('pm', 'path', 'android').startswith('package:'):
+                    ready += 1
+                    if ready == 2:
+                        return
+                else:
+                    ready = 0
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+                ready = 0
+                issue = (error.stderr or b'ADB did not respond').decode(errors='replace').strip()
+                report['lastBootTransportError'] = issue
+            time.sleep(2)
+        raise RuntimeError('Emulator did not stabilize: ' + issue)
 
     def key(self, *keys):
         self.shell('input', 'keyevent', *keys)
@@ -82,9 +109,25 @@ class Device:
     def label(self, text, timeout=40):
         return self.until(text, lambda tree: find_label(tree, text), timeout)
 
-    def tap_label(self, text):
-        x0, y0, x1, y1 = box(self.label(text))
-        self.shell('input', 'tap', (x0 + x1) // 2, (y0 + y1) // 2)
+    def select_dialog_button(self, text):
+        for _ in range(5):
+            tree = self.tree()
+            focus = next((n for n in tree.iter('node') if n.get('focused') == 'true'), None)
+            target = find_label(tree, text)
+            if focus is None or target is None:
+                break
+            if focus.get('text') == text:
+                self.key('KEYCODE_DPAD_CENTER')
+                return
+            x0, y0, x1, y1 = box(target)
+            a, b, c, d = box(focus)
+            dx, dy = x0 + x1 - a - c, y0 + y1 - b - d
+            if abs(dy) > abs(dx):
+                direction = 'DOWN' if dy > 0 else 'UP'
+            else:
+                direction = 'RIGHT' if dx > 0 else 'LEFT'
+            self.key('KEYCODE_DPAD_' + direction)
+        raise RuntimeError('Could not select dialog button with TV remote: ' + text)
 
     def cursor_click(self, target):
         """Aim with remote D-pad pulses and confirm the on-screen cursor is over the target."""
@@ -260,7 +303,7 @@ def run_game(device, game, first):
     device.label('游戏光标' if game_id != 'struggle-bus' else 'Struggle Bus')
     device.key('KEYCODE_MENU')
     device.label(title + ' · 操作说明')
-    device.tap_label('返回游戏列表')
+    device.select_dialog_button('返回游戏列表')
     device.focused(title)
     return {**result, 'returnedFocus': title}
 
@@ -271,27 +314,26 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--serial', help='Disposable Android TV emulator (defaults to the ADB selection)')
     args = parser.parse_args()
-    serial = args.serial or subprocess.check_output(['adb', 'get-serialno'], text=True).strip()
     args.out.mkdir(parents=True, exist_ok=True)
-    device = Device(serial, args.out)
-    if device.shell('getprop', 'ro.kernel.qemu') != '1' and device.shell('getprop', 'ro.boot.qemu') != '1':
-        parser.error('Use a disposable Android emulator for the offline retry check')
-    if 'android.software.leanback' not in device.shell('pm', 'list', 'features'):
-        parser.error('Use an Android TV system image')
-    with zipfile.ZipFile(args.apk) as archive:
-        games = json.loads(archive.read('assets/hosted-games.json'))
-    if [g['id'] for g in games] != list(AUTHOR_MARKERS):
-        raise ValueError('APK catalog must contain the six requested author games, in menu order')
-    report = {'apkSha256': hashlib.sha256(args.apk.read_bytes()).hexdigest(),
-              'fingerprint': device.shell('getprop', 'ro.build.fingerprint'),
-              'webview': device.shell('dumpsys', 'webviewupdate').splitlines()[:8],
-              'physicalTvTested': False, 'physicalControllerTested': False, 'games': {}}
+    device = Device(args.serial or os.environ.get('ANDROID_SERIAL'), args.out)
+    report = {'apkSha256': hashlib.sha256(args.apk.read_bytes()).hexdigest(), 'adb': device.prefix[0],
+              'physicalTvTested': False, 'physicalControllerTested': False, 'games': {}, 'controllers': {}}
     try:
+        device.wait_for_ready(report)
+        if device.shell('getprop', 'ro.kernel.qemu') != '1' and device.shell('getprop', 'ro.boot.qemu') != '1':
+            raise RuntimeError('Use a disposable Android emulator for the offline retry check')
+        if 'android.software.leanback' not in device.shell('pm', 'list', 'features'):
+            raise RuntimeError('Use an Android TV system image')
+        report['fingerprint'] = device.shell('getprop', 'ro.build.fingerprint')
+        report['webview'] = device.shell('dumpsys', 'webviewupdate').splitlines()[:8]
+        with zipfile.ZipFile(args.apk) as archive:
+            games = json.loads(archive.read('assets/hosted-games.json'))
+        if [g['id'] for g in games] != list(AUTHOR_MARKERS):
+            raise ValueError('APK catalog must contain the six requested author games, in menu order')
         device.adb('install', '-r', args.apk.resolve())
         device.shell('am', 'start', '-W', '-n', COMPONENT)
         device.focused(games[0]['zh'])
         device.screenshot('catalog-preview', mask_pairing=True)
-        report['controllers'] = {}
         for transport, probe in [('phone', phone_input), ('wifi', wifi_input)]:
             try:
                 device.focused(games[0]['zh'])
@@ -313,6 +355,13 @@ def main():
             except (RuntimeError, OSError, subprocess.SubprocessError, ValueError) as error:
                 report['games'][game['id']] = {'error': str(error)}
                 device.xml(game['id'] + '-failure')
+                # AndroidRuntime only; do not export browser history or pairing diagnostics.
+                crashes = device.adb('logcat', '-d', '-t', '400', '-s', 'AndroidRuntime:E')
+                (args.out / (game['id'] + '-runtime.txt')).write_text(
+                    re.sub(r'room=[^\s&]+', 'room=[omitted]', crashes))
+                if device.last_xml:
+                    labels = [n.get('text') or n.get('content-desc') for n in ET.fromstring(device.last_xml).iter('node')]
+                    print('Last visible labels:', [v[:80] for v in labels if v and 'room=' not in v][:24], flush=True)
                 # Restart in launcher to give the remaining author sites an independent result.
                 device.shell('am', 'force-stop', PACKAGE)
                 device.shell('am', 'start', '-W', '-n', COMPONENT)
@@ -320,9 +369,15 @@ def main():
                 if index:
                     device.key(*(['KEYCODE_DPAD_DOWN'] * index))
             print(game['id'], report['games'][game['id']], flush=True)
+    except Exception as error:
+        report['fatal'] = str(error)
+        if isinstance(error, subprocess.CalledProcessError):
+            report['adbStderr'] = (error.stderr or b'').decode(errors='replace')[:1500]
+        raise
     finally:
         (args.out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
-        device.shell('rm', '-f', REMOTE_XML)
+        with suppress(subprocess.SubprocessError):
+            device.shell('rm', '-f', REMOTE_XML)
     if any('error' in entry for group in ('games', 'controllers') for entry in report[group].values()):
         raise SystemExit('Android TV QA failed; see report.json and per-game evidence')
 

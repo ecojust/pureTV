@@ -132,14 +132,15 @@ jobs:
           sudo chmod a+rw /dev/kvm
       - name: Install runtime test dependencies
         run: python3 -m pip install Pillow==11.3.0 websocket-client==1.8.0
-      - uses: reactivecircus/android-emulator-runner@v2
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
+          emulator-build: '16970787'
           api-level: 36
           target: android-tv
           arch: x86_64
           profile: tv_1080p
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: python3 tools/hosted-games-tv/qa.py --apk "$RUNNER_TEMP"/signed/hosted-games-*.apk --out "$RUNNER_TEMP/hosted-games-qa"
       - uses: actions/upload-artifact@v4
         if: always()
