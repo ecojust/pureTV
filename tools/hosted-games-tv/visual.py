@@ -25,8 +25,14 @@ def locate_text(image, labels, lang):
     # Read text from the actual screen. Preserve line/word geometry for multi-word buttons.
     encoded = io.BytesIO()
     image.save(encoded, format='PNG')
-    result = subprocess.run(['tesseract', 'stdin', 'stdout', '-l', lang, '--psm', '11', 'tsv'],
-                            input=encoded.getvalue(), capture_output=True, timeout=15, check=True)
+    # The emulator and OCR share the runner. Cap OpenMP to avoid oversubscribing its
+    # cores; a busy early frame must not discard later timed captures or end the run.
+    try:
+        result = subprocess.run(['tesseract', 'stdin', 'stdout', '-l', lang, '--psm', '11', 'tsv'],
+                                input=encoded.getvalue(), capture_output=True, timeout=20, check=True,
+                                env={**os.environ, 'OMP_THREAD_LIMIT': '1'})
+    except subprocess.TimeoutExpired:
+        return None
     lines = {}
     for row in csv.DictReader(io.StringIO(result.stdout.decode()), delimiter='\t', quoting=csv.QUOTE_NONE):
         word = row.get('text', '').strip()
