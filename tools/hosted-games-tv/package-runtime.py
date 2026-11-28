@@ -12,7 +12,7 @@ import time
 from urllib.parse import urlsplit
 import zipfile
 
-from qa import Device, box
+from qa import Device, find_label
 
 
 class OpeningRequests(socketserver.ThreadingTCPServer):
@@ -46,12 +46,16 @@ def resumed(device):
     return ''
 
 
-def tap(device, label):
-    left, top, right, bottom = box(device.label(label, timeout=20))
-    device.shell('input', 'tap', str((left + right) // 2), str((top + bottom) // 2))
+def activity_state(device, package):
+    summary = device.shell('dumpsys', 'activity', 'activities')
+    foreground = [line.strip() for line in summary.splitlines()
+                  if 'topResumedActivity=' in line or 'mResumedActivity=' in line]
+    records = [line.strip() for line in summary.splitlines()
+               if 'Hist #' in line and package + '/' in line]
+    return {'resumed': foreground[:4], 'gameHistory': records[:4]}
 
 
-def probe(device, proxy, record, game):
+def probe(device, proxy, record, game, entry):
     package = record['packageName']
     expected = package + '/com.ecojust.hostedgames.MainActivity'
     intent = ('-a', 'android.intent.action.MAIN', '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-p', package)
@@ -61,6 +65,7 @@ def probe(device, proxy, record, game):
     with proxy.condition:
         first = len(proxy.requests)
     device.shell('am', 'force-stop', package)
+    device.shell('am', 'start', '-W', '-a', 'android.settings.SETTINGS')
     device.shell('am', 'start', '-W', '-a', 'android.intent.action.MAIN', '-c',
                  'android.intent.category.LEANBACK_LAUNCHER', '-n', component)
     origin = urlsplit(game['url'])
@@ -70,23 +75,30 @@ def probe(device, proxy, record, game):
             raise RuntimeError(f'Cold launch did not request {author}')
     if expected not in resumed(device):
         raise RuntimeError('Expected game activity is not in the foreground')
+    entry.update(launcherActivity=component, requestedAuthor=author, catalogUrl=game['url'])
     title = record['title'] + ' · 操作说明'
-    # Back opens the in-game guide. Continue dismisses it. Back opens it again.
+    # Wait for the TV window and native input overlay before dispatching the first remote key.
+    device.label('游戏光标', timeout=25)
+    device.key('KEYCODE_MENU')
+    device.label(title, timeout=25)
+    entry['guideTitle'] = title
+    device.select_dialog_button('继续游戏')
+    device.until('guide closed', lambda tree: find_label(tree, title) is None, timeout=20)
+    entry['continued'] = True
     device.key('KEYCODE_BACK')
     device.label(title, timeout=25)
-    tap(device, '继续游戏')
-    time.sleep(0.5)
-    device.key('KEYCODE_BACK')
-    device.label(title, timeout=25)
-    tap(device, '退出游戏')
+    entry['backOpenedGuide'] = True
+    device.select_dialog_button('退出游戏')
     deadline = time.monotonic() + 15
     while time.monotonic() < deadline:
-        activity = resumed(device)
-        if activity and package + '/' not in activity:
-            return {'packageName': package, 'launcherActivity': expected, 'requestedAuthor': author,
-                    'catalogUrl': game['url'], 'guideTitle': title, 'continued': True, 'exited': True}
+        state = activity_state(device, package)
+        if not state['gameHistory'] and all(package + '/' not in line for line in state['resumed']):
+            entry.update(exited=True, finalActivity=state)
+            return
         time.sleep(0.5)
-    raise RuntimeError('Exit did not leave the game activity')
+    entry['finalActivity'] = state
+    raise RuntimeError('Exit did not finish the game activity')
+
 
 
 def main():
@@ -136,15 +148,16 @@ def main():
         try:
             device.shell('settings', 'put', 'global', 'http_proxy', '127.0.0.1:23884')
             for record in receipt['packages']:
+                entry = {'packageName': record['packageName'], 'apkSha256': record['sha256']}
                 try:
-                    entry = probe(device, proxy, record, games[record['id']])
+                    probe(device, proxy, record, games[record['id']], entry)
                 except Exception as error:
-                    entry = {'error': str(error)}
+                    entry['error'] = str(error)
                     if isinstance(error, subprocess.CalledProcessError):
                         entry['adbError'] = (error.stderr or error.stdout or b'').decode(errors='replace')[:600]
                 finally:
                     device.shell('am', 'force-stop', record['packageName'])
-                report['packages'][record['id']] = {**entry, 'apkSha256': record['sha256']}
+                report['packages'][record['id']] = entry
                 save()
         finally:
             device.shell('settings', 'put', 'global', 'http_proxy', previous if previous != 'null' else ':0')
