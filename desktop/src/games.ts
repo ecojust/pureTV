@@ -65,7 +65,7 @@ export class Games {
         window.clearTimeout(this.readyTimeout);
         this.status('[data-frame-status]', '');
         this.forward(active);
-        active.frame.focus();
+        if (event.data.keepFocus !== true) active.frame.focus();
       }
     });
   }
