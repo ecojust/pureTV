@@ -18,7 +18,7 @@ ENGLISH=json.loads((root/'tools/resource-index.en.json').read_text())
 RESOURCE_ORDER=json.loads((root/'tools/resource-order.json').read_text())
 # Media apps have no game manifest or bundled game entry point.
 MEDIA_APPS={'apps/opera','apps/bilibili','apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
-TOOL_APPS={'apps/putrtv-store'}
+TOOL_APPS={'apps/putrtv-store','apps/hosted-games'}
 
 def section(key,info):
     if info['kind']=='launcher':return 'launcher'
@@ -136,8 +136,13 @@ def main():
         heading = '作者在线原版' if locale == 'zh' else 'Play the original games online'
         links = [f'[{game[locale]}](https://ecojust.github.io/pureTV/games/{game["id"]}/tv.html)'
                  for game in hosted]
+        tv_path = 'resource/apps/hosted-games/'
+        tv_apk = tv_path + dict(groups['tools'])['apps/hosted-games']['apk'] + '?raw=1'
+        tv_link = (f'[下载六款共用的 Android TV 安装包]({tv_apk}) · [电视操作说明]({tv_path})'
+                   if locale == 'zh' else
+                   f'[Download the Android TV app for all six games]({tv_apk}) · [TV controls]({tv_path})')
         text = replace_index(text, 'game-index', game_index(catalog, locale) +
-                             f'\n\n### {heading}\n\n' + ' · '.join(links))
+                             f'\n\n### {heading}\n\n' + ' · '.join(links) + '\n\n' + tv_link)
         page_cards = Counter(re.findall(r'<a\s+href="([^"]+)">\s*<img\b', text))
         for genre in catalog:
             for card in genre['cards']:

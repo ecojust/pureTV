@@ -61,12 +61,12 @@
   </tr>
 </table>
 
-### 应用-工具（1）
+### 应用-工具（2）
 
 <table>
   <tr>
+    <td align="center" valign="top" width="207"><a href="apps/hosted-games/"><img src="apps/hosted-games/thumb.png" width="180" alt="pureTV 在线游戏 界面"><br>pureTV 在线游戏</a></td>
     <td align="center" valign="top" width="207"><a href="apps/putrtv-store/"><img src="apps/putrtv-store/thumb.png" width="180" alt="putrtv商城 界面"><br>putrtv商城</a></td>
-    <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>

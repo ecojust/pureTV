@@ -16,8 +16,8 @@
 <table>
   <tr>
     <td align="center" valign="top" width="207"><a href="docs/guide/README.md#安装与升级电脑管理器"><img src="docs/previews/manager-zh.png" width="180" alt=""><br>pureTV Manager</a><br>在电脑上管理电视应用和启动器<br>Windows、macOS、Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.0">下载 0.6.0</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/hosted-games/"><img src="resource/apps/hosted-games/thumb.png" width="180" alt=""><br>pureTV 在线游戏</a><br>在电视上用中文指南、遥控器或局域网手柄游玩六款作者在线原作<br>Android TV<br><a href="resource/apps/hosted-games/hosted-games-0.1.0.apk?raw=1">下载 0.1.0 APK</a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="resource/apps/putrtv-store/thumb.png" width="180" alt=""><br>putrtv商城</a><br>直接在电视上浏览、安装应用和检查更新<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1">下载 0.1.3 APK</a></td>
-    <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
 </table>
@@ -235,6 +235,8 @@
 ### 作者在线原版
 
 [金库大盗](https://ecojust.github.io/pureTV/games/bandit/tv.html) · [鱼群环线](https://ecojust.github.io/pureTV/games/fish-loop/tv.html) · [黑色侦探：雨夜](https://ecojust.github.io/pureTV/games/noir-extreme/tv.html) · [飞天涂色巴士](https://ecojust.github.io/pureTV/games/struggle-bus/tv.html) · [暮海点灯人](https://ecojust.github.io/pureTV/games/vespertine/tv.html) · [大田都市科学高中专业探索](https://ecojust.github.io/pureTV/games/daejeon-campus/tv.html)
+
+[下载六款共用的 Android TV 安装包](resource/apps/hosted-games/hosted-games-0.1.0.apk?raw=1) · [电视操作说明](resource/apps/hosted-games/)
 
 <!-- game-index:end -->
 
