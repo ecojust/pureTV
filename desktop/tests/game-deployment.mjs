@@ -12,6 +12,7 @@ async function observeDeployment(page, {holdBuild=false, incomplete=false}={}) {
     window.__deployInstalls=[];
     tauri.invoke=async(command,args) => {
       if (command==='build_web_game_apk' && holdBuild) {
+        window.__gameBuildProgress = () => args.onProgress.onmessage({stage:'downloading',downloaded:10,total:20});
         await new Promise(resolve=>{window.__resumeGameBuild=resolve;});
       }
       if (command==='execute' && args.request.action==='install') {
@@ -44,19 +45,30 @@ export async function checkGameDeployment(check, snapshot, withoutAdb) {
   },withoutAdb());
 
   await check('game deployment installs the prepared path once for the authorized user and offers Launchers on confirmation', async page=>{
-    await observeDeployment(page);
+    await observeDeployment(page,{holdBuild:true});
     await openGames(page);
     await page.evaluate(()=>window.__holdNextOperation('install'));
     await deploy(page).evaluate(button=>{button.click();button.click();});
+    await page.waitForFunction(()=>!!window.__resumeGameBuild);
+    await page.evaluate(()=>window.__gameBuildProgress());
+    assert.deepEqual(await dialog(page).locator('[data-deploy-step]').evaluateAll(steps=>steps.map(s=>s.dataset.state)),['active','pending','pending']);
+    assert.equal(await dialog(page).locator('[data-apk-status]').innerText(),'正在打包 APK…');
+    assert.doesNotMatch(await dialog(page).innerText(),/下载/);
+    assert.match(await dialog(page).locator('[data-deployment-device]').innerText(),/当前用户 0/);
+    await page.evaluate(()=>window.__resumeGameBuild());
     await page.waitForFunction(()=>window.__pendingOperations.some(op=>op.action==='install'));
     assert.equal(await feedback(page).locator('[data-game-install-next]').count(),0);
+    assert.deepEqual(await feedback(page).locator('[data-deploy-step]').evaluateAll(steps=>steps.map(s=>s.dataset.state)),['done','active','pending']);
+    assert.match(await feedback(page).innerText(),/正在安装到电视/);
     const device=snapshot().device;
+    assert.equal(await feedback(page).locator('.deployment-target').innerText(),'Tetris · '+device.serial+' · 当前用户 '+device.userId);
     assert.deepEqual(await page.evaluate(()=>window.__deployInstalls),[
       {request:{action:'install',paths:[apkPath]},expectedTarget:{serial:device.serial,userId:device.userId}},
     ]);
     await page.evaluate(()=>window.__releaseOperation('install'));
     await feedback(page).getByRole('button',{name:'前往启动器'}).waitFor();
     assert.match(await feedback(page).innerText(),/将游戏添加到电视主屏幕/);
+    assert.deepEqual(await feedback(page).locator('[data-deploy-step]').evaluateAll(steps=>steps.map(s=>s.dataset.state)),['done','done','done']);
     await feedback(page).getByRole('button',{name:'前往启动器'}).click();
     await page.locator('.launcher-toolbar').waitFor();
     assert.equal((await page.evaluate(()=>window.__gameApkRequests.filter(r=>r.command==='build_web_game_apk'))).length,1);
@@ -68,6 +80,7 @@ export async function checkGameDeployment(check, snapshot, withoutAdb) {
     await deploy(page).click();
     await feedback(page).getByRole('button',{name:'重试'}).waitFor();
     assert.doesNotMatch(await feedback(page).innerText(),/前往启动器/);
+    assert.deepEqual(await feedback(page).locator('[data-deploy-step]').evaluateAll(steps=>steps.map(s=>s.dataset.state)),['done','incomplete','pending']);
     await feedback(page).getByRole('button',{name:'重试'}).click();
     await feedback(page).getByRole('button',{name:'前往启动器'}).waitFor();
     assert.equal(await page.evaluate(()=>window.__deployInstalls.length),2);

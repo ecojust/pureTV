@@ -8,7 +8,25 @@ export type QueueGameApk = (path:string) => void | Promise<void>;
 export interface GameDeployment {
   target():DeviceTarget | undefined;
   connect():void;
-  install(gameId:string, path:string, target:DeviceTarget):void;
+  install(gameId:string, name:string, path:string, target:DeviceTarget):void;
+}
+
+type DeploymentStep = 'pack' | 'install' | 'complete';
+
+export function deploymentDevice(target:DeviceTarget):string {
+  return target.serial + ' · ' + t('当前用户') + ' ' + target.userId;
+}
+
+export function deploymentSteps(active:DeploymentStep, incomplete=false):string {
+  const steps = [['pack', t('打包 APK')], ['install', t('安装到电视')], ['complete', t('完成')]];
+  const position = steps.findIndex(([step]) => step === active);
+  const items = steps.map(([step,label], index) => {
+    const done = index < position || active === 'complete';
+    const state = done ? 'done' : index !== position ? 'pending' : incomplete ? 'incomplete' : 'active';
+    const symbol = done ? '✓' : state === 'incomplete' ? '!' : String(index + 1);
+    return `<li data-deploy-step="${step}" data-state="${state}"${index === position ? ' aria-current="step"' : ''}><span aria-hidden="true">${symbol}</span>${label}</li>`;
+  });
+  return `<ol class="game-deployment-steps" aria-label="${t('部署进度')}">${items.join('')}</ol>`;
 }
 
 export class WebGamePackaging {
@@ -26,6 +44,7 @@ export class WebGamePackaging {
     dialog.setAttribute('aria-labelledby', 'game-apk-heading');
     dialog.innerHTML = `<div class="modal-heading"><h2 id="game-apk-heading"></h2>
       <button type="button" class="text-button" data-apk-close autofocus>${t('取消')}</button></div>
+      ${device ? `<p data-deployment-device></p><div data-deployment-steps>${deploymentSteps('pack')}</div>` : ''}
       <p role="status" aria-live="polite" data-apk-status></p>
       <div class="game-apk-progress" data-apk-progress hidden>
         <progress aria-label="${t('下载进度')}"></progress><span></span>
@@ -38,6 +57,8 @@ export class WebGamePackaging {
         <button type="button" class="primary" data-apk-queue hidden>${t('加入安装队列')}</button>
       </div>`;
     dialog.querySelector('h2')!.textContent = name;
+    const steps = dialog.querySelector<HTMLElement>('[data-deployment-steps]');
+    if (device) dialog.querySelector('[data-deployment-device]')!.textContent = deploymentDevice(device);
     const status = dialog.querySelector<HTMLElement>('[data-apk-status]')!;
     const transfer = dialog.querySelector<HTMLElement>('[data-apk-progress]')!;
     const bar = transfer.querySelector('progress')!;
@@ -67,10 +88,12 @@ export class WebGamePackaging {
     }
 
     async function prepare() {
+      let packed = false;
       retry.hidden = true;
       closeButton.textContent = t('取消');
       status.classList.remove('error');
-      status.textContent = generate ? t('正在生成电视 APK…') : t('正在准备电视 APK…');
+      if (steps) steps.innerHTML = deploymentSteps('pack');
+      status.textContent = deploy ? t('正在打包 APK…') : generate ? t('正在生成电视 APK…') : t('正在准备电视 APK…');
       try {
         let firstProgress = true;
         const onProgress:Channel<MarketProgress> = new Channel(event => {
@@ -78,7 +101,7 @@ export class WebGamePackaging {
           // Closing may precede native registration. Its first progress event acknowledges ownership.
           if (firstProgress && !dialog.open) cancelChannel(onProgress.id);
           firstProgress = false;
-          if (generate || !dialog.open) return;
+          if (deploy || generate || !dialog.open) return;
           const label = event.stage === 'verifying' ? t('正在校验安装包…') : t('正在下载安装包…');
           if (status.textContent !== label) status.textContent = label;
           transfer.hidden = event.stage !== 'downloading';
@@ -98,7 +121,8 @@ export class WebGamePackaging {
         transfer.hidden = true;
         if (device) {
           // The native build is complete. Hand this exact APK to the existing installation dialog.
-          deployment.install(gameId, result.path, device);
+          packed = true;
+          deployment.install(gameId, name, result.path, device);
           dialog.close();
           return;
         }
@@ -114,6 +138,7 @@ export class WebGamePackaging {
       } catch (error) {
         if (!dialog.open) return;
         transfer.hidden = true;
+        if (steps) steps.innerHTML = deploymentSteps(packed ? 'install' : 'pack', true);
         showError(deploy ? t('部署未完成') : generate ? t('生成失败') : t('获取失败'), error);
         const current = deployment.target();
         retry.hidden = !!device && (current?.serial !== device.serial || current.userId !== device.userId);
