@@ -102,13 +102,22 @@ async function inspectOriginal(game, frame) {
   switch (game.id) {
     case 'bandit': {
       assert.equal(await frame.title(), 'Vault Breakers');
-      const menu = frame.locator('#play-btn');
-      await menu.waitFor({state:'visible'});
-      await menu.click();
-      const room = frame.locator('#create-btn');
-      await room.waitFor({state:'visible'});
-      await frame.waitForFunction(() => Number(getComputedStyle(document.querySelector('.title-menu')).opacity) >= .99);
-      return {menu:'Vault Breakers', lobby:await room.innerText(), join:await frame.locator('#join-open').innerText()};
+      const create = frame.getByRole('button', {name:'CREATE ROOM', exact:true});
+      const modal = frame.locator('#create-modal');
+      assert.equal(await modal.isVisible(),false);
+      await create.click();
+      await modal.waitFor({state:'visible'});
+      assert.equal(await modal.getByRole('heading').innerText(), 'Create a room');
+      assert.ok(await modal.locator('[data-priv="1"]').isVisible());
+      assert.ok(await modal.getByRole('button',{name:'CREATE', exact:true}).isVisible());
+      const size = modal.locator('#create-size');
+      const initialPlayers = Number(await size.innerText());
+      await modal.getByRole('button', {name:'More players'}).click();
+      const selectedPlayers = Number(await size.innerText());
+      assert.equal(selectedPlayers,initialPlayers + 1);
+      await frame.evaluate(() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done))));
+      return {titleAction:'CREATE ROOM', opened:'Create a room', privateOption:true,
+        initialPlayers, selectedPlayers, roomSubmitted:false};
     }
     case 'noir-extreme': {
       await frame.locator('#title').waitFor({state:'visible'});

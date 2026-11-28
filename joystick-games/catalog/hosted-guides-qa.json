@@ -1,5 +1,5 @@
 {
-  "environment": "Chromium with the production Manager frontend, simulated Tauri window commands, public pureTV Pages and live author documents. The same six cases passed against the staged pages before this deployed-page regression.",
+  "environment": "Chromium with the production Manager frontend, simulated Tauri window commands, public pureTV Pages and live author documents. The same six cases passed against the staged pages before this deployed-page regression. The Bandit case below comes from its later room-form regression, with its own deployment and source digests.",
   "deployment": "https://github.com/ecojust/pureTV/pull/90",
   "viewports": {
     "manager": [
@@ -26,23 +26,23 @@
   },
   "games": [
     {
-      "scope": "guides and navigation",
+      "scope": "guides, navigation and original game",
       "game": "bandit",
       "name": "金库大盗",
       "category": "action",
       "manager": "http://127.0.0.1:1432",
-      "checkedAt": "2026-11-28T03:48:23.852Z",
+      "checkedAt": "2026-11-28T04:01:28.801Z",
       "wrapperSource": "public pureTV Pages",
       "browser": "156.0.8078.79",
       "hint": "《Bandit》现为多人版《Vault Breakers》。金库模式至少需要两人，可创建或加入房间。原作支持键鼠和标准手柄。",
       "managerGuide": {
         "title": "金库大盗",
-        "terms": 7,
+        "terms": 9,
         "steps": 3,
         "closeMethod": "button",
         "restoredGameFocus": true,
         "dimensions": {
-          "scrollHeight": 539,
+          "scrollHeight": 600,
           "height": 389,
           "overflowX": 0
         }
@@ -57,24 +57,45 @@
           "status": 200
         }
       ],
+      "readyOrigin": "https://ecojust.github.io",
       "fullscreen": true,
+      "authorTitle": "Vault Breakers",
+      "visibleUI": {
+        "titleAction": "CREATE ROOM",
+        "opened": "Create a room",
+        "privateOption": true,
+        "initialPlayers": 4,
+        "selectedPlayers": 5,
+        "roomSubmitted": false
+      },
+      "pixels": {
+        "colors": 85,
+        "contrast": 195
+      },
       "hostCommands": [],
       "restoredWindow": true,
       "standaloneGuide": {
         "title": "金库大盗",
-        "terms": 7,
+        "terms": 9,
         "steps": 3,
         "closeMethod": "escape",
         "restoredGameFocus": true,
         "dimensions": {
-          "scrollHeight": 539,
-          "height": 539,
+          "scrollHeight": 600,
+          "height": 600,
           "overflowX": 0
         },
         "openedBeforeAuthorLoad": false
       },
       "success": true,
-      "wrapperSha256": "89285ba6dfde3594ea1bcf9d80d13f011281e59c5e1296bc3221ab614297f15d"
+      "wrapperSha256": "3abbcc1ea55086ab28fbd1cf6fc5c7e185747ebd5899aff0ae75ebcd7de6e26e",
+      "retest": {
+        "deployment": "https://github.com/ecojust/pureTV/pull/92",
+        "command": "GAME_ID=bandit MANAGER_URL=<compiled Manager URL> QA_OUTPUT=<output> CHROMIUM_PATH=<Chromium> node tools/pc-games/qa/manager-hosted.mjs",
+        "driverSha256": "da7f8eedea549c5bc642fb6637590f492b7840d47e4817692b774391f6c95d41",
+        "catalogSha256": "1d845de5d82cc928ee742a34870ec790bca303fc38a30447d5303bc558b96bfd",
+        "reason": "The previous title-menu check observed a button that was already present. The rerun clicked CREATE ROOM directly on the title screen, opened the private-room settings and changed the room capacity before leaving the form."
+      }
     },
     {
       "scope": "guides and navigation",
