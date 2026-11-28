@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+"""Install all six apps together and exercise their individual TV launchers on a disposable emulator."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import socketserver
+import threading
+import time
+from urllib.parse import urlsplit
+import zipfile
+
+from qa import Device, box
+
+
+class OpeningRequests(socketserver.ThreadingTCPServer):
+    # Hold the author connection at the HTTPS CONNECT handshake while driving the native guide.
+    # This tests cold launch routing for all six apps without depending on author site availability.
+    daemon_threads = True
+
+    def __init__(self):
+        super().__init__(('127.0.0.1', 0), OpeningRequest)
+        self.requests = []
+        self.condition = threading.Condition()
+        self.finished = threading.Event()
+
+
+class OpeningRequest(socketserver.StreamRequestHandler):
+    def handle(self):
+        self.request.settimeout(10)
+        parts = self.rfile.readline(2048).decode('ascii', 'replace').split()
+        if len(parts) != 3 or parts[0] != 'CONNECT':
+            return
+        with self.server.condition:
+            self.server.requests.append(parts[1].lower())
+            self.server.condition.notify_all()
+        self.server.finished.wait(120)
+
+
+def resumed(device):
+    for line in device.shell('dumpsys', 'activity', 'activities').splitlines():
+        if any(name in line for name in ('topResumedActivity=', 'mResumedActivity=')):
+            return line
+    return ''
+
+
+def tap(device, label):
+    left, top, right, bottom = box(device.label(label, timeout=20))
+    device.shell('input', 'tap', str((left + right) // 2), str((top + bottom) // 2))
+
+
+def probe(device, proxy, record, game):
+    package = record['packageName']
+    expected = package + '/com.ecojust.hostedgames.MainActivity'
+    intent = ('-a', 'android.intent.action.MAIN', '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-p', package)
+    if expected not in device.shell('cmd', 'package', 'resolve-activity', '--brief', *intent).splitlines():
+        raise RuntimeError('Incorrect leanback activity')
+    with proxy.condition:
+        first = len(proxy.requests)
+    device.shell('am', 'force-stop', package)
+    device.shell('am', 'start', '-W', *intent)
+    origin = urlsplit(game['url'])
+    author = f'{origin.hostname}:{origin.port or 443}'
+    with proxy.condition:
+        if not proxy.condition.wait_for(lambda: author in proxy.requests[first:], timeout=35):
+            raise RuntimeError(f'Cold launch did not request {author}')
+    if expected not in resumed(device):
+        raise RuntimeError('Expected game activity is not in the foreground')
+    title = record['title'] + ' · 操作说明'
+    # Back opens the in-game guide. Continue dismisses it. Back opens it again.
+    device.key('KEYCODE_BACK')
+    device.label(title, timeout=25)
+    tap(device, '继续游戏')
+    time.sleep(0.5)
+    device.key('KEYCODE_BACK')
+    device.label(title, timeout=25)
+    tap(device, '退出游戏')
+    deadline = time.monotonic() + 15
+    while time.monotonic() < deadline:
+        activity = resumed(device)
+        if activity and package + '/' not in activity:
+            return {'packageName': package, 'launcherActivity': expected, 'requestedAuthor': author,
+                    'catalogUrl': game['url'], 'guideTitle': title, 'continued': True, 'exited': True}
+        time.sleep(0.5)
+    raise RuntimeError('Exit did not leave the game activity')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--signed', type=Path, required=True)
+    parser.add_argument('--out', type=Path, required=True)
+    args = parser.parse_args()
+    args.out.mkdir(parents=True, exist_ok=True)
+    receipt = json.loads((args.signed / 'packages.json').read_text())
+    report = {'sourceSha': receipt['sourceSha'], 'signingRun': receipt['runId'], 'physicalTvTested': False,
+              'networkCheck': 'HTTPS CONNECT destination observed through a holding proxy on the emulator',
+              'packages': {}}
+    device = Device('emulator-5554', args.out)
+    def save():
+        (args.out / 'device.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
+    save()
+    device.wait_for_ready(report)
+    if not (device.shell('getprop', 'ro.kernel.qemu') == '1'
+            or device.shell('getprop', 'ro.boot.qemu') == '1'):
+        raise RuntimeError('Use a disposable Android TV emulator')
+    if ('android.software.leanback' not in device.shell('pm', 'list', 'features')
+            or device.shell('getprop', 'ro.build.version.sdk') != '36'):
+        raise RuntimeError('Expected an API 36 Android TV image')
+    report['fingerprint'] = device.shell('getprop', 'ro.build.fingerprint')
+    games = {}
+    for record in receipt['packages']:
+        apk = args.signed / record['file']
+        if hashlib.sha256(apk.read_bytes()).hexdigest() != record['sha256']:
+            raise ValueError('Signed APK checksum differs')
+        if 'Success' not in device.adb('install', '-r', apk.resolve()):
+            raise RuntimeError('Installation failed for ' + record['id'])
+        with zipfile.ZipFile(apk) as z:
+            games[record['id']], = json.loads(z.read('assets/hosted-games.json'))
+    packages = {r['packageName'] for r in receipt['packages']}
+    installed = {line.removeprefix('package:') for line in device.shell('pm', 'list', 'packages').splitlines()}
+    if len(packages) != 6 or not packages.issubset(installed):
+        raise RuntimeError('Expected six concurrent installations')
+    report['installedTogether'] = sorted(packages)
+    save()
+    previous = device.shell('settings', 'get', 'global', 'http_proxy')
+    with OpeningRequests() as proxy:
+        thread = threading.Thread(target=proxy.serve_forever, daemon=True)
+        thread.start()
+        port = proxy.server_address[1]
+        device.adb('reverse', 'tcp:23884', 'tcp:' + str(port))
+        try:
+            device.shell('settings', 'put', 'global', 'http_proxy', '127.0.0.1:23884')
+            for record in receipt['packages']:
+                try:
+                    entry = probe(device, proxy, record, games[record['id']])
+                except Exception as error:
+                    entry = {'error': str(error)}
+                finally:
+                    device.shell('am', 'force-stop', record['packageName'])
+                report['packages'][record['id']] = {**entry, 'apkSha256': record['sha256']}
+                save()
+        finally:
+            device.shell('settings', 'put', 'global', 'http_proxy', previous if previous != 'null' else ':0')
+            if previous == 'null':
+                device.shell('settings', 'delete', 'global', 'http_proxy')
+            device.adb('reverse', '--remove', 'tcp:23884')
+            proxy.finished.set()
+            proxy.shutdown()
+    if any('error' in v for v in report['packages'].values()):
+        raise SystemExit('One or more standalone TV launcher checks failed')
+
+
+if __name__ == '__main__':
+    main()

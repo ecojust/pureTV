@@ -54,7 +54,10 @@ final class HostedControllerRoom implements AutoCloseable {
                 if (phone != newPhone) return;
                 phonePort = httpPort;
                 wifiPort = tcpPort;
-                if (wifiPort > 0) discovery.start("pureTV 在线游戏", wifiPort);
+                if (wifiPort > 0) {
+                    String name = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
+                    discovery.start(name, wifiPort);
+                }
             });
         });
     }
