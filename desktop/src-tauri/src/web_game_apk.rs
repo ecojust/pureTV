@@ -79,8 +79,7 @@ fn lookup(id: &str) -> Result<Game, String> {
 }
 
 pub(crate) fn verify_library(path: &Path) -> Result<(), String> {
-    let file = File::open(path).map_err(|_| "无法打开本地游戏资源")?;
-    let mut pack = zip::ZipArchive::new(file).map_err(|_| "无法读取本地游戏资源")?;
+    let mut pack = crate::offline_game_library::open(path)?;
     let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).map_err(|_| "游戏目录无效")?;
     for entry in entries {
         let game = lookup(&entry.id)?;
@@ -221,8 +220,7 @@ pub fn prepare(
             }
             Source::Bundled(member) => {
                 progress("preparing", 0)?;
-                let file = File::open(library()?).map_err(|_| "无法打开本地游戏资源")?;
-                let mut archive = zip::ZipArchive::new(file).map_err(|_| "无法读取本地游戏资源")?;
+                let mut archive = crate::offline_game_library::open(&library()?)?;
                 let apk = archive
                     .by_name(member)
                     .map_err(|_| "本地资源中缺少此游戏")?;

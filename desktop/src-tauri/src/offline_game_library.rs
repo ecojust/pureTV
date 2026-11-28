@@ -1,7 +1,7 @@
 use sha2::{Digest, Sha256};
 use std::{
     fs::File,
-    io::{Read, Seek, SeekFrom},
+    io::{BufReader, Read, Seek, SeekFrom},
     path::{Path, PathBuf},
     sync::OnceLock,
 };
@@ -35,13 +35,35 @@ fn matches(path: &Path, size: u64, digest: &str, portable: bool) -> bool {
     format!("{:x}", sha.finalize()) == digest
 }
 
+fn library_size() -> Result<u64, String> {
+    env!("PURETV_GAME_LIBRARY_BYTES")
+        .parse()
+        .map_err(|_| "游戏资源信息无效".into())
+}
+
+// The same ZIP is either a standalone file or appended to the PE. Its offset
+// is known, so avoid scanning embedded APK signatures across hundreds of MiB.
+pub(crate) fn open(path: &Path) -> Result<zip::ZipArchive<BufReader<File>>, String> {
+    use zip::read::{ArchiveOffset, Config};
+    let file = File::open(path).map_err(|_| "无法打开本地游戏资源")?;
+    let length = file.metadata().map_err(|_| "无法读取本地游戏资源")?.len();
+    let offset = length
+        .checked_sub(library_size()?)
+        .ok_or("本地游戏资源不完整")?;
+    zip::ZipArchive::with_config(
+        Config {
+            archive_offset: ArchiveOffset::Known(offset),
+        },
+        BufReader::new(file),
+    )
+    .map_err(|_| "无法读取本地游戏资源".into())
+}
+
 fn resolve(package: &tauri::PackageInfo, env: &tauri::Env) -> Result<PathBuf, String> {
     if let Some(path) = VERIFIED.get() {
         return Ok(path.clone());
     }
-    let size = env!("PURETV_GAME_LIBRARY_BYTES")
-        .parse()
-        .map_err(|_| "游戏资源信息无效")?;
+    let size = library_size()?;
     let digest = env!("PURETV_GAME_LIBRARY_SHA256");
     let installed = tauri::utils::platform::resource_dir(package, env)
         .map_err(|_| "无法定位本地游戏资源")?
