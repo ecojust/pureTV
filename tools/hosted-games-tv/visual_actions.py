@@ -44,13 +44,34 @@ def tap_campus_menu(screen):
     raise RuntimeError('Could not read the mini-game button in the author toolbar')
 
 
+def tap_cake_start(screen):
+    # The illustration says “press Start” directly above the button. Read the
+    # white label in the lower-right action row, and verify its purple backing.
+    until = time.monotonic() + 90
+    while time.monotonic() < until:
+        image = screen.frame()
+        left, top = image.width // 2, image.height * 68 // 100
+        actions = image.crop((left, top, image.width, image.height))
+        ink = actions.convert('L').point(lambda value: 0 if value > 202 else 255)
+        hit = locate_text(ink, ['시작'], 'kor')
+        if hit:
+            x0, y0, x1, y1 = hit['bounds']
+            x, y = left + (x0 + x1) / 2, top + (y0 + y1) / 2
+            red, green, blue = image.getpixel((left + max(0, x0 - 5), round(y)))
+            if red > green + 30 and blue > green + 40:
+                screen.tap(x, y)
+                return {'text': hit['text'], 'tap': [round(x), round(y)]}
+        time.sleep(1)
+    raise RuntimeError('Could not read the cake shop start button')
+
+
 def play_visual(screen, game_id):
     if game_id == 'daejeon-campus':
         menu = tap_campus_menu(screen)
         picker = screen.see_text(['어떤 게임을 해볼까', '케이크 타이쿤', '파티시에과'], lang='kor+eng')
         screen.capture('game-picker')
         cake = screen.tap_text(['케이크 타이쿤', '파티시에과'], lang='kor+eng')
-        start = screen.tap_text(['시작'], lang='kor+eng')
+        start = tap_cake_start(screen)
         sales = screen.see_text(['매출'], lang='kor+eng')
         return {'observed': 'Opened the game picker, started the cake shop and saw its sales HUD',
                 'menu': menu, 'picker': picker, 'cake': cake, 'start': start, 'salesHud': sales}
