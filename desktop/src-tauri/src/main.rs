@@ -13,6 +13,8 @@ mod mcp;
 mod package_insights;
 mod platform_tools;
 mod ui_preferences;
+mod web_game_apk;
+mod web_game_template;
 
 use puretv_core::{LauncherRequest, Manager as TvManager, Request, Snapshot};
 use serde::Serialize;
@@ -34,6 +36,7 @@ struct Bridge {
     snapshot: Arc<Mutex<Snapshot>>,
     progress: Arc<Mutex<Option<platform_tools::Progress>>>,
     market_progress: Arc<Mutex<Option<market::Progress>>>,
+    game_apk_channel: Arc<Mutex<Option<u32>>>,
 }
 
 // Keep the shared operation reservation alive even if a command task exits early.
@@ -41,6 +44,33 @@ struct OperationGuard(Arc<AtomicBool>);
 impl Drop for OperationGuard {
     fn drop(&mut self) {
         self.0.store(false, Ordering::Release);
+    }
+}
+
+// Clear the channel before releasing the shared operation lock. A late close
+// from an old game dialog cannot cancel a subsequent download or ADB action.
+struct GameApkOperation {
+    channel: Arc<Mutex<Option<u32>>>,
+    _operation: OperationGuard,
+}
+
+impl Drop for GameApkOperation {
+    fn drop(&mut self) {
+        self.channel
+            .lock()
+            .unwrap_or_else(|err| err.into_inner())
+            .take();
+    }
+}
+
+#[tauri::command]
+fn cancel_web_game_apk(channel_id: u32, bridge: tauri::State<'_, Bridge>) {
+    let active = bridge
+        .game_apk_channel
+        .lock()
+        .unwrap_or_else(|err| err.into_inner());
+    if *active == Some(channel_id) {
+        bridge.cancel.store(true, Ordering::Release);
     }
 }
 
@@ -507,6 +537,64 @@ async fn get_market_catalog(
     })
     .await
     .map_err(|_| "市场目录任务异常结束，请重试".to_string())?
+}
+
+#[tauri::command]
+async fn build_web_game_apk(
+    game_id: String,
+    on_progress: tauri::ipc::Channel<market::Progress>,
+    app: tauri::AppHandle,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<web_game_apk::GameApk, String> {
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+    let guard = GameApkOperation {
+        _operation: begin_market_operation(&bridge)?,
+        channel: Arc::clone(&bridge.game_apk_channel),
+    };
+    *guard.channel.lock().unwrap_or_else(|err| err.into_inner()) = Some(on_progress.id());
+    let bridge = bridge.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let _guard = guard;
+        web_game_apk::prepare(&directory, &game_id, &bridge.cancel, |progress| {
+            on_progress
+                .send(progress)
+                .map_err(|_| "游戏窗口已关闭".into())
+        })
+    })
+    .await
+    .map_err(|_| "游戏安装包任务异常结束".to_string())?
+}
+
+#[tauri::command]
+async fn save_web_game_apk(
+    game_id: String,
+    app: tauri::AppHandle,
+    bridge: tauri::State<'_, Bridge>,
+) -> Result<Option<String>, String> {
+    let name = web_game_apk::file_name(&game_id)?;
+    let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
+    let bridge = bridge.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let file = app
+            .dialog()
+            .file()
+            .set_title(dialog_text(
+                &app,
+                "保存电视 APK",
+                "儲存電視 APK",
+                "Save TV APK",
+            ))
+            .set_file_name(&name)
+            .add_filter("Android APK", &["apk"])
+            .blocking_save_file();
+        let Some(file) = file else { return Ok(None) };
+        let destination = file.into_path().map_err(|_| "请选择本地 APK 文件")?;
+        let _guard = begin_market_operation(&bridge)?;
+        web_game_apk::export(&directory, &game_id, &destination, &bridge.cancel)?;
+        Ok(Some(destination.to_string_lossy().into_owned()))
+    })
+    .await
+    .map_err(|_| "无法保存游戏安装包".to_string())?
 }
 
 #[tauri::command]
@@ -1294,6 +1382,7 @@ fn main() {
                 snapshot: snapshot.clone(),
                 progress: Arc::new(Mutex::new(None)),
                 market_progress: Arc::new(Mutex::new(None)),
+                game_apk_channel: Arc::new(Mutex::new(None)),
             };
             let handle = app.handle().clone();
             let service = bridge.clone();
@@ -1331,6 +1420,9 @@ fn main() {
             get_market_seen_apps,
             set_market_seen_apps,
             download_market_item,
+            build_web_game_apk,
+            cancel_web_game_apk,
+            save_web_game_apk,
             install_market_item,
             open_resource,
             get_forum_posts,
