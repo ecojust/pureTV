@@ -82,7 +82,7 @@
 
 [新增与更新的六款手柄游戏 · 浏览器试玩及操作说明](joystick-games/README.md#game-expansion)
 
-打开 pureTV Manager 0.8.0 的「游戏」。50 款本地游戏随客户端安装，首次游玩或打包都可以断网。在游戏卡片上点「部署到电视」，安装完成后按提示在启动器中把游戏添加到主屏幕。[电脑游玩与电视部署](docs/guide/README.md#从网页游戏准备电视-apk) · [浏览器游戏入口](https://ecojust.github.io/pureTV/)
+打开 pureTV Manager 0.8.0 的「游戏」。48 款本地游戏随客户端安装，首次游玩或打包都可以断网。在游戏卡片上点「部署到电视」，安装完成后按提示在启动器中把游戏添加到主屏幕。[电脑游玩与电视部署](docs/guide/README.md#从网页游戏准备电视-apk) · [浏览器游戏入口](https://ecojust.github.io/pureTV/)
 
 独立安装的游戏默认使用简体中文。六款作者在线原作保留游戏内原文。
 

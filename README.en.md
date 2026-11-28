@@ -82,7 +82,7 @@
 
 [Six new or updated controller games · browser builds and controls](joystick-games/README.md#game-expansion)
 
-Open **Games** in pureTV Manager 0.8.0. The client includes 50 local games for offline play and TV packaging, including on first launch. Choose **Deploy to TV** on a card to install the game, then add it to your TV launcher’s home screen. [Desktop play and TV deployment](docs/guide/README.en.md#prepare-a-tv-apk-from-a-web-game) · [Play in a browser](https://ecojust.github.io/pureTV/)
+Open **Games** in pureTV Manager 0.8.0. The client includes 48 local games for offline play and TV packaging, including on first launch. Choose **Deploy to TV** on a card to install the game, then add it to your TV launcher’s home screen. [Desktop play and TV deployment](docs/guide/README.en.md#prepare-a-tv-apk-from-a-web-game) · [Play in a browser](https://ecojust.github.io/pureTV/)
 
 Standalone game packages start in Simplified Chinese. The six games hosted by their authors retain their original in-game languages.
 
