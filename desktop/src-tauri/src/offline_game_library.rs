@@ -18,6 +18,7 @@ use std::{
 use tauri::Manager;
 use tempfile::NamedTempFile;
 
+const REPOSITORY: &str = "https://raw.githubusercontent.com/ecojust/pureTV/master/game-library/";
 const SOURCE: &str = "https://apps.b14f.com/game-library/";
 const INDEX_LIMIT: u64 = 4 * 1024 * 1024;
 // Receipts for servers still exposing the web/ directory without a manifest.
@@ -364,11 +365,20 @@ fn verified_copy(
 }
 
 fn response(client: &Client, base: &str, file: &Asset) -> Result<Response, String> {
-    let response = client
-        .get(format!("{base}{}", file.path))
-        .header(reqwest::header::ACCEPT_ENCODING, "identity")
-        .send()
-        .map_err(|_| "无法连接游戏库服务器")?;
+    let get = |origin: &str| {
+        client
+            .get(format!("{origin}{}", file.path))
+            .header(reqwest::header::ACCEPT_ENCODING, "identity")
+            .send()
+            .map_err(|_| "无法连接游戏库服务器")
+    };
+    let response = get(base)?;
+    // The same verified web file may still be syncing to the static host.
+    let response = if base == SOURCE && response.status() == StatusCode::NOT_FOUND {
+        get(REPOSITORY)?
+    } else {
+        response
+    };
     if response.status() != StatusCode::OK {
         return Err(format!(
             "游戏文件下载失败 (HTTP {})",
