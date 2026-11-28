@@ -15,7 +15,7 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="docs/guide/README.md#安装与升级电脑管理器"><img src="docs/previews/manager-zh.png" width="180" alt=""><br>pureTV Manager</a><br>在电脑上管理电视应用和启动器<br>Windows、macOS、Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.6.1">下载 0.6.1</a></td>
+    <td align="center" valign="top" width="207"><a href="docs/guide/README.md#安装与升级电脑管理器"><img src="docs/previews/manager-zh.png" width="180" alt=""><br>pureTV Manager</a><br>在电脑上管理电视应用和启动器<br>Windows、macOS、Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.7.0">下载 0.7.0</a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/hosted-games/"><img src="resource/apps/hosted-games/thumb.png" width="180" alt=""><br>pureTV 在线游戏</a><br>在电视上用中文指南、遥控器或局域网手柄游玩六款作者在线原作<br>Android TV<br><a href="resource/apps/hosted-games/hosted-games-0.1.0.apk?raw=1">下载 0.1.0 APK</a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="resource/apps/putrtv-store/thumb.png" width="180" alt=""><br>putrtv商城</a><br>直接在电视上浏览、安装应用和检查更新<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1">下载 0.1.3 APK</a></td>
     <td align="center" valign="top" width="207"></td>
@@ -82,7 +82,7 @@
 
 [新增与更新的六款手柄游戏 · 浏览器试玩及操作说明](joystick-games/README.md#game-expansion)
 
-打开 pureTV Manager 0.6.1 左侧的「游戏」，可从 56 张卡片中选择游戏，全屏游玩，无需连接电视或配置 ADB。其中 50 款支持 pureTV 无线手柄，6 款作者在线原作提供中文指南。[按分类找到六款在线游戏](docs/guide/README.md#在电脑上玩) · [在浏览器中游玩](https://ecojust.github.io/pureTV/)
+打开 pureTV Manager 0.7.0 左侧的「游戏」。「网页游戏」的 56 张卡片都可用于电脑游玩和准备电视 APK。新包可以保存到电脑，也可以加入安装队列。「电视游戏市场」提供服务器上的游戏和可选版本。[获取游戏 APK](docs/guide/README.md#从网页游戏准备电视-apk) · [在浏览器中游玩](https://ecojust.github.io/pureTV/)
 
 独立安装的游戏默认使用简体中文。六款作者在线原作保留游戏内原文。
 
