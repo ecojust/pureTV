@@ -1,0 +1,1376 @@
+{
+  "gamesChecked": 48,
+  "scope": "48 款的冷启动检查使用原作状态与画面，真实输入另覆盖俄罗斯方块、光球挑战、OpenAero 及 Backroad Rally。",
+  "browserChecks": {
+    "ci": {
+      "browser": "158.0.8127.36",
+      "artifactSha256": "75f99456b725c074d0e2f60350820d69b281d4d8e8a56ed5af1383947c6217d1",
+      "build": "https://github.com/ecojust/pureTV/actions/runs/46115322667",
+      "run": "https://github.com/ecojust/pureTV/actions/runs/46115580251",
+      "receipt": "https://github.com/ecojust/pureTV/blob/50f6a75159c8c2b02dd0dc8fcb38029815ec4a84/tools/desktop-offline-qa/shard-receipts.json",
+      "offlineGamesPassed": 45,
+      "description": "五个分片使用构建产物，编译客户端实际 Rust HTTP 与游戏资源读取代码。每款均从独立浏览器上下文启动，禁用 Service Worker，拦截外网并在浏览器层停用对外连接。原始测试也包含两款现为在线入口的游戏。"
+    },
+    "local-project": {
+      "browser": "156.0.8078.79",
+      "librarySha256": "382dd070a813a27bf6bebaa06b4e3e2870bb1ba70251dcaf14ff6b0186efc313",
+      "checkedEntries": 48,
+      "startupReferences": 246,
+      "externalStartupOrigins": [],
+      "description": "新生产服务从 project.zip 读取。48 个入口与 246 个直接引用经 HTTP 比对，两版逐项 SHA-256 相同。五款再次在新库冷启动并进行画面或输入检查。"
+    }
+  },
+  "notes": [
+    "霓虹飞车在 CI 软件渲染的首轮 45 秒内未进入可读状态。新项目库读取到原作 WebGL 菜单及绘制调用。",
+    "OpenAero 的本次机型使用随包 Rapier WASM。初轮在已经起飞后额外检查了另一套 JSBSim 后端。复测以实际获得的物理引擎和右倾响应为准。",
+    "Backroad Rally 默认画质的两次软件 GPU 测试在 150 秒内未确认驶入赛段。低画质实际加载同一芬兰赛段并完成加速。"
+  ],
+  "games": [
+    {
+      "id": "alchemists-lattice",
+      "sourceApkSha256": "745f43b2b4c94daf4d09a64d89637067f702b3ac4ec6e13d76807816a5d47373",
+      "localEntrySha256": "e50bb52ec48c7682d02579a163fc2e3a37a8eeb529952107b63dd9aec39c933c",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "alchemists-lattice",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "eefeb71405c08571b9fa6674f1185041704a3a0d6a80d18385521bbfb83a584f",
+      "sampledColors": 1611
+    },
+    {
+      "id": "alien-shooter",
+      "sourceApkSha256": "48c40117289e96035d07b894fcc0404b4e54df1eb3630ff67c6ece828e073e58",
+      "localEntrySha256": "9c5f1cbe5bf781231a002c936d9595e9323b63912c01f38a9e3cf2645db12c89",
+      "startupReferenceCount": 14,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "title",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            800,
+            450
+          ]
+        ]
+      },
+      "localResources": 22,
+      "frameSha256": "3da1a7fe9541e5eb466c580451fefc284e724e2553074f5d79e4f310cbae1cf3",
+      "sampledColors": 1293
+    },
+    {
+      "id": "atlas-of-ink",
+      "sourceApkSha256": "f9e9b51a9533ab2210c5ca2114384e9ce47055cacd831960d31b6f98f0685af7",
+      "localEntrySha256": "138d09d9e043a87df779428aa03c0f8d5cae3584067897dbb4888cc770de6bfb",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "atlas-of-ink",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            485,
+            338
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "af0b131efa314086584b31917c80b1c90b46a5f1f3ce87747ce7d264620a0c67",
+      "sampledColors": 756
+    },
+    {
+      "id": "backroad-rally",
+      "sourceApkSha256": "bf7f9dfeef3c8b2629d9a75e34d4be1d15938fa9c58d713e141e42ae01a91aff",
+      "localEntrySha256": "3c649d25b9dc99a355b05ee3e554394e5e20bb58d532b976a4ea5ae87eb1f8a7",
+      "startupReferenceCount": 7,
+      "sample": "local-project",
+      "ciPassed": false,
+      "ciFailure": "Page.wait_for_function: Timeout 150000ms exceeded.",
+      "passed": true,
+      "state": {
+        "phase": "playing",
+        "renderer": "webgl2",
+        "canvas": [
+          [
+            300,
+            168
+          ]
+        ]
+      },
+      "action": {
+        "stage": "finland",
+        "phase": "running",
+        "car": "swift",
+        "clock": 0.9083333333333325,
+        "secondsToObserveRunning": 61,
+        "speedBefore": 0.0028029302030911064,
+        "speedAfter": 2.8051019204971337
+      },
+      "entry": "?lang=zh&mode=quick&stage=finland&car=swift&cond=stage&weather=stage&quality=low&scale=0.5&cascades=0&draw=0.35&crowd=0"
+    },
+    {
+      "id": "bloom-hop",
+      "sourceApkSha256": "75dbb8332f813b049cf809f34371c6e223b109bf0c903d490c03c827f302eda8",
+      "localEntrySha256": "9a2cd649982b7355cae725b83f0d82bd91647f95bd16309d3aafbfa7aa4cb30a",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "bloom-hop",
+        "frames": 14,
+        "inputPolls": 14,
+        "canvas": [
+          [
+            461,
+            338
+          ]
+        ]
+      },
+      "localResources": 31,
+      "frameSha256": "b8b99b46fb42783b74df6d3bcecc755b315c4b32cb77701b7a0c644a161304ad",
+      "sampledColors": 1964
+    },
+    {
+      "id": "bumble-basket",
+      "sourceApkSha256": "41694d698173397c71413d7a8dd723fd1a6a34b7999fc25b893f7f29fff5784c",
+      "localEntrySha256": "4213ab89894f15df8b5dfd0dc76d63b946d20a4e169bcca9ae63fff51d68a37b",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "bumble-basket",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            560,
+            315
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "d051ab651d459bb05a4f6cc7ee18ef7308beea469177002f2832ab58d043adcc",
+      "sampledColors": 1208
+    },
+    {
+      "id": "claude-of-tanks",
+      "sourceApkSha256": "989695d339996985a629adb42b0bccbbc166ffbf88a713053404d1df0c7118b5",
+      "localEntrySha256": "271ffbc0e5a80f15dc01ac86ef813228cd04b86c8eac013fbbaa31cd29f48c56",
+      "startupReferenceCount": 6,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "claude-of-tanks",
+        "frames": 2,
+        "inputPolls": 2,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 28,
+      "frameSha256": "5785f7cbb2e4e49826438b1439172c4cd8238a825b832a512404b431ab720240",
+      "sampledColors": 2102
+    },
+    {
+      "id": "clawd-pop",
+      "sourceApkSha256": "a2f252cb442b0240c641c23ce66be3203d43e0743dc74a3bb12e9c5bf02dcdbc",
+      "localEntrySha256": "53320c2f5d4f6874be033f3a9cba373010229c59d552846213825807d9483eec",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "clawd-pop",
+        "frames": 11,
+        "inputPolls": 11,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 6,
+      "frameSha256": "728f11fdf1ba42e1eb9934ea9fc82c29fe38a0c94c46ad922bbccba1cf0b6fbc",
+      "sampledColors": 1802
+    },
+    {
+      "id": "dirt-crown",
+      "sourceApkSha256": "7d14f643bff8ed692b47dcb3bd31ceee1cbc997f7213ce4ac1aee32d332afed6",
+      "localEntrySha256": "2586aaa6cc36c4fcea48c8764eb10ae409e534939abe6041b669f691ce13d4ae",
+      "startupReferenceCount": 8,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "dirt-crown",
+        "frames": 6,
+        "inputPolls": 6,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 57,
+      "frameSha256": "56b4485cad8b6bddefdadd1d71d41f002436f29dc485d433ca5a2be505577970",
+      "sampledColors": 338
+    },
+    {
+      "id": "dolmus",
+      "sourceApkSha256": "22cf7a04520160e864dee5ef4f9e4c49f3328c9edae7ac1e199d89033c12cf49",
+      "localEntrySha256": "b71b3a3b216aa5e351240da1b028af47303b39b4a8a1a096ee76c107a44bdc42",
+      "startupReferenceCount": 3,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "dolmus",
+        "frames": 4,
+        "inputPolls": 4,
+        "canvas": [
+          [
+            560,
+            315
+          ]
+        ]
+      },
+      "localResources": 23,
+      "frameSha256": "3d3c751092c91d53a570a9eac1e93ba896243dd6b08f39b8c14924ce2b5acff2",
+      "sampledColors": 2167
+    },
+    {
+      "id": "emberbrood",
+      "sourceApkSha256": "d927b3a9b6851f8d2dce3c9b6c6b57d5522887f672800cfa6a8b9eedf4883d7f",
+      "localEntrySha256": "d3d2ec74939c4b11e77b636dbdaa48a1b175ac8e057307512c0994617b8f8ff5",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "dom",
+        "game": "emberbrood",
+        "frames": 5,
+        "inputPolls": 5,
+        "canvas": [
+          [
+            64,
+            64
+          ],
+          [
+            64,
+            64
+          ],
+          [
+            64,
+            64
+          ],
+          [
+            64,
+            64
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "132b17a1ccf0b9e9b11981a87cc0d3ba9802b324c54d915154f8411ecdca3236",
+      "sampledColors": 505
+    },
+    {
+      "id": "glup",
+      "sourceApkSha256": "835efc6a78e8f61cef8c8b01133813cd5ae663b7478c9f61a96f41635109b79b",
+      "localEntrySha256": "0597e33d6a2e899e7a19abd185639d2a9eac3d94d4e558e732fea1a3a947c6f4",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "glup",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            640,
+            360
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "455e54c25b71ea6ae1cd1fbf77254384b7d8664db9fb88cb8060925450bf6dcc",
+      "sampledColors": 178
+    },
+    {
+      "id": "gogh-strike",
+      "sourceApkSha256": "070db4777eec6de0dd27c3f3dcc6ab20ffc9103771e2bbdc843877317064615d",
+      "localEntrySha256": "5974a5607fa0905ad3ed63ec74ac54efedfe30d87ab36c0e6b9229053742e014",
+      "startupReferenceCount": 5,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "gogh-strike",
+        "frames": 5,
+        "inputPolls": 5,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 38,
+      "frameSha256": "2fb36d2282408e0e7d87a389a18524faed77fb56b6e9759b5a5d309e3441288a",
+      "sampledColors": 2475
+    },
+    {
+      "id": "jackal",
+      "sourceApkSha256": "daa32b6eec14b8d10cfbc73f6af23e02f7412c7b4debfa666d1c14a03b90a54e",
+      "localEntrySha256": "f403be5587d83049a79cefcf2d8abdfa59d243659fb14e909cf1a1394025b3fe",
+      "startupReferenceCount": 13,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "title",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            256,
+            240
+          ]
+        ]
+      },
+      "localResources": 26,
+      "frameSha256": "972f81d1e18799aa5fadac05a2ee3ec16507415190bd2c1640aa2d34f56c0d9b",
+      "sampledColors": 395
+    },
+    {
+      "id": "jewel",
+      "sourceApkSha256": "6615906c488d9bed955a57207a6c3c0fea6b68918c01e1b715daa090e1ba2123",
+      "localEntrySha256": "850d342f48af3d3ea38a0ff2ff269c3eb0a962f76b5d8639c33561266a2e5987",
+      "startupReferenceCount": 10,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "title",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            256,
+            240
+          ]
+        ]
+      },
+      "localResources": 13,
+      "frameSha256": "faa1e24151b225df6ee996bee430c9fc177b6f36a5be3f431e54108d09481259",
+      "sampledColors": 1080
+    },
+    {
+      "id": "kaboom-arena",
+      "sourceApkSha256": "a18d8994cd650fd4362461d34600371d6ccdfdef94d81b41def3422ba91dbc08",
+      "localEntrySha256": "6bafd759317b717ef4fbc3a692ac6ac4d8f8c07c6ffb0469ee587f1ed2bd1b0e",
+      "startupReferenceCount": 3,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "kaboom-arena",
+        "frames": 2,
+        "inputPolls": 2,
+        "canvas": [
+          [
+            240,
+            208
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "65619031c76c013dda69751905467801b64418be30d6b753b96cf16e0ad9e810",
+      "sampledColors": 1601
+    },
+    {
+      "id": "kart-royale",
+      "sourceApkSha256": "ebf8f4b4adc997a6af63bd032819a19fdc1a6b42e55464fe254727c5a3abdae0",
+      "localEntrySha256": "f61bb123703d7d286d6ec1d50690a9db4623edac830365e1bda2f8af249ed426",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "kart-royale",
+        "frames": 0,
+        "inputPolls": 0,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "db9317548ae7ea2c8a3f087d61fa2ad9bc28a92bb08470a5e3c2686746e18713",
+      "sampledColors": 294
+    },
+    {
+      "id": "kindle",
+      "sourceApkSha256": "9e93d6b44150ed5afd64f892c2bcba80c30e9511fbe9bb25898d4ceff5d486e6",
+      "localEntrySha256": "4f119f75b2103bc7e2f36b5b132a4158edb811476788d3a3a19e7dfd84c27c3f",
+      "startupReferenceCount": 3,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "kindle",
+        "frames": 5,
+        "inputPolls": 5,
+        "canvas": [
+          [
+            600,
+            338
+          ]
+        ]
+      },
+      "localResources": 6,
+      "frameSha256": "921db30090a135367f302425143168451f656f2f012574f3dedc94100f6ecfa5",
+      "sampledColors": 546
+    },
+    {
+      "id": "last-track",
+      "sourceApkSha256": "49d1028fd1b38e3a81e045af6e02f19ed1559ba116daf3f1a808143f9132626b",
+      "localEntrySha256": "c2a5ac2d4b1673c510956aeee608436f62ec2acb03e47f7f17e879883462a77e",
+      "startupReferenceCount": 7,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "last-track",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 132,
+      "frameSha256": "97e9e60c99d4ca3aa7943535115dd736cffe65bdc74e1c72655b24faf8ee1f2a",
+      "sampledColors": 2715
+    },
+    {
+      "id": "lumenrift",
+      "sourceApkSha256": "8683e27bf7f6f48a0596eca8b31f6047ee6273ad642f3e634aacd7688620bb4e",
+      "localEntrySha256": "613b948f3843581db7f3c9909af4d1323279d453a838e6f1825ce871983b7eca",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "lumenrift",
+        "frames": 1,
+        "inputPolls": 1,
+        "canvas": [
+          [
+            600,
+            338
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "9bd6e172381e3e15c8eb5ffea880277a96485d32a15065ff0eaf8cfa0a599ec5",
+      "sampledColors": 772
+    },
+    {
+      "id": "marti",
+      "sourceApkSha256": "6943c24242a977b2508da287aaff845f942fbcdb370f1dc97c59b79ba6282f57",
+      "localEntrySha256": "8ff58b5409d8b7394320739b57cb53cf47c3b84c9bd1d35a580c477ed5423e2b",
+      "startupReferenceCount": 7,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "marti",
+        "frames": 5,
+        "inputPolls": 5,
+        "canvas": [
+          [
+            560,
+            315
+          ]
+        ]
+      },
+      "localResources": 22,
+      "frameSha256": "54eefe22607a26c3d88446238f813ac8211e9825495c37d8ecfe6ca5be3de419",
+      "sampledColors": 2076
+    },
+    {
+      "id": "mechapede",
+      "sourceApkSha256": "f4bcde9788dfa61f5758e31b97d72772a60205947d0ea307effd051d7c584776",
+      "localEntrySha256": "7adb23edd7dce1301218ac072d41d1643912300ea0724464e913e93d0a760a70",
+      "startupReferenceCount": 6,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "mechapede",
+        "frames": 2,
+        "inputPolls": 2,
+        "canvas": [
+          [
+            231,
+            308
+          ]
+        ]
+      },
+      "localResources": 9,
+      "frameSha256": "5d9f3c9883197d72fb23da62471903d50a4c9eced515f1ce6dfd75ddf13df0bf",
+      "sampledColors": 1258
+    },
+    {
+      "id": "neon-arcana",
+      "sourceApkSha256": "fc6b94e263826955452d13bc9b112c11e9ab83fcbf1a2045b9fb837725e7c8f3",
+      "localEntrySha256": "47dd64e6e84ca23be895b5bdc6818b490e1be1daf08d8c7aa3a912d8c3c1d6ef",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "neon-arcana",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "8339feeb74b875d6af6a9decd9fe5afd635146701d5af4d7f6bb278532b7d7a5",
+      "sampledColors": 2286
+    },
+    {
+      "id": "neon-rush",
+      "sourceApkSha256": "3a4cb0b6ca74147a1014a0b7080e1320ce368d1f911661aec8aa80f425b0ff19",
+      "localEntrySha256": "46b24171cf325962973a08025cfbae18d940d1fb39b04bc296a7fe5c1383675c",
+      "startupReferenceCount": 8,
+      "sample": "local-project",
+      "ciPassed": false,
+      "ciFailure": "Page.wait_for_function: Timeout 45000ms exceeded.",
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": {
+          "backend": "webgl",
+          "renderer": "three-webgl",
+          "webglVersion": 2,
+          "drawCalls": 21
+        },
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            778,
+            358
+          ],
+          [
+            160,
+            110
+          ]
+        ]
+      },
+      "localResources": 13,
+      "frameSha256": "7b66e61d3a2e38d2a71e549da07536385cea73fe9312f1a6c7dca49745fba3d6",
+      "sampledColors": 1466
+    },
+    {
+      "id": "nerd-of-duty",
+      "sourceApkSha256": "8b5b536207896ebf9ff479234cd62c023cd2287b55eb151a0dd429ad2f354567",
+      "localEntrySha256": "e5c38ce402d06067e52d3ee80d9496a88d2ad23e5414107d10a0449ba2db891e",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "nerd-of-duty",
+        "frames": 4,
+        "inputPolls": 4,
+        "canvas": [
+          [
+            600,
+            337
+          ],
+          [
+            83,
+            83
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "319f2d98866c2d77240b840bd41ca013971960e51dad7eb3665f88c1c5862bbe",
+      "sampledColors": 1654
+    },
+    {
+      "id": "night-racer",
+      "sourceApkSha256": "680317e1876618e12160f2eea7c90d96072e36d6fa6b1652af11ef1e1ebf17d3",
+      "localEntrySha256": "3c590d3071f5305adbf6123c64e85330b00ecb1011d881aac0ae233076816b36",
+      "startupReferenceCount": 3,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "night-racer",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ],
+          [
+            300,
+            150
+          ]
+        ]
+      },
+      "localResources": 10,
+      "frameSha256": "7ab56d9c21a9ed452246c41ccabb3069156b1411685b9ca442c0686b377a3734",
+      "sampledColors": 2444
+    },
+    {
+      "id": "nova-lancer",
+      "sourceApkSha256": "cac532e4810fab77181b5b657d2c312b29cac840bd6780bfb0f10ea249e4acea",
+      "localEntrySha256": "869b3299e215ad4e50ec61a1252836ca787f28dde0c4d922c23fe2d5be54605c",
+      "startupReferenceCount": 3,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "nova-lancer",
+        "frames": 145,
+        "inputPolls": 2,
+        "canvas": [
+          [
+            400,
+            225
+          ],
+          [
+            600,
+            338
+          ]
+        ]
+      },
+      "localResources": 6,
+      "frameSha256": "a3390f9d2301ac2982b789f6ebfa1c14824266701435748c8344af7d86f4185f",
+      "sampledColors": 324
+    },
+    {
+      "id": "oathstones",
+      "sourceApkSha256": "f640280f60f2a778c706e290200dfc7796da81f7e43781c7111f75b7893d8732",
+      "localEntrySha256": "cd13019691771665bfa69b4d953e2bee78864873462a38c783cb107c49359c1d",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "oathstones",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            415,
+            320
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "1005e64fb7cb38d1bc47c99c28d7357ba7411d77d121363aa5d2b245986e0ded",
+      "sampledColors": 1822
+    },
+    {
+      "id": "openaero-dfw",
+      "sourceApkSha256": "028f485350d2552dceb65133381732f2d71639fd23604cd1771e67ef52bacd55",
+      "localEntrySha256": "89ea082965f82716ef193aae8b786833304993b7f908f0e8c99fa7192a6f0615",
+      "startupReferenceCount": 10,
+      "sample": "local-project",
+      "ciPassed": false,
+      "ciFailure": "The original flight-model WASM was not loaded",
+      "passed": true,
+      "state": {
+        "phase": "playing",
+        "renderer": "webgl2",
+        "game": "openaero-dfw",
+        "frames": 16,
+        "inputPolls": 16,
+        "canvas": [
+          [
+            600,
+            337
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      },
+      "action": {
+        "phase": "playing",
+        "bankDegreesBefore": 0.11393652940683043,
+        "bankDegreesAfter": 5.946936261914773
+      },
+      "localResources": 41,
+      "loadedWasm": [
+        "openaero-dfw/assets/rapier_wasm3d_bg-C6GCbKVJ.wasm"
+      ],
+      "frameSha256": "cce3f5a8553d9573aba182f39d1339b5d94ed3297e10f4387b95ebf61d9f6030",
+      "sampledColors": 2301
+    },
+    {
+      "id": "operation-ironhold",
+      "sourceApkSha256": "f8b5a416a649b3ea1b18bd9891646cfde08ea7c55ea9de2c194d11f37fac793a",
+      "localEntrySha256": "3fc1c852825e0849166cb94fe6116a99b8d1f8c35c7ec0e3316b633a7e1e3bf1",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "operation-ironhold",
+        "frames": 6,
+        "inputPolls": 6,
+        "canvas": [
+          [
+            600,
+            337
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            172,
+            172
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "8544d5befda33a650cbefe655f7e30235c40bb4655a34a8f2a346cf48378f548",
+      "sampledColors": 1988
+    },
+    {
+      "id": "penguintrack",
+      "sourceApkSha256": "7fcf5dc472170e031bcc5b387ccb45924d3126b230470b7bf59a7bb105699a48",
+      "localEntrySha256": "83f8f315ff97125719f54ead962f168cc3e550e8158ef6ed1161c93b192e7d06",
+      "startupReferenceCount": 8,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "penguintrack",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 14,
+      "frameSha256": "a7e4d62ad4c5a98430d8583114835b49ac2e65d4ef9707c2f7f2d78e6a30510b",
+      "sampledColors": 1754
+    },
+    {
+      "id": "ponpoko-kart",
+      "sourceApkSha256": "d5d30d6701bd33bd0f3d685161492d3101b8f2be90b40d43117c148ac8ac965d",
+      "localEntrySha256": "84fb0ac07a74689cf33a1ee96c0b60055901995d764ddfa21de6060c54921f80",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "ponpoko-kart",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "c1a9bd80c19f8cb4699cb068b983ffe73f60267d4c1aff2a55beddd85d8b2426",
+      "sampledColors": 3105
+    },
+    {
+      "id": "qq-speed",
+      "sourceApkSha256": "a7a7b2aa8449c69e91a78fb6f2d9f8e9bb77510d9ccbb1b7f52d9840b514da1c",
+      "localEntrySha256": "1c43b757194a4a75d36d030afe18420a4b31dd355779bc224c386bf13217aefb",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": null,
+        "game": "qq-speed",
+        "frames": null,
+        "inputPolls": 4,
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "439c0cf72fc21d280f1e0a15da5bed0557228a5cac3f02a747f68f22f18dcc21",
+      "sampledColors": 2234
+    },
+    {
+      "id": "saber-magic-tower",
+      "sourceApkSha256": "59eead9e1c0a61cd7dc2b5b1227c1d8547020c88965ade6114bbcaed2a2a6d95",
+      "localEntrySha256": "84c3bb30add319e1f0e64e6a8270fc1f4905c518d7dee74454cccbbf3fbfc7a6",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "saber-magic-tower",
+        "frames": 2,
+        "inputPolls": 2,
+        "canvas": [
+          [
+            456,
+            255
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "e52739558d14219092dcde9d9f68426c4c3c882a484ba273d249a6c01454bda6",
+      "sampledColors": 471
+    },
+    {
+      "id": "silent-meridian",
+      "sourceApkSha256": "e10fdcbf32dd805a5de5211c5f031d8d2a4daff497eb69470737e71000be06e0",
+      "localEntrySha256": "800d3c8b31c9307e77ba971184f4b7b3a6483cca6c4f839d2acbb253890e63b8",
+      "startupReferenceCount": 7,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "dom",
+        "game": "silent-meridian",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 13,
+      "frameSha256": "438b17728ff8d9f0e71b780713fd6c26d8aa1694f7b1a0eff54d7714a5b0cbdb",
+      "sampledColors": 1509
+    },
+    {
+      "id": "solder-and-rain",
+      "sourceApkSha256": "960f808c150ee60d9bde9cf166dfaf911724967d2cb08357a70ac6c1fb31beb9",
+      "localEntrySha256": "e568e2cd5b7926ab5731af2975883fc184e73223f597c53555070dd6fa4ef8e9",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "solder-and-rain",
+        "frames": 2,
+        "inputPolls": 2,
+        "canvas": [
+          [
+            484,
+            337
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "07fa86720cb56169a2513c4313d06879c9de930d12b807aea4f5691178f32941",
+      "sampledColors": 1855
+    },
+    {
+      "id": "starbase-spooky",
+      "sourceApkSha256": "cc8f6c791cbd0d1ea3e4cba23c4afe4772181d87d61fc7bbe9cd9b7865f98dd6",
+      "localEntrySha256": "514ab11ab0778b9aca02859f9560b5de1e56f22cb8067bda2dbf3489ba35e2e2",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "starbase-spooky",
+        "frames": 6,
+        "inputPolls": 6,
+        "canvas": [
+          [
+            640,
+            360
+          ]
+        ]
+      },
+      "localResources": 28,
+      "frameSha256": "d457e508d0f78a46a5253c84d8cc02f95bfeefb0f99a416762bac2318bdd0ce8",
+      "sampledColors": 1629
+    },
+    {
+      "id": "starfall",
+      "sourceApkSha256": "702e26fff8b2ed1e5c6953dc5776089b86c7cebdb53e99412d28ae766dec645b",
+      "localEntrySha256": "5abcdc6ce93bc5773d47343c2f27ce3ac23d0c29223ff4f70307a29ae6d25d7d",
+      "startupReferenceCount": 5,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "starfall",
+        "frames": 11,
+        "inputPolls": 11,
+        "canvas": [
+          [
+            600,
+            337
+          ],
+          [
+            600,
+            338
+          ],
+          [
+            132,
+            132
+          ]
+        ]
+      },
+      "localResources": 8,
+      "frameSha256": "2cb19eafe36780b493ea8dec9435893681f79975fd273b2f457fe5ac75b62374",
+      "sampledColors": 2687
+    },
+    {
+      "id": "starsling",
+      "sourceApkSha256": "1c8d546b14e70d7278b7bf10d68412abdb12dc5e28dcc77c032a79b8d76a4c78",
+      "localEntrySha256": "2712cfdded5803ea655f0120e3878cb2ee7fe4f04df0b67ede36fb6e312cfad2",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "starsling",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            438,
+            337
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "78d617ea43f9eacc729e98978dd55a8d7b6f09e34835549da4e8e3b4f24d7996",
+      "sampledColors": 1226
+    },
+    {
+      "id": "story-thief",
+      "sourceApkSha256": "c0414be105b81eb8097d5b59993056930b52b7f9c273becf18c6ae2657d6d9b1",
+      "localEntrySha256": "4cadbe5c8feb818d143517592e480d0af2c9df733d5e8570c4382f62d88a96ae",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "story-thief",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            320,
+            200
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            320,
+            200
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "5368607ed938638fff5fccfa2f743703c3cfd258e63c511fb561987663b5a8c3",
+      "sampledColors": 446
+    },
+    {
+      "id": "sugarplum-drop",
+      "sourceApkSha256": "45d0ef0e8c3441a4de53bf837d5e55fc9ba949d5fb70c0841a704a36bc07881f",
+      "localEntrySha256": "a7bf3ffd753c70337d789e53c20ee50c968cf3582956be167c398150ebc34b6f",
+      "startupReferenceCount": 2,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "canvas2d",
+        "game": "sugarplum-drop",
+        "frames": 3,
+        "inputPolls": 3,
+        "canvas": [
+          [
+            438,
+            338
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            20,
+            20
+          ]
+        ]
+      },
+      "localResources": 5,
+      "frameSha256": "c2bf69d0b214706fa3702096bc828e4a5a9107b82556c52cef318a9f21fba70b",
+      "sampledColors": 1194
+    },
+    {
+      "id": "super-mario",
+      "sourceApkSha256": "75db2dbaf4a9ea4a2f8e80967371f6f87b49389d44fdc043f05040430d5b6b35",
+      "localEntrySha256": "b2ad27e2ff3c661e0f5d3fcb4fe0d7fe5247bd649a46a7547cd84e9258552753",
+      "startupReferenceCount": 10,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "title",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            256,
+            240
+          ]
+        ]
+      },
+      "localResources": 13,
+      "frameSha256": "f345ff3aba921c411671a3e9d7a0df5eb5af19d21ca0c525915a915654222f1e",
+      "sampledColors": 969
+    },
+    {
+      "id": "tank",
+      "sourceApkSha256": "54f38e95fc0c626fd0ede4d73feb7a2291d4e4ca4ef656701f1d5fd507e1350f",
+      "localEntrySha256": "5ec4d60e0df95c1beaed1efa7b8a3fefcd38f0cd9e001cc839910858be1c53a8",
+      "startupReferenceCount": 12,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "title",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            256,
+            240
+          ]
+        ]
+      },
+      "localResources": 15,
+      "frameSha256": "e71450d1775093d596d9fb227bb90bf2d1c45b59bc89b9e86ea75e36226b45b1",
+      "sampledColors": 391
+    },
+    {
+      "id": "tetris",
+      "sourceApkSha256": "eef2c2a6d6bfd90b5d77aaf477c0b7c195b603e0496eaa1debd19555810339e6",
+      "localEntrySha256": "bbd079eb567ae238e3a0858ef41182cb76ddd6e644887fdedd10b0a964130108",
+      "startupReferenceCount": 10,
+      "sample": "local-project",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "playing",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            256,
+            240
+          ]
+        ]
+      },
+      "action": {
+        "phase": "playing",
+        "pieceXBefore": 4,
+        "pieceXAfter": 5
+      },
+      "localResources": 13,
+      "frameSha256": "18de046bf6bbcbc8522bb02c07ca01c9b0833be182afc4715c85db89fe579169",
+      "sampledColors": 782
+    },
+    {
+      "id": "turbo-kart-rally",
+      "sourceApkSha256": "a0b4cfcff24b313f4a3c02c3bf92781e23a588da2fb22068d9cbb85bf2f64e8e",
+      "localEntrySha256": "b1bfd58c4f2cd5ecbedfb45b244df03f16f8c5fbe69baa3ca447588a946c0401",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "turbo-kart-rally",
+        "frames": 6,
+        "inputPolls": 6,
+        "canvas": [
+          [
+            640,
+            360
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "d2ed71ac8ad608539722e3b8c5a8c8a28737d2f22c89e10af9773f00cd6ec7b9",
+      "sampledColors": 2768
+    },
+    {
+      "id": "turbo-kart-rush",
+      "sourceApkSha256": "a5417918e2ddc3e225ded15e406573423bbedd7405fad843e99e3611fd1fea7f",
+      "localEntrySha256": "bd9a6db184aa59742341cad3b7db011daeda05b403fd438a3ffaea168241aef0",
+      "startupReferenceCount": 4,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "menu",
+        "renderer": "webgl2",
+        "game": "turbo-kart-rush",
+        "frames": 4,
+        "inputPolls": 4,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "localResources": 7,
+      "frameSha256": "0aa4e76b32084420ebbbe7733a5fd4c69d97a8d9e20de1c255f08d3540571d25",
+      "sampledColors": 3086
+    },
+    {
+      "id": "used-car-racing",
+      "sourceApkSha256": "b3d324cce734c3e17430b53c7899fcbc54bcedcb6c633da5417e8711a8189ba2",
+      "localEntrySha256": "649b486134efe83dcff497be9f4550d2054babea091a2b14d46712b8d9f3d02e",
+      "startupReferenceCount": 12,
+      "sample": "ci",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "garage",
+        "renderer": null,
+        "game": null,
+        "frames": null,
+        "inputPolls": null,
+        "canvas": [
+          [
+            960,
+            540
+          ]
+        ]
+      },
+      "localResources": 35,
+      "frameSha256": "95051429b12653e0bd655e08cfa806879dcf972d36141b241d91cfdb9f3efe7c",
+      "sampledColors": 2197
+    },
+    {
+      "id": "zof-duty",
+      "sourceApkSha256": "b6f531e5b06f47e5f91a175db9d3f36a35c6984852404b7e8dab38bfd4c800c4",
+      "localEntrySha256": "b3d02e9093a4bde22da0753e7f997e7bec5db58440aa8a37b7dd13e7cfcc90b9",
+      "startupReferenceCount": 4,
+      "sample": "local-project",
+      "ciPassed": true,
+      "passed": true,
+      "state": {
+        "phase": "playing",
+        "renderer": "webgl2",
+        "game": "zof-duty",
+        "frames": 5,
+        "inputPolls": 5,
+        "canvas": [
+          [
+            600,
+            337
+          ]
+        ]
+      },
+      "action": {
+        "phase": "playing",
+        "scoreBefore": 0,
+        "scoreAfter": 100
+      },
+      "localResources": 14,
+      "frameSha256": "e07452cb94aae2579f98d504161f52bb749a163c68a1954c8db8d128f9c12d74",
+      "sampledColors": 973
+    }
+  ]
+}
