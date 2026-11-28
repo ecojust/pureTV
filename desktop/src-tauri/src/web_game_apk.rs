@@ -4,7 +4,7 @@ use crate::web_game_template::{embedded_game, EmbeddedGame};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fs::{self, File};
-use std::io::{self, Read, Seek, Write};
+use std::io::{self, BufReader, Read, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
@@ -23,7 +23,8 @@ struct CatalogGame {
 }
 
 enum Source {
-    Bundled(String),
+    Project,
+    Online,
     Embedded(EmbeddedGame),
 }
 
@@ -74,22 +75,48 @@ fn lookup(id: &str) -> Result<Game, String> {
         file_name: name.into(),
         sha256: entry.sha256,
         bytes: entry.bytes,
-        source: Source::Bundled(format!("apks/{id}/{name}")),
+        source: if crate::remote_game_apk::is_online_only(id) {
+            Source::Online
+        } else {
+            Source::Project
+        },
     })
 }
 
 pub(crate) fn verify_library(path: &Path) -> Result<(), String> {
     let mut pack = crate::offline_game_library::open(path)?;
+    if pack
+        .file_names()
+        .flatten()
+        .any(|name| name.ends_with(".apk"))
+    {
+        return Err("本地游戏库中包含成品 APK".into());
+    }
     let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).map_err(|_| "游戏目录无效")?;
     for entry in entries {
         let game = lookup(&entry.id)?;
-        if let Source::Bundled(member) = game.source {
-            let apk = pack
-                .by_name(&member)
-                .map_err(|_| format!("缺少 {member}"))?;
-            if apk.size() != game.bytes || apk.compression() != zip::CompressionMethod::Stored {
-                return Err(format!("游戏资源无效: {member}"));
+        if matches!(game.source, Source::Online) {
+            let prefix = format!("projects/{}/", entry.id);
+            let web = format!("web/{}/", entry.id);
+            if pack.file_names().flatten().any(|name| {
+                name.starts_with(&prefix)
+                    || name
+                        .strip_prefix(&web)
+                        .is_some_and(|file| !matches!(file, "thumb.png" | "thumb.webp"))
+            }) {
+                return Err(format!("离线库中包含未授权的游戏项目: {}", entry.id));
             }
+            continue;
+        }
+        if !assemble_project(
+            &mut pack,
+            &entry.id,
+            &game,
+            io::sink(),
+            &AtomicBool::new(false),
+            |_| Ok(()),
+        )? {
+            return Err(format!("游戏项目组装后的 APK 校验失败: {}", entry.id));
         }
         let page = format!("web/{}/tv.html", entry.id);
         if pack.by_name(&page).is_err() {
@@ -97,6 +124,66 @@ pub(crate) fn verify_library(path: &Path) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+// Rebuild the official signed APK from the same unsigned Android project used
+// by the desktop player. Only signatures and central records are held in RAM.
+fn assemble_project(
+    pack: &mut zip::ZipArchive<BufReader<File>>,
+    id: &str,
+    game: &Game,
+    output: impl Write,
+    cancel: &AtomicBool,
+    progress: impl FnMut(u64) -> Result<(), String>,
+) -> Result<bool, String> {
+    const RECORD_LIMIT: u64 = 16 * 1024 * 1024;
+    let invalid = "本地游戏项目或签名资料无效";
+    let mut signature = pack
+        .by_name(&format!("projects/{id}/signing.bin"))
+        .map_err(|_| "缺少游戏的签名资料")?;
+    if !(32..=RECORD_LIMIT).contains(&signature.size()) {
+        return Err(invalid.into());
+    }
+    let mut magic = [0; 8];
+    signature.read_exact(&mut magic).map_err(|_| invalid)?;
+    if &magic != b"PTVSIG01" {
+        return Err(invalid.into());
+    }
+    let mut number = || {
+        let mut bytes = [0; 8];
+        signature.read_exact(&mut bytes).map_err(|_| invalid)?;
+        Ok::<u64, &str>(u64::from_le_bytes(bytes))
+    };
+    let prefix = number()?;
+    let directory_size = number()?;
+    let local_signatures = number()?;
+    let mut records = Vec::new();
+    signature.read_to_end(&mut records).map_err(|_| invalid)?;
+    drop(signature);
+    let signed_bytes = records.len() as u64;
+    if local_signatures > signed_bytes
+        || directory_size > RECORD_LIMIT
+        || prefix
+            .checked_add(directory_size)
+            .and_then(|n| n.checked_add(signed_bytes))
+            != Some(game.bytes)
+    {
+        return Err(invalid.into());
+    }
+    let mut project = pack
+        .by_name_seek(&crate::offline_game_library::project_member(id))
+        .map_err(|_| "未找到可读取的本地游戏项目")?;
+    project.seek(SeekFrom::Start(prefix)).map_err(|_| invalid)?;
+    let mut directory = vec![0; directory_size as usize];
+    project.read_exact(&mut directory).map_err(|_| invalid)?;
+    project.rewind().map_err(|_| invalid)?;
+    let (local, trailer) = records.split_at(local_signatures as usize);
+    let signed = project
+        .take(prefix)
+        .chain(local)
+        .chain(&directory[..])
+        .chain(trailer);
+    copy_verified(signed, output, game, cancel, progress)
 }
 
 pub fn file_name(game_id: &str) -> Result<String, String> {
@@ -218,14 +305,19 @@ pub fn prepare(
                     progress("verifying", n)
                 })?
             }
-            Source::Bundled(member) => {
+            Source::Project => {
                 progress("preparing", 0)?;
                 let mut archive = crate::offline_game_library::open(&library()?)?;
-                let apk = archive
-                    .by_name(member)
-                    .map_err(|_| "本地资源中缺少此游戏")?;
-                copy_verified(apk, &mut output, &game, cancel, |n| {
+                assemble_project(&mut archive, game_id, &game, &mut output, cancel, |n| {
                     progress("preparing", n)
+                })?
+            }
+            Source::Online => {
+                progress("downloading", 0)?;
+                let response =
+                    crate::remote_game_apk::download(game_id, &game.file_name, game.bytes, cancel)?;
+                copy_verified(response, &mut output, &game, cancel, |n| {
+                    progress("downloading", n)
                 })?
             }
         };
@@ -240,7 +332,7 @@ pub fn prepare(
         path: target.to_str().ok_or("游戏 APK 缓存路径无法表示")?.into(),
         package_name: match game.source {
             Source::Embedded(entry) => Some(entry.package_name.into()),
-            Source::Bundled(_) => crate::app_logos::package_name(&target),
+            Source::Project | Source::Online => crate::app_logos::package_name(&target),
         },
         sha256: game.sha256,
     })
@@ -290,10 +382,10 @@ mod tests {
             assert_eq!(game.sha256.len(), 64);
             assert!(game.sha256.bytes().all(|b| b.is_ascii_hexdigit()));
             assert!(game.bytes > 0);
-            let Source::Bundled(member) = game.source else {
-                panic!("wrong source for {}", entry.id)
-            };
-            assert_eq!(member, format!("apks/{}/{}", entry.id, game.file_name));
+            assert_eq!(
+                matches!(game.source, Source::Online),
+                crate::remote_game_apk::is_online_only(&entry.id)
+            );
         }
         for unknown in [
             "",
@@ -375,6 +467,9 @@ mod tests {
         let archive = Path::new(env!("CARGO_MANIFEST_DIR")).join("offline-assets/game-library.zip");
         let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).unwrap();
         for entry in entries {
+            if crate::remote_game_apk::is_online_only(&entry.id) {
+                continue;
+            }
             let directory = tempdir().unwrap();
             let game = prepare(
                 directory.path(),

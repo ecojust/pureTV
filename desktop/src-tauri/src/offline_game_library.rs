@@ -41,6 +41,10 @@ fn library_size() -> Result<u64, String> {
         .map_err(|_| "游戏资源信息无效".into())
 }
 
+pub(crate) fn project_member(id: &str) -> String {
+    format!("projects/{id}/project.zip")
+}
+
 // The same ZIP is either a standalone file or appended to the PE. Its offset
 // is known, so avoid scanning embedded APK signatures across hundreds of MiB.
 pub(crate) fn open(path: &Path) -> Result<zip::ZipArchive<BufReader<File>>, String> {
