@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
+  <head><script>
+    window.TankHost = window.PureGameHost;
+    window.PureGame = {
+      roomInfo: info => window.TankTV?.updateRoom(info),
+      networkChanged: info => window.TankTV?.updateRoom(info),
+      key: (button, down) => window.TankTV?.key(button, down),
+      suspend: paused => window.TankTV?.suspend(paused),
+      focus: active => window.TankTV?.suspend(!active)
+    };
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"

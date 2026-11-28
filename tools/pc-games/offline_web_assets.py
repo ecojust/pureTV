@@ -1,15 +1,41 @@
 """Stage desktop overlays from the verified upstream packages used to build local game projects."""
 import argparse
 import json
+import re
 from pathlib import Path
 import shutil
 from zipfile import ZipFile
 from pathlib import PurePosixPath
 
+from host import ALIASES
 from hosted_games import hosted_cover, hosted_games
 from launcher import matching_file
 from prepare_standalone import ROOT, source_revision, tracked_file
 from stage_web_games import write_player_assets, write_player_cover
+
+
+def adapt_android_entry(slug, target):
+    if slug not in ALIASES:
+        return
+    bridge = ALIASES[slug]
+    api = bridge.removesuffix('Host') + 'TV'
+    entry = target / 'android-entry.html'
+    # Adapt the older game runtime to the common Android JavaScript interface.
+    script = f"""<script>
+    window.{bridge} = window.PureGameHost;
+    window.PureGame = {{
+      roomInfo: info => window.{api}?.updateRoom(info),
+      networkChanged: info => window.{api}?.updateRoom(info),
+      key: (button, down) => window.{api}?.key(button, down),
+      suspend: paused => window.{api}?.suspend(paused),
+      focus: active => window.{api}?.suspend(!active)
+    }};
+    </script>"""
+    html, count = re.subn(r'<head(?:\s[^>]*)?>', lambda match: match.group() + script,
+                          entry.read_text(encoding='utf-8-sig'), count=1, flags=re.I)
+    if count != 1:
+        raise ValueError(f'{slug} has no Android entry head')
+    entry.write_text(html, encoding='utf-8')
 
 
 def stage(apks, output):
@@ -54,6 +80,7 @@ def stage(apks, output):
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 with archive.open(member) as source, destination.open('xb') as output_file:
                     shutil.copyfileobj(source, output_file)
+            adapt_android_entry(slug, target)
             write_player_assets(archive, pinned, directory, target)
 
 

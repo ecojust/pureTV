@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
+  <head><script>
+    window.MarioHost = window.PureGameHost;
+    window.PureGame = {
+      roomInfo: info => window.MarioTV?.updateRoom(info),
+      networkChanged: info => window.MarioTV?.updateRoom(info),
+      key: (button, down) => window.MarioTV?.key(button, down),
+      suspend: paused => window.MarioTV?.suspend(paused),
+      focus: active => window.MarioTV?.suspend(!active)
+    };
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"

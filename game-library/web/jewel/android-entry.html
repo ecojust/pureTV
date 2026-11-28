@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
+  <head><script>
+    window.JewelHost = window.PureGameHost;
+    window.PureGame = {
+      roomInfo: info => window.JewelTV?.updateRoom(info),
+      networkChanged: info => window.JewelTV?.updateRoom(info),
+      key: (button, down) => window.JewelTV?.key(button, down),
+      suspend: paused => window.JewelTV?.suspend(paused),
+      focus: active => window.JewelTV?.suspend(!active)
+    };
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"

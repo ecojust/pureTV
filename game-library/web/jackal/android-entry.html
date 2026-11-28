@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
+  <head><script>
+    window.JackalHost = window.PureGameHost;
+    window.PureGame = {
+      roomInfo: info => window.JackalTV?.updateRoom(info),
+      networkChanged: info => window.JackalTV?.updateRoom(info),
+      key: (button, down) => window.JackalTV?.key(button, down),
+      suspend: paused => window.JackalTV?.suspend(paused),
+      focus: active => window.JackalTV?.suspend(!active)
+    };
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"

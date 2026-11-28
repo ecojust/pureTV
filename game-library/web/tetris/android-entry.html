@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
+  <head><script>
+    window.TetrisHost = window.PureGameHost;
+    window.PureGame = {
+      roomInfo: info => window.TetrisTV?.updateRoom(info),
+      networkChanged: info => window.TetrisTV?.updateRoom(info),
+      key: (button, down) => window.TetrisTV?.key(button, down),
+      suspend: paused => window.TetrisTV?.suspend(paused),
+      focus: active => window.TetrisTV?.suspend(!active)
+    };
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"

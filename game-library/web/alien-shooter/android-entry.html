@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
+<head><script>
+    window.AlienShooterHost = window.PureGameHost;
+    window.PureGame = {
+      roomInfo: info => window.AlienShooterTV?.updateRoom(info),
+      networkChanged: info => window.AlienShooterTV?.updateRoom(info),
+      key: (button, down) => window.AlienShooterTV?.key(button, down),
+      suspend: paused => window.AlienShooterTV?.suspend(paused),
+      focus: active => window.AlienShooterTV?.suspend(!active)
+    };
+    </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self' blob:">
