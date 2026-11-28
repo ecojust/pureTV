@@ -52,7 +52,7 @@ The TV store and the desktop manager read the same Media, Games and Launchers di
 
 Open **Games** in Manager 0.8.0 and choose **Play on computer** on a local game card. All 50 local games include their code and essential assets in the installer. You can play offline on first launch without connecting a TV. [Download 0.8.0](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.0)
 
-Use **Category** to find the six games hosted by their authors.
+The six titles under **Online games** load from their authors’ sites. Internet access is required on the computer or TV where you play. Browse them by category below.
 
 | Category | Games |
 | --- | --- |
