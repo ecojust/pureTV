@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Drive the installed APK with Android input. Save screenshots and accessibility evidence."""
 import argparse
+from collections import Counter
 from contextlib import contextmanager, suppress
 import hashlib
 import io
@@ -13,7 +14,7 @@ import time
 import xml.etree.ElementTree as ET
 import zipfile
 
-from PIL import Image, ImageChops, ImageDraw, ImageStat
+from PIL import Image, ImageDraw, ImageStat
 
 from controllers import phone_input, wifi_input, wifi_play
 from window_snapshot import install_sampler, read_snapshot
@@ -153,21 +154,28 @@ class Device:
         web = self.until('game WebView', lambda tree: next(
             (n for n in tree.iter('node') if n.get('class') == 'android.webkit.WebView'), None))
         left, top, right, bottom = box(web)
-        step = .009 * max(right - left, bottom - top)
-        for _ in range(8):
+        minimum = .009 * max(right - left, bottom - top)
+        step = [getattr(self, 'cursor_step', minimum)] * 2
+        last = None
+        for _ in range(22):
             mx0, my0, mx1, my1 = box(self.label('游戏光标'))
-            mx, my = (mx0 + mx1) / 2, (my0 + my1) / 2
-            if x0 <= mx < x1 and y0 <= my < y1:
+            point = ((mx0 + mx1) / 2, (my0 + my1) / 2)
+            if x0 <= point[0] < x1 and y0 <= point[1] < y1:
                 self.key('KEYCODE_DPAD_CENTER')
                 return
             directions = []
-            for pos, low, high, backwards, forwards in (
-                    (mx, x0, x1, 'LEFT', 'RIGHT'), (my, y0, y1, 'UP', 'DOWN')):
-                if low <= pos < high:
+            pulses = [0, 0]
+            for axis, (low, high, minus, plus) in enumerate(((x0, x1, 'LEFT', 'RIGHT'), (y0, y1, 'UP', 'DOWN'))):
+                if last and last[1][axis]:
+                    measured = abs(point[axis] - last[0][axis]) / last[1][axis]
+                    step[axis] = max(minimum, measured)
+                if low <= point[axis] < high:
                     continue
-                delta = (low + high) / 2 - pos
-                nudge = 'KEYCODE_DPAD_' + (backwards if delta < 0 else forwards)
-                directions.extend([nudge] * max(1, min(32, round(abs(delta) / step))))
+                delta = (low + high) / 2 - point[axis]
+                count = max(1, min(8, int(abs(delta) / step[axis] * .8)))
+                directions.extend(['KEYCODE_DPAD_' + (minus if delta < 0 else plus)] * count)
+                pulses[axis] = count
+            last = (point, pulses)
             self.key(*directions)
         raise RuntimeError('TV cursor did not reach author control at ' + str(target))
 
@@ -212,6 +220,7 @@ class Device:
             node = find_label(tree, '游戏光标')
             return box(node) if node is not None and box(node)[0] > before[0] else None
         after = self.until('rightward movement of the native game cursor', moved)
+        self.cursor_step = after[0] - before[0]
         return {'before': before, 'afterDpadRight': after}
 
 
@@ -229,8 +238,8 @@ def offline_proxy(device):
 
 
 def fish_action(device):
-    # The author uses a centered 1080x1920 FIT canvas; level 1's first bus is at (540,490).
-    # Undo's fixed icon visibly changes from disabled to enabled after the first move.
+    # The author fits a centered 1080x1920 board. On level 1 a tap sends the blue
+    # group from the first bus into the pipe. Undo waits until a receiving bus absorbs it.
     web = device.until('game WebView', lambda tree: next(
         (n for n in tree.iter('node') if n.get('class') == 'android.webkit.WebView'), None))
     left, top, right, bottom = box(web)
@@ -239,23 +248,77 @@ def fish_action(device):
     def point(x, y):
         return (round((left + right) / 2 + (x - 540) * scale), round((top + bottom) / 2 + (y - 960) * scale))
 
-    undo = (*point(316, 1766), *point(364, 1814))
-    # Wait for the fixed colored control, excluding the loading screen and flat page background.
-    deadline = time.monotonic() + 80
-    while True:
-        before = device.screenshot('fish-loop-before')
-        if max(ImageStat.Stat(before.crop(undo)).stddev) >= 15:
-            break
-        if time.monotonic() > deadline:
-            raise RuntimeError('Fish Loop Undo control did not render')
-        time.sleep(.8)
+    tail = (*point(686, 445), *point(737, 495))
+    empty = (*point(686, 1080), *point(737, 1130))
+    digits = (*point(510, 100), *point(640, 191))
+
+    def sample(frame):
+        # Compare the tail tank with the same empty compartment on the third bus.
+        colored = ImageStat.Stat(frame.crop(tail)).median
+        reference = ImageStat.Stat(frame.crop(empty)).median
+        contrast = max(abs(a - b) for a, b in zip(colored, reference))
+        # Read the first white digit of the 0/5 counter. The zero is wide with a
+        # closed interior; the one is narrow and solid. The HUD bounces on change.
+        mask = frame.crop(digits).convert('L').point(lambda v: 255 if v > 215 else 0)
+        counter = None
+        for x in range(mask.width):
+            column = mask.crop((x, 0, x + 1, mask.height)).getbbox()
+            if not column:
+                continue
+            ImageDraw.floodfill(mask, (x, column[1]), 100)
+            glyph = mask.point(lambda v: 255 if v == 100 else 0)
+            bounds = glyph.getbbox()
+            width, height = bounds[2] - bounds[0], bounds[3] - bounds[1]
+            if height >= 19 * scale:
+                # Flood only the exterior background; the enclosed hole in a zero remains black.
+                ImageDraw.floodfill(glyph, (0, 0), 127)
+                has_hole = glyph.crop(bounds).histogram()[0] > 0
+                if has_hole and width / height >= .6:
+                    counter = 0
+                elif not has_hole and width / height < .62:
+                    counter = 1
+                break
+            mask.paste(0, bounds)
+        return dict(tankColorDistance=contrast, pipeCount=counter)
+
+    def wait_frame(name, condition, timeout):
+        deadline = time.monotonic() + timeout
+        while True:
+            state = sample(device.screenshot('fish-loop-' + name))
+            if condition(state):
+                return state
+            if time.monotonic() >= deadline:
+                raise RuntimeError('Fish Loop did not reach ' + name + ' state: ' + str(state))
+            time.sleep(.4)
+
+    before = wait_frame('before', lambda s: s['pipeCount'] == 0 and s['tankColorDistance'] > 45, 80)
     device.cursor_click((*point(450, 455), *point(630, 525)))
-    time.sleep(1)
-    after = device.screenshot('fish-loop-after')
-    difference = ImageStat.Stat(ImageChops.difference(before.crop(undo), after.crop(undo))).mean
-    if max(difference) < 8:
-        raise RuntimeError('Fish Loop Undo icon did not change after the fish bus was tapped')
-    return {'action': 'D-pad and OK selected the first bus; Undo icon changed', 'undoRegion': undo, 'meanChannelDifference': difference}
+    after = wait_frame('after', lambda s: s['pipeCount'] == 1 or
+                       (s['pipeCount'] == 0 and s['tankColorDistance'] < 18), 60)
+    return {'action': 'D-pad and OK sent the first bus’s blue fish into the pipe',
+            'before': before, 'after': after}
+
+
+def flight_scene_stats(image):
+    # The author's blue loading surface already has a gear in the corner. Inspect only
+    # the interior, excluding buttons, native status text and the pointer overlay.
+    width, height = image.size
+    view = image.crop((.12 * width, .12 * height, .88 * width, .83 * height)).resize((110, 63))
+    colors = Counter(tuple(channel // 16 for channel in pixel) for pixel in view.getdata())
+    total = sum(colors.values())
+    return {'interiorColors': len(colors), 'nonDominantFraction': round(1 - max(colors.values()) / total, 3)}
+
+
+def wait_for_flight(device):
+    deadline = time.monotonic() + 200
+    while True:
+        image = device.screenshot('struggle-bus-scene')
+        stats = flight_scene_stats(image)
+        if stats['interiorColors'] >= 15 and stats['nonDominantFraction'] > .10:
+            return stats
+        if time.monotonic() > deadline:
+            raise RuntimeError('Flight scenery did not render; latest interior sample ' + str(stats))
+        time.sleep(2)
 
 
 def author_action(device, game_id):
@@ -263,7 +326,9 @@ def author_action(device, game_id):
         return fish_action(device)
     if game_id == 'bandit':
         device.click_author_label('PLAY')
-        device.label('SAFEHOUSE', timeout=85)
+        device.until('Vault Breakers safehouse', lambda tree: any(
+            'SAFEHOUSE' in (n.get('text', '') + ' ' + n.get('content-desc', '')).upper()
+            for n in tree.iter('node')) and find_label(tree, 'WAITING FOR CREW') is not None, timeout=85)
         return {'observed': 'PLAY joined the author’s multiplayer SAFEHOUSE lobby'}
     if game_id == 'daejeon-campus':
         device.click_author_label('미니게임')
@@ -288,8 +353,9 @@ def author_action(device, game_id):
         device.key('KEYCODE_MEDIA_PLAY_PAUSE')
         device.until('driving mode (cursor hidden)', lambda tree:
                      find_label(tree, '游戏光标') is None and find_label(tree, 'Struggle Bus') is not None)
+        scenery = wait_for_flight(device)
         device.key('KEYCODE_DPAD_RIGHT', 'KEYCODE_BUTTON_A')
-        return {'observed': 'Driving mode selected', 'inputsSent': ['D-pad right', 'A'],
+        return {'observed': 'Driving mode selected and flight scenery rendered', 'scenery': scenery, 'inputsSent': ['D-pad right', 'A'],
                 'unverified': 'Steering and paint effects inside the author canvas'}
 
 
@@ -316,9 +382,13 @@ def run_game(device, game, result, save):
     save()
     if game_id == 'fish-loop':
         result['wifiController'] = wifi_play(device, title)
-    result.update(author_action(device, game_id))
+    try:
+        result.update(author_action(device, game_id))
+        device.screenshot(game_id + '-played')
+    except (RuntimeError, OSError, ValueError, subprocess.SubprocessError) as error:
+        # Still check native help/exit so a game-side failure does not hide the TV host result.
+        result['gameplayError'] = str(error)
     save()
-    device.screenshot(game_id + '-played')
     device.key('KEYCODE_BACK')
     device.label(title + ' · 操作说明')
     device.label('手机手柄二维码')
@@ -333,6 +403,8 @@ def run_game(device, game, result, save):
     device.focused(title)
     result['returnedFocus'] = title
     save()
+    if 'gameplayError' in result:
+        raise RuntimeError(result['gameplayError'])
 
 
 def main():
