@@ -1753,11 +1753,14 @@ try {
   const inlineProvider=async(p,item)=>{
     const card=marketCard(p,item);
     assert.equal(await card.locator('.market-author').count(),0,'There is no separate author label or row');
-    const bounds=await card.locator('.market-card-heading').evaluate(heading=>{
+    // A catalog or locale update can replace a card between resolving its locator and measuring it.
+    const bounds=await p.evaluate(id=>{
+      const heading=document.querySelector(`.market-card[data-market-id="${CSS.escape(id)}"] .market-card-heading`);
+      if(!heading)throw new Error(`Missing current market heading for ${id}`);
       const title=heading.querySelector('h2'),provider=heading.querySelector('.market-author-name');
       const measure=element=>({box:element.getBoundingClientRect().toJSON(),width:element.clientWidth,total:element.scrollWidth,overflow:getComputedStyle(element).textOverflow,whiteSpace:getComputedStyle(element).whiteSpace});
       return {heading:heading.getBoundingClientRect().toJSON(),direct:title.parentElement===heading&&provider.parentElement===heading,onlyNames:heading.textContent.replace(/\s/g,'')===(title.textContent+provider.textContent).replace(/\s/g,''),title:measure(title),provider:measure(provider)};
-    });
+    },item.id);
     assert.ok(bounds.direct&&bounds.onlyNames,'The heading contains the app name and provider directly, without an added label');
     assert.ok(bounds.title.box.right<=bounds.provider.box.left&&bounds.title.box.top<bounds.provider.box.bottom&&bounds.provider.box.top<bounds.title.box.bottom,`Provider stays to the right of the app name on the same line: ${JSON.stringify(bounds)}`);
     assert.ok(bounds.title.box.left>=bounds.heading.left-1&&bounds.provider.box.right<=bounds.heading.right+1,'Names stay within the heading');
