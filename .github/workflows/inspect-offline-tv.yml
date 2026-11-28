@@ -14,13 +14,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh api repos/ecojust/pureTV/actions/jobs/140894204448/logs > source.log
-          gh api repos/ecojust/pureTV/actions/artifacts/15252217202/zip > data.zip
+          gh api --allow-escape-sequences repos/ecojust/pureTV/actions/jobs/140894204448/logs > source.log
+
           python - <<'PY'
           import re,zipfile,json
-          with zipfile.ZipFile('data.zip') as z:
-              print('::notice title=Recorded QA stages::'+','.join(sorted(json.loads(z.read('native.json')).keys())))
-              print('::notice title=Evidence files::'+','.join(z.namelist()))
           lines=open('source.log').read().splitlines()
           matches=[i for i,x in enumerate(lines) if 'Traceback (most recent call last)' in x]
           if matches:
@@ -30,3 +27,12 @@ jobs:
           t=re.sub(r'https?://\S+','[url]',t)
           print('::notice title=Runtime failure::'+t.replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
           PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46117407468
+          name: manager-offline-tv-0.8.0
+          path: evidence
+      - run: |
+          echo "::notice title=Evidence files::$(ls evidence | tr '\n' ' ')"
+          echo "::notice title=Recorded stages::$(jq -r 'keys | join(",")' evidence/native.json)"
