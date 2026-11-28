@@ -2013,7 +2013,7 @@ try {
     await shot(p,'apk-market-updates-zh');
     await p.locator('[name="locale"]').selectOption('en');assert.equal(await p.locator('h1').innerText(),'TV Apps');assert.equal(await p.locator('.market-new').count(),2);
     await p.locator('[name="theme"]').selectOption('graphite');await shot(p,'apk-market-updates-graphite');
-    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');assert.equal(await p.locator('.market-new').count(),2);
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'電視應用');assert.equal(await p.locator('.market-new').count(),2);
     await marketCard(p,versionedItem('0.9.0')).locator('[data-act="download-market"]').click();await result(p,'success');await acknowledge(p);
     assert.equal((await marketRequests(p)).filter(value=>value.command==='download_market_item').at(-1).id,versionedItem('0.9.0').id);
     await nav(p,'apps');await openMarket(p);assert.deepEqual(await newMarketIds(p),[],'The next visit uses the successful previous visit as its baseline');
@@ -2206,7 +2206,12 @@ try {
     assert.deepEqual(await requests(p),[],'Downloading a launcher never changes the default Home');
   },withoutAdb());
   await check('TV Apps installs a launcher, then lets the user enable and customize it',async p=>{
-    await openMarket(p);await p.locator('[data-market-category="launcher"]').click();await act(p,'install-market').click();
+    await openMarket(p);await p.locator('[data-market-category="launcher"]').click();
+    await act(p,'download-market').click();
+    await result(p,'success');await acknowledge(p);
+    assert.equal(await p.locator('[data-launcher-apk]').count(),1);
+    const installButton = marketCard(p,store.items[2]).getByRole('button',{name:'安装到电视'});
+    await installButton.click();
     await p.locator('#confirm-operation').click();await held(p,'installMarketItem');
     await release(p,'installMarketItem');await result(p,'success');await acknowledge(p);
     const install=(await marketRequests(p)).find(value=>value.command==='install_market_item');assert.equal(install.id,store.items[2].id);assert.equal(install.revision,store.revision);
@@ -2275,7 +2280,7 @@ try {
       await act(p,'refresh-market').click();await result(p,'success');await acknowledge(p);
       assert.equal(await marketAuthor(p,updated.items[0]).innerText(),provider?.trim()||'Not provided','Missing and blank providers share the localized fallback; provided names are trimmed');
     }
-    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'APK市場');
+    await p.locator('[name="locale"]').selectOption('zh-TW');assert.equal(await p.locator('h1').innerText(),'電視應用');
     assert.match(await p.locator('[data-market-category="launcher"]').innerText(),/啟動器/);
     assert.equal(await marketAuthor(p,updated.items[0]).innerText(),'更新后的演示作者','Provider remains unchanged in Traditional Chinese');
     await inlineProvider(p,updated.items[0]);
@@ -2417,7 +2422,7 @@ try {
   const forumRequests=p=>p.evaluate(()=>window.__forumRequests);
   const forumFirst=forumPage({hasMore:true});
   const forumSecond=forumPage({page:2,posts:[{number:'IABC121',title:'第二页的帖子',author:'另一位用户',state:'progressing',comments:1,updatedAt:'2026-10-30T10:00:00+08:00',labels:[]}]});
-  await check('forum: navigation follows APK Market and browsing never requires ADB or reserves device operations',async p=>{
+  await check('forum: navigation follows TV Apps and browsing never requires ADB or reserves device operations',async p=>{
     const writes=[];p.on('request',request=>{if(request.url().includes('gitee.com')&&['POST','PUT','PATCH','DELETE'].includes(request.method()))writes.push({url:request.url(),method:request.method()});});
     const pages=await p.locator('.sidebar nav [data-page]').evaluateAll(elements=>elements.map(element=>element.dataset.page));
     assert.equal(pages[pages.indexOf('market')+1],'forum');
