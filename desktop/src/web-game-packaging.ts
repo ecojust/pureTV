@@ -3,8 +3,7 @@ import type {DeviceTarget, MarketProgress} from './types';
 import {message, t} from './i18n';
 export type GameKind = 'online' | 'hosted' | 'project';
 
-type GameApk = {path:string; packageName?:string | null; sha256:string};
-export type QueueGameApk = (path:string) => void | Promise<void>;
+type GameApk = {path:string};
 
 export interface GameDeployment {
   target():DeviceTarget | undefined;
@@ -34,13 +33,12 @@ export function deploymentSteps(kind:GameKind, active:DeploymentStep, incomplete
 export class WebGamePackaging {
   private dialog?:HTMLDialogElement;
 
-  constructor(private readonly enqueue:QueueGameApk, private readonly deployment:GameDeployment) {}
+  constructor(private readonly deployment:GameDeployment) {}
 
-  open(gameId:string, name:string, kind:GameKind, opener:HTMLButtonElement, deploy:boolean):void {
+  open(gameId:string, name:string, kind:GameKind, opener:HTMLButtonElement, downloaded:() => void):void {
     if (this.dialog?.open) return;
-    const device = deploy ? this.deployment.target() : undefined;
+    const device = this.deployment.target();
     const online = kind === 'online';
-    const generate = kind === 'hosted';
     const deployment = this.deployment;
     const dialog = document.createElement('dialog');
     this.dialog = dialog;
@@ -54,12 +52,9 @@ export class WebGamePackaging {
       <div class="game-apk-progress" data-apk-progress hidden>
         <progress aria-label="${t('下载进度')}"></progress><span></span>
       </div>
-      <dl data-apk-details hidden><dt>${t('包名')}</dt><dd></dd><dt>SHA-256</dt><dd></dd></dl>
       <div class="game-apk-actions">
         <button type="button" class="primary" data-apk-connect hidden>${t('前往设备连接')}</button>
         <button type="button" data-apk-retry hidden>${t('重试')}</button>
-        <button type="button" data-apk-save hidden>${t('保存到电脑')}</button>
-        <button type="button" class="primary" data-apk-queue hidden>${t('加入安装队列')}</button>
       </div>`;
     dialog.querySelector('h2')!.textContent = name;
     const steps = dialog.querySelector<HTMLElement>('[data-deployment-steps]');
@@ -68,15 +63,10 @@ export class WebGamePackaging {
     const transfer = dialog.querySelector<HTMLElement>('[data-apk-progress]')!;
     const bar = transfer.querySelector('progress')!;
     const bytes = transfer.querySelector('span')!;
-    const details = dialog.querySelector('dl')!;
-    const [packageValue, digestValue] = Array.from(details.querySelectorAll('dd'));
     const connect = dialog.querySelector<HTMLButtonElement>('[data-apk-connect]')!;
     const retry = dialog.querySelector<HTMLButtonElement>('[data-apk-retry]')!;
-    const save = dialog.querySelector<HTMLButtonElement>('[data-apk-save]')!;
-    const queue = dialog.querySelector<HTMLButtonElement>('[data-apk-queue]')!;
     const closeButton = dialog.querySelector<HTMLButtonElement>('[data-apk-close]')!;
     let preparing:Channel<MarketProgress> | undefined;
-    let apk:GameApk | undefined;
 
     function cancelChannel(channelId:number) {
       void invoke('cancel_web_game_apk', {channelId}).catch(error => console.warn('APK cancellation failed', error));
@@ -92,13 +82,13 @@ export class WebGamePackaging {
       status.classList.add('error');
     }
 
-    async function prepare() {
+    async function prepare(device:DeviceTarget) {
       let packed = false;
       retry.hidden = true;
       closeButton.textContent = t('取消');
       status.classList.remove('error');
       if (steps) steps.innerHTML = deploymentSteps(kind, 'pack');
-      status.textContent = online ? t('正在获取正式 APK…') : deploy ? t('正在打包 APK…') : generate ? t('正在生成电视 APK…') : t('正在准备电视 APK…');
+      status.textContent = online ? t('正在获取正式 APK…') : t('正在打包 APK…');
       try {
         let firstProgress = true;
         const onProgress:Channel<MarketProgress> = new Channel(event => {
@@ -106,6 +96,7 @@ export class WebGamePackaging {
           // Closing may precede native registration. Its first progress event acknowledges ownership.
           if (firstProgress && !dialog.open) cancelChannel(onProgress.id);
           firstProgress = false;
+          if (kind === 'project' && event.stage === 'preparing') downloaded();
           if (!dialog.open) return;
           if (event.stage !== 'downloading' && event.stage !== 'verifying') {
             transfer.hidden = true;
@@ -129,62 +120,28 @@ export class WebGamePackaging {
         });
         preparing = onProgress;
         const result = await invoke<GameApk>('build_web_game_apk', {gameId, onProgress});
+        if (kind === 'project') downloaded();
         if (!dialog.open) return;
         transfer.hidden = true;
-        if (device) {
-          // The native build is complete. Hand this exact APK to the existing installation dialog.
-          packed = true;
-          deployment.install(gameId, kind, name, result.path, device);
-          dialog.close();
-          return;
-        }
-        apk = result;
-        packageValue.textContent = result.packageName || '';
-        packageValue.hidden = !result.packageName;
-        details.querySelector('dt')!.hidden = !result.packageName;
-        digestValue.textContent = result.sha256;
-        details.hidden = false;
-        status.textContent = t('电视 APK 已就绪');
-        save.hidden = false;
-        queue.hidden = false;
+        packed = true;
+        deployment.install(gameId, kind, name, result.path, device);
+        dialog.close();
       } catch (error) {
         if (!dialog.open) return;
         transfer.hidden = true;
         if (steps) steps.innerHTML = deploymentSteps(kind, packed ? 'install' : 'pack', true);
-        showError(deploy ? t('部署未完成') : generate ? t('生成失败') : t('获取失败'), error);
+        showError(t('部署未完成'), error);
         const current = deployment.target();
-        retry.hidden = !!device && (current?.serial !== device.serial || current.userId !== device.userId);
-        connect.hidden = !device || !!current;
+        retry.hidden = current?.serial !== device.serial || current.userId !== device.userId;
+        connect.hidden = !!current;
       } finally {
         preparing = undefined;
         closeButton.textContent = t('关闭');
       }
     }
 
-    const useApk = async (action:'save' | 'queue') => {
-      if (!apk || save.disabled) return;
-      save.disabled = queue.disabled = true;
-      status.classList.remove('error');
-      try {
-        if (action === 'save') {
-          status.textContent = t('正在保存…');
-          const destination = await invoke<string | null>('save_web_game_apk', {gameId});
-          if (dialog.open) status.textContent = destination ? t('已保存到') + ' ' + destination : t('电视 APK 已就绪');
-        } else {
-          await this.enqueue(apk.path);
-          if (dialog.open) dialog.close();
-        }
-      } catch (error) {
-        if (dialog.open) showError(action === 'save' ? t('保存失败') : t('加入安装队列失败'), error);
-      } finally {
-        save.disabled = queue.disabled = false;
-      }
-    };
-
     connect.addEventListener('click', () => { dialog.close(); deployment.connect(); });
-    retry.addEventListener('click', () => void prepare());
-    save.addEventListener('click', () => void useApk('save'));
-    queue.addEventListener('click', () => void useApk('queue'));
+    if (device) retry.addEventListener('click', () => void prepare(device));
     closeButton.addEventListener('click', dismiss);
     dialog.addEventListener('cancel', event => {
       event.preventDefault();
@@ -194,18 +151,18 @@ export class WebGamePackaging {
       dialog.remove();
       if (this.dialog !== dialog) return;
       this.dialog = undefined;
-      const target = opener.isConnected ? opener : document.querySelector<HTMLElement>(`[data-${deploy ? 'deploy' : 'build'}-game="${CSS.escape(gameId)}"]`);
+      const target = opener.isConnected ? opener : document.querySelector<HTMLElement>(`[data-deploy-game="${CSS.escape(gameId)}"]`);
       target?.focus({preventScroll:true});
     }, {once:true});
     document.body.append(dialog);
     dialog.showModal();
-    if (deploy && !device) {
+    if (!device) {
       status.textContent = t('请先连接电视并完成 ADB 授权，再部署游戏。');
       closeButton.textContent = t('关闭');
       connect.hidden = false;
       connect.focus();
     } else {
-      void prepare();
+      void prepare(device);
     }
   }
 }

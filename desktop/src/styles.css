@@ -1859,29 +1859,27 @@ select { box-sizing:border-box; height:38px; min-height:38px; line-height:normal
 .web-game-tools span { font-size:13px; color:var(--muted); }
 .list-page #page-content > .web-game-grid {
   flex:1; min-height:0; overflow:auto; overscroll-behavior:contain;
-  display:grid; align-content:start; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; padding:4px 10px 8px 3px;
+  display:grid; align-content:start; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; padding:6px 10px 8px 6px;
 }
-.web-game-section { grid-column:1 / -1; font-size:16px; margin:5px 0 0; }
-.web-game-section small { display:inline-block; margin-inline-start:10px; font-size:13px; font-weight:400; color:var(--muted); }
 .web-game-card { display:flex; flex-direction:column; min-width:0; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
-.web-game-cover { position:relative; width:100%; display:block; text-align:left; border:0; border-radius:11px; padding:0; overflow:hidden; }
+.web-game-cover {
+  display:flex; flex:1; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
+  width:100%; min-width:0; padding:0; border:0; border-radius:11px; overflow:hidden;
+  text-align:start; white-space:normal;
+}
+.web-game-image { position:relative; display:block; }
 .web-game-cover img { display:block; width:100%; aspect-ratio:16 / 9; object-fit:cover; background:var(--surface-soft); }
 .web-game-cover strong { display:block; padding:10px 12px; overflow-wrap:anywhere; color:var(--text-strong); font-size:16px; }
-.web-game-play-label { position:absolute; inset:6px auto auto 6px; padding:2px 7px; border-radius:4px; background:#132134e8; color:white; font-size:12px; }
-.web-game-network-note { margin:0 10px 6px; color:var(--muted); }
-.web-game-download { display:grid; gap:4px; margin:0 10px 6px; }
-.web-game-download button { padding:5px 8px; font-size:13px; }
-.web-game-download button[aria-disabled="true"] { color:var(--muted); cursor:default; }
-.web-game-download small { color:var(--danger); overflow-wrap:anywhere; }
-.web-game-actions { display:flex; flex-wrap:wrap; gap:6px; margin:auto 10px 10px; }
-.web-game-actions button { flex:1 1 auto; padding:5px 8px; font-size:13px; }
+.web-game-downloaded {
+  position:absolute; right:6px; bottom:6px; padding:2px 7px; border-radius:6px;
+  background:#132134e8; color:white; font-size:12px; line-height:1.5; pointer-events:none;
+}
+.web-game-actions { margin:0 10px 10px; }
+.web-game-actions button { width:100%; padding:5px 8px; font-size:13px; }
 .game-apk-dialog [hidden] { display:none; }
 .game-apk-progress { display:flex; align-items:center; gap:10px; font-size:13px; }
 .game-apk-progress progress { flex:1; min-width:0; accent-color:var(--green); }
 .game-apk-dialog [data-apk-status] { overflow-wrap:anywhere; }
-.game-apk-dialog dl:not([hidden]) { display:grid; grid-template-columns:max-content minmax(0,1fr); gap:6px 12px; font-size:13px; }
-.game-apk-dialog dt { color:var(--muted); }
-.game-apk-dialog dd { margin:0; overflow-wrap:anywhere; user-select:text; }
 .game-apk-dialog .error { color:var(--danger); }
 .game-deployment-steps { display:flex; flex-wrap:wrap; gap:8px 18px; list-style:none; margin:12px 0; padding:0; }
 .game-deployment-steps li { display:flex; align-items:center; gap:5px; color:var(--muted); font-size:13px; }

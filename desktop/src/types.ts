@@ -61,7 +61,7 @@ export interface MarketSeenApps {
   entries: MarketSeenEntry[] | null; warning: string | null;
 }
 export interface MarketProgress {
-  stage: 'catalog' | 'downloading' | 'verifying' | 'installing'; downloaded: number; total: number; itemId?: string;
+  stage: 'catalog' | 'downloading' | 'verifying' | 'preparing' | 'installing'; downloaded: number; total: number; itemId?: string;
 }
 export interface MarketDownload {
   item: MarketItem; path: string; homeBackground?: string | null; homeBackgroundColor?: string | null;
