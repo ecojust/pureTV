@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>五步冲线</title>
+<style>
+  body { font: 1.4rem system-ui, sans-serif; color: #edf6ff; background: #142236; text-align: center; margin: 12vh 5vw; }
+  progress { width: min(90%, 28rem); height: 2rem; accent-color: #70dcaf; }
+</style>
+<h1>五步冲线</h1>
+<p>每按一次手柄 A 键前进一步，五步到达终点。</p>
+<progress id="track" value="0" max="5" aria-label="已完成步数"></progress>
+<p id="status" aria-live="polite">请从 pureTV 管理器的本地游戏页打开。</p>
+<script>
+  const track = document.getElementById('track');
+  const status = document.getElementById('status');
+  const address = new URLSearchParams(location.search).get('puretvSocket');
+  if (address) {
+    const socket = new WebSocket(address);
+    let playerSession;
+    let previousPresses = 0;
+    socket.onmessage = ({data}) => {
+      const message = JSON.parse(data);
+      if (message.type !== 'puretv:controller-state' || track.value >= track.max) return;
+      const player = message.state.players.find(p => p.connected && p.id === 1);
+      if (!player) {
+        playerSession = undefined;
+        status.textContent = '等待一号手柄连接';
+        return;
+      }
+      if (playerSession !== player.session) {
+        playerSession = player.session;
+        previousPresses = 0;
+      }
+      const presses = player.buttonCounters.A;
+      track.value = Math.min(track.max, track.value + Math.max(0, presses - previousPresses));
+      previousPresses = presses;
+      status.textContent = track.value === track.max ? '到达终点！' : `${track.value} / ${track.max}`;
+    };
+    socket.onclose = () => { status.textContent = '手柄服务已关闭'; };
+  }
+</script>
+</html>

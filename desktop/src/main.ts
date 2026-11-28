@@ -4,6 +4,7 @@ import {UnifiedEditor} from './unified-editor';
 import {PackageInfoDialog} from './package-info';
 import {ClientUpdater} from './client-updater';
 import {Games} from './games';
+import {listen} from '@tauri-apps/api/event';
 import {deploymentDevice, deploymentSteps, type GameKind} from './web-game-packaging';
 import {Forum} from './forum';
 import {adbInfoPage} from './adb-info';
@@ -358,7 +359,7 @@ function adbPanel(): string {
 }
 function shell(): string {
   const [label, status] = deviceStatus();
-  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${page === 'info' || page === 'games' ? '' : api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>${page === 'games' ? 'apps.b14f.com' : page === 'info' ? t('本地命令说明') : !needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : marketActive() ? 'apps.b14f.com' : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
+  return ui`<aside class="sidebar"><nav aria-label="主要页面">${(Object.entries(pages) as [Page, [string, string, string]][]).filter(([key])=>key!=='install').map(([key, data]) => `<button class="nav-item ${page === key || page==='install' && key==='apps' ? 'active' : ''}" data-page="${key}" ${page === key || page==='install' && key==='apps' ? 'aria-current="page"' : ''}>${icon(data[2])}<span>${t(data[0])}</span></button>`).join('')}</nav><section class="appearance-panel" aria-label="语言与外观"><label>语言<select name="locale" aria-label="界面语言">${localeOptions()}</select></label><label>主题<select name="theme" aria-label="界面主题">${themeOptions()}</select></label></section><a class="brand" href="#" aria-label="pureTV 电视管理器"><img src="/puretv-logo.png" alt="" width="42" height="42">pure<span>TV</span></a><p class="brand-caption">电视管理器<span class="app-version">v${esc(appVersion)}</span></p><div data-client-update-slot>${clientUpdater.sidebar()}</div></aside><main class="${page === 'connect' ? '' : 'list-page'}"><header class="page-header"><div><h1>${t(pages[page][0])}</h1><p>${t(page === 'games' && games.source === 'local' ? '游玩自己制作的网页游戏，通过 MCP 接入手柄。' : pages[page][1])}</p></div>${needsTelevision() ? `<div class="header-actions"><span class="device-badge"><i class="dot ${status}"></i>${online() ? t('已连接 · ') : ''}${esc(label)}</span></div>` : ''}</header>${page === 'info' || page === 'games' ? '' : api.demo ? needsTelevision() ? t('<div class="banner demo-banner">演示模式 · 示例设备和应用，所有操作仅用于预览，不会连接真实电视。</div>') : t('<div class="banner demo-banner">演示模式 · 示例内容，仅用于预览。</div>') : !api.desktop ? needsTelevision() ? t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用来连接电视和安装 APK。</div>') : t('<div class="banner warning-banner">这是浏览器预览。请运行桌面应用读取完整内容。</div>') : ''}${notice && (!noticeRequiresTelevision || needsTelevision()) ? ui`<div class="banner notice ${noticeKind}" data-notice-scope="${noticeRequiresTelevision ? 'device' : 'general'}" role="status"><span>${esc(message(notice))}</span><button class="icon-button" aria-label="关闭提示" data-act="dismiss">${icon('close')}</button></div>` : ''}${busyIndicator()}<section id="page-content">${content()}</section><footer class="app-footer"><span>${page === 'games' ? (games.source === 'local' ? t('本机文件') : 'apps.b14f.com') : page === 'info' ? t('本地命令说明') : !needsTelevision() ? (api.demo ? t('演示数据') : page === 'history' ? t('本地操作记录') : marketActive() ? 'apps.b14f.com' : 'Gitee · pure-tv-store') : api.demo ? t('演示数据 · 不执行 ADB') : snapshot.device ? (page === 'connect' ? ui`目标 ${esc(snapshot.device.serial)} · 用户 ${snapshot.device.userId}` : ui`当前 Android 用户 ${snapshot.device.userId}`) : t('选择设备后开始管理')}</span></footer></main>`;
 }
 function syncSceneScale():void {const canvas=layoutDialog.querySelector<HTMLElement>('.scene-canvas');if(canvas)canvas.style.setProperty('--scene-unit',`${canvas.clientWidth/960}px`);}
 function scrollAreas():HTMLElement[]{return [...root.querySelectorAll<HTMLElement>('[data-scroll]'),...layoutDialog.querySelectorAll<HTMLElement>('[data-scroll]')];}
@@ -395,7 +396,7 @@ function content(): string {
     case 'connect': return connectionPage() + mcpPanel();
     case 'apps': return appTabs() + appsPage();
     case 'market': return marketPage();
-    case 'games': return games.render();
+    case 'games': return games.render(mcpInfo, mcpError);
     case 'forum': return forum.render();
     case 'install': return appTabs() + installPage();
     case 'history': return historyPage();
@@ -1130,6 +1131,20 @@ document.addEventListener('click', event => {
   if (target.closest('.brand')) { event.preventDefault(); page = 'connect'; render(); return; }
   const nav = target.closest<HTMLButtonElement>('[data-page]');
   if (nav) { page = nav.dataset.page as Page; render(); readLauncherLayout(); return; }
+  const source = target.closest<HTMLButtonElement>('[data-game-source]')?.dataset.gameSource;
+  if (source === 'online' || source === 'local') {
+    void games.setSource(source).then(() => {
+      if (games.source === source && document.activeElement === document.body)
+        root.querySelector<HTMLElement>(`[data-game-source="${source}"]`)?.focus({preventScroll:true});
+    });
+    root.querySelector<HTMLElement>(`[data-game-source="${source}"]`)?.focus({preventScroll:true});
+    return;
+  }
+  if (target.closest('[data-choose-local]')) { void games.chooseLocal(); return; }
+  if (target.closest('[data-refresh-local]')) { void games.refreshLocal(); return; }
+  if (target.closest('[data-game-config]')) { games.toggleConfig(); return; }
+  const localGame = target.closest<HTMLElement>('[data-play-local]');
+  if (localGame) { games.openLocal(localGame.dataset.playLocal!); return; }
   if (target.closest('[data-refresh-games]')) {
     const refreshing = games.refresh();
     render();
@@ -1210,6 +1225,27 @@ document.addEventListener('keydown', event => {
     event.preventDefault(); const button = root.querySelector<HTMLButtonElement>('[data-act="connect"]'); if (button && !button.disabled) button.click();
   }
 });
+root.addEventListener('keydown', event => {
+  if (!(event.target instanceof HTMLElement) || !event.target.matches('[data-game-source]')) return;
+  const source = event.target.dataset.gameSource;
+  const next = event.key === 'Home' ? 'online' : event.key === 'End' ? 'local' :
+    ['ArrowLeft', 'ArrowRight'].includes(event.key) ? (source === 'online' ? 'local' : 'online') : null;
+  if (next) {
+    event.preventDefault();
+    root.querySelector<HTMLButtonElement>(`[data-game-source="${next}"]`)?.click();
+  }
+});
+if (api.desktop) {
+  void listen('local-games-changed', () => {
+    if (page === 'games' && games.source === 'local') void games.refreshLocal();
+  }).catch(error => showNotice(String(error), 'error'));
+  void listen<{id:string}>('play-local-game', async ({payload}) => {
+    if (games.playing) return;
+    page = 'games';
+    await games.setSource('local');
+    if (page === 'games') games.openLocal(payload.id);
+  }).catch(error => showNotice(String(error), 'error'));
+}
 render();
 clientUpdater.start();
 void api.execute({ action: 'getState' }).then(value => {

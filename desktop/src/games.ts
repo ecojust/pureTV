@@ -1,7 +1,7 @@
 import {invoke} from '@tauri-apps/api/core';
 import {listen, type UnlistenFn} from '@tauri-apps/api/event';
 import {getCurrentWindow} from '@tauri-apps/api/window';
-import {desktop} from './bridge';
+import {desktop, type McpInfo} from './bridge';
 import {locale, message, t} from './i18n';
 import {WebGamePackaging, type GameKind, type GameDeployment} from './web-game-packaging';
 
@@ -46,15 +46,19 @@ async function browserCatalog():Promise<{catalog:Catalog; base:string}> {
   throw new Error(t('无法读取游戏列表，请检查网络后重试。'));
 }
 
-type ControllerSession = {session:string; port:number; addresses:string[]; discovery:boolean};
+type LocalGame = {id:string; title:string; directory:string};
+type GameSource = 'online' | 'local';
+type ControllerSession = {webSocketUrl?:string; session:string; port:number; addresses:string[]; discovery:boolean};
 type ControllerPlayer = {id:number; connected:boolean; controllerId:string};
 type ControllerState = {session:string; revision:number; connections:number; players:ControllerPlayer[]};
 type ActiveGame = {
-  game:Game;
+  id:string;
+  source:GameSource;
   frame:HTMLIFrameElement;
   origin:string;
   ready:boolean;
   enteredFullscreen?:boolean;
+  localMount?:string;
   controller?:ControllerSession;
   snapshot?:ControllerState;
   unlisten?:UnlistenFn;
@@ -66,6 +70,13 @@ const escape = (value:string) => value.replace(/[&<>"']/g, char => ({'&':'&amp;'
 
 export class Games {
   private group = '';
+  source:GameSource = 'online';
+  private localGames:LocalGame[] = [];
+  private listing = 0;
+  private localLoading = false;
+  private localError = '';
+  private choosing = false;
+  private configOpen = false;
   private player = document.createElement('dialog');
   private active?:ActiveGame;
   private readyTimeout?:number;
@@ -103,6 +114,76 @@ export class Games {
         if (event.data.keepFocus !== true) active.frame.focus();
       }
     });
+  }
+
+  get playing():boolean { return !!this.active; }
+
+  async setSource(source:GameSource):Promise<void> {
+    this.source = source;
+    const refresh = source === 'local' && desktop ? this.refreshLocal() : undefined;
+    this.changed();
+    await refresh;
+  }
+
+  async refreshLocal():Promise<void> {
+    const request = ++this.listing;
+    this.localLoading = true;
+    this.localError = '';
+    try {
+      const games = await invoke<LocalGame[]>('list_local_games');
+      if (request === this.listing) this.localGames = games;
+    } catch (error) {
+      if (request === this.listing) this.localError = String(error);
+    } finally {
+      if (request === this.listing) {
+        this.localLoading = false;
+        this.changed();
+      }
+    }
+  }
+
+  async chooseLocal():Promise<void> {
+    if (this.choosing) return;
+    this.choosing = true;
+    this.localError = '';
+    this.changed();
+    let added:LocalGame | null = null;
+    try {
+      added = await invoke<LocalGame | null>('choose_local_game');
+      if (added) await this.refreshLocal();
+    } catch (error) {
+      this.localError = String(error);
+    } finally {
+      this.choosing = false;
+      this.changed();
+      const selector = added ? `[data-play-local="${CSS.escape(added.id)}"]` : '[data-choose-local]';
+      document.querySelector<HTMLElement>(selector)?.focus({preventScroll:true});
+    }
+  }
+
+  toggleConfig():void {
+    this.configOpen = !this.configOpen;
+    this.changed();
+    document.querySelector<HTMLElement>('[data-game-config]')?.focus({preventScroll:true});
+  }
+
+  private renderLocal(info:McpInfo | null, error:string):string {
+    if (!desktop) return `<p>${t('请在桌面客户端中添加和游玩本地游戏。')}</p>`;
+    const config = info ? `<pre tabindex="0" class="mcp-config">${escape(JSON.stringify(info.config, null, 2))}</pre>` :
+      `<p class="hint">${escape(error || t('正在读取 MCP 配置…'))}</p>`;
+    return `<div class="web-game-tools"><button type="button" class="primary" data-choose-local${this.choosing ? ' disabled' : ''}>${t('添加游戏文件夹')}</button>
+      <button type="button" data-game-config aria-expanded="${this.configOpen}" aria-controls="game-mcp-config">MCP · ${t('游戏开发')}</button></div>
+      <div class="local-games-scroll" data-scroll="local-games">
+      <section class="panel" id="game-mcp-config" ${this.configOpen ? '' : 'hidden'}>
+        <p>${t('保持管理器打开，将以下配置加入 Agent 的 MCP 设置：')}</p>${config}
+        <p>${t('调用以下工具读取手柄协议、注册游戏和测试按键。')}</p>
+        <code>get_gamepad_protocol · register_local_game · test_gamepad_button</code>
+      </section>
+      ${this.localError ? `<div role="alert">${escape(message(this.localError))} <button data-refresh-local>${t('重试')}</button></div>` : ''}
+      ${this.localGames.length ? `<div class="local-games-list">${this.localGames.map(game =>
+        `<button class="local-game-entry" data-play-local="${escape(game.id)}"><span><strong>${escape(game.title)}</strong><small>${escape(game.directory)}</small></span><span aria-hidden="true">▶</span></button>`).join('')}</div>` :
+        `<p class="hint">${this.localLoading ? t('正在读取游戏列表…') : t('选择包含 index.html 的文件夹，即可从这里启动游戏。')}</p>`}
+      </div>`;
   }
 
   async refresh():Promise<void> {
@@ -144,7 +225,16 @@ export class Games {
     cover?.setAttribute('aria-describedby', 'downloaded-' + game.id);
   }
 
-  render():string {
+  render(info:McpInfo | null, error:string):string {
+    const tabs = (['online', 'local'] as const).map(source => {
+      const selected = this.source === source;
+      return `<button type="button" id="game-source-${source}" role="tab" data-game-source="${source}" aria-controls="game-source-panel" aria-selected="${selected}" tabindex="${selected ? 0 : -1}" class="${selected ? 'primary' : ''}">${source === 'online' ? t('线上游戏') : t('本地游戏')}</button>`;
+    }).join('');
+    return `<div class="application-tabs" role="tablist" aria-label="${t('游戏来源')}">${tabs}</div>
+      <section class="game-source-panel" id="game-source-panel" role="tabpanel" aria-labelledby="game-source-${this.source}">${this.source === 'local' ? this.renderLocal(info, error) : this.renderOnline()}</section>`;
+  }
+
+  private renderOnline():string {
     if (!this.catalog && !this.loading && !this.catalogError) void this.refresh();
     const reload = `<button type="button" data-refresh-games${this.loading ? ' disabled' : ''}>${this.loading ? t('正在读取游戏列表…') : this.catalogError ? t('重试') : t('刷新列表')}</button>`;
     const error = this.catalogError ? `<p role="alert">${escape(message(this.catalogError))}</p>` : '';
@@ -177,32 +267,89 @@ export class Games {
     this.packaging.open(id, gameName(game), game.kind, opener, () => this.markDownloaded(game, revision));
   }
 
-  open(id:string):void {
-    const game = this.catalog?.games.find(entry => entry.id === id);
-    if (!game || this.active) return;
+  private createPlayer(id:string, title:string, loading:string, hint:string):ActiveGame {
     const content = document.createElement('div');
     content.className = 'game-player-content';
     content.innerHTML = `<div class="game-player-toolbar">
       <button type="button" data-close-game>← ${t('返回游戏列表')}</button>
-      <h2 id="game-player-title">${escape(gameName(game))}</h2>
+      <h2 id="game-player-title">${escape(title)}</h2>
       <div class="game-status" role="status" aria-label="${t('游戏状态')}" tabindex="0">
         <p><span data-frame-status></span> <span data-socket-status></span></p>
       </div>
     </div>`;
     const frame = document.createElement('iframe');
-    frame.title = gameName(game);
+    frame.title = title;
     frame.allow = 'gamepad; fullscreen; autoplay';
     frame.sandbox.add('allow-scripts', 'allow-same-origin', 'allow-pointer-lock');
-    const local = desktop && game.kind === 'project';
-    const active:ActiveGame = {game, frame, ready:false, origin:local ? '' : new URL(gamesBase).origin};
+    const active:ActiveGame = {id, source:this.source, frame, ready:false, origin:''};
     this.active = active;
     content.append(frame);
     this.player.append(content);
-    this.status('[data-frame-status]', local && !game.downloaded ? t('正在准备本地游戏，首次使用需要下载…') : t('正在加载游戏…'));
-    const hint = game.controls ? game.controls[gameLanguage()] :
-      desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。');
+    this.status('[data-frame-status]', loading);
     this.status('[data-socket-status]', hint);
     this.player.showModal();
+    if (desktop) {
+      this.windowWork = this.windowWork.then(async () => {
+        const appWindow = getCurrentWindow();
+        if (!await appWindow.isFullscreen() && this.active === active) {
+          await appWindow.setFullscreen(true);
+          active.enteredFullscreen = true;
+        }
+      }).catch(() => {}); // The player still fills the window if fullscreen is unavailable.
+    } else {
+      void content.requestFullscreen?.().catch(() => {});
+    }
+    return active;
+  }
+
+  openLocal(id:string):void {
+    const game = this.localGames.find(entry => entry.id === id);
+    if (!desktop || !game || this.active || this.source !== 'local') return;
+    const active = this.createPlayer(id, game.title, t('正在加载游戏…'), t('正在启动无线手柄服务…'));
+    this.socketWork = this.socketWork.then(async () => {
+      if (this.active !== active) return;
+      const mount = await invoke<string>('play_local_game', {id});
+      if (this.active !== active) {
+        await invoke('release_local_game', {url:mount});
+        return;
+      }
+      active.localMount = mount;
+      const url = new URL(mount);
+      if (url.protocol !== 'http:' || url.hostname !== '127.0.0.1' || !['48735','48736','48737','48738'].includes(url.port) ||
+          !/^\/games\/[a-f0-9]{32}\/index\.html$/.test(url.pathname)) throw new Error(t('本地游戏资源暂不可用。'));
+      active.origin = url.origin;
+      try {
+        await this.startControllers(active, url.origin);
+        if (active.controller?.webSocketUrl) url.searchParams.set('puretvSocket', active.controller.webSocketUrl);
+      } catch {
+        if (this.active !== active) return;
+        this.status('[data-socket-status]', t('无线手柄服务不可用，仍可使用键盘游玩。'));
+      }
+      if (this.active !== active) return;
+      active.frame.addEventListener('load', () => {
+        if (this.active !== active) return;
+        active.ready = true;
+        this.status('[data-frame-status]', '');
+        this.forward(active);
+        active.frame.focus();
+      }, {once:true});
+      active.frame.src = url.href;
+    }).catch(error => {
+      if (this.active === active) {
+        this.status('[data-frame-status]', message(String(error)));
+        this.status('[data-socket-status]', '');
+      }
+    });
+  }
+
+  open(id:string):void {
+    const game = this.catalog?.games.find(entry => entry.id === id);
+    if (!game || this.active) return;
+    const local = desktop && game.kind === 'project';
+    const loading = local && !game.downloaded ? t('正在准备本地游戏，首次使用需要下载…') : t('正在加载游戏…');
+    const hint = game.controls ? game.controls[gameLanguage()] : desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。');
+    const active = this.createPlayer(id, gameName(game), loading, hint);
+    const frame = active.frame;
     if (local) {
       const revision = projectRevision(this.catalog!, game);
       void invoke<string>('local_game_base', {gameId:id}).then(base => {
@@ -222,18 +369,8 @@ export class Games {
         }
       });
     } else {
+      active.origin = new URL(gamesBase).origin;
       frame.src = gameUrl(gamesBase, id);
-    }
-    if (desktop) {
-      this.windowWork = this.windowWork.then(async () => {
-        const appWindow = getCurrentWindow();
-        if (!await appWindow.isFullscreen() && this.active === active) {
-          await appWindow.setFullscreen(true);
-          active.enteredFullscreen = true;
-        }
-      }).catch(() => {}); // The player still fills the window if fullscreen is unavailable.
-    } else {
-      void content.requestFullscreen?.().catch(() => {});
     }
     if (!local) this.readyTimeout = window.setTimeout(() => {
       this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
@@ -245,12 +382,12 @@ export class Games {
     }
   }
 
-  private async startControllers(active:ActiveGame):Promise<void> {
+  private async startControllers(active:ActiveGame, gameOrigin?:string):Promise<void> {
     if (this.active !== active) return;
     const unlisten = await listen<ControllerState>('game-controller-state', ({payload}) => this.update(active, payload));
     if (this.active !== active) { unlisten(); return; }
     active.unlisten = unlisten;
-    const controller = await invoke<ControllerSession>('start_game_controllers', {players:twoPlayerGames.has(active.game.id) ? 2 : 1});
+    const controller = await invoke<ControllerSession>('start_game_controllers', gameOrigin ? {players:2, gameOrigin, localGameId:active.id} : {players:twoPlayerGames.has(active.id) ? 2 : 1});
     if (this.active !== active) { await invoke('stop_game_controllers', {session:controller.session}); return; }
     active.controller = controller;
     this.showControllerStatus(active);
@@ -296,6 +433,7 @@ export class Games {
     this.active = undefined;
     window.clearTimeout(this.readyTimeout);
     active.unlisten?.();
+    if (active.localMount) void invoke('release_local_game', {url:active.localMount}).catch(() => {});
     const session = active.controller?.session;
     if (session) this.socketWork = this.socketWork.then(() => invoke<void>('stop_game_controllers', {session})).catch(() => {});
     if (desktop) {
@@ -305,6 +443,6 @@ export class Games {
     }
     this.player.close();
     this.player.replaceChildren();
-    document.querySelector<HTMLElement>(`[data-play-game="${CSS.escape(active.game.id)}"]`)?.focus({preventScroll:true});
+    document.querySelector<HTMLElement>(`[data-play-${active.source === 'local' ? 'local' : 'game'}="${CSS.escape(active.id)}"]`)?.focus({preventScroll:true});
   }
 }

@@ -1,12 +1,12 @@
 # pureTV 电视系统管理器
 
-**pureTV Manager 0.8.1** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
+**pureTV Manager 0.9.0** 是电脑端电视系统管理工具，通过 ADB 管理 Android TV / Google TV 的设备信息、应用和默认启动器，并提供完整 MCP 接口。
 
-下载：[0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
+下载：[0.9.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.9.0)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-当前开发版将「游戏」放在「论坛」前面，打开后即可浏览网站游戏库。点击卡片在电脑上游玩。支持离线的游戏会在首次游玩或部署时自动下载并校验，封面右下角的「已下载」表示可以离线使用。升级管理器会保留下载。卡片上的「部署到电视」会准备 APK 并安装到已连接并授权的电视。六款由作者托管的游戏和《Kart Rush》《CF 运输船》需要联网游玩，后两款首次部署时从原发布地址获取电视安装包。[使用说明](../docs/guide/README.md#在电脑上玩)
+在「游戏 → 线上游戏」可浏览网站游戏库。点击卡片在电脑上游玩。支持离线的游戏会在首次游玩或部署时自动下载并校验，封面右下角的「已下载」表示可以离线使用。升级管理器会保留下载。卡片上的「部署到电视」会准备 APK 并安装到已连接并授权的电视。六款由作者托管的游戏和《Kart Rush》《CF 运输船》需要联网游玩，后两款首次部署时从原发布地址获取电视安装包。[使用说明](../docs/guide/README.md#在电脑上玩)
 
-0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.8.1**，旧客户端不会自动切换下载地址。
+0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.9.0**，旧客户端不会自动切换下载地址。
 
 0.8.1 内置完整游戏资源，较早版本更新器的单文件上限为 256 MiB。若提示文件过大，可直接从发布页下载对应平台的安装文件并覆盖安装。
 
@@ -30,7 +30,7 @@
 | 应用管理 · 已安装 | 搜索／分类、包名用途与卸载风险查询、应用与启动器安装包大小、批量启用／停用、为当前用户卸载／恢复 |
 | 应用管理 · 待安装 | 导入本地 APK、逐项或勾选批量安装；成功项移出队列，失败和未执行项保留 |
 | 电视应用 | 搜索、预览和下载电视 APK。启动器分类集中提供安装、设置／恢复默认 HOME 和自定义受支持的桌面。 |
-| 游戏 | 从网站游戏列表选一张卡片在电脑上游玩，或点「部署到电视」安装到已连接的电视 |
+| 游戏 | 「线上游戏」提供点击游玩与电视部署。「本地游戏」可载入含有 `index.html` 的自制网页游戏，并提供 MCP 配置、手柄接入与测试。[开发说明](docs/mcp.md) |
 | 论坛 | 浏览 Gitee Issues 列表、原帖正文和跟帖；刷新、翻页、外部发帖及前往原帖回复 |
 | 操作记录 | 最近 200 项修改记录，包含目标设备／用户、逐项结果与错误 |
 | 兼容性方案 | 离线说明各操作的 ADB 命令、用法与系统兼容性，支持简体中文、繁体中文和英文 |
@@ -50,14 +50,14 @@
 应用对整个 `.app` 执行 ad-hoc 签名，最低系统版本为 macOS 11。**ad-hoc 签名不是 Developer ID 签名，也不代表通过 Apple 公证**；首次打开仍可能出现来源或开发者验证提示。
 
 - 提示「无法验证开发者」：尝试打开一次后，进入「系统设置 → 隐私与安全性」，找到 pureTV Manager 的拦截信息并选择「仍要打开」（Open Anyway）。macOS 11／12 的入口为「系统偏好设置 → 安全性与隐私」。
-- 提示「已损坏，无法打开」：先从本仓库的 [0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
+- 提示「已损坏，无法打开」：先从本仓库的 [0.9.0 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.9.0) 下载 DMG 和 `SHA256SUMS.txt`，在终端进入下载目录并计算校验值：
 
   ```bash
   cd ~/Downloads
-  shasum -a 256 pureTV-Manager-0.8.1-macos-arm64.dmg
+  shasum -a 256 pureTV-Manager-0.9.0-macos-arm64.dmg
   ```
 
-  Intel Mac 将上述文件名换为 `pureTV-Manager-0.8.1-macos-x64.dmg`。
+  Intel Mac 将上述文件名换为 `pureTV-Manager-0.9.0-macos-x64.dmg`。
 
   将输出的完整 SHA256 与 `SHA256SUMS.txt` 中同名文件的一行比较；不一致时重新下载，不要打开该副本。校验一致后，重新将 DMG 中的应用拖入「应用程序」，覆盖旧版。
 
@@ -175,7 +175,7 @@ python3 -m http.server --directory /tmp/puretv-site 8080
 
 保持管理器打开，在首页「MCP · Agent 调试」复制 JSON 到客户端。标准 stdio 代理连接同一窗口，共享当前电视、Android 用户、ADB、操作锁和记录；状态、错误、布局与画面同步显示。
 
-**34 个工具**覆盖界面现有设备管理功能，包括系统信息、连接、应用安装／卸载／启停、启动器切换／布局、市场目录／下载／安装、ADB 下载配置、用户背景图、原生文件选择器、取消和历史。详见 [MCP 接入及工具](docs/mcp.md)。
+从「游戏 → 本地游戏」也可以复制 MCP 配置，登记和打开自制网页游戏，通过 WebSocket 和测试接口验证手柄输入。设备管理工具覆盖现有功能，包括系统信息、连接、应用安装／卸载／启停、启动器切换／布局、市场目录／下载／安装、ADB 下载配置、用户背景图、原生文件选择器、取消和历史。详见 [MCP 接入及工具](docs/mcp.md)。
 
 ## 操作范围与恢复
 

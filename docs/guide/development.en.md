@@ -28,7 +28,7 @@ For changes and test results across versions 0.5.0–0.5.2 of the nine Android T
 
 Open **Device connection → MCP · Agent debugging** in the manager. Copy the complete JSON shown in the window into the agent client's MCP configuration, reconnect the `puretv` service and keep the window open. The configuration uses stdio. Its `command` points to the actual manager executable on that computer and the `--mcp` argument identifies the local session file. Copy the configuration again after moving the app, and reconnect after restarting the manager.
 
-The agent and interface share the current device, Android user, ADB configuration, operation lock and log. The 34 tools cover system information, connections, app management, APK installation, launcher switching and layout, market browsing and installation, backgrounds, ADB setup, language and themes, cancellation and logs. Use `get_state` to inspect the state of the open window. [MCP setup, tool parameters and examples (Chinese)](../../desktop/docs/mcp.md)
+The agent and interface share the current device, Android user, ADB configuration, operation lock and log. Use the Local games tab to copy the same configuration, register your own web game and test its controller input. The device tools cover system information, connections, app management, APK installation, launcher switching and layout, market browsing and installation, backgrounds, ADB setup, language and themes, cancellation and logs. Use `get_state` to inspect the state of the open window. [MCP setup, tool parameters and examples (Chinese)](../../desktop/docs/mcp.md)
 
 ## Custom launcher layouts
 
