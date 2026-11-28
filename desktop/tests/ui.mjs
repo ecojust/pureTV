@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { verifyGameApkCancellation } from './game-apk-cancel.mjs';
 import { mockBridge, snapshot, marketCatalog, packageInsight, clientUpdate, forumPage, forumDetail, forumReplies } from './fixtures.mjs';
 
 const directory = fileURLToPath(new URL('..', import.meta.url));
@@ -197,9 +198,42 @@ try {
     assert.ok(!commands.includes('start_game_controllers'));
     assert.deepEqual(await requests(p), [], 'Hosted games do not send device operations');
   }, withoutAdb());
+  await check('games allow exporting existing titles and queueing one verified APK without ADB', async p => {
+    await nav(p, 'games');
+    assert.equal(await p.locator('[data-build-game]').count(), 56);
+    const button = p.locator('[data-build-game="bandit"]');
+    assert.equal(await button.innerText(), '生成电视 APK');
+    assert.equal(await p.locator('[data-build-game="tetris"]').innerText(), '获取电视 APK');
+    await button.click();
+    const dialog = p.locator('dialog.game-apk-dialog[open]');
+    await dialog.locator('[data-apk-save]').click();
+    await dialog.getByText(/\/exports\/bandit.apk/).waitFor();
+    await dialog.locator('[data-apk-queue]').click();
+    await p.locator('.apk-item').getByText(/bandit-0\.1\.0\.apk/).first().waitFor();
+    assert.deepEqual(await p.evaluate(() => window.__gameApkRequests), [
+      {command:'build_web_game_apk', id:'bandit'}, {command:'save_web_game_apk', id:'bandit'},
+    ]);
+    assert.ok(!(await requests(p)).some(req => req.action === 'install'));
+  }, withoutAdb(), {gameApkDestination:'/exports/bandit.apk'});
+  await check('games can retry a failed APK and cancelling the save dialog keeps it ready', async p => {
+    await nav(p, 'games');
+    const button = p.locator('[data-build-game="tetris"]');
+    await button.click();
+    const dialog = p.locator('dialog.game-apk-dialog[open]');
+    await dialog.getByText(/获取失败/).waitFor();
+    assert.equal(await dialog.locator('[data-apk-queue]').isVisible(), false);
+    await p.evaluate(() => { window.__gameApkError = null; });
+    await dialog.locator('[data-apk-retry]').click();
+    await dialog.locator('[data-apk-save]').click();
+    await dialog.getByText('电视 APK 已就绪', {exact:true}).waitFor();
+    await dialog.locator('[data-apk-close]').click();
+    assert.equal(await button.evaluate(el => el === document.activeElement), true);
+  }, withoutAdb(), {gameApkError:'下载失败'});
+  await check('games cancel only the APK requested by the closed dialog', verifyGameApkCancellation, withoutAdb());
   await check('games open fullscreen in the same browser tab and exit from the game', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
+    assert.equal(await p.locator('[data-build-game]').count(), 0);
     const play = p.locator('[data-play-game="tetris"]');
     await play.click();
     await p.waitForFunction(() => !!document.fullscreenElement?.querySelector('iframe'));
@@ -1753,6 +1787,27 @@ try {
   const categorizedGame=version=>({...store.items[1],id:`game/prism-relay/prism-relay-${version}.apk`,name:'镜光接力',provider:'演示游戏工作室',version,fileName:`prism-relay-${version}.apk`,folderUrl:store.items[1].folderUrl.replace('/media/webtv','/game/prism-relay')});
   const latestGame=categorizedGame('0.2.1'),olderGame=categorizedGame('0.2.0');
   const categorizedStore={...store,items:[categorizedMedia,store.items[1],olderGame,latestGame,store.items[2]]};
+  await check('games share TV market versions, downloads and the application queue', async p => {
+    await nav(p, 'games');
+    await p.locator('[name="gameGroup"]').selectOption('puzzle');
+    await p.locator('[data-games-view="market"]').click();
+    await marketCard(p, latestGame).waitFor();
+    await settled(p);
+    assert.equal(await p.locator('.market-card').count(), 1);
+    await p.locator('[name="marketSearch"]').fill('镜光');
+    await versionSelect(p, latestGame).selectOption(olderGame.id);
+    await p.locator('[data-games-view="web"]').click();
+    assert.equal(await p.locator('[name="gameGroup"]').inputValue(), 'puzzle');
+    await p.locator('[data-games-view="market"]').click();
+    assert.equal(await p.locator('[name="marketSearch"]').inputValue(), '镜光');
+    await marketCard(p, olderGame).locator('[data-act="download-market"]').click();
+    await result(p, 'success');
+    await acknowledge(p);
+    await p.locator('[data-act="market-pending"][data-kind="app"]').click();
+    assert.match(await p.locator('.apk-item').innerText(), /prism-relay-0\.2\.0\.apk/);
+    assert.deepEqual((await marketRequests(p)).filter(req => req.command === 'download_market_item'),
+      [{command:'download_market_item', id:olderGame.id, revision:categorizedStore.revision}]);
+  }, withoutAdb(), {marketCatalog:categorizedStore});
   await check('market media and game tabs isolate search and grouped counts while preserving versions and the app download queue',async p=>{
     await openMarket(p);
     assert.deepEqual(await p.locator('[data-market-category]').evaluateAll(tabs=>tabs.map(tab=>tab.dataset.marketCategory)),['launcher','media','game']);
