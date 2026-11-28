@@ -1,0 +1,66 @@
+name: Preserve Manager offline TV evidence
+on:
+  push:
+    branches: [recover-manager-offline-46118410846]
+    paths: ['.github/workflows/preserve-manager-offline.yml']
+permissions:
+  actions: read
+  contents: write
+jobs:
+  preserve:
+    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/recover-manager-offline-46118410846'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ORIGINAL: '46118410846'
+      EXPECTED_SOURCE: 'e0dfcd91c4a93845d5c599e57863626eaffe5ae4'
+      INSTALLER_BUILD_RUN: '46115848343'
+      ARTIFACT: '15252029007'
+      ARCHIVE_DIGEST: 'e48cca58019d76967fcb67568b46d7a663c4f03bdf1e5d00fe1dfd6503ff9c26'
+    steps:
+      - name: Verify source and preserve two JSON files and the deployment result image
+        run: |
+          set -euo pipefail
+          api=repos/ecojust/pureTV/actions
+          gh api "$api/artifacts/$ARTIFACT" > metadata.json
+          jq -e --arg sha "$EXPECTED_SOURCE" --arg digest "$ARCHIVE_DIGEST" --argjson run "$ORIGINAL" '
+            .workflow_run.id==$run and .workflow_run.head_sha==$sha and .digest==("sha256:"+$digest)
+            and .name=="manager-offline-tv-0.8.0" and (.expired|not) and .size_in_bytes<6000000' metadata.json
+          gh api --allow-escape-sequences "$api/artifacts/$ARTIFACT/zip" > archive.zip
+          echo "$ARCHIVE_DIGEST  archive.zip" | sha256sum -c -
+          mkdir export
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import json, struct, os
+          out=Path('export')
+          with ZipFile('archive.zip') as z:
+              for name in ('native.json', 'installer.json', 'deployed.png'):
+                  info=z.getinfo(name)
+                  assert 0 < info.file_size <= 2500000
+                  data=z.read(info)
+                  if name == 'native.json':
+                      obj=json.loads(data)
+                      assert obj['status']=='passed' and obj['offlineHost']['interfaces']==['lo']
+                      assert obj['androidTV']['gameInstalledBeforeDeploy'] is False
+                      assert obj['installed']['package']=='com.ecojust.neonrushtv' and obj['installed']['foregroundAfter5s']
+                      assert obj['installed']['sha256']=='3a4cb0b6ca74147a1014a0b7080e1320ce368d1f911661aec8aa80f425b0ff19'
+                  elif name == 'installer.json':
+                      obj=json.loads(data)
+                      assert obj['installer']=='pureTV-Manager-0.8.0-linux-x64.deb'
+                      assert obj['source']=={'buildRun':os.environ['INSTALLER_BUILD_RUN']}
+                  else:
+                      assert data.startswith(b'\x89PNG\r\n\x1a\n') and struct.unpack('>II',data[16:24])==(1500,980)
+                  (out/name).write_bytes(data)
+          PY
+          cd export
+          git init -q
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add native.json installer.json deployed.png
+          git commit -qm "Preserve desktop offline TV evidence for run $ORIGINAL at $EXPECTED_SOURCE"
+          gh auth setup-git
+          git remote add origin https://github.com/ecojust/pureTV.git
+          branch="build-assets/manager-offline-tv-$ORIGINAL"
+          git push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
