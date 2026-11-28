@@ -157,6 +157,18 @@ class ReleaseCertificatesTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'Publish launcher APKs'):
             list(resource_catalog.catalog_directories(self.root))
 
+    def test_single_hosted_games_require_the_current_release_certificate(self):
+        packages = resource_catalog.HOSTED_GAME_PACKAGES
+        self.assertEqual(set(packages), {'bandit', 'fish-loop', 'noir-extreme', 'struggle-bus',
+                                         'vespertine', 'daejeon-campus'})
+        for slug, package in packages.items():
+            with self.subTest(slug=slug):
+                self.assertEqual(package, 'com.ecojust.hostedgames.' + slug.replace('-', '_'))
+                self.assertEqual(resource_catalog.expected_release_certificate(
+                    self.root, self.identity(package, 1, '0.1.0')), self.new)
+                self.assertEqual(resource_catalog.expected_release_certificate(
+                    self.root, self.identity(package + 'x', 1, '0.1.0')), self.old)
+
     def test_unknown_and_similar_package_names_cannot_automatically_use_the_new_pin(self):
         for package in ('com.ecojust.unknown', 'com.ecojust.newapp',
                         'com.ecojust.coastkarttv.clone', 'com.ecojust.tanktv2',

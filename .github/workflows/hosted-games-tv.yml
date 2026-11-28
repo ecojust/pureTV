@@ -16,12 +16,29 @@ on:
   pull_request:
     paths: *inputs
   workflow_dispatch:
+    inputs:
+      packaging:
+        description: TV packages to build
+        type: choice
+        options: [collection, single-titles]
+        default: collection
 
 permissions:
   contents: read
 
 jobs:
+  single-titles:
+    if: github.event_name == 'workflow_dispatch' && inputs.packaging == 'single-titles' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
+    uses: ./.github/workflows/hosted-game-packages.yml
+    permissions:
+      actions: read
+      contents: write
+    secrets:
+      PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+      PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+
   build:
+    if: github.event_name != 'workflow_dispatch' || inputs.packaging != 'single-titles'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
