@@ -1,5 +1,11 @@
 name: Release six individual hosted TV games
 on:
+  workflow_dispatch:
+    inputs:
+      signed_run:
+        description: Previous single-title signing run on master to test again, without rebuilding
+        type: string
+        required: true
   workflow_call:
     secrets:
       PURETV_KEYSTORE_BASE64: {required: true}
@@ -10,7 +16,7 @@ permissions:
 
 jobs:
   build:
-    if: github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
+    if: inputs.signed_run == '' && github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
@@ -65,7 +71,7 @@ jobs:
 
   sign:
     needs: build
-    if: github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
+    if: inputs.signed_run == '' && github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -102,6 +108,10 @@ jobs:
 
   television:
     needs: sign
+    if: always() && github.ref == 'refs/heads/master' && github.repository == 'ecojust/pureTV' && (needs.sign.result == 'success' || inputs.signed_run != '')
+    permissions:
+      actions: read
+      contents: read
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -110,10 +120,29 @@ jobs:
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: /tools/hosted-games-tv/
+      - name: Select the original signed artifact
+        id: origin
+        env:
+          ORIGINAL: ${{ inputs.signed_run || github.run_id }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$ORIGINAL" =~ ^[0-9]+$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ORIGINAL" > "$RUNNER_TEMP/original.json"
+          jq -e '.event=="workflow_dispatch" and .head_branch=="master" and .head_repository.full_name=="ecojust/pureTV" and .path==".github/workflows/hosted-games-tv.yml"' "$RUNNER_TEMP/original.json"
+          echo "run=$ORIGINAL" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
-        with: {name: single-hosted-signed, path: "${{ runner.temp }}/signed"}
+        with:
+          name: single-hosted-signed
+          path: ${{ runner.temp }}/signed
+          run-id: ${{ steps.origin.outputs.run }}
+          github-token: ${{ github.token }}
       - name: Enable KVM and prepare Android input tests
         run: |
+          test "$(jq -r .head_sha "$RUNNER_TEMP/original.json")" = "$(jq -r .sourceSha "$RUNNER_TEMP/signed/packages.json")"
+          test "$(jq -r .id "$RUNNER_TEMP/original.json")" = "$(jq -r .runId "$RUNNER_TEMP/signed/packages.json")"
+          (cd "$RUNNER_TEMP/signed" && sha256sum --check SHA256SUMS.txt)
           sudo chmod a+rw /dev/kvm
           python3 -m pip install Pillow==11.3.0 websocket-client==1.8.0
       - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
@@ -156,7 +185,7 @@ jobs:
             sha256sum --check SHA256SUMS.txt
             test "$(jq -r .sourceSha packages.json)" = "$GITHUB_SHA"
           else
-            test "$(jq -r .sourceSha device.json)" = "$GITHUB_SHA"
+            test "$(jq -r .qaSourceSha device.json)" = "$GITHUB_SHA"
           fi
           git init -q
           git config user.name github-actions[bot]
@@ -170,7 +199,7 @@ jobs:
 
   export-device:
     needs: [sign, television]
-    if: always() && needs.sign.result == 'success'
+    if: always() && github.ref == 'refs/heads/master' && github.repository == 'ecojust/pureTV' && needs.television.result != 'skipped' && (needs.sign.result == 'success' || inputs.signed_run != '')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions: {contents: write}
