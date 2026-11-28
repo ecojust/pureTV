@@ -10,6 +10,7 @@ mod launcher_covers;
 mod market;
 mod market_seen;
 mod mcp;
+mod offline_game_library;
 mod package_insights;
 mod platform_tools;
 mod ui_preferences;
@@ -555,11 +556,17 @@ async fn build_web_game_apk(
     let bridge = bridge.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
         let _guard = guard;
-        web_game_apk::prepare(&directory, &game_id, &bridge.cancel, |progress| {
-            on_progress
-                .send(progress)
-                .map_err(|_| "游戏窗口已关闭".into())
-        })
+        web_game_apk::prepare(
+            &directory,
+            &game_id,
+            || offline_game_library::path(&app),
+            &bridge.cancel,
+            |progress| {
+                on_progress
+                    .send(progress)
+                    .map_err(|_| "游戏窗口已关闭".into())
+            },
+        )
     })
     .await
     .map_err(|_| "游戏安装包任务异常结束".to_string())?
@@ -1341,6 +1348,17 @@ fn main() {
         }
         return;
     }
+    let context = tauri::generate_context!();
+    if args
+        .get(1)
+        .is_some_and(|arg| arg == "--verify-game-library")
+    {
+        if let Err(error) = offline_game_library::verify(context.package_info()) {
+            eprintln!("{error}");
+            std::process::exit(1);
+        }
+        return;
+    }
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
@@ -1440,7 +1458,7 @@ fn main() {
             game_controller_state,
             mcp_info
         ])
-        .build(tauri::generate_context!())
+        .build(context)
         .expect("无法启动 pureTV 电视管理器")
         .run(|app, event| {
             if matches!(event, tauri::RunEvent::Exit) {

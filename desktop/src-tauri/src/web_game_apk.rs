@@ -1,7 +1,6 @@
 //! Prepare the TV package for a game in the built-in desktop catalog.
 use crate::market::Progress;
 use crate::web_game_template::{embedded_game, EmbeddedGame};
-use reqwest::{blocking::Response, redirect, Url};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fs::{self, File};
@@ -12,9 +11,6 @@ use std::time::{Duration, Instant};
 use tempfile::NamedTempFile;
 
 const CATALOG: &str = include_str!("../../../tools/pc-games/catalog.json");
-// The desktop web catalog also feeds the online PC player. Resolve its branch links
-// against the repository revision that contains these exact versioned APKs.
-const APK_REVISION: &str = env!("PURETV_GAME_APK_REVISION");
 const CATALOG_URL_PREFIX: &str =
     "https://github.com/ecojust/pureTV/raw/refs/heads/master/joystick-games/";
 
@@ -27,7 +23,7 @@ struct CatalogGame {
 }
 
 enum Source {
-    Download(Url),
+    Bundled(String),
     Embedded(EmbeddedGame),
 }
 
@@ -74,16 +70,34 @@ fn lookup(id: &str) -> Result<Game, String> {
         })
         .map(|(_, name)| name)
         .ok_or("游戏 APK 清单地址无效")?;
-    let url = Url::parse(&format!(
-        "https://github.com/ecojust/pureTV/raw/{APK_REVISION}/joystick-games/{id}/{name}"
-    ))
-    .map_err(|_| "游戏 APK 清单地址无效")?;
     Ok(Game {
         file_name: name.into(),
         sha256: entry.sha256,
         bytes: entry.bytes,
-        source: Source::Download(url),
+        source: Source::Bundled(format!("apks/{id}/{name}")),
     })
+}
+
+pub(crate) fn verify_library(path: &Path) -> Result<(), String> {
+    let file = File::open(path).map_err(|_| "无法打开本地游戏资源")?;
+    let mut pack = zip::ZipArchive::new(file).map_err(|_| "无法读取本地游戏资源")?;
+    let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).map_err(|_| "游戏目录无效")?;
+    for entry in entries {
+        let game = lookup(&entry.id)?;
+        if let Source::Bundled(member) = game.source {
+            let apk = pack
+                .by_name(&member)
+                .map_err(|_| format!("缺少 {member}"))?;
+            if apk.size() != game.bytes || apk.compression() != zip::CompressionMethod::Stored {
+                return Err(format!("游戏资源无效: {member}"));
+            }
+        }
+        let page = format!("web/{}/tv.html", entry.id);
+        if pack.by_name(&page).is_err() {
+            return Err(format!("缺少 {page}"));
+        }
+    }
+    Ok(())
 }
 
 pub fn file_name(game_id: &str) -> Result<String, String> {
@@ -105,53 +119,7 @@ fn check_cancel(cancel: &AtomicBool) -> Result<(), String> {
     }
 }
 
-fn allowed_redirect(url: &Url) -> bool {
-    url.scheme() == "https"
-        && url.port().is_none()
-        && url.username().is_empty()
-        && url.password().is_none()
-        && matches!(
-            url.host_str(),
-            Some("raw.githubusercontent.com" | "media.githubusercontent.com")
-        )
-}
-
-fn fetch(url: &Url, expected: u64) -> Result<Response, String> {
-    let client = reqwest::blocking::Client::builder()
-        .https_only(true)
-        .redirect(redirect::Policy::custom(|attempt| {
-            if attempt.previous().len() <= 3 && allowed_redirect(attempt.url()) {
-                attempt.follow()
-            } else {
-                attempt.error("游戏 APK 下载重定向无效")
-            }
-        }))
-        .user_agent(concat!("pureTV-Manager/", env!("CARGO_PKG_VERSION")))
-        .connect_timeout(Duration::from_secs(10))
-        .timeout(Duration::from_secs(20))
-        .build()
-        .map_err(|_| "无法准备游戏下载")?;
-    let response = client
-        .get(url.clone())
-        .header(reqwest::header::ACCEPT_ENCODING, "identity")
-        .send()
-        .map_err(|_| "无法连接游戏 APK 下载服务器")?;
-    if response.status() != reqwest::StatusCode::OK {
-        return Err(format!(
-            "游戏 APK 下载服务器返回 HTTP {}",
-            response.status().as_u16()
-        ));
-    }
-    if response
-        .content_length()
-        .is_some_and(|length| length != expected)
-    {
-        return Err("游戏 APK 大小与清单不符".into());
-    }
-    Ok(response)
-}
-
-// Use the same check during download, cache reuse, and export. A destination
+// Use the same check during extraction, cache reuse, and export. A destination
 // only receives verified bytes when its neighboring temporary file is committed.
 fn copy_verified(
     mut from: impl Read,
@@ -214,6 +182,7 @@ fn publish(file: NamedTempFile, path: &Path, cancel: &AtomicBool) -> Result<(), 
 pub fn prepare(
     directory: &Path,
     game_id: &str,
+    library: impl FnOnce() -> Result<PathBuf, String>,
     cancel: &AtomicBool,
     mut report: impl FnMut(Progress) -> Result<(), String>,
 ) -> Result<GameApk, String> {
@@ -250,11 +219,15 @@ pub fn prepare(
                     progress("verifying", n)
                 })?
             }
-            Source::Download(url) => {
-                progress("downloading", 0)?;
-                let response = fetch(url, game.bytes)?;
-                copy_verified(response, &mut output, &game, cancel, |n| {
-                    progress("downloading", n)
+            Source::Bundled(member) => {
+                progress("preparing", 0)?;
+                let file = File::open(library()?).map_err(|_| "无法打开本地游戏资源")?;
+                let mut archive = zip::ZipArchive::new(file).map_err(|_| "无法读取本地游戏资源")?;
+                let apk = archive
+                    .by_name(member)
+                    .map_err(|_| "本地资源中缺少此游戏")?;
+                copy_verified(apk, &mut output, &game, cancel, |n| {
+                    progress("preparing", n)
                 })?
             }
         };
@@ -269,7 +242,7 @@ pub fn prepare(
         path: target.to_str().ok_or("游戏 APK 缓存路径无法表示")?.into(),
         package_name: match game.source {
             Source::Embedded(entry) => Some(entry.package_name.into()),
-            Source::Download(_) => crate::app_logos::package_name(&target),
+            Source::Bundled(_) => crate::app_logos::package_name(&target),
         },
         sha256: game.sha256,
     })
@@ -319,17 +292,10 @@ mod tests {
             assert_eq!(game.sha256.len(), 64);
             assert!(game.sha256.bytes().all(|b| b.is_ascii_hexdigit()));
             assert!(game.bytes > 0);
-            let Source::Download(url) = game.source else {
+            let Source::Bundled(member) = game.source else {
                 panic!("wrong source for {}", entry.id)
             };
-            assert_eq!(url.host_str(), Some("github.com"));
-            assert_eq!(
-                url.path(),
-                format!(
-                    "/ecojust/pureTV/raw/{APK_REVISION}/joystick-games/{}/{}",
-                    entry.id, game.file_name
-                )
-            );
+            assert_eq!(member, format!("apks/{}/{}", entry.id, game.file_name));
         }
         for unknown in [
             "",
@@ -339,14 +305,6 @@ mod tests {
             "tank/../jackal",
         ] {
             assert!(lookup(unknown).is_err());
-        }
-        for address in [
-            "https://example.org/file.apk",
-            "http://raw.githubusercontent.com/file.apk",
-            "https://raw.githubusercontent.com.example/file",
-            "https://media.githubusercontent.com:123/file",
-        ] {
-            assert!(!allowed_redirect(&Url::parse(address).unwrap()));
         }
     }
 
@@ -378,10 +336,16 @@ mod tests {
             "struggle-bus",
         ] {
             let entry = embedded_game(id).unwrap();
-            let first = prepare(root, id, &cancel(), |p| {
-                assert_ne!(p.stage, "downloading");
-                Ok(())
-            })
+            let first = prepare(
+                root,
+                id,
+                || panic!("standalone template opened the library"),
+                &cancel(),
+                |p| {
+                    assert_ne!(p.stage, "downloading");
+                    Ok(())
+                },
+            )
             .unwrap();
             assert_eq!(first.package_name.as_deref(), Some(entry.package_name));
             let target = root.join(entry.file_name);
@@ -392,7 +356,16 @@ mod tests {
             fs::write(&first.path, vec![0; expected.len()]).unwrap();
             thread::scope(|scope| {
                 for _ in 0..2 {
-                    scope.spawn(|| prepare(root, id, &cancel(), |_| Ok(())).unwrap());
+                    scope.spawn(|| {
+                        prepare(
+                            root,
+                            id,
+                            || panic!("standalone template opened the library"),
+                            &cancel(),
+                            |_| Ok(()),
+                        )
+                        .unwrap()
+                    });
                 }
             });
             assert_eq!(fs::read(first.path).unwrap(), expected);
@@ -400,33 +373,36 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "downloads an official game APK from the frozen public repository"]
-    fn native_catalog_download_cache_and_export() {
-        let directory = tempdir().unwrap();
-        let id = std::env::var("PURETV_TEST_GAME_APK_ID").unwrap_or_else(|_| "tank".into());
-        let first = prepare(directory.path(), &id, &cancel(), |_| Ok(())).unwrap();
-        let cached = prepare(directory.path(), &id, &cancel(), |p| {
-            assert_ne!(p.stage, "downloading");
-            Ok(())
-        })
-        .unwrap();
-        assert_eq!(first.path, cached.path);
-        assert!(first.package_name.is_some());
-        let target = directory.path().join(file_name(&id).unwrap());
-        export(directory.path(), &id, &target, &cancel()).unwrap();
-        let game = lookup(&id).unwrap();
-        assert_eq!(fs::metadata(&target).unwrap().len(), game.bytes);
-        assert!(copy_verified(
-            File::open(&target).unwrap(),
-            io::sink(),
-            &game,
-            &cancel(),
-            |_| Ok(())
-        )
-        .unwrap());
-        println!(
-            "Verified {} ({} bytes), SHA-256 {}",
-            game.file_name, game.bytes, game.sha256
-        );
+    fn catalog_games_prepare_from_local_zip_and_export_exact_bytes() {
+        let archive = Path::new(env!("CARGO_MANIFEST_DIR")).join("offline-assets/game-library.zip");
+        let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).unwrap();
+        for entry in entries {
+            let directory = tempdir().unwrap();
+            let game = prepare(
+                directory.path(),
+                &entry.id,
+                || Ok(archive.clone()),
+                &cancel(),
+                |_| Ok(()),
+            )
+            .unwrap();
+            let cached = prepare(
+                directory.path(),
+                &entry.id,
+                || panic!("opened library on cache hit"),
+                &cancel(),
+                |_| Ok(()),
+            )
+            .unwrap();
+            assert_eq!(game.path, cached.path);
+            assert!(game.package_name.is_some(), "{}", entry.id);
+            let target = directory.path().join(file_name(&entry.id).unwrap());
+            export(directory.path(), &entry.id, &target, &cancel()).unwrap();
+            assert_eq!(fs::metadata(&target).unwrap().len(), entry.bytes);
+            assert_eq!(
+                format!("{:x}", Sha256::digest(fs::read(target).unwrap())),
+                entry.sha256
+            );
+        }
     }
 }
