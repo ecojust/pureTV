@@ -1,4 +1,4 @@
-name: Replay six native TV games with the verified signed APK
+name: Observe the two remaining author games on the signed Android TV client
 on:
   push:
     branches: [recover-hosted-46104774692]
@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 env:
-  QA_SHA: d7c32fb61e3361e4436e89986496d95ec2edd202
+  QA_SHA: cb9fff5d99690c94b03f71f34fa131d8e173da35
   APK_SHA: a72fddf7b643ba2d1f4f5090386ce94d962902ae0bc635a44fa68acf70c60699
 jobs:
   replay:
@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        game: [bandit, fish-loop, noir-extreme, struggle-bus, vespertine, daejeon-campus]
+        game: [noir-extreme, daejeon-campus]
     env:
       GAME: ${{ matrix.game }}
     steps:
@@ -36,6 +36,10 @@ jobs:
           echo "$APK_SHA  $RUNNER_TEMP/hosted.apk" | sha256sum --check
           test "$(git rev-parse HEAD)" = "$QA_SHA"
           python3 -m pip install Pillow==11.3.0 websocket-client==1.8.0
+          if ! command -v tesseract >/dev/null || ! tesseract --list-langs 2>/dev/null | grep -qx kor; then
+            sudo apt-get -qo Acquire::Retries=3 update
+            sudo apt-get -qo Acquire::Retries=3 install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng tesseract-ocr-kor
+          fi
           sudo chmod a+rw /dev/kvm
           mkdir -p "$RUNNER_TEMP/qa" "$RUNNER_TEMP/share"
           cat > "$RUNNER_TEMP/test-guest.sh" <<'SH'
@@ -46,7 +50,7 @@ jobs:
             timeout 8 "$adb" -s emulator-5554 shell cat /proc/meminfo | tr -d '\r' | grep -E '^(MemAvailable|MemFree|MemTotal|SwapFree|SwapTotal):'
           }
           mem > "$RUNNER_TEMP/share/guest-memory-before.txt" || true
-          python3 tools/hosted-games-tv/qa.py --case "$GAME" --apk "$RUNNER_TEMP/hosted.apk" --out "$RUNNER_TEMP/qa"
+          python3 tools/hosted-games-tv/visual.py --case "$GAME" --apk "$RUNNER_TEMP/hosted.apk" --out "$RUNNER_TEMP/qa"
           result=$?
           mem > "$RUNNER_TEMP/share/guest-memory-after.txt" || true
           timeout 8 "$adb" -s emulator-5554 shell dumpsys activity exit-info com.ecojust.hostedgames | grep -Eo 'reason=[0-9]+ \([^)]{0,80}\)' | head -20 > "$RUNNER_TEMP/share/guest-exit-reasons.txt" || true
@@ -77,19 +81,17 @@ jobs:
           from pathlib import Path
           import json, os, re, xml.etree.ElementTree as ET
           game=os.environ['GAME']
-          for p in Path('qa').glob('*'):
-              names=['report.json',game+'-played.png',game+'-author.xml',game+'-card.xml',game+'-failure.xml',game+'-guide.xml',game+'-guide.png','offline-error.png']
-              if game=='struggle-bus': names+=['struggle-bus-scene.png']
-              if game=='fish-loop': names+=['fish-loop-before.png','fish-loop-after.png']
-              if p.name not in names or not p.is_file() or p.is_symlink() or p.stat().st_size>5_000_000: continue
-              data=p.read_bytes()
-              if p.suffix=='.xml':
-                  xml=ET.fromstring(data)
-                  for node in xml.iter():
-                      for attr,text in node.attrib.items():
-                          if re.search(r'https?://|[?&](?:room|token|key)=|room=|bearer\s+|邀请码[:：]|加入码[:：]',text,re.I): node.set(attr,'[redacted]')
-                  data=ET.tostring(xml,encoding='utf8')
-              (Path('share')/p.name).write_bytes(data)
+          total=frames=0
+          for p in sorted(Path('qa').glob('*')):
+              if not p.is_file() or p.is_symlink() or p.stat().st_size>5000000: continue
+              if p.name=='report.json':
+                  (Path('share')/p.name).write_bytes(p.read_bytes())
+              elif re.fullmatch(re.escape(game)+r'-visual-[a-zA-Z0-9_-]{1,40}\.png',p.name):
+                  size=p.stat().st_size
+                  if frames<14 and total+size<32000000:
+                      (Path('share')/p.name).write_bytes(p.read_bytes())
+                      frames+=1
+                      total+=size
           host=Path('host/report.json')
           if host.is_file() and host.stat().st_size<100_000: Path('share/host-environment.json').write_bytes(host.read_bytes())
           samples=Path('host/samples.jsonl')
@@ -120,14 +122,14 @@ jobs:
         run: |
           set -euo pipefail
           gh auth setup-git
-          games=(bandit fish-loop noir-extreme struggle-bus vespertine daejeon-campus)
+          games=(noir-extreme daejeon-campus)
           prefix="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           while true; do
             gh api "$prefix/artifacts" > manifest.json
             for game in "${games[@]}"; do
               test ! -f "$game.done" || continue
               name="replay-$game"
-              id="$(jq -r --arg n "$name" '.artifacts[]|select(.name==$n and (.expired|not) and .size_in_bytes<20000000)|.id' manifest.json)"
+              id="$(jq -r --arg n "$name" '.artifacts[]|select(.name==$n and (.expired|not) and .size_in_bytes<36000000)|.id' manifest.json)"
               [[ "$id" =~ ^[0-9]+$ ]] || continue
               digest="$(jq -r --argjson id "$id" '.artifacts[]|select(.id==$id)|.digest|split(":")[1]' manifest.json)"
               gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > package.zip
@@ -155,10 +157,51 @@ jobs:
               touch "$game.done"
             done
             count="$(find . -maxdepth 1 -name '*.done' | wc -l)"
-            if test "$count" = 6; then break; fi
+            if test "$count" = 2; then break; fi
             gh api "$prefix/jobs" > jobs.json
-            if jq -e '[.jobs[]|select(.name|startswith("replay ("))]|length==6 and all(.status=="completed")' jobs.json; then
-              echo "Missing one of the six case artifacts"; exit 1
+            if jq -e '[.jobs[]|select(.name|startswith("replay ("))]|length==2 and all(.status=="completed")' jobs.json; then
+              echo "Missing a visual case artifact"; exit 1
             fi
             sleep 15
           done
+
+  previous-fish-frames:
+    if: github.repository == 'ecojust/pureTV'
+    permissions:
+      actions: read
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Retain original fish frames from the same signed APK test
+        shell: bash
+        run: |
+          set -euo pipefail
+          id=15247419126
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id" > meta.json
+          jq -e '.name=="hosted-games-tv-case-fish-loop" and .workflow_run.id==46105928279 and .workflow_run.head_sha=="f23e13df65206fa84bfa315356bfb57ee53d9606"' meta.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > input.zip
+          echo "f4b30e4d9f804c4265b1a6d2f0c902c0706d0de5f5143903ecce828579303fcd  input.zip" | sha256sum --check
+          mkdir evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,os,zipfile
+          with zipfile.ZipFile('input.zip') as z:
+              report=json.loads(z.read('report.json'))
+              assert report['apkSha256']==os.environ['APK_SHA']
+              for name in ('report.json','fish-loop-before.png','fish-loop-after.png'):
+                  assert z.namelist().count(name)==1 and 0<z.getinfo(name).file_size<5000000
+                  (Path('evidence')/name).write_bytes(z.read(name))
+          PY
+          cd evidence
+          git init -q
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -qm "Retain unmodified Fish Loop frames from artifact $id and APK $APK_SHA"
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          gh auth setup-git
+          branch="build-assets/hosted-replay-$GITHUB_RUN_ID-original-fish"
+          git push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
