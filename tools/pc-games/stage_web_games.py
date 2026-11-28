@@ -28,6 +28,10 @@ WEB_BUNDLES = {
 }
 
 
+def write_player_cover(directory, target):
+    save_banner(ROOT / directory, target / 'thumb.png', size=(480, 270))
+
+
 def write_player_assets(archive, game, directory, target):
     """Write the PC entry and adapters alongside the unmodified signed game assets."""
     slug = game['id']
@@ -57,7 +61,7 @@ def write_player_assets(archive, game, directory, target):
     if not matches:
         raise ValueError(f'{slug} has no game page head')
     entry.write_text(html, encoding='utf-8')
-    save_banner(ROOT / directory, target / 'thumb.png', size=(480, 270))
+    write_player_cover(directory, target)
 
 
 def stage(game, output, cache, revision):

@@ -1,4 +1,4 @@
-"""Build the desktop player's small web overlays for its bundled, signed game APKs."""
+"""Stage desktop overlays from the verified upstream packages used to build local game projects."""
 import argparse
 import json
 from pathlib import Path
@@ -8,12 +8,13 @@ from zipfile import ZipFile
 from hosted_games import hosted_cover, hosted_games
 from launcher import matching_file
 from prepare_standalone import ROOT, source_revision, tracked_file
-from stage_web_games import write_player_assets
+from stage_web_games import write_player_assets, write_player_cover
 
 
 def stage(apks, output):
     source = Path(__file__).resolve().parent
     catalog = json.loads((source / 'catalog.json').read_text(encoding='utf-8'))
+    online_only = set(json.loads((source / 'online-only.json').read_text(encoding='utf-8')))
     revision = source_revision()
     output.mkdir(parents=True, exist_ok=True)
     for name in ('pc-bridge.js', 'web-host.js', 'web-host.css'):
@@ -27,15 +28,19 @@ def stage(apks, output):
 
     for game in catalog:
         slug = game['id']
+        target = output / slug
+        target.mkdir()
+        directory = 'joystick-games/' + slug
+        if slug in online_only:
+            write_player_cover(directory, target)
+            continue
         filename = game['url'].rsplit('/', 1)[1]
         apk = apks / slug / filename
         if not matching_file(apk, game):
             raise ValueError(f'{slug}: missing or incorrect signed APK in {apks}')
-        target = output / slug
-        target.mkdir()
         pinned = {**game, 'url': game['url'].replace('/refs/heads/master/', '/' + revision + '/')}
         with ZipFile(apk) as archive:
-            write_player_assets(archive, pinned, 'joystick-games/' + slug, target)
+            write_player_assets(archive, pinned, directory, target)
 
 
 if __name__ == '__main__':

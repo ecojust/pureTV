@@ -151,7 +151,7 @@ async function verify(browser, game) {
   const page = await browser.newPage({locale:'zh-CN', viewport:{width:960,height:540}, ignoreHTTPSErrors:true});
   page.setDefaultTimeout(120000);
   const evidence = {game:game.id, checkedAt:new Date().toISOString(), manager, browser:browser.version(),
-    bridge:'Simulated Tauri fullscreen and wireless controller events', source:'Bundled APK and desktop adapters', files:{}};
+    bridge:'Simulated Tauri fullscreen and wireless controller events', source:'Bundled game project and desktop adapters', files:{}};
   const hashes = [];
   page.on('response', response => {
     const url = new URL(response.url());

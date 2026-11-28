@@ -1,7 +1,5 @@
 //! Serve the installed game's web assets on a separate, stable loopback origin.
-//! The archive contains thin desktop overlays and the same signed APKs deployed to TVs.
-use serde::Deserialize;
-use std::collections::HashMap;
+//! Desktop overlays and TV package assembly share the installed game project files.
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::{Path, PathBuf};
@@ -14,7 +12,6 @@ use zip::{
 };
 
 const PORTS: [u16; 4] = [48731, 48732, 48733, 48734];
-const CATALOG: &str = include_str!("../../../tools/pc-games/catalog.json");
 const GAME_CSP: &str = "default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'none'";
 
 #[derive(Default)]
@@ -53,22 +50,7 @@ pub async fn local_game_base(
     Ok(base)
 }
 
-#[derive(Deserialize)]
-struct Game {
-    id: String,
-    url: String,
-}
-
 pub(crate) fn start(library: PathBuf, preference: &Path) -> Result<String, String> {
-    let entries: Vec<Game> = serde_json::from_str(CATALOG).map_err(|e| e.to_string())?;
-    let apks: HashMap<_, _> = entries
-        .into_iter()
-        .map(|game| {
-            let filename = game.url.rsplit('/').next().unwrap_or_default();
-            let member = format!("apks/{}/{filename}", game.id);
-            (game.id, member)
-        })
-        .collect();
     let mut secret = [0; 16];
     getrandom::fill(&mut secret).map_err(|e| e.to_string())?;
     let token: String = secret.iter().map(|byte| format!("{byte:02x}")).collect();
@@ -97,36 +79,42 @@ pub(crate) fn start(library: PathBuf, preference: &Path) -> Result<String, Strin
     for _ in 0..4 {
         readers.push(crate::offline_game_library::open(&library)?);
     }
-    let assets = Arc::new((apks, prefix, address));
+    let route = Arc::new((prefix, address));
     for mut archive in readers {
         let server = server.clone();
-        let assets = assets.clone();
+        let route = route.clone();
         std::thread::spawn(move || {
             for request in server.incoming_requests() {
-                serve(request, &mut archive, &assets.0, &assets.1, &assets.2);
+                serve(request, &mut archive, &route.0, &route.1);
             }
         });
     }
     Ok(base)
 }
 
-fn asset(
-    library: &mut ZipArchive<BufReader<File>>,
-    apks: &HashMap<String, String>,
-    relative: &str,
-) -> Option<Vec<u8>> {
+fn asset(library: &mut ZipArchive<BufReader<File>>, relative: &str) -> Option<Vec<u8>> {
+    let game_path = relative
+        .split_once('/')
+        .map(|(id, path)| (crate::offline_game_library::project_member(id), path));
+    if let Some((member, path)) = &game_path {
+        // Online listings contribute only their cover to this application.
+        if !matches!(*path, "thumb.png" | "thumb.webp") && library.index_for_name(member).is_none()
+        {
+            return None;
+        }
+    }
     let overlay = format!("web/{relative}");
     let mut bytes = Vec::new();
     if let Some(index) = library.index_for_name(&overlay) {
         library.by_index(index).ok()?.read_to_end(&mut bytes).ok()?;
     } else {
-        let (game, name) = relative.split_once('/')?;
-        let apk = library.by_name_seek(apks.get(game)?).ok()?;
+        let (member, name) = game_path?;
+        let project = library.by_name_seek(&member).ok()?;
         let mut archive = ZipArchive::with_config(
             Config {
                 archive_offset: ArchiveOffset::Known(0),
             },
-            BufReader::new(apk),
+            BufReader::new(project),
         )
         .ok()?;
         archive
@@ -184,13 +172,7 @@ fn byte_range(value: &str, len: usize) -> Option<(usize, usize)> {
     (start <= end).then_some((start, end))
 }
 
-fn serve(
-    request: Request,
-    library: &mut ZipArchive<BufReader<File>>,
-    apks: &HashMap<String, String>,
-    prefix: &str,
-    address: &str,
-) {
+fn serve(request: Request, library: &mut ZipArchive<BufReader<File>>, prefix: &str, address: &str) {
     if !matches!(request.method(), Method::Get | Method::Head) {
         let _ = request.respond(Response::empty(405));
         return;
@@ -209,7 +191,7 @@ fn serve(
         let _ = request.respond(Response::empty(404));
         return;
     };
-    let Some(bytes) = asset(library, apks, relative) else {
+    let Some(bytes) = asset(library, relative) else {
         let _ = request.respond(Response::empty(404));
         return;
     };
