@@ -1,0 +1,40 @@
+// Runs the production Activity and socket servers through Android lifecycle callbacks.
+plugins { id 'com.android.application' version '8.5.2' }
+
+def repo = file('../../..')
+def appSources = new File(repo, 'resource/apps/hosted-games/src/main')
+def gameKit = new File(repo, 'resource/game-kit')
+def catalog = tasks.register('stageCatalog', Sync) {
+    from(new File(repo, 'tools/pc-games/hosted-games.json'))
+    into(layout.buildDirectory.dir('catalog'))
+}
+
+def controllers = tasks.register('stageControllers', Sync) {
+    from(new File(gameKit, 'android/src/main/java')) {
+        include 'com/ecojust/gamekit/LanGameServer.java', 'com/ecojust/gamekit/WifiControllerServer.java',
+                'com/ecojust/gamekit/WifiControllerDiscovery.java'
+    }
+    into(layout.buildDirectory.dir('controllers'))
+}
+
+android {
+    namespace 'com.ecojust.hostedgames'
+    compileSdk 35
+    defaultConfig { applicationId 'com.ecojust.hostedgames'; minSdk 26; targetSdk 34 }
+    sourceSets.main {
+        manifest.srcFile new File(appSources, 'AndroidManifest.xml')
+        res.srcDirs = [new File(appSources, 'res')]
+        assets.srcDirs = [layout.buildDirectory.dir('catalog')]
+        java.srcDirs = [new File(appSources, 'java'), layout.buildDirectory.dir('controllers')]
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    testOptions { unitTests.includeAndroidResources = true }
+}
+
+tasks.named('preBuild').configure { dependsOn catalog, controllers }
+
+dependencies {
+    implementation 'com.google.zxing:core:3.5.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+}

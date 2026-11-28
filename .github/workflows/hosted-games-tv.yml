@@ -5,6 +5,7 @@ on:
     paths: &inputs
       - resource/apps/hosted-games/src/**
       - resource/apps/hosted-games/build.py
+      - joystick-games/tools/android-zxing.py
       - resource/game-kit/android/src/main/java/com/ecojust/gamekit/LanGameServer.java
       - resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiController*.java
       - resource/game-kit/web/controller.*
@@ -30,6 +31,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /resource/apps/hosted-games/
+            /joystick-games/tools/android-zxing.py
             /resource/game-kit/android/src/main/java/
             /resource/game-kit/web/controller.*
             /tools/pc-games/hosted-games.json
@@ -40,9 +42,21 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: platforms;android-35 build-tools;34.0.0
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/puretv/zxing-core-3.5.3.jar
+          key: zxing-core-3.5.3-8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82
+      - name: Verify the cached QR encoder or fetch it from a Maven mirror
+        shell: bash
+        run: |
+          cached="$HOME/.cache/puretv/zxing-core-3.5.3.jar"
+          verify=(python3 joystick-games/tools/android-zxing.py --output "$RUNNER_TEMP/zxing.jar")
+          if [[ ! -f "$cached" ]] || ! "${verify[@]}" --archive "$cached" --receipt "$RUNNER_TEMP/cache.json"; then
+            "${verify[@]}" --receipt "$RUNNER_TEMP/download.json"
+            install -Dm644 "$RUNNER_TEMP/zxing.jar" "$cached"
+          fi
       - name: Build the unsigned game launcher
         run: |
-          curl -fsSL --retry 3 https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar -o "$RUNNER_TEMP/zxing.jar"
           python3 resource/apps/hosted-games/build.py --sdk "$ANDROID_HOME" --zxing "$RUNNER_TEMP/zxing.jar" --output "$RUNNER_TEMP/unsigned.apk"
       - uses: actions/upload-artifact@v4
         with:
@@ -158,10 +172,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout-cone-mode: false
-          sparse-checkout: /.gitattributes
       - uses: actions/download-artifact@v4
         with:
           name: hosted-games-tv-signed
@@ -176,8 +186,12 @@ jobs:
         shell: bash
         env:
           TV_RESULT: ${{ needs.television.result }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          mkdir "$RUNNER_TEMP/export"
+          cd "$RUNNER_TEMP/export"
+          git init -q
           release=release-staging/hosted-games
           mkdir -p "$release"
           (cd "$RUNNER_TEMP/signed" && sha256sum --check SHA256SUMS.txt)
@@ -199,7 +213,9 @@ jobs:
             --arg result "$TV_RESULT" '{sourceSha:$sha, runId:$run, attempt:$attempt, television:$result}' > "$release/build.json"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add --sparse --force -- "$release"
+          git add -- "$release"
           git commit -m "Stage hosted games TV build $GITHUB_RUN_ID ($GITHUB_SHA)"
           branched="build-assets/hosted-games-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          gh auth setup-git
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
           git push --force-with-lease="refs/heads/$branched:" origin "HEAD:refs/heads/$branched"
