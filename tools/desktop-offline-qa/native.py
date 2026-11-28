@@ -12,6 +12,7 @@ import time
 
 import pyatspi as at
 from gi.repository import GLib
+from PIL import Image, ImageChops
 
 
 out, manager_pid, metadata = sys.argv[1:]
@@ -138,17 +139,44 @@ def disconnected_and_play():
     photo("no-device")
     record("noDevice", {"adbDevices": [], "guidance": message, "installSuccessVisible": False})
     click(button("关闭"))
-    click(button(title))
-    start = button("开始竞速 · ENTER", 80)
-    assert start.getState().contains(at.STATE_ENABLED), "Renderer does not support this race"
-    click(start)
-    # Pausing via the running game's own control exposes a distinct resume action.
-    pause = wait("game pause action", lambda: next((n for r, name, _, n in entries()
-                 if r in ("button", "push button") and name.startswith("暂停")), None), 35)
-    click(pause)
-    button("继续比赛 · P")
-    photo("local-race-paused")
-    record("offlineDesktop", {"game": title, "input": "Start race, then pause", "observed": "继续比赛 · P"})
+    # The original Tetris implementation draws all menus and pieces inside one canvas.
+    # Capture only its actual visible pixels, with the pointer kept off the board.
+    click(button("Tetris"))
+    canvas = wait("Tetris game canvas", lambda: next((n for r, name, _, n in entries()
+                  if r == "canvas" and name == "TETRIS TV"), None), 75)
+    box = canvas.queryComponent().getExtents(at.DESKTOP_COORDS)
+    assert box.width > 128 and box.height > 120 and box.x >= 0 and box.y >= 0, tuple(box)
+    command("xdotool", "mousemove", str(box.x + box.width // 2), str(box.y + box.height // 2), "click", "1")
+    command("xdotool", "mousemove", "0", "0")
+    time.sleep(2)
+
+    def board(filename):
+        path = out / (filename + ".png")
+        command("import", "-window", "root", "-crop", f"{box.width}x{box.height}+{box.x}+{box.y}", str(path))
+        with Image.open(path) as opened:
+            image = opened.convert("RGB").resize((128, 120))
+        assert len(image.getcolors(128 * 120)) > 10, "Game has not rendered a board"
+        return image
+
+    def changed_fraction(before, after):
+        gray = ImageChops.difference(before, after).convert("L")
+        return sum(gray.histogram()[20:]) / (gray.width * gray.height)
+
+    menu = board("game-title")
+    key("p")
+    time.sleep(1)
+    playing = board("game-playing")
+    changed = changed_fraction(menu, playing)
+    assert changed > 0.08, f"START did not replace the title with a board ({changed:.1%})"
+    key("Right")
+    key("p")
+    time.sleep(0.5)
+    paused = board("game-paused")
+    changed_again = changed_fraction(playing, paused)
+    assert changed_again > 0.025, f"Pause overlay did not appear ({changed_again:.1%})"
+    record("offlineDesktop", {"game": "Tetris", "input": ["START", "Right", "Pause"],
+                              "menuToBoardChangedFraction": round(changed, 4),
+                              "boardToPauseChangedFraction": round(changed_again, 4)})
     back = wait("player toolbar", lambda: next((n for r, name, _, n in entries()
                 if r in ("button", "push button") and "返回游戏列表" in name), None), 15)
     click(back)
@@ -171,6 +199,9 @@ def boot_tv():
             return False
     wait("Android TV boot", booted, 420)
     assert os.readlink("/proc/self/ns/net") == os.readlink(f"/proc/{emulator.pid}/ns/net")
+    adb("emulator-5554", "shell", "input", "keyevent", "KEYCODE_WAKEUP")
+    adb("emulator-5554", "shell", "wm", "dismiss-keyguard")
+    adb("emulator-5554", "shell", "svc", "power", "stayon", "true")
     assert "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features")
     # A QEMU port redirection survives Manager restarting the host ADB daemon during connection.
     # Expose real guest adbd over guest Ethernet as on a network-enabled television.
@@ -216,6 +247,9 @@ def deploy():
     see(install_message, 150)
     see("操作成功")
     button("前往启动器")
+    steps = ["打包 APK", "安装到电视", "完成"]
+    for step in steps:
+        see(step)
     photo("deployed")
     path = adb(endpoint, "shell", "pm", "path", "--user", "0", package)
     assert re.fullmatch(r"package:/data/app/[^\n]+/base\.apk", path), path
@@ -237,7 +271,7 @@ def deploy():
     see("电视启动器")
     record("installed", {"package": package, "user": 0, "size": len(installed), "sha256": digest,
                          "matchesPublishedApk": True, "launcherGuidance": install_message,
-                         "launcherPageOpened": True, "leanbackComponent": component, "foregroundAfter5s": True})
+                         "displayedSteps": steps, "launcherPageOpened": True, "leanbackComponent": component, "foregroundAfter5s": True})
 
 
 if __name__ == "__main__":
