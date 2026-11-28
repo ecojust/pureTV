@@ -26,6 +26,8 @@ python3 resource/apps/hosted-games/build.py --sdk /path/to/android-sdk \
   --zxing /path/to/core-3.5.3.jar --output /tmp/hosted-games-unsigned.apk
 ```
 
-构建脚本核对 ZXing 校验和，从网页目录的同一份清单打包六款游戏的地址及中文指南。仓库发布流程使用 pureTV 固定证书签名，再在 Android TV 模拟器上安装测试。[工作流](../../../.github/workflows/hosted-games-tv.yml) · [手机手柄二维码组件许可](src/main/assets/ZXing-LICENSE.txt)
+构建脚本核对 ZXing 校验和，从网页目录的同一份清单打包六款游戏的地址及中文指南。常规提交执行未签名构建。在 master 上手动运行「Hosted games for Android TV」发布流程，会使用 pureTV 固定证书签名，再在 Android TV 模拟器上安装测试。[工作流](../../../.github/workflows/hosted-games-tv.yml) · [手机手柄二维码组件许可](src/main/assets/ZXing-LICENSE.txt)
 
 在仓库根目录运行 `resource/launcher/puretv/gradlew -p tools/hosted-games-tv/native testDebugUnitTest`，可复验应用进入后台后释放端口、回到前台后保留同一游戏画面，以及离开作者站点后返回原入口。测试使用 Robolectric API 28 和真实的本地 TCP 连接。[签名包资源校验](docs/signed-package.json)
+
+[查看六款游戏的 Android TV 模拟器验收结果](docs/android-tv.md) · [网页版和电脑管理器的逐款指南验收](../../../joystick-games/catalog/hosted-guides-qa.json)

@@ -1,7 +1,7 @@
 name: Hosted games for Android TV
 on:
   push:
-    branches: [master, continue-six-hosted-tv]
+    branches: [master]
     paths: &inputs
       - resource/apps/hosted-games/src/**
       - resource/apps/hosted-games/build.py
@@ -67,7 +67,7 @@ jobs:
 
   sign:
     needs: build
-    if: github.event_name != 'pull_request' && github.repository == 'ecojust/pureTV' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/continue-six-hosted-tv')
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -157,8 +157,8 @@ jobs:
           target: android-tv
           arch: x86_64
           profile: tv_1080p
-          disable-animations: true
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          disable-animations: false
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
           script: python3 tools/hosted-games-tv/qa.py --case "${{ matrix.case }}" --apk "$RUNNER_TEMP"/signed/hosted-games-*.apk --out "$RUNNER_TEMP/hosted-games-qa"
       - uses: actions/upload-artifact@v4
         if: always()
