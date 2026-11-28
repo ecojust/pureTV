@@ -1,7 +1,39 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>金库大盗 · pureTV</title><style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%}body{display:flex;flex-direction:column;background:#101820;color:#edf4f5;font:1rem/1.45 system-ui,sans-serif}
-iframe{width:100%;flex:1 1 0;min-height:0;border:0}details{padding:.35rem 1rem}summary{cursor:pointer;width:max-content}p{margin:.4rem 0}
-</style><script defer src="../hosted-player.js"></script></head><body data-src="https://vault-breakers.onrender.com/" data-title="金库大盗" data-title-en="Vault Breakers (formerly Bandit)">
-<details><summary>操作说明</summary><p data-en="Bandit is now Vault Breakers. Heist needs at least two players. Create or join a room. Play with keyboard and mouse or a standard gamepad.">《Bandit》现为多人版《Vault Breakers》。金库模式至少需要两人，可创建或加入房间。原作支持键鼠和标准手柄。</p></details></body></html>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%}
+body{display:flex;flex-direction:column;background:#101820;color:#edf4f5;font:1rem/1.5 system-ui,sans-serif}
+iframe{width:100%;flex:1 1 0;min-height:0;border:0}
+nav{display:flex;justify-content:flex-end;padding:.15rem .65rem}
+button{background:#243a46;color:inherit;border:1px solid #74929f;border-radius:.35rem;padding:.25rem .8rem;font:inherit;cursor:pointer}
+button:focus-visible,#guide-body:focus-visible{outline:3px solid #ffd45e;outline-offset:-3px}
+dialog{width:min(42rem,95vw);max-height:92vh;padding:0;background:#152630;color:inherit;border:1px solid #74929f;border-radius:.65rem}
+dialog[open]{display:flex;flex-direction:column}
+dialog::backdrop{background:rgba(0,0,0,.68)}
+header{display:flex;align-items:center;gap:1rem;justify-content:space-between;border-bottom:1px solid #45606c;padding:.75rem 1rem}
+header button{flex-shrink:0}
+h1,h2,p,ol,dl,dd{margin:0}
+h1{font-size:1.25rem}h2{font-size:1.1rem;margin:1rem 0 .35rem}
+#guide-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:.9rem 1rem 1.1rem}
+ol{padding-inline-start:1.6rem}li+li{margin-top:.4rem}
+dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);column-gap:1rem;row-gap:.4rem;overflow-wrap:anywhere}dt{font-weight:600}
+</style><script defer src="../hosted-player.js?v=2"></script></head>
+<body data-src="https://vault-breakers.onrender.com/" data-title="金库大盗" data-title-en="Vault Breakers (formerly Bandit)">
+<nav><button type="button" id="open-guide" aria-haspopup="dialog" aria-controls="guide" data-en="Game guide">中文指南</button></nav>
+<dialog id="guide" aria-labelledby="guide-title">
+<header><h1 id="guide-title" data-en="Vault Breakers (formerly Bandit)">金库大盗</h1>
+<button type="button" id="close-guide" autofocus data-en="Return to game">返回游戏</button></header>
+<div id="guide-body" tabindex="0">
+<p><span data-en="In Heist, runners deliver diamonds to the getaway before time runs out. The saboteur hides the diamonds and defends the house.">在劫案模式中，逃脱者要在倒计时结束前将钻石送到撤离点。破坏者负责藏起钻石、守住屋子。</span></p>
+<h2 data-en="How to play">玩法与操作</h2><ol><li><span data-en="Choose PLAY, then CREATE ROOM and share the room code. A second player can enter it under JOIN BY CODE.">从 PLAY 进入，选 CREATE ROOM 建房，把房间码给同伴。另一位玩家选 JOIN BY CODE 输入房间码。</span></li>
+<li><span data-en="Select HEIST with at least two players. Everyone readies up, then the host starts. Check your role each round.">选 HEIST，至少两人入房。所有人选 READY 后，由房主开始。每轮先看分配给自己的角色。</span></li>
+<li><span data-en="As a runner, hold E beside furniture to search it and bring diamonds to GETAWAY. Use the arrows to move and Shift to sprint. On a standard gamepad use the stick, A and RT respectively to move, interact and sprint.">逃脱者靠近家具长按 E 搜寻，找到钻石后送到 GETAWAY。用方向键移动，Shift 冲刺。标准手柄用摇杆移动、A 互动、RT 冲刺。</span></li></ol>
+<h2 data-en="On-screen terms">画面词汇</h2><dl><dt>PLAY</dt><dd><span data-en="Open the game menu">进入游戏</span></dd>
+<dt>CREATE ROOM</dt><dd><span data-en="Host a room">创建房间</span></dd>
+<dt>JOIN BY CODE</dt><dd><span data-en="Join a friend’s room">输入房间码加入</span></dd>
+<dt>READY</dt><dd><span data-en="Mark yourself ready">准备就绪</span></dd>
+<dt>Saboteur</dt><dd><span data-en="Defending role">破坏者，负责防守</span></dd>
+<dt>Runners</dt><dd><span data-en="Diamond hunters">逃脱者，负责寻宝</span></dd>
+<dt>GETAWAY</dt><dd><span data-en="Diamond drop-off">撤离点，送交钻石</span></dd></dl>
+</div></dialog></body></html>
