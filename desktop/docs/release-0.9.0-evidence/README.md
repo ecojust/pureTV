@@ -11,3 +11,5 @@
 0.9.0 标签指向 `b81eabe535a36b666ea331d2437fc7dbf686e067`，2026-11-28 12:58 UTC 公开发布。Windows x64 安装版与便携版、两种 macOS DMG、Linux x64 DEB 均已从公开链接匿名下载，大小与 GitHub 记录一致，SHA-256 与发布清单逐项相符。正式构建还通过了无外网条件下的 Android TV 模拟器部署测试。[逐包大小与摘要](public-downloads.json) · [发行构建](https://github.com/ecojust/pureTV/actions/runs/46146210460) · [下载](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.9.0)
 
 从上述公开 Linux DEB 提取版本 0.9.0 的可执行文件，再次运行完整原生 MCP 验收，退出码为 0。示例实际订阅了 WebSocket，测试按键使 WebKit 中的游戏前进，过期会话被拒绝。
+
+![正式 Linux 客户端收到一次 A 键后，进度停在五分之一，等待手柄再次连接](button-race.png)
