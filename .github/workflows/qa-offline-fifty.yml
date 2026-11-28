@@ -1,0 +1,75 @@
+name: Cold start the 50 installed desktop games
+on:
+  push:
+    branches: [qa-offline-library-50]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: qa-offline-fifty
+  cancel-in-progress: true
+env:
+  GH_REPO: ecojust/pureTV
+  BUILD_RUN: '46115322667'
+jobs:
+  exercise:
+    name: Games shard ${{ matrix.shard }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools/desktop-offline-qa
+            tools/pc-games/catalog.json
+            desktop/src-tauri/src/local_game_player.rs
+            desktop/src-tauri/src/offline_game_library.rs
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve the four-platform build's verified library
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GH_REPO/actions/runs/$BUILD_RUN" --jq .head_sha)" = 89118589afcac78f4a41526a789e41760fcb3541
+          for i in $(seq 1 40); do
+            if gh run download "$BUILD_RUN" -n offline-game-library -D "$RUNNER_TEMP/library"; then break; fi
+            sleep 15
+          done
+          cd "$RUNNER_TEMP/library"
+          test "$(sha256sum game-library.zip | cut -d' ' -f1)" = "$(cat game-library.sha256)"
+          cp game-library.sha256 "$GITHUB_WORKSPACE/"
+      - name: Build the production Rust HTTP and APK reader
+        run: |
+          python tools/desktop-offline-qa/shard-host/build-host.py
+          PURETV_GAME_LIBRARY_BYTES=$(stat -c %s "$RUNNER_TEMP/library/game-library.zip") cargo build --locked --release --manifest-path tools/desktop-offline-qa/shard-host/Cargo.toml
+          python -m pip install pillow==11.3.0 playwright==1.58.0
+      - name: Cold-start ten games with no outbound game traffic
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          exe=tools/desktop-offline-qa/shard-host/target/release/native-game-origin
+          "$exe" "$RUNNER_TEMP/library/game-library.zip" > "$RUNNER_TEMP/origin" &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 25); do test -s "$RUNNER_TEMP/origin" && break; sleep 1; done
+          mapfile -t games < <(python -c 'import json, os; print(*(g["id"] for g in json.load(open("tools/pc-games/catalog.json"))[int(os.environ["SHARD"])::5]), sep="\n")')
+          test "${#games[@]}" -eq 10
+          args=()
+          for game in "${games[@]}"; do args+=(--game "$game"); done
+          python tools/desktop-offline-qa/gameplay.py --base "$(cat "$RUNNER_TEMP/origin")" --browser "$(command -v google-chrome)" --report "shard-$SHARD.json" "${args[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-shard-${{ matrix.shard }}
+          path: |
+            shard-*.json
+            game-library.sha256
+          retention-days: 5
