@@ -610,7 +610,6 @@ async fn build_web_game_apk(
         web_game_apk::prepare(
             &directory,
             &game_id,
-            || offline_game_library::path(&app),
             &bridge.cancel,
             |progress| {
                 on_progress
@@ -629,10 +628,10 @@ async fn save_web_game_apk(
     app: tauri::AppHandle,
     bridge: tauri::State<'_, Bridge>,
 ) -> Result<Option<String>, String> {
-    let name = web_game_apk::file_name(&game_id)?;
     let directory = app.path().app_data_dir().map_err(|_| "无法定位数据目录")?;
     let bridge = bridge.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
+        let name = web_game_apk::file_name(&directory, &game_id)?;
         let file = app
             .dialog()
             .file()
@@ -1400,16 +1399,6 @@ fn main() {
         return;
     }
     let context = tauri::generate_context!();
-    if args
-        .get(1)
-        .is_some_and(|arg| arg == "--verify-game-library")
-    {
-        if let Err(error) = offline_game_library::verify(context.package_info()) {
-            eprintln!("{error}");
-            std::process::exit(1);
-        }
-        return;
-    }
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
@@ -1505,6 +1494,8 @@ fn main() {
             client_update_result,
             get_package_insight,
             open_package_resource,
+            offline_game_library::game_library_catalog,
+            offline_game_library::download_library_game,
             local_game_player::local_game_base,
             start_game_controllers,
             stop_game_controllers,

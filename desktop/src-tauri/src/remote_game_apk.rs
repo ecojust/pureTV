@@ -1,23 +1,14 @@
-//! Download the two catalog APKs supplied separately from the desktop installation.
+//! Download the official APK for an online entry in the current game catalog.
 use reqwest::{blocking::Response, redirect::Policy, StatusCode, Url};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::LazyLock;
 use std::time::Duration;
 
-// Both official APKs in the 0.7.0 master tree match the current catalog receipts.
-const REVISION: &str = "91da348a470b2dc45a86662c3d972bebf0d23e70";
-static ONLINE_IDS: LazyLock<[&str; 2]> = LazyLock::new(|| {
-    serde_json::from_str(include_str!("../../../tools/pc-games/online-only.json"))
-        .expect("the bundled online-only catalog must contain two game IDs")
-});
-
-pub(crate) fn is_online_only(id: &str) -> bool {
-    ONLINE_IDS.contains(&id)
-}
-
 fn official_url(id: &str, file: &str) -> Result<Url, String> {
-    if !is_online_only(id)
-        || !file.starts_with(&format!("{id}-"))
+    if id.is_empty()
+        || !id
+            .bytes()
+            .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
+        || file.starts_with('.')
         || !file.ends_with(".apk")
         || !file
             .bytes()
@@ -26,7 +17,7 @@ fn official_url(id: &str, file: &str) -> Result<Url, String> {
         return Err("游戏没有可用的官方 APK 下载地址".into());
     }
     format!(
-        "https://raw.githubusercontent.com/ecojust/pureTV/{REVISION}/joystick-games/{id}/{file}"
+        "https://raw.githubusercontent.com/ecojust/pureTV/refs/heads/master/joystick-games/{id}/{file}"
     )
     .parse()
     .map_err(|_| "游戏 APK 清单地址无效".into())
@@ -42,7 +33,7 @@ pub(crate) fn download(
         return Err("游戏 APK 操作已取消".into());
     }
     let url = official_url(id, file)?;
-    // These versioned Git blobs have a final raw URL and do not require a redirect.
+    // The catalog pins the bytes by SHA-256. Fetch only from the official raw origin.
     let response = reqwest::blocking::Client::builder()
         .https_only(true)
         .redirect(Policy::none())
@@ -75,18 +66,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn only_the_two_official_game_downloads_are_addressable() {
-        assert_eq!(ONLINE_IDS.len(), 2);
-        for id in ["kart-rush", "cf-transport-ship"] {
+    fn online_downloads_stay_under_the_official_game_directory() {
+        for id in ["kart-rush", "cf-transport-ship", "new-online-title"] {
             let file = format!("{id}-0.1.3.apk");
             let url = official_url(id, &file).unwrap();
             assert_eq!(url.host_str(), Some("raw.githubusercontent.com"));
             assert_eq!(
                 url.path(),
-                format!("/ecojust/pureTV/{REVISION}/joystick-games/{id}/{file}")
+                format!("/ecojust/pureTV/refs/heads/master/joystick-games/{id}/{file}")
             );
         }
-        assert!(official_url("turbo-kart-rush", "turbo-kart-rush-0.1.3.apk").is_err());
+        assert!(official_url("../turbo", "turbo-kart-rush-0.1.3.apk").is_err());
         assert!(official_url("kart-rush", "kart-rush-../other.apk").is_err());
         assert!(official_url("kart-rush", "kart-rush-%2e%2e.apk").is_err());
         assert!(official_url("kart-rush", "https://example.org/kart-rush-0.1.3.apk").is_err());

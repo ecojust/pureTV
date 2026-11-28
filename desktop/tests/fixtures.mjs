@@ -1,6 +1,8 @@
 import {readFileSync} from 'node:fs';
 const managerVersion=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')).version;
 
+export const gameLibrary = JSON.parse(readFileSync(new URL('../../game-library/catalog.json', import.meta.url), 'utf8'));
+
 export function snapshot() {
   return {
     localNetwork:{addresses:[{interfaceName:'Wi-Fi',ip:'192.168.0.2',prefixLength:24},{interfaceName:'Ethernet',ip:'10.0.0.2',prefixLength:24},{interfaceName:'Test LAN',ip:'192.168.1.2',prefixLength:24}],error:null},
@@ -84,7 +86,7 @@ export function forumReplies(number = 'IABC123', overrides = {}) {
 }
 
 export async function mockBridge(page, initial = snapshot(), options = {}) {
-  await page.addInitScript(({initial, options, defaultMarketCatalog, defaultClientUpdate, defaultForumPage, defaultForumDetails, defaultForumReplies}) => {
+  await page.addInitScript(({initial, options, defaultGameLibrary, defaultMarketCatalog, defaultClientUpdate, defaultForumPage, defaultForumDetails, defaultForumReplies}) => {
     if (window !== window.top) return;
     const state = structuredClone(initial);
     const defaultLayout=options.layout || {version:2,home:{columns:4,items:[{action:'music',icon:'music',color:'#303338'},{action:'files',icon:'files',color:'#3B4C46'},{action:'apps',icon:'apps',color:'#374959'}]},apps:{columns:3,items:[]}};
@@ -141,6 +143,8 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
     window.__emitMcp = (event, payload) => { for (const callback of (window.__eventListeners?.[event] || [])) callbacks.get(callback)?.({event, payload, id:callback}); };
     window.__eventListeners = {};
     window.__gameCommands = [];
+    window.__gameLibraryRequests = [];
+    window.__gameCatalog = options.gameCatalog ?? defaultGameLibrary;
     window.__gameApkRequests = [];
     window.__gameApkError = options.gameApkError || null;
     window.__windowFullscreen = false;
@@ -173,7 +177,20 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
           if (command === 'save_web_game_apk') return options.gameApkDestination || null;
           return {path:`/cache/games/${id}-0.1.0.apk`, packageName:null, sha256:'a'.repeat(64)};
         }
-        if (command === 'local_game_base') return options.localGameBase || 'http://127.0.0.1:48731/games/';
+        if (command === 'game_library_catalog') {
+          window.__gameLibraryRequests.push({command});
+          await holdOperation(command);
+          return structuredClone(window.__gameCatalog);
+        }
+        if (command === 'download_library_game' || command === 'local_game_base') {
+          window.__gameLibraryRequests.push({command, gameId:args.gameId});
+          await holdOperation(command);
+          const entry = window.__gameCatalog.games.find(game => game.id === args.gameId);
+          if (!entry || entry.kind !== 'project') throw new Error('游戏不可下载');
+          entry.downloaded = true;
+          if (command === 'local_game_base') return options.localGameBase || 'http://127.0.0.1:48731/games/';
+          return;
+        }
         if (['start_game_controllers', 'game_controller_state', 'stop_game_controllers'].includes(command)) {
           window.__gameCommands.push({command, ...args});
           if (command === 'start_game_controllers') {
@@ -409,7 +426,7 @@ export async function mockBridge(page, initial = snapshot(), options = {}) {
         return structuredClone(state);
       },
     };
-  }, {initial, options, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate(), defaultForumPage:forumPage(),
+  }, {initial, options, defaultGameLibrary:gameLibrary, defaultMarketCatalog:marketCatalog(), defaultClientUpdate:clientUpdate(), defaultForumPage:forumPage(),
     defaultForumDetails:Object.fromEntries(['IABC123','IABC122','IABC121'].map(number=>[number,forumDetail(number)])),
     defaultForumReplies:Object.fromEntries(['IABC123','IABC122','IABC121'].map(number=>[number,{1:forumReplies(number)}])),
   });

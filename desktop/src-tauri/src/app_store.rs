@@ -134,7 +134,7 @@ fn html_unescape(value: &str) -> Option<String> {
 
 // Nginx autoindex uses quoted href attributes. Read the href, never the visible
 // (possibly truncated) label or its rounded human-readable file size.
-fn href_attribute(tag: &str) -> Option<&str> {
+pub(crate) fn href_attribute(tag: &str) -> Option<&str> {
     let bytes = tag.as_bytes();
     let mut i = 0;
     while i < bytes.len() {

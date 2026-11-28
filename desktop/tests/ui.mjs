@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { checkGameDeployment } from './game-deployment.mjs';
 import { verifyGameApkCancellation } from './game-apk-cancel.mjs';
-import { mockBridge, snapshot, marketCatalog, packageInsight, clientUpdate, forumPage, forumDetail, forumReplies } from './fixtures.mjs';
+import { mockBridge, snapshot, gameLibrary, marketCatalog, packageInsight, clientUpdate, forumPage, forumDetail, forumReplies } from './fixtures.mjs';
 
 const directory = fileURLToPath(new URL('..', import.meta.url));
 const port = 1429, url = `http://127.0.0.1:${port}`;
@@ -61,6 +61,10 @@ async function check(name, run, state = snapshot(), options = {}) {
   p.on('pageerror', e => errors.push(e.message));
   try {
     if (state) await mockBridge(p, state, options);
+    else await p.route('https://apps.b14f.com/game-library/catalog.json', route => route.fulfill({
+      json:gameLibrary, headers:{'Access-Control-Allow-Origin':'*'}
+    }));
+    await p.route('https://apps.b14f.com/game-library/web/**/thumb.*', route => route.fulfill({status:204}));
     await p.goto(url);
     await p.locator('.connection-strip').waitFor();
     if (state?.device) await p.getByText(state.device.model, { exact:true }).first().waitFor();
@@ -99,10 +103,10 @@ try {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
     const play = p.locator('[data-play-game="tetris"]');
+    await play.waitFor();
     const ids = await p.locator('[data-play-game]').evaluateAll(items => items.map(item => item.dataset.playGame).sort());
-    const catalog = JSON.parse(await readFile(new URL('../../tools/pc-games/catalog.json', import.meta.url), 'utf8'));
-    const hosted = JSON.parse(await readFile(new URL('../../tools/pc-games/hosted-games.json', import.meta.url), 'utf8'));
-    assert.deepEqual(ids, [...catalog, ...hosted].map(item => item.id).sort());
+    assert.deepEqual(ids, gameLibrary.games.map(item => item.id).sort());
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests), [{command:'game_library_catalog'}]);
     assert.equal(await p.locator('[data-browser-game], .web-game-grid [target="_blank"]').count(), 0);
     await play.click();
     const dialog = p.locator('dialog.game-player[open]');
@@ -111,6 +115,8 @@ try {
     assert.doesNotMatch(await dialog.innerText(), /浏览器/);
     const frame = p.frame({url: url => url.href.startsWith(gamePage)}) || await p.waitForEvent('framenavigated', {predicate:f => f.url().startsWith(gamePage)});
     await frame.waitForFunction(() => window.received?.some(state => state.revision === 0));
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests.filter(r => r.command === 'local_game_base')),
+      [{command:'local_game_base', gameId:'tetris'}]);
     const status = dialog.getByRole('status', {name:'游戏状态'});
     assert.equal(await dialog.getByRole('status').count(), 1);
     assert.match(await status.innerText(), /搜索键.*192\.168\.0\.2:63485/);
@@ -149,6 +155,64 @@ try {
     await nav(p, 'apps');
     assert.equal(await p.locator('iframe').count(), 0);
   }, withoutAdb());
+  await check('game library retries a failed catalog and displays the entries returned by the server', async p => {
+    await p.evaluate(() => window.__holdNextOperation('game_library_catalog'));
+    await nav(p, 'games');
+    await p.waitForFunction(() => window.__pendingOperations.some(op => op.action === 'game_library_catalog'));
+    assert.equal(await p.locator('[data-play-game]').count(), 0);
+    await release(p, 'game_library_catalog', {error:'无法连接游戏库'});
+    await p.getByRole('alert').filter({hasText:'无法连接游戏库'}).waitFor();
+    const refresh = p.locator('[data-refresh-games]');
+    await p.evaluate(() => {
+      const source = window.__gameCatalog.games.find(game => game.id === 'tetris');
+      const id = 'catalog-addition';
+      window.__gameCatalog.games = [{
+        ...source, id, zh:'测试新增游戏', en:'New catalog game',
+        apk:{...source.apk, fileName:id + '.apk'},
+        files:source.files.map(file => ({...file, path:file.path.replace('/tetris/', '/' + id + '/')}))
+      }];
+    });
+    await refresh.click();
+    const card = p.locator('[data-play-game="catalog-addition"]');
+    await card.waitFor();
+    assert.match(await card.innerText(), /测试新增游戏/);
+    assert.equal(await p.locator('[data-play-game]').count(), 1);
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests.map(r => r.command)),
+      ['game_library_catalog', 'game_library_catalog']);
+    await p.evaluate(() => { window.__gameCatalog.games = []; });
+    await refresh.click();
+    await card.waitFor({state:'detached'});
+    assert.match(await p.locator('.web-game-tools').innerText(), /游戏数量 · 0/);
+  }, withoutAdb());
+  await check('game download saves only the selected title without opening a player or preparing an APK', async p => {
+    await nav(p, 'games');
+    const download = p.locator('[data-download-game="tetris"]');
+    await download.waitFor();
+    assert.match(await download.innerText(), /下载到本地/);
+    assert.equal(await p.locator('[data-download-game="kart-rush"], [data-download-game="bandit"]').count(), 0);
+
+    await p.evaluate(() => window.__holdNextOperation('download_library_game'));
+    await download.click();
+    await p.waitForFunction(() => window.__pendingOperations.some(op => op.action === 'download_library_game'));
+    assert.equal(await download.isDisabled(), true);
+    await release(p, 'download_library_game', {error:'测试网络中断'});
+    const card = p.locator('.web-game-card').filter({has:download});
+    await card.getByText('测试网络中断', {exact:false}).waitFor();
+    assert.match(await download.innerText(), /重新下载/);
+    await download.click();
+    await download.filter({hasText:'已下载'}).waitFor();
+    await p.locator('[data-refresh-games]').click();
+    await p.waitForFunction(() => window.__gameLibraryRequests.filter(r => r.command === 'game_library_catalog').length === 2);
+    assert.match(await download.innerText(), /已下载/);
+    assert.equal(await download.isDisabled(), true);
+    assert.match(await p.locator('[data-download-game="jewel"]').innerText(), /下载到本地/);
+    assert.equal(await p.locator('dialog.game-player[open], dialog.game-apk-dialog[open]').count(), 0);
+    assert.deepEqual(await p.evaluate(() => window.__gameLibraryRequests.filter(r => r.command !== 'game_library_catalog')), [
+      {command:'download_library_game', gameId:'tetris'}, {command:'download_library_game', gameId:'tetris'}
+    ]);
+    assert.deepEqual(await p.evaluate(() => window.__gameApkRequests), []);
+    assert.deepEqual(await p.evaluate(() => window.__gameCommands), []);
+  }, withoutAdb());
   await check('games show the actual controller port when discovery is unavailable', async p => {
     await p.route(gamePage + '*', route => route.fulfill({contentType:'text/html', body:gameFrameHtml}));
     await nav(p, 'games');
@@ -166,18 +230,20 @@ try {
     assert.equal(await dialog.locator('iframe').isVisible(), true);
   }, withoutAdb(), {gameControllerError:'TCP 63485: bind failed'});
   await check('games retain the Pages player and wireless controller for both online-only Android titles', async p => {
-    const ids = JSON.parse(await readFile(new URL('../../tools/pc-games/online-only.json', import.meta.url), 'utf8'));
+    const ids = gameLibrary.games.filter(game => game.kind === 'online').map(game => game.id);
+    const projectCount = gameLibrary.games.filter(game => game.kind === 'project').length;
     await nav(p, 'games');
     const sections = p.locator('.web-game-section');
-    assert.match(await sections.nth(0).innerText(), /本地游戏 · 48/);
-    assert.match(await sections.nth(1).innerText(), /联网游戏 · 8/);
+    assert.match(await sections.nth(0).innerText(), new RegExp('本地游戏 · ' + projectCount));
+    assert.match(await sections.nth(0).innerText(), /首次.*下载/);
+    assert.match(await sections.nth(1).innerText(), new RegExp('联网游戏 · ' + (gameLibrary.games.length - projectCount)));
     assert.equal(await p.locator('.web-game-network-note').count(), ids.length);
     assert.deepEqual([...ids].sort(), ['cf-transport-ship','kart-rush']);
     for (const id of ids) {
       const card = p.locator(`[data-play-game="${id}"]`);
       const tag = await card.evaluate(button=>Array.from(document.querySelectorAll('.web-game-section')).filter(section=>section.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).at(-1).textContent);
       assert.match(tag,/联网游戏/);
-      await p.waitForFunction(id => document.querySelector(`[data-play-game="${id}"] img`).src.startsWith('http://127.0.0.1:'), id);
+      assert.equal(await card.locator('img').getAttribute('src'), `https://apps.b14f.com/game-library/web/${id}/thumb.png`);
       assert.equal(await p.locator(`[data-build-game="${id}"]`).innerText(),'获取正式 APK');
       const source = gamesOrigin + '/pureTV/games/' + id + '/tv.html';
       await p.route(source+'*', route=>route.fulfill({contentType:'text/html',body:gameFrameHtml}));
@@ -191,7 +257,7 @@ try {
     await p.waitForFunction(()=>window.__gameCommands.filter(item=>item.command==='stop_game_controllers').length===2);
   }, withoutAdb());
   await check('games hosted by the author open from their category with Chinese controls and return to the selected card', async p => {
-    const hosted = JSON.parse(await readFile(new URL('../../tools/pc-games/hosted-games.json', import.meta.url), 'utf8'));
+    const hosted = gameLibrary.games.filter(game => game.kind === 'hosted');
     const categories = {
       bandit: 'action', 'fish-loop': 'puzzle', 'noir-extreme': 'action',
       'struggle-bus': 'flight', vespertine: 'action', 'daejeon-campus': 'action',
@@ -227,7 +293,8 @@ try {
   }, withoutAdb());
   await check('games allow exporting existing titles and queueing one verified APK without ADB', async p => {
     await nav(p, 'games');
-    assert.equal(await p.locator('[data-build-game]').count(), 56);
+    await p.locator('[data-build-game="tetris"]').waitFor();
+    assert.equal(await p.locator('[data-build-game]').count(), gameLibrary.games.length);
     const button = p.locator('[data-build-game="bandit"]');
     assert.equal(await button.innerText(), '生成电视 APK');
     assert.equal(await p.locator('[data-build-game="tetris"]').innerText(), '获取电视 APK');

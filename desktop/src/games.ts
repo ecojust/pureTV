@@ -1,26 +1,46 @@
 import {invoke} from '@tauri-apps/api/core';
 import {listen, type UnlistenFn} from '@tauri-apps/api/event';
 import {getCurrentWindow} from '@tauri-apps/api/window';
-import catalog from '../../tools/pc-games/catalog.json';
-import hosted from '../../tools/pc-games/hosted-games.json';
-import sections from '../../tools/readme-app-games.json';
 import {desktop} from './bridge';
-import {locale, t} from './i18n';
-import {needsOnlineApk, WebGamePackaging, type GameDeployment, type QueueGameApk} from './web-game-packaging';
+import {locale, message, t} from './i18n';
+import {WebGamePackaging, type GameKind, type GameDeployment, type QueueGameApk} from './web-game-packaging';
 
 const gamesBase = 'https://ecojust.github.io/pureTV/games/';
 const localOrigins = new Set([48731, 48732, 48733, 48734].map(port => 'http://127.0.0.1:' + port));
 const twoPlayerGames = new Set(['tank', 'super-mario', 'jackal', 'tetris', 'jewel', 'used-car-racing']);
-type Game = (typeof catalog)[number] | (typeof hosted)[number];
-const games = new Map<string, Game>([...catalog, ...hosted].map(game => [game.id, game]));
-const groups = sections.map(({id, zh, en, games:entries}) => ({
-  id, zh, en,
-  games: entries.flatMap(entry => {
-    const path = entry.resource ?? entry.page;
-    const game = path && games.get(path.split('/')[1]);
-    return game ? [game] : [];
-  }).concat(hosted.filter(game => game.category === id))
-}));
+const libraryBase = 'https://apps.b14f.com/game-library/';
+const repositoryBase = 'https://raw.githubusercontent.com/ecojust/pureTV/master/game-library/';
+
+type Group = {id:string; zh:string; en:string};
+type Game = Group & {category:string; kind:GameKind; downloaded?:boolean; controls?:{zh:string; en:string}};
+type Catalog = {version:number; groups:Group[]; games:Game[]};
+
+function validCatalog(catalog:Catalog):boolean {
+  const named = (entry:Group) => entry && typeof entry.id === 'string' && /^[a-z0-9-]+$/.test(entry.id) &&
+    typeof entry.zh === 'string' && typeof entry.en === 'string';
+  return catalog?.version === 1 && Array.isArray(catalog.groups) && catalog.groups.every(named) &&
+    Array.isArray(catalog.games) && catalog.games.every(game => named(game) &&
+      catalog.groups.some(group => group.id === game.category) &&
+      ['project', 'online', 'hosted'].includes(game.kind) && (!game.controls ||
+        typeof game.controls.zh === 'string' && typeof game.controls.en === 'string'));
+}
+
+async function browserCatalog():Promise<{catalog:Catalog; base:string}> {
+  for (const base of [libraryBase, repositoryBase]) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 12000);
+    try {
+      const response = await fetch(base + 'catalog.json', {cache:'no-cache', signal:controller.signal});
+      if (response.ok) {
+        const catalog:Catalog = await response.json();
+        if (validCatalog(catalog)) return {catalog, base};
+      }
+    } catch { /* The repository also serves the published catalog. */ }
+    finally { window.clearTimeout(timer); }
+  }
+  throw new Error(t('无法读取游戏列表，请检查网络后重试。'));
+}
+
 type ControllerSession = {session:string; port:number; addresses:string[]; discovery:boolean};
 type ControllerPlayer = {id:number; connected:boolean; controllerId:string};
 type ControllerState = {session:string; revision:number; connections:number; players:ControllerPlayer[]};
@@ -34,7 +54,6 @@ type ActiveGame = {
   snapshot?:ControllerState;
   unlisten?:UnlistenFn;
 };
-function onlineGame(game:Game) { return 'controls' in game || needsOnlineApk(game.id); }
 function gameLanguage() { return locale() === 'en' ? 'en' : 'zh'; }
 function gameName(game:Game) { return gameLanguage() === 'en' ? game.en : game.zh; }
 function gameUrl(base:string, id:string) { return base + encodeURIComponent(id) + '/tv.html?lang=' + gameLanguage(); }
@@ -45,8 +64,12 @@ export class Games {
   private player = document.createElement('dialog');
   private active?:ActiveGame;
   private readyTimeout?:number;
-  private localBase?:string;
-  private localStart?:Promise<string>;
+  private catalog?:Catalog;
+  private coverBase = libraryBase;
+  private loading = false;
+  private catalogError = '';
+  private downloading = new Set<string>();
+  private downloadErrors = new Map<string,string>();
   // Finish late starts and stops in order when a player exits and opens another title.
   private socketWork = Promise.resolve();
 
@@ -54,7 +77,7 @@ export class Games {
 
   private readonly packaging:WebGamePackaging;
 
-  constructor(enqueue:QueueGameApk, deployment:GameDeployment) {
+  constructor(enqueue:QueueGameApk, deployment:GameDeployment, private readonly changed:() => void) {
     this.packaging = new WebGamePackaging(enqueue, deployment);
     this.player.className = 'game-player';
     this.player.setAttribute('aria-labelledby', 'game-player-title');
@@ -78,71 +101,106 @@ export class Games {
     });
   }
 
-  private localLibrary():Promise<string> {
-    if (!this.localStart) {
-      this.localStart = invoke<string>('local_game_base').then(base => {
-        const url = new URL(base);
-        if (!localOrigins.has(url.origin) || !url.pathname.startsWith('/games/') || !url.pathname.endsWith('/')) {
-          throw new Error(t('本地游戏资源暂不可用。'));
-        }
-        this.localBase = url.href;
-        for (const img of document.querySelectorAll<HTMLImageElement>('img[data-local-cover]')) {
-          img.src = url.href + img.dataset.localCover;
-        }
-        return url.href;
-      }).catch(error => {
-        this.localStart = undefined;
-        throw error;
-      });
+  async refresh():Promise<void> {
+    if (this.loading) return;
+    this.loading = true;
+    this.catalogError = '';
+    try {
+      const result = desktop ? {catalog:await invoke<Catalog>('game_library_catalog'), base:libraryBase} : await browserCatalog();
+      if (!validCatalog(result.catalog)) throw new Error(t('游戏列表格式无效。'));
+      this.catalog = result.catalog;
+      this.coverBase = result.base;
+      if (!this.catalog.groups.some(group => group.id === this.group)) this.group = '';
+    } catch (error) {
+      this.catalogError = error instanceof Error ? error.message : String(error);
+    } finally {
+      this.loading = false;
+      this.changed();
     }
-    return this.localStart;
+  }
+
+  private downloadControl(game:Game):string {
+    const busy = this.downloading.has(game.id);
+    const error = this.downloadErrors.get(game.id);
+    const label = busy ? t('下载中…') : game.downloaded ? t('已下载') : error ? t('重新下载') : t('下载到本地');
+    const id = escape(game.id);
+    return `<button type="button" data-download-game="${id}" aria-label="${escape(gameName(game) + ' · ' + label)}"
+      aria-disabled="${busy || !!game.downloaded}">${label}</button>${error && !game.downloaded ? `<small role="alert">${escape(message(error))}</small>` : ''}`;
+  }
+
+  private updateDownloadControl(id:string):void {
+    const slot = document.querySelector<HTMLElement>(`[data-download-slot="${CSS.escape(id)}"]`);
+    const game = this.catalog?.games.find(entry => entry.id === id);
+    if (!slot || !game) return;
+    const focused = slot.contains(document.activeElement);
+    slot.innerHTML = this.downloadControl(game);
+    if (focused) slot.querySelector('button')?.focus({preventScroll:true});
+  }
+
+  async download(id:string):Promise<void> {
+    const game = this.catalog?.games.find(entry => entry.id === id);
+    if (!desktop || game?.kind !== 'project' || game.downloaded || this.downloading.has(id)) return;
+    this.downloading.add(id);
+    this.downloadErrors.delete(id);
+    this.updateDownloadControl(id);
+    try {
+      await invoke('download_library_game', {gameId:id});
+      game.downloaded = true;
+    } catch (error) {
+      this.downloadErrors.set(id, error instanceof Error ? error.message : String(error));
+    } finally {
+      this.downloading.delete(id);
+      this.updateDownloadControl(id);
+    }
   }
 
   render():string {
-    if (desktop && !this.localBase) void this.localLibrary().catch(() => {});
-    const shown = groups.filter(group => !this.group || this.group === group.id);
-    const options = groups.map(group => `<option value="${group.id}"${group.id === this.group ? ' selected' : ''}>${escape(locale() === 'en' ? group.en : t(group.zh))}</option>`).join('');
-    const listed = shown.flatMap(section => section.games);
+    if (!this.catalog && !this.loading && !this.catalogError) void this.refresh();
+    const reload = `<button type="button" data-refresh-games${this.loading ? ' disabled' : ''}>${this.loading ? t('正在读取游戏列表…') : this.catalogError ? t('重试') : t('刷新列表')}</button>`;
+    const error = this.catalogError ? `<p role="alert">${escape(message(this.catalogError))}</p>` : '';
+    if (!this.catalog) return `<div class="web-game-tools">${reload}</div>${error}`;
+    const {games, groups} = this.catalog;
+    const options = groups.map(group => `<option value="${escape(group.id)}"${group.id === this.group ? ' selected' : ''}>${escape(locale() === 'en' ? group.en : t(group.zh))}</option>`).join('');
+    const listed = games.filter(game => !this.group || game.category === this.group);
     const card = (game:Game) => {
       const id = game.id;
-      const cover = 'controls' in game ? 'thumb.webp' : 'thumb.png';
+      const cover = game.kind === 'hosted' ? 'thumb.webp' : 'thumb.png';
       const name = escape(gameName(game));
       const play = desktop ? `<span class="web-game-play-label">${t('电脑游玩')}</span>` : '';
-      const onlineApk = needsOnlineApk(id);
-      const action = onlineApk ? t('获取正式 APK') : 'controls' in game ? t('生成电视 APK') : t('获取电视 APK');
+      const onlineApk = game.kind === 'online';
+      const action = onlineApk ? t('获取正式 APK') : game.kind === 'hosted' ? t('生成电视 APK') : t('获取电视 APK');
       const onlineNote = onlineApk ? `<small id="apk-note-${escape(id)}" class="web-game-network-note">${t('首次获取正式 APK 需要联网。')}</small>` : '';
+      const download = desktop && game.kind === 'project' ? `<div class="web-game-download" data-download-slot="${escape(id)}" aria-live="polite">${this.downloadControl(game)}</div>` : '';
       const pack = desktop ? `${onlineNote}<div class="web-game-actions"><button type="button" class="primary" data-deploy-game="${escape(id)}"
         aria-label="${name} · ${t('部署到电视')}"${onlineApk ? ` aria-describedby="apk-note-${escape(id)}"` : ''}>${t('部署到电视')}</button><button type="button" class="web-game-apk" data-build-game="${escape(id)}"
         aria-label="${name} · ${action}">${action}</button></div>` : '';
       const imagePath = encodeURIComponent(id) + '/' + cover;
-      const coverBase = desktop ? this.localBase : gamesBase;
-      const image = coverBase ? `src="${escape(coverBase + imagePath)}"` : `data-local-cover="${imagePath}"`;
       return `<article class="web-game-card"><button type="button" class="web-game-cover" data-play-game="${escape(id)}" aria-label="${name}">
-        <img loading="lazy" ${image} alt=""><strong>${name}</strong>${play}</button>${pack}</article>`;
+        <img loading="lazy" src="${escape(this.coverBase + 'web/' + imagePath)}" alt=""><strong>${name}</strong>${play}</button>${download}${pack}</article>`;
     };
     let cards:string;
     if (desktop) {
-      const local = listed.filter(game => !onlineGame(game));
-      const online = listed.filter(onlineGame);
+      const local = listed.filter(game => game.kind === 'project');
+      const online = listed.filter(game => game.kind !== 'project');
       cards = [
-        local.length ? `<h3 class="web-game-section">${t('本地游戏')} · ${local.length}<small>${t('游玩和部署这些游戏无需互联网连接。')}</small></h3>${local.map(card).join('')}` : '',
+        local.length ? `<h3 class="web-game-section">${t('本地游戏')} · ${local.length}<small>${t('首次游玩或部署时下载，之后可离线使用。')}</small></h3>${local.map(card).join('')}` : '',
         online.length ? `<h3 class="web-game-section">${t('联网游戏')} · ${online.length}<small>${t('打开联网游戏需要网络连接。')}</small></h3>${online.map(card).join('')}` : ''
       ].join('');
     } else {
       cards = listed.map(card).join('');
     }
-    return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${listed.length}</span></div><div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards}</div>`;
+    return `<div class="web-game-tools"><label>${t('游戏分类')} <select name="gameGroup"><option value="">${t('全部游戏')}</option>${options}</select></label><span>${t('游戏数量')} · ${listed.length}</span>${reload}</div>${error}<div class="web-game-grid" data-scroll="games-${this.group || 'all'}">${cards}</div>`;
   }
 
   setGroup(group:string):void { this.group = group; }
 
   packageGame(id:string, opener:HTMLButtonElement, deploy=false):void {
-    const game = games.get(id);
-    if (desktop && game && !this.active) this.packaging.open(id, gameName(game), 'controls' in game, opener, deploy);
+    const game = this.catalog?.games.find(entry => entry.id === id);
+    if (desktop && game && !this.active) this.packaging.open(id, gameName(game), game.kind, opener, deploy);
   }
 
   open(id:string):void {
-    const game = games.get(id);
+    const game = this.catalog?.games.find(entry => entry.id === id);
     if (!game || this.active) return;
     const content = document.createElement('div');
     content.className = 'game-player-content';
@@ -157,26 +215,33 @@ export class Games {
     frame.title = gameName(game);
     frame.allow = 'gamepad; fullscreen; autoplay';
     frame.sandbox.add('allow-scripts', 'allow-same-origin', 'allow-pointer-lock');
-    const local = desktop && !onlineGame(game);
+    const local = desktop && game.kind === 'project';
     const active:ActiveGame = {game, frame, ready:false, origin:local ? '' : new URL(gamesBase).origin};
     this.active = active;
     content.append(frame);
     this.player.append(content);
-    this.status('[data-frame-status]', t('正在加载游戏…'));
-    const hint = 'controls' in game ? game.controls[gameLanguage()] :
+    this.status('[data-frame-status]', local ? t('正在准备本地游戏，首次使用需要下载…') : t('正在加载游戏…'));
+    const hint = game.controls ? game.controls[gameLanguage()] :
       desktop ? t('正在启动无线手柄服务…') : t('可使用键盘游玩。');
     this.status('[data-socket-status]', hint);
     this.player.showModal();
     if (local) {
-      void this.localLibrary().then(base => {
+      void invoke<string>('local_game_base', {gameId:id}).then(base => {
+        const url = new URL(base);
+        if (!localOrigins.has(url.origin) || !url.pathname.startsWith('/games/') || !url.pathname.endsWith('/')) {
+          throw new Error(t('本地游戏资源暂不可用。'));
+        }
+        game.downloaded = true;
+        this.downloadErrors.delete(id);
+        this.updateDownloadControl(id);
         if (this.active === active) {
-          active.origin = new URL(base).origin;
+          active.origin = url.origin;
+          this.status('[data-frame-status]', t('正在加载游戏…'));
           frame.src = gameUrl(base, id);
         }
-      }).catch(() => {
+      }).catch(error => {
         if (this.active === active) {
-          window.clearTimeout(this.readyTimeout);
-          this.status('[data-frame-status]', t('本地游戏资源暂不可用。'));
+          this.status('[data-frame-status]', message(error instanceof Error ? error.message : String(error)));
         }
       });
     } else {
@@ -193,10 +258,10 @@ export class Games {
     } else {
       void content.requestFullscreen?.().catch(() => {});
     }
-    this.readyTimeout = window.setTimeout(() => {
-      this.status('[data-frame-status]', local ? t('正在加载游戏…') : t('游戏加载较慢，请检查网络。'));
+    if (!local) this.readyTimeout = window.setTimeout(() => {
+      this.status('[data-frame-status]', t('游戏加载较慢，请检查网络。'));
     }, 25000);
-    if (desktop && !('controls' in game)) {
+    if (desktop && game.kind !== 'hosted') {
       this.socketWork = this.socketWork.then(() => this.startControllers(active)).catch(() => {
         if (this.active === active) this.status('[data-socket-status]', t('无线手柄服务不可用，仍可使用键盘游玩。'));
       });

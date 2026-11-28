@@ -1,9 +1,11 @@
-//! Serve the installed game's web assets on a separate, stable loopback origin.
-//! Desktop overlays and TV package assembly share the installed game project files.
+//! Serve the downloaded game's web assets on a separate, stable loopback origin.
+//! Desktop overlays and TV package assembly share the same cached game project.
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, Mutex};
+use std::sync::atomic::AtomicBool;
+use std::sync::{Arc, Mutex, RwLock};
 use tauri::Manager;
 use tiny_http::{Header, Method, Request, Response, Server};
 use zip::{
@@ -15,46 +17,62 @@ const PORTS: [u16; 4] = [48731, 48732, 48733, 48734];
 const GAME_CSP: &str = "default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'none'";
 
 #[derive(Default)]
-pub struct Player(Mutex<Option<String>>);
+pub struct Player(Mutex<Option<GameServer>>);
+
+struct MountedGame {
+    id: String,
+    root: PathBuf,
+}
+
+struct GameServer {
+    origin: String,
+    mounts: Arc<RwLock<HashMap<String, Arc<MountedGame>>>>,
+}
 
 #[tauri::command]
 pub async fn local_game_base(
+    game_id: String,
     app: tauri::AppHandle,
     player: tauri::State<'_, Player>,
 ) -> Result<String, String> {
-    let player = player.inner();
-    if let Some(base) = player
-        .0
-        .lock()
-        .map_err(|_| "本地游戏资源暂不可用。")?
-        .clone()
-    {
-        return Ok(base);
-    }
-    let preference = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| e.to_string())?
-        .join("game-player-port");
-    // Verifying the installed archive on first access can involve hundreds of MiB.
-    let library =
-        tauri::async_runtime::spawn_blocking(move || crate::offline_game_library::path(&app))
-            .await
-            .map_err(|e| e.to_string())??;
-    let mut running = player.0.lock().map_err(|_| "本地游戏资源暂不可用。")?;
-    if let Some(base) = running.as_ref() {
-        return Ok(base.clone());
-    }
-    let base = start(library, &preference)?;
-    *running = Some(base.clone());
-    Ok(base)
+    let directory = app.path().app_data_dir().map_err(|e| e.to_string())?;
+    let preference = directory.join("game-player-port");
+    let id = game_id.clone();
+    let root = tauri::async_runtime::spawn_blocking(move || {
+        crate::offline_game_library::ensure(&directory, &id, &AtomicBool::new(false))
+    })
+    .await
+    .map_err(|e| e.to_string())??;
+    player.mount(game_id, root, &preference)
 }
 
-pub(crate) fn start(library: PathBuf, preference: &Path) -> Result<String, String> {
-    let mut secret = [0; 16];
-    getrandom::fill(&mut secret).map_err(|e| e.to_string())?;
-    let token: String = secret.iter().map(|byte| format!("{byte:02x}")).collect();
-    let prefix = format!("/games/{token}/");
+impl Player {
+    fn mount(&self, game_id: String, root: PathBuf, preference: &Path) -> Result<String, String> {
+        let mut running = self.0.lock().map_err(|_| "本地游戏资源暂不可用。")?;
+        let server = match running.as_ref() {
+            Some(server) => server,
+            None => running.insert(start(preference)?),
+        };
+        let mut mounts = server
+            .mounts
+            .write()
+            .map_err(|_| "本地游戏资源暂不可用。")?;
+        if let Some((token, _)) = mounts
+            .iter()
+            .find(|(_, m)| m.id == game_id && m.root == root)
+        {
+            return Ok(format!("{}/games/{token}/", server.origin));
+        }
+        // Each mounted revision serves its own overlay, project and shared scripts together.
+        let mut secret = [0; 16];
+        getrandom::fill(&mut secret).map_err(|e| e.to_string())?;
+        let token: String = secret.iter().map(|byte| format!("{byte:02x}")).collect();
+        mounts.insert(token.clone(), Arc::new(MountedGame { id: game_id, root }));
+        Ok(format!("{}/games/{token}/", server.origin))
+    }
+}
+
+fn start(preference: &Path) -> Result<GameServer, String> {
     // Local storage belongs to the game's origin. Keep the last usable port on restart.
     let preferred = std::fs::read_to_string(preference)
         .ok()
@@ -73,56 +91,53 @@ pub(crate) fn start(library: PathBuf, preference: &Path) -> Result<String, Strin
         .ok_or("本地游戏资源暂不可用。")?;
     let _ = std::fs::write(preference, port.to_string());
     let address = format!("127.0.0.1:{port}");
-    let base = format!("http://{address}{prefix}");
     let server = Arc::new(server);
-    let mut readers = Vec::new();
+    let mounts = Arc::new(RwLock::new(HashMap::new()));
     for _ in 0..4 {
-        readers.push(crate::offline_game_library::open(&library)?);
-    }
-    let route = Arc::new((prefix, address));
-    for mut archive in readers {
-        let server = server.clone();
-        let route = route.clone();
+        let server = Arc::clone(&server);
+        let mounts = Arc::clone(&mounts);
+        let address = address.clone();
         std::thread::spawn(move || {
             for request in server.incoming_requests() {
-                serve(request, &mut archive, &route.0, &route.1);
+                serve(request, &mounts, &address);
             }
         });
     }
-    Ok(base)
+    Ok(GameServer {
+        origin: format!("http://{address}"),
+        mounts,
+    })
 }
 
-fn asset(library: &mut ZipArchive<BufReader<File>>, relative: &str) -> Option<Vec<u8>> {
-    let game_path = relative
-        .split_once('/')
-        .map(|(id, path)| (crate::offline_game_library::project_member(id), path));
-    if let Some((member, path)) = &game_path {
-        // Online listings contribute only their cover to this application.
-        if !matches!(*path, "thumb.png" | "thumb.webp") && library.index_for_name(member).is_none()
-        {
+fn asset(game: &MountedGame, relative: &str) -> Option<Vec<u8>> {
+    // Only expose web overlays and the assets/ subtree of the requested project.
+    let path = relative.split_once('/');
+    if let Some((id, _)) = path {
+        if id != game.id {
             return None;
         }
     }
-    let overlay = format!("web/{relative}");
-    let mut bytes = Vec::new();
-    if let Some(index) = library.index_for_name(&overlay) {
-        library.by_index(index).ok()?.read_to_end(&mut bytes).ok()?;
-    } else {
-        let (member, name) = game_path?;
-        let project = library.by_name_seek(&member).ok()?;
-        let mut archive = ZipArchive::with_config(
-            Config {
-                archive_offset: ArchiveOffset::Known(0),
-            },
-            BufReader::new(project),
-        )
-        .ok()?;
-        archive
-            .by_name(&format!("assets/{name}"))
-            .ok()?
-            .read_to_end(&mut bytes)
-            .ok()?;
+    let overlay = game.root.join("web").join(relative);
+    match std::fs::symlink_metadata(&overlay) {
+        Ok(metadata) if metadata.is_file() => return std::fs::read(overlay).ok(),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => (),
+        _ => return None,
     }
+    let (id, name) = path?;
+    let project = File::open(game.root.join("projects").join(id).join("project.zip")).ok()?;
+    let mut archive = ZipArchive::with_config(
+        Config {
+            archive_offset: ArchiveOffset::Known(0),
+        },
+        BufReader::new(project),
+    )
+    .ok()?;
+    let mut bytes = Vec::new();
+    archive
+        .by_name(&format!("assets/{name}"))
+        .ok()?
+        .read_to_end(&mut bytes)
+        .ok()?;
     Some(bytes)
 }
 
@@ -172,7 +187,7 @@ fn byte_range(value: &str, len: usize) -> Option<(usize, usize)> {
     (start <= end).then_some((start, end))
 }
 
-fn serve(request: Request, library: &mut ZipArchive<BufReader<File>>, prefix: &str, address: &str) {
+fn serve(request: Request, mounts: &RwLock<HashMap<String, Arc<MountedGame>>>, address: &str) {
     if !matches!(request.method(), Method::Get | Method::Head) {
         let _ = request.respond(Response::empty(405));
         return;
@@ -183,15 +198,23 @@ fn serve(request: Request, library: &mut ZipArchive<BufReader<File>>, prefix: &s
         return;
     }
     let path = request.url().split('?').next().unwrap_or("");
-    let Some(relative) = path.strip_prefix(prefix).filter(|p| {
-        !p.split('/').any(|part| matches!(part, "" | "." | ".."))
-            && p.bytes()
-                .all(|b| b.is_ascii_alphanumeric() || b"./-+_()".contains(&b))
-    }) else {
+    let Some((token, relative)) = path
+        .strip_prefix("/games/")
+        .and_then(|path| path.split_once('/'))
+        .filter(|(_, p)| {
+            !p.split('/').any(|part| matches!(part, "" | "." | ".."))
+                && p.bytes()
+                    .all(|b| b.is_ascii_alphanumeric() || b"./-+_()".contains(&b))
+        })
+    else {
         let _ = request.respond(Response::empty(404));
         return;
     };
-    let Some(bytes) = asset(library, relative) else {
+    let game = mounts
+        .read()
+        .ok()
+        .and_then(|mounts| mounts.get(token).cloned());
+    let Some(bytes) = game.and_then(|game| asset(&game, relative)) else {
         let _ = request.respond(Response::empty(404));
         return;
     };

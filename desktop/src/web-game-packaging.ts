@@ -1,10 +1,7 @@
 import {Channel, invoke} from '@tauri-apps/api/core';
 import type {DeviceTarget, MarketProgress} from './types';
 import {message, t} from './i18n';
-import onlineOnly from '../../tools/pc-games/online-only.json';
-
-const onlineApks = new Set(onlineOnly);
-export const needsOnlineApk = (id:string):boolean => onlineApks.has(id);
+export type GameKind = 'online' | 'hosted' | 'project';
 
 type GameApk = {path:string; packageName?:string | null; sha256:string};
 export type QueueGameApk = (path:string) => void | Promise<void>;
@@ -12,7 +9,7 @@ export type QueueGameApk = (path:string) => void | Promise<void>;
 export interface GameDeployment {
   target():DeviceTarget | undefined;
   connect():void;
-  install(gameId:string, name:string, path:string, target:DeviceTarget):void;
+  install(gameId:string, kind:GameKind, name:string, path:string, target:DeviceTarget):void;
 }
 
 type DeploymentStep = 'pack' | 'install' | 'complete';
@@ -21,8 +18,8 @@ export function deploymentDevice(target:DeviceTarget):string {
   return target.serial + ' · ' + t('当前用户') + ' ' + target.userId;
 }
 
-export function deploymentSteps(gameId:string, active:DeploymentStep, incomplete=false):string {
-  const first = needsOnlineApk(gameId) ? t('获取正式 APK') : t('打包 APK');
+export function deploymentSteps(kind:GameKind, active:DeploymentStep, incomplete=false):string {
+  const first = kind === 'online' ? t('获取正式 APK') : t('打包 APK');
   const steps = [['pack', first], ['install', t('安装到电视')], ['complete', t('完成')]];
   const position = steps.findIndex(([step]) => step === active);
   const items = steps.map(([step,label], index) => {
@@ -39,10 +36,11 @@ export class WebGamePackaging {
 
   constructor(private readonly enqueue:QueueGameApk, private readonly deployment:GameDeployment) {}
 
-  open(gameId:string, name:string, generate:boolean, opener:HTMLButtonElement, deploy:boolean):void {
+  open(gameId:string, name:string, kind:GameKind, opener:HTMLButtonElement, deploy:boolean):void {
     if (this.dialog?.open) return;
     const device = deploy ? this.deployment.target() : undefined;
-    const online = needsOnlineApk(gameId);
+    const online = kind === 'online';
+    const generate = kind === 'hosted';
     const deployment = this.deployment;
     const dialog = document.createElement('dialog');
     this.dialog = dialog;
@@ -50,8 +48,8 @@ export class WebGamePackaging {
     dialog.setAttribute('aria-labelledby', 'game-apk-heading');
     dialog.innerHTML = `<div class="modal-heading"><h2 id="game-apk-heading"></h2>
       <button type="button" class="text-button" data-apk-close autofocus>${t('取消')}</button></div>
-      ${online ? `<p class="hint" data-online-apk>${t('首次获取正式 APK 需要联网。')}</p>` : ''}
-      ${device ? `<p data-deployment-device></p><div data-deployment-steps>${deploymentSteps(gameId, 'pack')}</div>` : ''}
+      ${online ? `<p class="hint" data-online-apk>${t('首次获取正式 APK 需要联网。')}</p>` : kind === 'project' ? `<p class="hint">${t('首次游玩或部署时下载，之后可离线使用。')}</p>` : ''}
+      ${device ? `<p data-deployment-device></p><div data-deployment-steps>${deploymentSteps(kind, 'pack')}</div>` : ''}
       <p role="status" aria-live="polite" data-apk-status></p>
       <div class="game-apk-progress" data-apk-progress hidden>
         <progress aria-label="${t('下载进度')}"></progress><span></span>
@@ -99,7 +97,7 @@ export class WebGamePackaging {
       retry.hidden = true;
       closeButton.textContent = t('取消');
       status.classList.remove('error');
-      if (steps) steps.innerHTML = deploymentSteps(gameId, 'pack');
+      if (steps) steps.innerHTML = deploymentSteps(kind, 'pack');
       status.textContent = online ? t('正在获取正式 APK…') : deploy ? t('正在打包 APK…') : generate ? t('正在生成电视 APK…') : t('正在准备电视 APK…');
       try {
         let firstProgress = true;
@@ -108,8 +106,14 @@ export class WebGamePackaging {
           // Closing may precede native registration. Its first progress event acknowledges ownership.
           if (firstProgress && !dialog.open) cancelChannel(onProgress.id);
           firstProgress = false;
-          if (!online || !dialog.open) return;
-          const label = event.stage === 'verifying' ? t('正在校验安装包…') : t('正在下载安装包…');
+          if (!dialog.open) return;
+          if (event.stage !== 'downloading' && event.stage !== 'verifying') {
+            transfer.hidden = true;
+            if (kind === 'project') status.textContent = t('正在准备电视 APK…');
+            return;
+          }
+          const label = event.stage === 'verifying' ? t('正在校验安装包…') :
+            kind === 'project' ? t('正在下载游戏资源…') : t('正在下载安装包…');
           if (status.textContent !== label) status.textContent = label;
           transfer.hidden = event.stage !== 'downloading';
           if (transfer.hidden) return;
@@ -120,7 +124,8 @@ export class WebGamePackaging {
             bar.removeAttribute('value');
           }
           const received = (event.downloaded / 1048576).toFixed(1);
-          bytes.textContent = event.total ? received + ' / ' + (event.total / 1048576).toFixed(1) + ' MiB' : received + ' MiB';
+          bytes.textContent = event.total ? received + ' / ' + (event.total / 1048576).toFixed(1) + ' MiB' :
+            event.downloaded ? received + ' MiB' : '';
         });
         preparing = onProgress;
         const result = await invoke<GameApk>('build_web_game_apk', {gameId, onProgress});
@@ -129,7 +134,7 @@ export class WebGamePackaging {
         if (device) {
           // The native build is complete. Hand this exact APK to the existing installation dialog.
           packed = true;
-          deployment.install(gameId, name, result.path, device);
+          deployment.install(gameId, kind, name, result.path, device);
           dialog.close();
           return;
         }
@@ -145,7 +150,7 @@ export class WebGamePackaging {
       } catch (error) {
         if (!dialog.open) return;
         transfer.hidden = true;
-        if (steps) steps.innerHTML = deploymentSteps(gameId, packed ? 'install' : 'pack', true);
+        if (steps) steps.innerHTML = deploymentSteps(kind, packed ? 'install' : 'pack', true);
         showError(deploy ? t('部署未完成') : generate ? t('生成失败') : t('获取失败'), error);
         const current = deployment.target();
         retry.hidden = !!device && (current?.serial !== device.serial || current.userId !== device.userId);

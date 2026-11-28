@@ -11,10 +11,6 @@ on:
       - 'tools/pc-games/hosted-games.json'
       - 'tools/pc-games/*bridge*'
       - 'tools/pc-games/web-host.*'
-      - 'tools/pc-games/offline_web_assets.py'
-      - 'tools/pc-games/stage_web_games.py'
-      - 'tools/pc-games/prepare_standalone.py'
-      - 'tools/pc-games/web-layouts/**'
       - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
       - '.github/workflows/desktop-offline-tv.yml'
@@ -28,10 +24,6 @@ on:
       - 'tools/pc-games/hosted-games.json'
       - 'tools/pc-games/*bridge*'
       - 'tools/pc-games/web-host.*'
-      - 'tools/pc-games/offline_web_assets.py'
-      - 'tools/pc-games/stage_web_games.py'
-      - 'tools/pc-games/prepare_standalone.py'
-      - 'tools/pc-games/web-layouts/**'
       - 'tools/readme-app-games.json'
       - '.github/workflows/desktop.yml'
       - '.github/workflows/desktop-offline-tv.yml'
@@ -47,27 +39,7 @@ concurrency:
   cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
-  game-library:
-    name: Prepare verified offline game resources
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python -m pip install Pillow==11.3.0
-      - run: python desktop/scripts/pack-offline-games.py --output desktop/src-tauri/offline-assets/game-library.zip
-      - uses: actions/upload-artifact@v4
-        with:
-          name: offline-game-library
-          path: desktop/src-tauri/offline-assets/game-library.*
-          compression-level: 0
-          if-no-files-found: error
-          retention-days: 2
-
   build:
-    needs: game-library
     name: ${{ matrix.platform }}
     strategy:
       fail-fast: false
@@ -96,7 +68,6 @@ jobs:
         shell: bash
         working-directory: desktop
     env:
-      PURETV_PREBUILT_GAME_LIBRARY: '1'
       BUILD_PLATFORM: ${{ matrix.platform }}
       BUILD_TARGET: ${{ matrix.target }}
       BUNDLE_FORMAT: ${{ matrix.bundle }}
@@ -109,10 +80,6 @@ jobs:
         working-directory: ${{ runner.temp }}
         run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: offline-game-library
-          path: desktop/src-tauri/offline-assets/
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -223,7 +190,7 @@ jobs:
       - name: Collect release files
         run: |
           python - <<'PYTHON'
-          import hashlib, json, os, shutil, subprocess, sys
+          import hashlib, json, os, shutil
           from pathlib import Path
           version = json.loads(Path('src-tauri/tauri.conf.json').read_text())['version']
           platform = os.environ['BUILD_PLATFORM']
@@ -236,12 +203,7 @@ jobs:
               matches = list((bundles / 'nsis').glob('*.exe'))
               assert len(matches) == 1, f'Expected one NSIS installer, got {matches}'
               shutil.copyfile(matches[0], output / f'{prefix}-setup.exe')
-              subprocess.run([sys.executable, 'scripts/pack-offline-games.py', '--portable', str(target / 'puretv-desktop.exe'),
-                              '--library', 'src-tauri/offline-assets/game-library.zip',
-                              '--output', str(output / f'{prefix}-portable.exe')], check=True)
-              # No sidecar in this folder: this launches the published single-file edition.
-              subprocess.run([str((output / f'{prefix}-portable.exe').resolve()), '--verify-game-library'],
-                             cwd=output, timeout=90, check=True)
+              shutil.copyfile(target / 'puretv-desktop.exe', output / f'{prefix}-portable.exe')
           else:
               extension = 'dmg' if platform.startswith('macos-') else 'deb'
               matches = list((bundles / extension).glob(f'*.{extension}'))

@@ -1,26 +1,14 @@
-//! Prepare the TV package for a game in the built-in desktop catalog.
+//! Prepare the TV package for a game in the current game library catalog.
 use crate::market::Progress;
 use crate::web_game_template::{embedded_game, EmbeddedGame};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use sha2::{Digest, Sha256};
 use std::fs::{self, File};
-use std::io::{self, BufReader, Read, Seek, SeekFrom, Write};
+use std::io::{self, Read, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 use tempfile::NamedTempFile;
-
-const CATALOG: &str = include_str!("../../../tools/pc-games/catalog.json");
-const CATALOG_URL_PREFIX: &str =
-    "https://github.com/ecojust/pureTV/raw/refs/heads/master/joystick-games/";
-
-#[derive(Deserialize)]
-struct CatalogGame {
-    id: String,
-    url: String,
-    bytes: u64,
-    sha256: String,
-}
 
 enum Source {
     Project,
@@ -43,93 +31,36 @@ pub struct GameApk {
     pub sha256: String,
 }
 
-fn lookup(id: &str) -> Result<Game, String> {
-    if let Some(entry) = embedded_game(id) {
+fn lookup(directory: &Path, id: &str) -> Result<Game, String> {
+    let catalog = crate::offline_game_library::catalog(directory)?;
+    let entry = catalog.game(id)?;
+    if entry.kind == "hosted" {
+        let template = embedded_game(id).ok_or("游戏没有可用的电视 APK 模板")?;
         return Ok(Game {
-            file_name: entry.file_name.into(),
-            sha256: entry.sha256.into(),
-            bytes: entry.bytes,
-            source: Source::Embedded(entry),
+            file_name: template.file_name.into(),
+            sha256: template.sha256.into(),
+            bytes: template.bytes,
+            source: Source::Embedded(template),
         });
     }
-    let entries: Vec<CatalogGame> =
-        serde_json::from_str(CATALOG).map_err(|_| "游戏目录无效，请更新管理器")?;
-    let entry = entries
-        .into_iter()
-        .find(|entry| entry.id == id)
-        .ok_or("游戏不在客户端目录中")?;
-    let name = entry
-        .url
-        .strip_prefix(CATALOG_URL_PREFIX)
-        .and_then(|path| path.split_once('/'))
-        .filter(|(folder, name)| {
-            *folder == id
-                && name.ends_with(".apk")
-                && name
-                    .bytes()
-                    .all(|b| b.is_ascii_alphanumeric() || b"-_.".contains(&b))
-        })
-        .map(|(_, name)| name)
-        .ok_or("游戏 APK 清单地址无效")?;
+    let apk = entry.apk.as_ref().ok_or("游戏 APK 清单无效")?;
+    let source = match entry.kind.as_str() {
+        "online" => Source::Online,
+        "project" => Source::Project,
+        _ => return Err("未知游戏类型".into()),
+    };
     Ok(Game {
-        file_name: name.into(),
-        sha256: entry.sha256,
-        bytes: entry.bytes,
-        source: if crate::remote_game_apk::is_online_only(id) {
-            Source::Online
-        } else {
-            Source::Project
-        },
+        file_name: apk.file_name.clone(),
+        bytes: apk.bytes,
+        sha256: apk.sha256.clone(),
+        source,
     })
-}
-
-pub(crate) fn verify_library(path: &Path) -> Result<(), String> {
-    let mut pack = crate::offline_game_library::open(path)?;
-    if pack
-        .file_names()
-        .flatten()
-        .any(|name| name.ends_with(".apk"))
-    {
-        return Err("本地游戏库中包含成品 APK".into());
-    }
-    let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).map_err(|_| "游戏目录无效")?;
-    for entry in entries {
-        let game = lookup(&entry.id)?;
-        if matches!(game.source, Source::Online) {
-            let prefix = format!("projects/{}/", entry.id);
-            let web = format!("web/{}/", entry.id);
-            if pack.file_names().flatten().any(|name| {
-                name.starts_with(&prefix)
-                    || name
-                        .strip_prefix(&web)
-                        .is_some_and(|file| !matches!(file, "thumb.png" | "thumb.webp"))
-            }) {
-                return Err(format!("离线库中包含未授权的游戏项目: {}", entry.id));
-            }
-            continue;
-        }
-        if !assemble_project(
-            &mut pack,
-            &entry.id,
-            &game,
-            io::sink(),
-            &AtomicBool::new(false),
-            |_| Ok(()),
-        )? {
-            return Err(format!("游戏项目组装后的 APK 校验失败: {}", entry.id));
-        }
-        let page = format!("web/{}/tv.html", entry.id);
-        if pack.by_name(&page).is_err() {
-            return Err(format!("缺少 {page}"));
-        }
-    }
-    Ok(())
 }
 
 // Rebuild the official signed APK from the same unsigned Android project used
 // by the desktop player. Only signatures and central records are held in RAM.
 fn assemble_project(
-    pack: &mut zip::ZipArchive<BufReader<File>>,
+    root: &Path,
     id: &str,
     game: &Game,
     output: impl Write,
@@ -138,10 +69,10 @@ fn assemble_project(
 ) -> Result<bool, String> {
     const RECORD_LIMIT: u64 = 16 * 1024 * 1024;
     let invalid = "本地游戏项目或签名资料无效";
-    let mut signature = pack
-        .by_name(&format!("projects/{id}/signing.bin"))
-        .map_err(|_| "缺少游戏的签名资料")?;
-    if !(32..=RECORD_LIMIT).contains(&signature.size()) {
+    let project_dir = root.join("projects").join(id);
+    let mut signature =
+        File::open(project_dir.join("signing.bin")).map_err(|_| "缺少游戏的签名资料")?;
+    if !(32..=RECORD_LIMIT).contains(&signature.metadata().map_err(|_| invalid)?.len()) {
         return Err(invalid.into());
     }
     let mut magic = [0; 8];
@@ -170,9 +101,8 @@ fn assemble_project(
     {
         return Err(invalid.into());
     }
-    let mut project = pack
-        .by_name_seek(&crate::offline_game_library::project_member(id))
-        .map_err(|_| "未找到可读取的本地游戏项目")?;
+    let mut project =
+        File::open(project_dir.join("project.zip")).map_err(|_| "未找到可读取的本地游戏项目")?;
     project.seek(SeekFrom::Start(prefix)).map_err(|_| invalid)?;
     let mut directory = vec![0; directory_size as usize];
     project.read_exact(&mut directory).map_err(|_| invalid)?;
@@ -186,8 +116,8 @@ fn assemble_project(
     copy_verified(signed, output, game, cancel, progress)
 }
 
-pub fn file_name(game_id: &str) -> Result<String, String> {
-    Ok(lookup(game_id)?.file_name)
+pub fn file_name(directory: &Path, game_id: &str) -> Result<String, String> {
+    Ok(lookup(directory, game_id)?.file_name)
 }
 
 fn cache_path(directory: &Path, game: &Game) -> PathBuf {
@@ -298,18 +228,21 @@ fn publish(
 pub fn prepare(
     directory: &Path,
     game_id: &str,
-    library: impl FnOnce() -> Result<PathBuf, String>,
     cancel: &AtomicBool,
     mut report: impl FnMut(Progress) -> Result<(), String>,
 ) -> Result<GameApk, String> {
     check_cancel(cancel)?;
-    let game = lookup(game_id)?;
+    let game = lookup(directory, game_id)?;
     let target = cache_path(directory, &game);
     let mut progress = |stage: &str, downloaded| {
         report(Progress {
             stage: stage.into(),
             downloaded,
-            total: game.bytes,
+            total: if stage == "downloading" && matches!(game.source, Source::Project) {
+                0 // Project assets and the final APK have different sizes.
+            } else {
+                game.bytes
+            },
             item_id: Some(game_id.into()),
         })
     };
@@ -336,9 +269,10 @@ pub fn prepare(
                 })?
             }
             Source::Project => {
+                progress("downloading", 0)?;
+                let root = crate::offline_game_library::ensure(directory, game_id, cancel)?;
                 progress("preparing", 0)?;
-                let mut archive = crate::offline_game_library::open(&library()?)?;
-                assemble_project(&mut archive, game_id, &game, &mut output, cancel, |n| {
+                assemble_project(&root, game_id, &game, &mut output, cancel, |n| {
                     progress("preparing", n)
                 })?
             }
@@ -369,7 +303,7 @@ pub fn prepare(
 }
 
 // Only the native save dialog supplies the destination. The source is always
-// derived from the catalog ID and checked again against the built-in digest.
+// derived from the catalog ID and checked again against the catalog digest.
 pub fn export(
     directory: &Path,
     game_id: &str,
@@ -384,7 +318,7 @@ pub fn export(
     {
         return Err("请选择 APK 保存路径".into());
     }
-    let game = lookup(game_id)?;
+    let game = lookup(directory, game_id)?;
     let source = cached_file(&cache_path(directory, &game), &game)?.ok_or("请先准备游戏 APK")?;
     let parent = destination.parent().ok_or("APK 保存路径无效")?;
     let mut temp = NamedTempFile::new_in(parent).map_err(|_| "无法创建游戏 APK 导出文件")?;
@@ -404,34 +338,21 @@ mod tests {
         AtomicBool::new(false)
     }
 
-    #[test]
-    fn catalog_ids_resolve_only_to_their_pinned_packages() {
-        let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).unwrap();
-        for entry in entries {
-            let game = lookup(&entry.id).unwrap();
-            assert_eq!(game.sha256.len(), 64);
-            assert!(game.sha256.bytes().all(|b| b.is_ascii_hexdigit()));
-            assert!(game.bytes > 0);
-            assert_eq!(
-                matches!(game.source, Source::Online),
-                crate::remote_game_apk::is_online_only(&entry.id)
-            );
-        }
-        for unknown in [
-            "",
-            "https://example.org/tank.apk",
-            "../tank",
-            "Tank",
-            "tank/../jackal",
-        ] {
-            assert!(lookup(unknown).is_err());
-        }
+    fn seed_catalog(directory: &Path) {
+        let library = directory.join("game-library");
+        fs::create_dir_all(&library).unwrap();
+        fs::write(
+            library.join("catalog.json"),
+            include_bytes!("../../../game-library/catalog.json"),
+        )
+        .unwrap();
     }
 
     #[test]
     fn corrupt_cache_or_cancelled_export_preserves_previous_file() {
         let directory = tempdir().unwrap();
-        let game = lookup("tank").unwrap();
+        seed_catalog(directory.path());
+        let game = lookup(directory.path(), "tank").unwrap();
         let cache = cache_path(directory.path(), &game);
         fs::create_dir_all(cache.parent().unwrap()).unwrap();
         fs::write(cache, vec![0; game.bytes as usize]).unwrap();
@@ -440,7 +361,7 @@ mod tests {
         assert!(export(directory.path(), "tank", &target, &cancel()).is_err());
         assert!(export(directory.path(), "tank", &target, &AtomicBool::new(true)).is_err());
         assert_eq!(fs::read(&target).unwrap(), b"previous export");
-        assert_eq!(fs::read_dir(directory.path()).unwrap().count(), 2);
+        assert_eq!(fs::read_dir(directory.path()).unwrap().count(), 3);
     }
 
     #[test]
@@ -473,6 +394,7 @@ mod tests {
     fn embedded_packages_prepare_offline_and_repair_corrupt_cache() {
         let directory = tempdir().unwrap();
         let root = directory.path();
+        seed_catalog(root);
         for id in [
             "bandit",
             "noir-extreme",
@@ -482,16 +404,10 @@ mod tests {
             "struggle-bus",
         ] {
             let entry = embedded_game(id).unwrap();
-            let first = prepare(
-                root,
-                id,
-                || panic!("standalone template opened the library"),
-                &cancel(),
-                |p| {
-                    assert_ne!(p.stage, "downloading");
-                    Ok(())
-                },
-            )
+            let first = prepare(root, id, &cancel(), |p| {
+                assert_ne!(p.stage, "downloading");
+                Ok(())
+            })
             .unwrap();
             assert_eq!(first.package_name.as_deref(), Some(entry.package_name));
             let target = root.join(entry.file_name);
@@ -502,16 +418,7 @@ mod tests {
             fs::write(&first.path, vec![0; expected.len()]).unwrap();
             thread::scope(|scope| {
                 for _ in 0..2 {
-                    scope.spawn(|| {
-                        prepare(
-                            root,
-                            id,
-                            || panic!("standalone template opened the library"),
-                            &cancel(),
-                            |_| Ok(()),
-                        )
-                        .unwrap()
-                    });
+                    scope.spawn(|| prepare(root, id, &cancel(), |_| Ok(())).unwrap());
                 }
             });
             assert_eq!(fs::read(first.path).unwrap(), expected);
@@ -519,39 +426,69 @@ mod tests {
     }
 
     #[test]
-    fn catalog_games_prepare_from_local_zip_and_export_exact_bytes() {
-        let archive = Path::new(env!("CARGO_MANIFEST_DIR")).join("offline-assets/game-library.zip");
-        let entries: Vec<CatalogGame> = serde_json::from_str(CATALOG).unwrap();
-        for entry in entries {
-            if crate::remote_game_apk::is_online_only(&entry.id) {
+    #[ignore = "requires the complete game-library checkout, including LFS objects"]
+    fn published_projects_reconstruct_the_official_signed_apks() {
+        let library = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../game-library");
+        let catalog: serde_json::Value =
+            serde_json::from_slice(&fs::read(library.join("catalog.json")).unwrap()).unwrap();
+        for entry in catalog["games"].as_array().unwrap() {
+            if entry["kind"] != "project" {
                 continue;
             }
-            let directory = tempdir().unwrap();
-            let game = prepare(
-                directory.path(),
-                &entry.id,
-                || Ok(archive.clone()),
-                &cancel(),
-                |_| Ok(()),
-            )
-            .unwrap();
-            let cached = prepare(
-                directory.path(),
-                &entry.id,
-                || panic!("opened library on cache hit"),
-                &cancel(),
-                |_| Ok(()),
-            )
-            .unwrap();
-            assert_eq!(game.path, cached.path);
-            assert!(game.package_name.is_some(), "{}", entry.id);
-            let target = directory.path().join(file_name(&entry.id).unwrap());
-            export(directory.path(), &entry.id, &target, &cancel()).unwrap();
-            assert_eq!(fs::metadata(&target).unwrap().len(), entry.bytes);
-            assert_eq!(
-                format!("{:x}", Sha256::digest(fs::read(target).unwrap())),
-                entry.sha256
+            let id = entry["id"].as_str().unwrap();
+            let apk = &entry["apk"];
+            let game = Game {
+                file_name: apk["fileName"].as_str().unwrap().into(),
+                bytes: apk["bytes"].as_u64().unwrap(),
+                sha256: apk["sha256"].as_str().unwrap().into(),
+                source: Source::Project,
+            };
+            assert!(
+                assemble_project(&library, id, &game, io::sink(), &cancel(), |_| Ok(())).unwrap(),
+                "{id}"
             );
         }
+    }
+
+    #[test]
+    fn reconstructs_an_apk_from_downloaded_project_and_signatures() {
+        let temp = tempdir().unwrap();
+        let dir = temp.path().join("projects/new-title");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("project.zip"), b"payloadcentralunsigned-tail").unwrap();
+        let mut signing = b"PTVSIG01".to_vec();
+        for size in [7u64, 7, 5] {
+            signing.extend(size.to_le_bytes());
+        }
+        signing.extend(b"blocksignatures");
+        fs::write(dir.join("signing.bin"), signing).unwrap();
+        let expected = b"payloadblockcentralsignatures";
+        let game = Game {
+            file_name: "new-title.apk".into(),
+            bytes: expected.len() as u64,
+            sha256: format!("{:x}", Sha256::digest(expected)),
+            source: Source::Project,
+        };
+        let mut apk = Vec::new();
+        assert!(assemble_project(
+            temp.path(),
+            "new-title",
+            &game,
+            &mut apk,
+            &cancel(),
+            |_| Ok(())
+        )
+        .unwrap());
+        assert_eq!(apk, expected);
+        fs::write(dir.join("signing.bin"), b"incomplete").unwrap();
+        assert!(assemble_project(
+            temp.path(),
+            "new-title",
+            &game,
+            io::sink(),
+            &cancel(),
+            |_| Ok(())
+        )
+        .is_err());
     }
 }
