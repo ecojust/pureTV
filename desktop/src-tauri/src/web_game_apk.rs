@@ -255,14 +255,44 @@ fn cached_file(path: &Path, game: &Game) -> Result<Option<File>, String> {
     }
 }
 
-fn publish(file: NamedTempFile, path: &Path, cancel: &AtomicBool) -> Result<(), String> {
+fn publish(
+    mut file: NamedTempFile,
+    path: &Path,
+    cancel: &AtomicBool,
+    cache: Option<&Game>,
+) -> Result<(), String> {
     file.as_file()
         .sync_all()
         .map_err(|_| "无法写入完整的游戏 APK")?;
-    check_cancel(cancel)?;
-    file.persist(path)
-        .map_err(|_| "无法保存游戏 APK，请检查目录权限")?;
-    Ok(())
+    let mut retries = 0;
+    loop {
+        check_cancel(cancel)?;
+        let conflict = match file.persist(path) {
+            Ok(_) => return Ok(()),
+            Err(err) => err,
+        };
+        let failure = || format!("无法保存游戏 APK: {}", conflict.error);
+        let Some(game) = cache else {
+            return Err(failure());
+        };
+        // Another process can finish repairing this cache entry while we are writing it.
+        if let Ok(Some(winner)) = cached_file(path, game) {
+            if copy_verified(winner, io::sink(), game, cancel, |_| Ok(()))? {
+                return Ok(());
+            }
+        }
+        // On Windows an open destination can temporarily deny MoveFileExW
+        // with ACCESS_DENIED, SHARING_VIOLATION or LOCK_VIOLATION.
+        if !cfg!(windows)
+            || !matches!(conflict.error.raw_os_error(), Some(5 | 32 | 33))
+            || retries == 6
+        {
+            return Err(failure());
+        }
+        file = conflict.file;
+        std::thread::sleep(Duration::from_millis(20 << retries));
+        retries += 1;
+    }
 }
 
 pub fn prepare(
@@ -324,7 +354,7 @@ pub fn prepare(
         if !matches {
             return Err("游戏 APK 校验失败，请重试".into());
         }
-        publish(output, &target, cancel)?;
+        publish(output, &target, cancel, Some(&game))?;
     }
     check_cancel(cancel)?;
     progress("verifying", game.bytes)?;
@@ -361,7 +391,7 @@ pub fn export(
     if !copy_verified(source, &mut temp, &game, cancel, |_| Ok(()))? {
         return Err("游戏 APK 缓存校验失败，请重新准备".into());
     }
-    publish(temp, destination, cancel)
+    publish(temp, destination, cancel, None)
 }
 
 #[cfg(test)]
@@ -411,6 +441,32 @@ mod tests {
         assert!(export(directory.path(), "tank", &target, &AtomicBool::new(true)).is_err());
         assert_eq!(fs::read(&target).unwrap(), b"previous export");
         assert_eq!(fs::read_dir(directory.path()).unwrap().count(), 2);
+    }
+
+    #[test]
+    fn failed_cache_rename_accepts_only_a_verified_winner() {
+        let dir = tempdir().unwrap();
+        let target = dir.path().join("game.apk");
+        let game = Game {
+            file_name: "game.apk".into(),
+            bytes: 4,
+            sha256: format!("{:x}", Sha256::digest(b"good")),
+            source: Source::Project,
+        };
+        // A missing temporary pathname forces the rename to fail on every OS.
+        let pending = || {
+            NamedTempFile::from_parts(
+                tempfile::tempfile_in(dir.path()).unwrap(),
+                tempfile::TempPath::try_from_path(dir.path().join("missing")).unwrap(),
+            )
+        };
+        fs::write(&target, b"good").unwrap();
+        assert!(publish(pending(), &target, &cancel(), Some(&game)).is_ok());
+        assert!(publish(pending(), &target, &cancel(), None).is_err());
+        assert!(publish(pending(), &target, &AtomicBool::new(true), Some(&game)).is_err());
+        fs::write(&target, b"evil").unwrap();
+        assert!(publish(pending(), &target, &cancel(), Some(&game)).is_err());
+        assert_eq!(fs::read(&target).unwrap(), b"evil");
     }
 
     #[test]
