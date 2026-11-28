@@ -1,0 +1,179 @@
+name: Release six individual hosted TV games
+on:
+  workflow_call:
+    secrets:
+      PURETV_KEYSTORE_BASE64: {required: true}
+      PURETV_KEYSTORE_PASSWORD: {required: true}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        game: [bandit, fish-loop, noir-extreme, struggle-bus, vespertine, daejeon-campus]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /resource/apps/hosted-games/src/
+            /resource/apps/hosted-games/build.py
+            /resource/game-kit/android/src/main/java/
+            /resource/game-kit/web/controller.*
+            /joystick-games/tools/android-zxing.py
+            /joystick-games/catalog/previews/0501-1000/0769.webp
+            /joystick-games/catalog/previews/1001-1500/1457.webp
+            /joystick-games/catalog/previews/2001-2500/2286.webp
+            /joystick-games/catalog/previews/2501-3000/2980.webp
+            /joystick-games/catalog/previews/3001-3500/3266.webp
+            /joystick-games/catalog/previews/3501-4000/3570.webp
+            /tools/pc-games/hosted-games.json
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: android-actions/setup-android@v3
+        with: {packages: 'platforms;android-35 build-tools;34.0.0'}
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/puretv/zxing-core-3.5.3.jar
+          key: zxing-core-3.5.3-8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82
+      - name: Build one title from the frozen master revision
+        shell: bash
+        env: {GAME: "${{ matrix.game }}"}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          cached="$HOME/.cache/puretv/zxing-core-3.5.3.jar"
+          verify=(python3 joystick-games/tools/android-zxing.py --output "$RUNNER_TEMP/zxing.jar")
+          if [[ ! -f "$cached" ]] || ! "${verify[@]}" --archive "$cached" --receipt "$RUNNER_TEMP/cache.json"; then
+            "${verify[@]}" --receipt "$RUNNER_TEMP/download.json"
+            install -Dm644 "$RUNNER_TEMP/zxing.jar" "$cached"
+          fi
+          python3 -m pip install Pillow==11.3.0
+          python3 resource/apps/hosted-games/build.py --game "$GAME" --output "$RUNNER_TEMP/$GAME.apk" --sdk "$ANDROID_HOME" --zxing "$RUNNER_TEMP/zxing.jar"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: single-hosted-unsigned-${{ matrix.game }}
+          path: ${{ runner.temp }}/${{ matrix.game }}.apk
+          if-no-files-found: error
+
+  sign:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /resource/apps/hosted-games/src/main/AndroidManifest.xml
+            /tools/resource_catalog.py
+            /tools/pc-games/hosted-games.json
+            /tools/puretv-release-certificate-v2.sha256
+            /tools/hosted-games-tv/package-release.py
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: android-actions/setup-android@v3
+        with: {packages: 'build-tools;34.0.0'}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: single-hosted-unsigned-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/unsigned
+      - name: Match the six identities, sign with the pinned key, and verify the signed entries
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: python3 tools/hosted-games-tv/package-release.py --sign-from "$RUNNER_TEMP/unsigned" --signed "$RUNNER_TEMP/signed" --tools "$ANDROID_HOME/build-tools/34.0.0"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: single-hosted-signed
+          path: ${{ runner.temp }}/signed/
+          if-no-files-found: error
+          retention-days: 14
+
+  television:
+    needs: sign
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /tools/hosted-games-tv/
+      - uses: actions/download-artifact@v4
+        with: {name: single-hosted-signed, path: "${{ runner.temp }}/signed"}
+      - name: Enable KVM and prepare Android input tests
+        run: |
+          sudo chmod a+rw /dev/kvm
+          python3 -m pip install Pillow==11.3.0 websocket-client==1.8.0
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          emulator-build: '16970787'
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          disable-animations: false
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
+          script: python3 tools/hosted-games-tv/package-runtime.py --signed "$RUNNER_TEMP/signed" --out "$RUNNER_TEMP/device"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: single-hosted-device
+          path: ${{ runner.temp }}/device/device.json
+          if-no-files-found: error
+
+  export-signed:
+    needs: sign
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {contents: write}
+    env:
+      STAGE: signed
+    steps: &publish
+      - uses: actions/download-artifact@v4
+        with:
+          name: single-hosted-${{ env.STAGE }}
+          path: ${{ runner.temp }}/export
+      - name: Preserve the artifact on a new immutable build-assets ref
+        env: {GH_TOKEN: "${{ github.token }}"}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/export"
+          if [[ "$STAGE" == signed ]]; then
+            test "$(find . -maxdepth 1 -name '*.apk' | wc -l)" = 6
+            sha256sum --check SHA256SUMS.txt
+            test "$(jq -r .sourceSha packages.json)" = "$GITHUB_SHA"
+          else
+            test "$(jq -r .sourceSha device.json)" = "$GITHUB_SHA"
+          fi
+          git init -q
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -qm "Hosted TV games $STAGE from $GITHUB_SHA (run $GITHUB_RUN_ID)"
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          gh auth setup-git
+          branch="build-assets/single-hosted-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-$STAGE"
+          git push --force-with-lease="refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
+
+  export-device:
+    needs: [sign, television]
+    if: always() && needs.sign.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {contents: write}
+    env:
+      STAGE: device
+    steps: *publish
