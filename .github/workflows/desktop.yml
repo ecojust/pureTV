@@ -94,6 +94,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
+      - name: Select native Perl for Windows OpenSSL
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $perl = 'C:\Strawberry\perl\bin\perl.exe'
+          if (!(Test-Path $perl)) { throw "Windows runner is missing Strawberry Perl" }
+          "OPENSSL_SRC_PERL=$perl" >> $env:GITHUB_ENV
+          "PERL=$perl" >> $env:GITHUB_ENV
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: |
