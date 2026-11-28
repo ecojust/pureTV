@@ -100,7 +100,8 @@ def key(*names):
 
 def enter(label, value):
     field = wait(label, lambda: next((n for r, name, _, n in entries()
-                                     if r in ("entry", "text", "spin button") and name == label), None), 20)
+                                     if r in ("entry", "text", "spin button") and
+                                     (name == label or name.startswith(label + " "))), None), 20)
     field.queryComponent().grabFocus()
     key("ctrl+a")
     command("xdotool", "type", "--clearmodifiers", value)
@@ -108,6 +109,55 @@ def enter(label, value):
 
 def photo(filename):
     command("import", "-window", "root", str(out / (filename + ".png")))
+
+
+def deployment_photo():
+    # Capture real X11 pixels after the success dialog has been painted. In addition
+    # to AT-SPI semantics, OCR verifies its contents in the actual submitted frame.
+    target = out / "deployed.png"
+    heading = wait("success heading", lambda: next((node for role, name, _, node in entries()
+                   if role == "heading" and name.strip() == "操作成功"), None), 10)
+    action = button("前往启动器")
+    xid = command("xdotool", "getactivewindow")
+    command("xdotool", "windowactivate", "--sync", xid)
+    words = []
+    for attempt in range(4):
+        if attempt == 1:
+            command("xdotool", "windowsize", "--sync", xid, "1380", "910")
+        if attempt == 2:
+            action.queryComponent().grabFocus()
+            subprocess.run(["xrefresh"], timeout=4, check=False)
+        if attempt == 3:
+            key("alt+F10")
+        time.sleep(1)
+        photo("deployed")
+        with Image.open(target) as captured:
+            read = []
+            for node in (heading, action):
+                box = node.queryComponent().getExtents(at.DESKTOP_COORDS)
+                top = max(0, box.y - 4)
+                crop = captured.crop((max(0, box.x - 4), top, min(captured.width, box.x + box.width + 4),
+                                      min(captured.height, box.y + box.height + 4)))
+                if crop.width == 0 or crop.height == 0:
+                    read.append("")
+                    continue
+                from io import BytesIO
+                stream = BytesIO()
+                crop = crop.resize((crop.width * 3, crop.height * 3))
+                crop.save(stream, "PNG")
+                ocr = subprocess.run(["tesseract","stdin","stdout","-l","chi_sim","--psm","7"],
+                                     input=stream.getvalue(), capture_output=True, timeout=12, check=True)
+                read.append(re.sub(r"\s+", "", ocr.stdout.decode(errors="replace")))
+            full = subprocess.run(["tesseract",str(target),"stdout","-l","chi_sim+eng","--psm","11"],
+                                  capture_output=True, text=True, timeout=25, check=True)
+            text = re.sub(r"\s+", "", full.stdout)
+        words = read
+        if ("成功" in read[0] and "启动器" in read[1]) or (
+                ("操作成功" in text or "游戏已安装" in text) and "前往启动器" in text):
+            record("visibleResult", {"ocrConfirmed": True, "window": "X11 root",
+                                     "expected": ["操作成功", "前往启动器"]})
+            return
+    raise RuntimeError("Could not verify success dialog in screenshot: " + repr(words[:2]))
 
 
 def host_isolation():
@@ -186,13 +236,32 @@ def disconnected_and_play():
 
 def boot_tv():
     scratch = Path(os.environ["XDG_RUNTIME_DIR"])
+    avds = command("emulator", "-list-avds").splitlines()
+    assert "offlineTV" in avds, f"Prepared AVD unavailable: {avds}"
+    free = os.statvfs(os.environ["ANDROID_AVD_HOME"])
+    emulator_version = command("emulator", "-version").splitlines()
+    version = next((line.strip() for line in emulator_version if "emulator version" in line.lower()), "unknown")
+    record("emulatorEnvironment", {"availableAvds": avds, "version": version,
+                                   "avdFreeMiB": free.f_bavail * free.f_frsize // 1048576})
+    print(command("df", "-h", os.environ["ANDROID_AVD_HOME"]), flush=True)
+    emulator_log = scratch / "emulator.log"
+
+    def emulator_failure():
+        text = emulator_log.read_text(errors="replace").splitlines()
+        diagnostics = [line[:400] for line in text if re.search(
+            r"error|failed|fatal|panic|missing|unknown|not found|not enough|does not exist|not supported", line, re.I)
+            and not re.search(r"token|credential|password|adbkey|api.key|jwt|grpc", line, re.I)]
+        return " | ".join(diagnostics[-8:]) or f"emulator exited with code {emulator.poll()}"
+
     emulator = subprocess.Popen(["emulator", "-avd", "offlineTV", "-port", "5554", "-no-window",
                                  "-gpu", "lavapipe", "-memory", "2048", "-cores", "2", "-noaudio",
-                                 "-no-boot-anim", "-no-snapshot"], stdout=(scratch / "emulator.log").open("w"),
+                                 "-no-boot-anim", "-no-snapshot"], stdout=emulator_log.open("w"),
                                 stderr=subprocess.STDOUT)
     def booted():
         if emulator.poll() is not None:
-            raise RuntimeError("Android TV emulator exited during boot")
+            failure = emulator_failure()
+            record("emulatorExit", {"code": emulator.returncode, "reason": failure})
+            raise RuntimeError("Android TV emulator exited during boot: " + failure)
         try:
             return adb("emulator-5554", "shell", "getprop", "sys.boot_completed", timeout=5) == "1"
         except (subprocess.SubprocessError, OSError):
@@ -201,7 +270,6 @@ def boot_tv():
     assert os.readlink("/proc/self/ns/net") == os.readlink(f"/proc/{emulator.pid}/ns/net")
     adb("emulator-5554", "shell", "input", "keyevent", "KEYCODE_WAKEUP")
     adb("emulator-5554", "shell", "wm", "dismiss-keyguard")
-    adb("emulator-5554", "shell", "svc", "power", "stayon", "true")
     assert "android.software.leanback" in adb("emulator-5554", "shell", "pm", "list", "features")
     # A QEMU port redirection survives Manager restarting the host ADB daemon during connection.
     # Expose real guest adbd over guest Ethernet as on a network-enabled television.
@@ -250,7 +318,7 @@ def deploy():
     steps = ["打包 APK", "安装到电视", "完成"]
     for step in steps:
         see(step)
-    photo("deployed")
+    deployment_photo()
     path = adb(endpoint, "shell", "pm", "path", "--user", "0", package)
     assert re.fullmatch(r"package:/data/app/[^\n]+/base\.apk", path), path
     installed = subprocess.check_output(["adb", "-s", endpoint, "exec-out", "cat", path[8:]], timeout=45)

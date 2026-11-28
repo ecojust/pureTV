@@ -1,0 +1,15 @@
+name: Isolated offline TV check on the existing Linux installer
+on:
+  push:
+    branches: [qa/manager-offline-visual-46115848343]
+    paths: ['.github/workflows/independent-desktop-tv.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  existing-linux:
+    uses: ./.github/workflows/desktop-offline-tv.yml
+    with:
+      build_run: '46115848343'
+
+# Verified visible evidence revision 1
