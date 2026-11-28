@@ -77,7 +77,8 @@ final class MenuCaption implements AutoCloseable {
                 JSONObject match = terms.optJSONObject(index);
                 if (match == null) caption.setVisibility(View.GONE);
                 else {
-                    caption.setText(match.optString("label") + "  ·  " + match.optString("zh"));
+                    String text = match.optString("label") + "  ·  " + match.optString("zh");
+                    if (!text.contentEquals(caption.getText())) caption.setText(text);
                     FrameLayout.LayoutParams position = (FrameLayout.LayoutParams) caption.getLayoutParams();
                     int gravity = (y > height * .72f ? Gravity.TOP : Gravity.BOTTOM) | Gravity.CENTER_HORIZONTAL;
                     if (position.gravity != gravity) { position.gravity = gravity; caption.setLayoutParams(position); }

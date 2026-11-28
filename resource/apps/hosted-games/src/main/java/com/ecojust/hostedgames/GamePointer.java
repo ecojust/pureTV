@@ -16,6 +16,7 @@ final class GamePointer {
     private float x = -1, y;
     private boolean pressed;
     private long downTime;
+    private final View.OnLayoutChangeListener layout = (view, l, t, r, b, oldL, oldT, oldR, oldB) -> position();
 
     GamePointer(FrameLayout layer, WebView web) {
         this.web = web;
@@ -32,6 +33,7 @@ final class GamePointer {
         marker.setBackground(circle);
         marker.setVisibility(View.GONE);
         layer.addView(marker, new FrameLayout.LayoutParams(diameter, diameter));
+        web.addOnLayoutChangeListener(layout);
     }
 
     void show(boolean visible) {
@@ -84,6 +86,7 @@ final class GamePointer {
 
     void remove() {
         cancel();
+        web.removeOnLayoutChangeListener(layout);
         ((FrameLayout) marker.getParent()).removeView(marker);
     }
 
