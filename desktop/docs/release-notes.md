@@ -3,21 +3,21 @@
 ## 简体中文
 
 - 游戏卡片新增「部署到电视」。连接并授权目标电视后，点一次即可从本地准备 APK、安装到电视。安装成功后，管理器会提示你在电视启动器中把游戏添加到主屏幕。
-- 客户端内置 50 款游戏的程序、图像、音效和相应的电视签名包。电脑首次游玩、保存 APK 以及通过已连接的 ADB 部署都能在没有互联网的情况下完成。
+- 电脑直接从 50 款内置游戏项目读取程序、图像和音效。部署时用同一份项目和随附的正式签名数据组装电视 APK。电脑首次游玩、保存 APK 以及通过已连接的 ADB 部署都能在没有互联网的情况下完成。
 - 六款作者托管的作品列于「联网游戏」，电脑或电视游玩时需要访问作者站点。
 - 安装文件变大。0.7.0 及更早版本的内置更新器对安装包有大小限制，从本页下载对应平台的新版覆盖安装即可保留现有配置。
 
 ## 繁體中文
 
 - 遊戲卡片新增「部署到電視」。連線並授權目標電視後，按一下即可從本機準備 APK、安裝到電視。安裝成功後，管理器會提示你在電視啟動器將遊戲加入主畫面。
-- 用戶端內建 50 款遊戲的程式、圖像、音效和對應的電視簽署安裝檔。電腦首次遊玩、儲存 APK，以及透過已連線的 ADB 部署，都可在沒有網際網路的環境下完成。
+- 電腦直接從 50 款內建遊戲專案讀取程式、圖像和音效。部署時使用同一份專案及隨附的正式簽署資料組裝電視 APK。電腦首次遊玩、儲存 APK，以及透過已連線的 ADB 部署，都可在沒有網際網路的環境下完成。
 - 六款由作者代管的作品列於「連線遊戲」，電腦或電視遊玩時需要連線至作者網站。
 - 安裝檔較大。0.7.0 和更舊版本的更新器有安裝檔大小限制，請從本頁下載新版並覆蓋安裝，保留既有設定。
 
 ## English
 
 - Choose **Deploy to TV** on a game card after connecting and authorizing your TV. Manager prepares the APK locally, installs it on that TV and, on success, explains how to add the game to the launcher’s home screen.
-- The client includes 50 local games and their signed TV packages. Play on your computer for the first time, export an APK or deploy to a connected TV over ADB without internet access.
+- The client runs 50 games from their bundled project files. To deploy a game, it assembles the TV APK from those same files and the original signing data. Play on your computer for the first time, export an APK or deploy to a connected TV over ADB without internet access.
 - The six author-hosted titles are listed under **Online games** and require internet access on the device where you play.
 - Because the game library increases installer size, the updater in 0.7.0 and earlier may reject the download. Install the package for your platform from this release to keep your settings.
 
