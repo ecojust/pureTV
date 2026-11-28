@@ -66,10 +66,10 @@ To play from the project homepage, select **Play in browser** on a game card. Th
 
 Open **Games → Web games** and find the game you want to install on your TV.
 
-- For the 50 games with official signed TV packages, choose **Get TV APK** to retrieve the original package.
-- For the six games hosted by their authors, choose **Build TV APK**. Manager assembles a standalone package for the selected game on your computer using a pre-signed template. You can install all six side by side. The TV needs internet access to play each game on its author’s site.
+- For the 50 games with official signed TV packages, choose **Get TV APK** to download the original package on first use. A verified local copy can be reused offline.
+- For the six games hosted by their authors, choose **Build TV APK**. Manager assembles the selected game’s package offline using a built-in, pre-signed template. You can install all six side by side. The TV needs internet access to play each game on its author’s site.
 
-Once the APK is ready, check its package name and SHA-256. Choose **Save to computer** to export it without connecting a TV. To install it, choose **Add to install queue** and open **Pending apps** under **Apps**. Connect the TV, authorize ADB and install individual items or a batch. Only games already in **Web games** are available for packaging.
+Once the APK is ready, check its SHA-256 and, when available, its package name. Choose **Save to computer** to export it without connecting a TV. To install it, choose **Add to install queue** and open **Pending apps** under **Apps**. Connect the TV, authorize ADB and install individual items or a batch. Only games already in **Web games** are available for packaging.
 
 To browse other games or versions on the market server, switch to **TV game market** in the same section. It provides the market’s previews, version selector, downloads and installation controls.
 
@@ -95,7 +95,7 @@ python3 -m venv .venv
 
 Choose a game on the homepage, select its TV icon to download the signed APK, and install it on the television. If you downloaded the source archive, extract it and install the APK from `joystick-games/<game-id>/`. [Browse the homepage game catalog](../../README.en.md#games) · [Download the six updated and new games](../../joystick-games/README.md#game-expansion)
 
-The six author-hosted games share one Android TV app. Open pureTV Online Games and select a title with the remote or scan the code with a phone on the same network. Press Back during play to see the Chinese guide and controls. [TV app and controls](../../resource/apps/hosted-games/)
+The six author-hosted games are also available together in one Android TV app, linked from the homepage. Open pureTV Online Games and select a title with the remote or scan the code with a phone on the same network. Press Back during play to see the Chinese guide and controls. [TV app and controls](../../resource/apps/hosted-games/)
 
 Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
 
