@@ -14,11 +14,11 @@ from urllib.parse import urlsplit
 import zipfile
 
 from qa import Device, find_label
+from window_snapshot import install_sampler
 
 
 class OpeningRequests(socketserver.ThreadingTCPServer):
-    # Hold the author connection at the HTTPS CONNECT handshake while driving the native guide.
-    # This tests cold launch routing for all six apps without depending on author site availability.
+    # The routing probe ends at CONNECT. The interactive launch uses the device's normal network.
     daemon_threads = True
 
     def __init__(self):
@@ -59,7 +59,34 @@ def activity_state(device, package):
     return {'resumed': foreground[:4], 'focusedWindow': focus[:2], 'gameHistory': records[:4]}
 
 
-def probe(device, proxy, record, game, entry):
+def restore_proxy(device, previous):
+    device.shell('settings', 'put', 'global', 'http_proxy', previous if previous != 'null' else ':0')
+    if previous == 'null':
+        device.shell('settings', 'delete', 'global', 'http_proxy')
+
+
+def loaded_player(device, record, entry, stage):
+    package = record['packageName']
+    def ready(tree):
+        if find_label(tree, '游戏加载失败') is not None:
+            entry['nativeError'] = [n.get('text', '') for n in tree.iter('node')
+                                    if n.get('package') == package and n.get('text')][:8]
+            return 'failed'
+        if find_label(tree, '正在打开' + record['title'] + '…') is not None:
+            return False
+        web = any(n.get('class') == 'android.webkit.WebView' and n.get('package') == package
+                  for n in tree.iter('node'))
+        return web and find_label(tree, '游戏光标') is not None
+
+    if device.until('loaded author WebView and active game cursor', ready, timeout=60) == 'failed':
+        raise RuntimeError('The native network error screen appeared: ' + ' '.join(entry['nativeError']))
+    state = activity_state(device, package)
+    if not any(package + '/' in item for item in state['resumed']):
+        raise RuntimeError('Loaded game did not retain its foreground activity')
+    entry[stage] = True
+
+
+def probe(device, proxy, previous, record, game, entry):
     package = record['packageName']
     expected = package + '/com.ecojust.hostedgames.MainActivity'
     intent = ('-a', 'android.intent.action.MAIN', '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-p', package)
@@ -71,8 +98,10 @@ def probe(device, proxy, record, game, entry):
     device.shell('am', 'force-stop', package)
     device.shell('am', 'start', '-W', '-a', 'android.settings.SETTINGS')
     entry['previousActivity'] = activity_state(device, package)
-    device.shell('am', 'start', '-W', '-a', 'android.intent.action.MAIN', '-c',
-                 'android.intent.category.LEANBACK_LAUNCHER', '-n', component)
+    start = ('am', 'start', '-W', '-a', 'android.intent.action.MAIN', '-c',
+             'android.intent.category.LEANBACK_LAUNCHER', '-n', component)
+    device.shell('settings', 'put', 'global', 'http_proxy', '127.0.0.1:23884')
+    device.shell(*start)
     origin = urlsplit(game['url'])
     author = f'{origin.hostname}:{origin.port or 443}'
     with proxy.condition:
@@ -81,14 +110,16 @@ def probe(device, proxy, record, game, entry):
     if expected not in resumed(device):
         raise RuntimeError('Expected game activity is not in the foreground')
     entry.update(launcherActivity=component, requestedAuthor=author, catalogUrl=game['url'])
+    device.shell('am', 'force-stop', package)
+    restore_proxy(device, previous)
+    device.shell(*start)
+    loaded_player(device, record, entry, 'loadedOnNormalNetwork')
     title = record['title'] + ' · 操作说明'
-    # Wait for the TV window and native input overlay before dispatching the first remote key.
-    device.label('游戏光标', timeout=25)
     device.key('KEYCODE_MENU')
     device.label(title, timeout=25)
     entry['guideTitle'] = title
     device.select_dialog_button('继续游戏')
-    device.until('guide closed', lambda tree: find_label(tree, title) is None, timeout=20)
+    loaded_player(device, record, entry, 'playerRestoredAfterContinue')
     entry['continued'] = True
     device.key('KEYCODE_BACK')
     device.label(title, timeout=25)
@@ -116,7 +147,7 @@ def main():
     receipt = json.loads((args.signed / 'packages.json').read_text())
     report = {'sourceSha': receipt['sourceSha'], 'signingRun': receipt['runId'], 'physicalTvTested': False,
               'qaSourceSha': os.environ.get('GITHUB_SHA'), 'deviceRun': os.environ.get('GITHUB_RUN_ID'),
-              'networkCheck': 'HTTPS CONNECT destination observed through a holding proxy on the emulator',
+              'networkCheck': 'Cold-launch HTTPS CONNECT destination observed; second launch and remote input use the unmodified emulator network',
               'packages': {}}
     device = Device('emulator-5554', args.out)
     def save():
@@ -130,6 +161,11 @@ def main():
             or device.shell('getprop', 'ro.build.version.sdk') != '36'):
         raise RuntimeError('Expected an API 36 Android TV image')
     report['fingerprint'] = device.shell('getprop', 'ro.build.fingerprint')
+    try:
+        install_sampler(device)
+        device.sampler_ready = True
+    except (OSError, subprocess.SubprocessError, KeyError):
+        pass  # Device.tree falls back to the system uiautomator dump.
     games = {}
     for record in receipt['packages']:
         apk = args.signed / record['file']
@@ -152,11 +188,10 @@ def main():
         port = proxy.server_address[1]
         device.adb('reverse', 'tcp:23884', 'tcp:' + str(port))
         try:
-            device.shell('settings', 'put', 'global', 'http_proxy', '127.0.0.1:23884')
             for record in receipt['packages']:
                 entry = {'packageName': record['packageName'], 'apkSha256': record['sha256']}
                 try:
-                    probe(device, proxy, record, games[record['id']], entry)
+                    probe(device, proxy, previous, record, games[record['id']], entry)
                 except Exception as error:
                     entry['error'] = str(error)
                     try:
@@ -170,9 +205,7 @@ def main():
                 report['packages'][record['id']] = entry
                 save()
         finally:
-            device.shell('settings', 'put', 'global', 'http_proxy', previous if previous != 'null' else ':0')
-            if previous == 'null':
-                device.shell('settings', 'delete', 'global', 'http_proxy')
+            restore_proxy(device, previous)
             device.adb('reverse', '--remove', 'tcp:23884')
             proxy.finished.set()
             proxy.shutdown()
