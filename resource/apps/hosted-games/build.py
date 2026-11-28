@@ -2,10 +2,12 @@
 """Build the online TV game's unsigned APK with Android SDK 35 and JDK 17."""
 import argparse
 import hashlib
+import json
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import xml.etree.ElementTree as ET
 import zipfile
 
 APP = Path(__file__).resolve().parent
@@ -15,7 +17,44 @@ ZXING_SHA256 = "8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82
 CONTROLLER_CLASSES = ("LanGameServer", "WifiControllerServer", "WifiControllerDiscovery")
 
 
-def build(sdk, zxing, output):
+CATALOG = REPO / "tools/pc-games/hosted-games.json"
+
+
+def single_game_inputs(game_id, source, assets, work):
+    from PIL import Image, ImageOps
+
+    games = json.loads(CATALOG.read_text(encoding="utf-8"))
+    game = next((entry for entry in games if entry["id"] == game_id), None)
+    if game is None:
+        raise ValueError(f"Unknown hosted game: {game_id}")
+
+    (assets / "hosted-games.json").write_text(json.dumps([game], ensure_ascii=False), encoding="utf-8")
+    config = assets / "game-config.json"
+    controller = json.loads(config.read_text(encoding="utf-8"))
+    controller.update(name=game["zh"], nameEn=game["en"])
+    config.write_text(json.dumps(controller, ensure_ascii=False), encoding="utf-8")
+
+    resources = work / "res"
+    shutil.copytree(source / "res", resources)
+    strings = resources / "values/strings.xml"
+    values = ET.parse(strings)
+    values.find(".//string[@name='app_name']").text = game["zh"]
+    values.write(strings, encoding="utf-8")
+    number = game["number"]
+    start = (number - 1) // 500 * 500 + 1
+    preview = REPO / "joystick-games/catalog/previews" / f"{start:04}-{start + 499:04}" / f"{number:04}.webp"
+    drawables = resources / "drawable-nodpi"
+    drawables.mkdir()
+    with Image.open(preview) as original:
+        for name, size in (("icon", (192, 192)), ("banner", (320, 180))):
+            (resources / "drawable" / f"{name}.xml").unlink()
+            ImageOps.fit(original.convert("RGB"), size, method=Image.Resampling.LANCZOS).save(drawables / f"{name}.png")
+
+    package = "com.ecojust.hostedgames." + game_id.replace("-", "_")
+    return resources, ["--rename-manifest-package", package]
+
+
+def build(sdk, zxing, output, game_id=None):
     if hashlib.sha256(zxing.read_bytes()).hexdigest() != ZXING_SHA256:
         raise ValueError("Expected the pinned ZXing core 3.5.3 JAR")
     tools = sdk / "build-tools/34.0.0"
@@ -30,14 +69,19 @@ def build(sdk, zxing, output):
         work = Path(tmp)
         assets = work / "assets"
         shutil.copytree(source / "assets", assets)
-        shutil.copyfile(REPO / "tools/pc-games/hosted-games.json", assets / "hosted-games.json")
+        resources = source / "res"
+        link_options = []
+        if game_id is None:
+            shutil.copyfile(CATALOG, assets / "hosted-games.json")
+        else:
+            resources, link_options = single_game_inputs(game_id, source, assets, work)
         for extension in ("html", "css", "js"):
             shutil.copy(KIT / "web" / f"controller.{extension}", assets)
         generated = work / "generated"
         apk = work / "unsigned.apk"
-        run(tools / "aapt2", "compile", "--dir", source / "res", "-o", work / "res.zip")
+        run(tools / "aapt2", "compile", "--dir", resources, "-o", work / "res.zip")
         run(tools / "aapt2", "link", "-I", android, "--manifest", source / "AndroidManifest.xml",
-            "--java", generated, "-A", assets, "-o", apk, work / "res.zip")
+            *link_options, "--java", generated, "-A", assets, "-o", apk, work / "res.zip")
 
         classes = work / "classes"
         classes.mkdir()
@@ -69,5 +113,7 @@ if __name__ == "__main__":
     parser.add_argument("--sdk", required=True, type=Path)
     parser.add_argument("--zxing", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--game", choices=[entry["id"] for entry in json.loads(CATALOG.read_text(encoding="utf-8"))],
+                        help="Build a standalone TV app for one game from the hosted catalog")
     args = parser.parse_args()
-    build(args.sdk, args.zxing, args.output)
+    build(args.sdk, args.zxing, args.output, args.game)

@@ -28,6 +28,8 @@ python3 resource/apps/hosted-games/build.py --sdk /path/to/android-sdk \
   --zxing /path/to/core-3.5.3.jar --output /tmp/hosted-games-unsigned.apk
 ```
 
+构建单款时安装 Pillow 11.3.0，并在相同命令中加上 `--game fish-loop` 等清单 ID。可用 ID 为 `bandit`、`fish-loop`、`noir-extreme`、`struggle-bus`、`vespertine`、`daejeon-campus`。每款使用自己的包名、中文名称和封面，启动后直接打开该游戏。返回键可查看原作指南和手机配对二维码，选择「退出游戏」返回系统。这六个独立包可与合集一起安装在一台电视上，各自保存游戏进度。
+
 构建脚本核对 ZXing 校验和，从网页目录的同一份清单打包六款游戏的地址及中文指南。常规提交执行未签名构建。在 master 上手动运行「Hosted games for Android TV」发布流程，会使用 pureTV 固定证书签名，再在 Android TV 模拟器上安装测试。[工作流](../../../.github/workflows/hosted-games-tv.yml) · [手机手柄二维码组件许可](src/main/assets/ZXing-LICENSE.txt)
 
 在仓库根目录运行 `resource/launcher/puretv/gradlew -p tools/hosted-games-tv/native testDebugUnitTest`，可复验应用进入后台后释放端口、回到前台后保留同一游戏画面，以及离开作者站点后返回原入口。测试使用 Robolectric API 28 和真实的本地 TCP 连接。[签名包资源校验](docs/signed-package.json)
