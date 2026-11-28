@@ -124,8 +124,12 @@ jobs:
 
   television:
     needs: sign
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [controllers, bandit, fish-loop, noir-extreme, struggle-bus, vespertine, daejeon-campus]
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -155,17 +159,42 @@ jobs:
           profile: tv_1080p
           disable-animations: true
           emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
-          script: python3 tools/hosted-games-tv/qa.py --apk "$RUNNER_TEMP"/signed/hosted-games-*.apk --out "$RUNNER_TEMP/hosted-games-qa"
+          script: python3 tools/hosted-games-tv/qa.py --case "${{ matrix.case }}" --apk "$RUNNER_TEMP"/signed/hosted-games-*.apk --out "$RUNNER_TEMP/hosted-games-qa"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: hosted-games-tv-runtime
+          name: hosted-games-tv-case-${{ matrix.case }}
           path: ${{ runner.temp }}/hosted-games-qa/
           if-no-files-found: warn
           retention-days: 14
 
-  export:
+  collect:
     needs: [sign, television]
+    if: always() && needs.sign.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /tools/hosted-games-tv/qa-report.py
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: hosted-games-tv-case-*
+          path: ${{ runner.temp }}/cases
+      - name: Combine independent Android TV test results
+        run: python3 tools/hosted-games-tv/qa-report.py --input "$RUNNER_TEMP/cases" --out "$RUNNER_TEMP/runtime"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hosted-games-tv-runtime
+          path: ${{ runner.temp }}/runtime/
+          if-no-files-found: error
+          retention-days: 14
+
+  export:
+    needs: [sign, television, collect]
     if: always() && needs.sign.result == 'success'
     permissions:
       contents: write
@@ -201,9 +230,9 @@ jobs:
             test "$(stat -c %s "$input")" -lt 10000000
             cp "$input" "$release/"
           done
-          # Export only the report, the redacted catalog and the six gameplay frames.
+          # Export only bounded redacted evidence and the six gameplay frames.
           # Controller setup screens include an ephemeral LAN pairing code.
-          for name in report.json catalog-preview.png {bandit,fish-loop,noir-extreme,struggle-bus,vespertine,daejeon-campus}-played.png; do
+          for name in report.json catalog-preview.png {bandit,fish-loop,noir-extreme,struggle-bus,vespertine,daejeon-campus}-{played.png,failure.xml,author.xml,guide.xml}; do
             input="$RUNNER_TEMP/runtime/$name"
             if test -f "$input" && test ! -L "$input" && test "$(stat -c %s "$input")" -lt 5000000; then
               cp "$input" "$release/$name"

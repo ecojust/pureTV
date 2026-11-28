@@ -100,6 +100,30 @@ public class HostedLifecycleTest {
     }
 
     @Test
+    public void lanControllerCanFocusAndOpenSecondCatalogEntry() {
+        ActivityController<MainActivity> lifecycle = Robolectric.buildActivity(MainActivity.class);
+        MainActivity activity = lifecycle.setup().visible().windowFocusChanged(true).get();
+        try {
+            View root = activity.getWindow().getDecorView();
+            assertTrue(findButton(root, "金库大盗").hasFocus());
+            HostedLobbyInput lobby = getField(activity, "lobby");
+            java.util.function.IntConsumer navigate = getField(lobby, "action");
+            navigate.accept(KeyEvent.KEYCODE_DPAD_DOWN);
+            Button fish = findButton(root, "鱼群环线");
+            View focused = activity.getCurrentFocus();
+            assertTrue("LAN Down should move focus to Fish Loop. Current focus: " + focused
+                + ", next: " + (focused == null ? null : focused.focusSearch(View.FOCUS_DOWN))
+                + ", expected: " + fish + ", touch mode: " + fish.isInTouchMode()
+                + ", rect: "+ fish.getWidth() + "x"+fish.getHeight(), fish.hasFocus());
+            navigate.accept(KeyEvent.KEYCODE_DPAD_CENTER);
+            WebView web = getField(activity, "web");
+            assertEquals("https://huykc1.github.io/fish-loop-phaser-demo/demo/", shadowOf(web).getLastLoadedUrl());
+        } finally {
+            lifecycle.pause().stop().destroy();
+        }
+    }
+
+    @Test
     public void topLevelNavigationFallbackRestartsAtOriginalAuthor() throws Exception {
         ActivityController<MainActivity> lifecycle = Robolectric.buildActivity(MainActivity.class);
         MainActivity activity = lifecycle.setup().visible().windowFocusChanged(true).get();

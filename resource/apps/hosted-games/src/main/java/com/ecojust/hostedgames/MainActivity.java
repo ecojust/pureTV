@@ -131,9 +131,15 @@ public final class MainActivity extends Activity {
         detail.addView(original);
         detail.addView(instructions);
         detail.addView(new ConnectionPanel());
-        Button selected = null;
+        Button selected = null, previous = null;
         for (Game item : games) {
             Button entry = button(item.title, () -> play(item));
+            entry.setId(View.generateViewId());
+            if (previous != null) {
+                previous.setNextFocusDownId(entry.getId());
+                entry.setNextFocusUpId(previous.getId());
+            }
+            previous = entry;
             entry.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             buttons.addView(entry, new LinearLayout.LayoutParams(-1, -2));
             Runnable describe = () -> {
@@ -374,20 +380,30 @@ public final class MainActivity extends Activity {
     }
 
     private void navigate(int key) {
-        if (helpDialog != null) {
-            if (key == KeyEvent.KEYCODE_BUTTON_START || key == KeyEvent.KEYCODE_BACK) {
-                helpDialog.dismiss();
-                return;
-            }
-            // Deliver the key pair to the same dialog if its button closes or replaces it.
-            AlertDialog dialog = helpDialog;
-            dialog.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, key));
-            if (dialog.isShowing()) dialog.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, key));
-        } else if (key == KeyEvent.KEYCODE_BACK && game == null) {
-            finish();
-        } else if (key != KeyEvent.KEYCODE_BUTTON_START) {
-            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, key));
-            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, key));
+        if (key == KeyEvent.KEYCODE_BACK || key == KeyEvent.KEYCODE_BUTTON_START) {
+            if (helpDialog != null) helpDialog.dismiss();
+            else if (key == KeyEvent.KEYCODE_BACK) onBackPressed();
+            return;
+        }
+        View focused = helpDialog == null ? getCurrentFocus() : helpDialog.getCurrentFocus();
+        if (focused == null) return;
+        if (key == KeyEvent.KEYCODE_DPAD_CENTER) {
+            if (focused.isEnabled()) focused.performClick();
+            return;
+        }
+        // LAN events arrive on the UI thread without ViewRootImpl's physical D-pad focus traversal.
+        int direction;
+        switch (key) {
+            case KeyEvent.KEYCODE_DPAD_LEFT: direction = View.FOCUS_LEFT; break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT: direction = View.FOCUS_RIGHT; break;
+            case KeyEvent.KEYCODE_DPAD_UP: direction = View.FOCUS_UP; break;
+            case KeyEvent.KEYCODE_DPAD_DOWN: direction = View.FOCUS_DOWN; break;
+            default: return;
+        }
+        View next = focused.focusSearch(direction);
+        if (next != null && next != focused && next.requestFocus(direction)) return;
+        if (focused instanceof ScrollView && (direction == View.FOCUS_UP || direction == View.FOCUS_DOWN)) {
+            ((ScrollView) focused).pageScroll(direction);
         }
     }
 

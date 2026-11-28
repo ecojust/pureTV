@@ -245,8 +245,8 @@ def author_action(device, game_id):
         return fish_action(device)
     if game_id == 'bandit':
         device.click_author_label('PLAY')
-        device.label('CREATE ROOM')
-        return {'observed': 'PLAY opened the CREATE ROOM lobby'}
+        device.label('SAFEHOUSE', timeout=85)
+        return {'observed': 'PLAY joined the author’s multiplayer SAFEHOUSE lobby'}
     if game_id == 'daejeon-campus':
         device.click_author_label('미니게임')
         device.until('a Korean game start button', lambda tree: next(
@@ -275,23 +275,31 @@ def author_action(device, game_id):
                 'unverified': 'Steering and paint effects inside the author canvas'}
 
 
-def run_game(device, game, first):
+def run_game(device, game, result, save):
     title, game_id = game['zh'], game['id']
     device.focused(title)
     device.xml(game_id + '-card')
-    if first:
+    result["cardFocused"] = title
+    save()
+    if game_id == "bandit":
         with offline_proxy(device):
             device.key('KEYCODE_DPAD_CENTER')
             device.label('游戏加载失败')
             device.screenshot('offline-error')
         device.focused('重试')
+        result['offlineRetryFocused'] = True
+        save()
     device.key('KEYCODE_DPAD_CENTER')
     device.label(AUTHOR_MARKERS[game_id], timeout=110)
     device.xml(game_id + '-author')
-    result = {'cursor': device.verify_pointer()}
+    result['authorMarker'] = AUTHOR_MARKERS[game_id]
+    save()
+    result['cursor'] = device.verify_pointer()
+    save()
     if game_id == 'fish-loop':
         result['wifiController'] = wifi_play(device, title)
     result.update(author_action(device, game_id))
+    save()
     device.screenshot(game_id + '-played')
     device.key('KEYCODE_BACK')
     device.label(title + ' · 操作说明')
@@ -305,7 +313,8 @@ def run_game(device, game, first):
     device.label(title + ' · 操作说明')
     device.select_dialog_button('返回游戏列表')
     device.focused(title)
-    return {**result, 'returnedFocus': title}
+    result['returnedFocus'] = title
+    save()
 
 
 def main():
@@ -313,11 +322,23 @@ def main():
     parser.add_argument('--apk', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--serial', help='Disposable Android TV emulator (defaults to the ADB selection)')
+    parser.add_argument('--case', choices=['all', 'controllers', *AUTHOR_MARKERS], default='all')
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     device = Device(args.serial or os.environ.get('ANDROID_SERIAL'), args.out)
-    report = {'apkSha256': hashlib.sha256(args.apk.read_bytes()).hexdigest(), 'adb': device.prefix[0],
+    report = {'case': args.case, 'passed': False, 'apkSha256': hashlib.sha256(args.apk.read_bytes()).hexdigest(), 'adb': device.prefix[0],
               'physicalTvTested': False, 'physicalControllerTested': False, 'games': {}, 'controllers': {}}
+    def save():
+        partial = args.out / 'report.partial'
+        partial.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
+        partial.replace(args.out / 'report.json')
+
+    def fresh_catalog():
+        device.shell('am', 'force-stop', PACKAGE)
+        device.shell('am', 'start', '-W', '-n', COMPONENT)
+        device.focused(games[0]['zh'])
+
+    save()
     try:
         device.wait_for_ready(report)
         if device.shell('getprop', 'ro.kernel.qemu') != '1' and device.shell('getprop', 'ro.boot.qemu') != '1':
@@ -331,54 +352,54 @@ def main():
         if [g['id'] for g in games] != list(AUTHOR_MARKERS):
             raise ValueError('APK catalog must contain the six requested author games, in menu order')
         device.adb('install', '-r', args.apk.resolve())
-        device.shell('am', 'start', '-W', '-n', COMPONENT)
-        device.focused(games[0]['zh'])
-        device.screenshot('catalog-preview', mask_pairing=True)
-        for transport, probe in [('phone', phone_input), ('wifi', wifi_input)]:
-            try:
-                device.focused(games[0]['zh'])
-                report['controllers'][transport] = probe(device, [g['zh'] for g in games])
-                device.key('KEYCODE_DPAD_UP')
-                device.focused(games[0]['zh'])
-            except Exception as error:
-                # WebSocket diagnostics can contain the ephemeral room token.
-                report['controllers'][transport] = {'error': re.sub(
-                    r'room=[^\s&]+', 'room=[omitted]', str(error))}
-                device.shell('am', 'force-stop', PACKAGE)
-                device.shell('am', 'start', '-W', '-n', COMPONENT)
-                device.focused(games[0]['zh'])
+        if args.case in ('all', 'controllers'):
+            for transport, probe in [('phone', phone_input), ('wifi', wifi_input)]:
+                try:
+                    fresh_catalog()
+                    if transport == 'phone':
+                        device.screenshot('catalog-preview', mask_pairing=True)
+                    report['controllers'][transport] = probe(device, [g['zh'] for g in games])
+                except Exception as error:
+                    # WebSocket diagnostics can contain the ephemeral room token.
+                    report['controllers'][transport] = {'error': re.sub(
+                        r'room=[^\s&]+', 'room=[omitted]', str(error))}
+                save()
         for index, game in enumerate(games):
+            game_id = game['id']
+            if args.case not in ('all', game_id):
+                continue
+            result = {}
+            report['games'][game_id] = result
+            save()
             try:
-                if index:
-                    device.key('KEYCODE_DPAD_DOWN')
-                report['games'][game['id']] = run_game(device, game, first=index == 0)
-            except (RuntimeError, OSError, subprocess.SubprocessError, ValueError) as error:
-                report['games'][game['id']] = {'error': str(error)}
-                device.xml(game['id'] + '-failure')
-                # AndroidRuntime only; do not export browser history or pairing diagnostics.
-                crashes = device.adb('logcat', '-d', '-t', '400', '-s', 'AndroidRuntime:E')
-                (args.out / (game['id'] + '-runtime.txt')).write_text(
-                    re.sub(r'room=[^\s&]+', 'room=[omitted]', crashes))
-                if device.last_xml:
-                    labels = [n.get('text') or n.get('content-desc') for n in ET.fromstring(device.last_xml).iter('node')]
-                    print('Last visible labels:', [v[:80] for v in labels if v and 'room=' not in v][:24], flush=True)
-                # Restart in launcher to give the remaining author sites an independent result.
-                device.shell('am', 'force-stop', PACKAGE)
-                device.shell('am', 'start', '-W', '-n', COMPONENT)
-                device.focused(games[0]['zh'])
+                fresh_catalog()
                 if index:
                     device.key(*(['KEYCODE_DPAD_DOWN'] * index))
-            print(game['id'], report['games'][game['id']], flush=True)
+                run_game(device, game, result, save)
+            except Exception as error:
+                result['error'] = str(error)
+                if device.last_xml:
+                    labels = [n.get('text') or n.get('content-desc') for n in ET.fromstring(device.last_xml).iter('node')]
+                    result['lastVisibleLabels'] = [v[:96] for v in labels if v and 'room=' not in v][:30]
+                save()
+                # Diagnostics are secondary to per-game results. Android logcat filters can
+                # wait indefinitely for a matching line when the requested buffer is empty.
+                with suppress(OSError, ValueError):
+                    device.xml(game_id + '-failure')
+            print(game_id, result, flush=True)
+            save()
+        report['passed'] = not any('error' in entry for group in ('games', 'controllers')
+                                   for entry in report[group].values())
     except Exception as error:
         report['fatal'] = str(error)
         if isinstance(error, subprocess.CalledProcessError):
             report['adbStderr'] = (error.stderr or b'').decode(errors='replace')[:1500]
         raise
     finally:
-        (args.out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
+        save()
         with suppress(subprocess.SubprocessError):
             device.shell('rm', '-f', REMOTE_XML)
-    if any('error' in entry for group in ('games', 'controllers') for entry in report[group].values()):
+    if not report['passed']:
         raise SystemExit('Android TV QA failed; see report.json and per-game evidence')
 
 
