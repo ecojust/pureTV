@@ -207,7 +207,7 @@ def host_isolation():
     return {"interfaces": names, "publicTcp": "ENETUNREACH", "managerInSameNamespace": True}
 
 
-def disconnected_and_play():
+def open_games():
     nav = wait("Manager sidebar", lambda: next((n for r, name, _, n in entries()
                if r in ("button", "push button") and name in ("Games", "游戏")), None), 65)
     if nav.name == "Games":
@@ -215,6 +215,18 @@ def disconnected_and_play():
         language.queryComponent().grabFocus()
         key("Home", "Return")
     click(button("游戏"))
+
+
+def download_selected_games():
+    open_games()
+    for name in ("Tetris", title):
+        click(button(name + " · 下载到本地"))
+        button(name + " · 已下载", timeout=120)
+    (out / "downloaded-games.json").write_text(json.dumps(["tetris", "neon-rush"]))
+
+
+def disconnected_and_play():
+    open_games()
     assert command("adb", "devices").splitlines() == ["List of devices attached"]
     click(button(title + " · 部署到电视"))
     message = "请先连接电视并完成 ADB 授权，再部署游戏。"
@@ -380,6 +392,9 @@ def deploy():
 
 
 if __name__ == "__main__":
+    if os.environ.get("PURETV_QA_DOWNLOAD_GAMES") == "1":
+        download_selected_games()
+        sys.exit(0)
     record("offlineHost", host_isolation())
     disconnected_and_play()
     tv = boot_tv()

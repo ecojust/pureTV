@@ -50,7 +50,7 @@ The TV store and the desktop manager read the same Media, Games and Launchers di
 
 ### Play on a computer
 
-Open **Games** in Manager 0.8.1 and choose **Play on computer** on a local game card. All 48 local games include their code and essential assets in the installer. You can play offline on first launch without connecting a TV. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
+Open **Games** and choose **Play on computer**. The 0.8.2 development build reads the catalog online and downloads the selected game on first use. Choose **Download for offline use** to save it in advance. You can play downloaded games offline without connecting a TV. The published 0.8.1 installer includes all 48 local games. [Download 0.8.1](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)
 
 **Online games** retains eight entries. Kart Rush and CF Transport Ship use an online player on desktop and download the original TV package on first deployment. The following six games load from their authors’ sites on both desktop and TV.
 
@@ -67,7 +67,7 @@ To play from the project homepage, select **Play in browser** on a game card. Th
 #### Prepare a TV APK from a web game
 
 1. Connect and authorize your TV under **Device connection** and check the selected Android user. A local network with no internet access is sufficient for an established ADB connection.
-2. Under **Games**, choose **Deploy to TV** on a local game card. The dialog shows the local APK preparation step, then installation on the selected TV. First use works offline and preparing the APK requires no Android SDK.
+2. Under **Games**, choose **Deploy to TV** on a local game card. The dialog shows the local APK preparation step, then installation on the selected TV. The development build downloads the selected game on first use. Once downloaded, you can prepare its APK offline without installing the Android SDK.
 3. When installation succeeds, open the TV launcher’s app list, choose the game and add it to the home screen. You can also open it directly from the app list.
 
 To keep an APK for another device, use the card’s APK export action and save it to your computer. Saving works without a connected TV.

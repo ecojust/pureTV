@@ -1,0 +1,126 @@
+/* Each game keeps its input bridge running while the host presents the status. */
+html[data-puretv-game] #puretv-controller-panel {
+  display: none !important;
+}
+
+/* Five racing games also append their own control legend to the SDK panel. */
+html[data-controller-guide] #puretv-controller-panel:not([hidden]):not([data-playing="true"]) {
+  display: block !important;
+}
+#puretv-controller-panel > :not(.lasttrack-controller-help, #tv-help, .tv-control-help, .tv-mapping, .tv-help) {
+  display: none !important;
+}
+
+#puretv-web-notice {
+  position: fixed;
+  z-index: 2147483647;
+  top: 8px;
+  right: 8px;
+  box-sizing: border-box;
+  max-width: calc(100% - 16px);
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #18232e;
+  color: #fff;
+  font: 13px/1.4 system-ui, sans-serif;
+  text-align: start;
+  pointer-events: none;
+}
+
+/* The five NES titles use the same rail. Joined players' cards contain
+   score, lives or turn information; the other cards only describe pairing. */
+html[data-player-scorecards] .sidebar > #wifi-clients,
+html[data-player-scorecards] .sidebar .join-card > :not(#room-brand),
+html[data-player-scorecards] .sidebar .player-card:not(.connected),
+html[data-player-scorecards] .sidebar .player-card:not([data-game-player]),
+html[data-player-scorecards] .sidebar .players:not(:has(.player-card.connected[data-game-player])) {
+  display: none !important;
+}
+
+/* Retain the control diagram, camera and pause buttons and driving HUD. */
+html[data-puretv-game="alien-shooter"] .player-connection,
+html[data-puretv-game="alien-shooter"] #room-panel > :not(.control-diagram),
+html[data-puretv-game="used-car-racing"] #startup:not(.failed) #startup-detail,
+html[data-puretv-game="used-car-racing"] #controller-dock,
+html[data-puretv-game="used-car-racing"] [data-phase="garage"] > #room,
+html[data-puretv-game="used-car-racing"] #room > :not(.control-help) {
+  display: none !important;
+}
+html[data-puretv-game="alien-shooter"] #room-panel .control-diagram,
+html[data-puretv-game="used-car-racing"] #room .control-help {
+  margin-block: 0;
+}
+html[data-puretv-game="used-car-racing"] #room .control-help {
+  border: 0;
+  padding: 0;
+}
+
+html[data-puretv-game="neon-rush"] #rush-phone-button,
+html[data-puretv-game="neon-rush"] #rush-wifi-help,
+html[data-puretv-game="neon-rush"] #connection,
+html[data-puretv-game="neon-rush"] aside > .side-heading,
+html[data-puretv-game="neon-rush"] #qr-wrap,
+html[data-puretv-game="neon-rush"] #room-address,
+html[data-puretv-game="neon-rush"] #kit-wifi-help,
+html[data-puretv-game="neon-rush"] #kit-wifi-help + .divider {
+  display: none !important;
+}
+/* The compact horizontal rail normally reserves three columns for pairing. */
+@media (min-width: 851px) {
+  html[data-puretv-game="neon-rush"] .app .workspace > aside.controller-strip {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) 104px !important;
+  }
+  html[data-puretv-game="neon-rush"] .app .workspace > aside.controller-strip > .control {
+    grid-column: 1 !important;
+  }
+  html[data-puretv-game="neon-rush"] .app .workspace > aside.controller-strip > .tip {
+    grid-column: 2 !important;
+  }
+  html[data-puretv-game="neon-rush"] .app .workspace > aside.controller-strip > .small-help {
+    grid-column: 3 !important;
+  }
+}
+
+/* The hosted games no longer need the space reserved just for the TV pairing card. */
+html[data-puretv-game="cf-transport-ship"] .screen {
+  right: 0;
+}
+
+@media (max-width: 680px) {
+  html[data-puretv-game="cf-transport-ship"] .title { padding-right: 0; }
+}
+
+html[data-puretv-game="qq-speed"] #menu { padding-right: 16px; padding-top: 24px; }
+html[data-puretv-game="qq-speed"] #pause .box,
+html[data-puretv-game="qq-speed"] #result .box { margin-right: 0; }
+
+html[data-puretv-game="kart-rush"] #overlay { padding-right: 12px !important; }
+
+html[data-puretv-game="penguintrack"][data-tv-driving="false"] .pt-screen {
+  padding-left: clamp(16px, 4vw, 48px) !important;
+}
+html[data-puretv-game="penguintrack"][data-tv-driving="false"] .pt-screen.ed-screen {
+  left: 0 !important;
+  padding-left: 0 !important;
+}
+
+html[data-puretv-game="kart-royale"][data-tv-driving="false"] .kr-screen.on > .kr-screen-in {
+  padding-left: calc(var(--safe-x) + env(safe-area-inset-left, 0px)) !important;
+}
+html[data-puretv-game="kart-royale"][data-tv-driving="false"] .kc-root.on {
+  padding-left: calc(16px + env(safe-area-inset-left, 0px)) !important;
+}
+
+html[data-puretv-game="lumenrift"] .screen { padding-right: 20px; }
+@media (max-height: 500px) {
+  html[data-puretv-game="lumenrift"] .screen { padding-right: 10px; }
+}
+@media (max-width: 540px) {
+  html[data-puretv-game="lumenrift"] .screen { padding: 6px; }
+}
+
+html[data-puretv-game="gogh-strike"] body[data-screen="menu"] #main-menu {
+  left: 50%;
+  width: min(910px, calc(100% - 30px));
+}

@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="en">
+<head><script>const pureTVPCConfig={"alias": null, "gameKit": false};</script><script src="../web-host.js"></script><script src="../pc-bridge.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#111118">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Kaboom Arena – free Bomberman-style fan game, play online</title>
+<meta name="description" content="Kaboom Arena is a free fan-made tribute to Konami's Bomberman: drop bombs, blast walls and outlast your rivals. Solo vs bots, local with friends or online with a room code. Works on desktop, phone and tablet, installable, offline solo. Not affiliated with Konami.">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="application-name" content="Kaboom Arena">
+<meta name="apple-mobile-web-app-title" content="Kaboom">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; background: #111118; color: #fff; font: 16px/1.4 system-ui, sans-serif; overflow: hidden; overscroll-behavior: none; }
+  .screen { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+  .screen.on { display: flex; }
+  :root { --yellow: #ffd23c; --red: #e8453c; --blue: #3c7be8; --ink: #14141f; }
+  .screen:not(#game) { background: radial-gradient(ellipse at 50% 0%, #2b2347 0%, #14141f 60%, #0b0b12 100%); }
+  button, input { font: inherit; padding: 12px 20px; border-radius: 12px; border: 0; min-width: 240px; }
+  button { background: var(--blue); color: #fff; font-weight: 700; cursor: pointer; border-bottom: 4px solid #0004; transition: transform .08s, filter .15s; }
+  button:hover:not(:disabled) { filter: brightness(1.12); }
+  button:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 1px; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  button:disabled { opacity: .4; cursor: default; }
+  button.alt { background: #333348; }
+  input { text-align: center; text-transform: uppercase; letter-spacing: .3em; background: #222233; color: #fff; }
+  .row { display: flex; gap: 8px; }
+  .row button, .row input { min-width: 0; }
+  #msg { min-height: 1.4em; color: var(--yellow); text-align: center; }
+  #code { font-size: 3rem; letter-spacing: .3em; font-weight: 700; }
+  canvas { image-rendering: pixelated; touch-action: none; }
+  #quit { position: absolute; top: 6px; right: 6px; min-width: 0; padding: 6px 12px; background: #0008; }
+  #c3 { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; image-rendering: auto; }
+  #hud3 { position: absolute; inset: 0; pointer-events: none; font: 600 14px/1.3 system-ui, sans-serif; text-shadow: 0 1px 3px #000; }
+  .h3-scores { position: absolute; top: 10px; left: 12px; right: 56px; display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 18px; }
+  .h3-scores span { padding-left: 22px; position: relative; }
+  .h3-scores span::before { content: ""; position: absolute; left: 0; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--c); box-shadow: 0 0 6px var(--c); }
+  .h3-scores span.dead { opacity: .4; text-decoration: line-through; }
+  .h3-scores .team { padding: 0; display: flex; gap: 10px; border-bottom: 3px solid var(--c); }
+  .h3-scores .team::before { display: none; }
+  .h3-scores .team > b { color: var(--c); }
+  .h3-scores .me { text-decoration: underline; }
+  .h3-curse { color: #d58cff; }
+  .h3-info { position: absolute; top: 38px; right: 12px; display: grid; justify-items: end; gap: 3px; font-size: 14px; }
+  .h3-info b { padding: 2px 8px; border-radius: 4px; background: #000a; color: #ff6a5c; }
+  .h3-info .h3-mode { color: #ffd23c; }
+  .h3-frenzy { position: absolute; inset: 0; box-shadow: inset 0 0 90px 10px #ff3d8a; opacity: 0; }
+  .h3-frenzy.warn { opacity: .55; }
+  .h3-frenzy.on { opacity: .3; }
+  .h3-first { color: #fff9; font-size: 14px; }
+  .h3-sudden { color: #ff5a4a; animation: blink .6s infinite alternate; }
+  @keyframes blink { to { opacity: .3; } }
+  .h3-left { position: absolute; top: 44px; left: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .h3-gear { min-width: 0; padding: 5px 10px; font-size: 10px; pointer-events: auto; background: #000a; border: 1px solid #b46cff88; color: #e5d2ff; }
+  .h3-gear[hidden] { display: none; }
+  .h3-badge { position: static; min-width: 0; padding: 8px 12px; text-align: left; pointer-events: auto; background: #000a; border: 1px solid #fff3; font-size: 12px; font-weight: 500; }
+  .h3-badge.on { border-color: #b46cff; color: #e5d2ff; box-shadow: 0 0 14px #b46cff66; }
+  .h3-badge.on b { color: #d6a8ff; }
+  @media (max-width: 600px) { .h3-scores { font-size: 12px; gap: 0 10px; } .h3-scores span { padding-left: 17px; } .h3-scores span::before { width: 12px; height: 12px; top: 2px; } .h3-info { top: 124px; font-size: 11px; } .h3-left { top: 64px; } }
+  .h3-toast { position: absolute; top: 46px; right: 8px; max-width: 60vw; padding: 5px 10px; border-left: 3px solid #b46cff; background: #000a; color: #e5d2ff; font-size: 12px; font-weight: 500; opacity: 0; transition: opacity .3s; }
+  .h3-toast.on { opacity: 1; }
+  .h3-stat { display: block; margin-top: 4px; font-size: 14px; color: #d6a8ff; }
+  .h3-stat:empty { display: none; }
+  .h3-dock { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 14px; padding: 6px 12px; border-radius: 8px; background: #000a; font-size: 13px; pointer-events: none; white-space: nowrap; }
+  .h3-dock:empty { display: none; }
+  .h3-dock span { display: flex; align-items: center; gap: 6px; border-left: 4px solid var(--c); padding-left: 6px; }
+  .h3-dock img { width: 20px; height: 20px; image-rendering: pixelated; }
+  .h3-dock .ring { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-style: normal; font-size: 11px; background: radial-gradient(#14141f 56%, #0000 58%), conic-gradient(var(--c) var(--f), #fff3 0); }
+  @media (pointer: coarse) { .h3-dock { bottom: 150px; } }
+  .h3-spec { display: none; position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); padding: 4px 12px; border-radius: 8px; background: #000a; white-space: nowrap; }
+  .h3-banner { position: absolute; left: 0; right: 0; top: 42%; text-align: center; font-size: 28px; padding: 14px; background: #000b; border-block: 2px solid #ffd23c; }
+  #touch { display: none; position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+  #touch > * { pointer-events: auto; }
+  #quit, #pauseBtn { z-index: 4; }
+  #pauseBtn { position: absolute; top: 6px; right: 52px; min-width: 0; padding: 6px 12px; background: #0008; }
+  #muteBtn { position: fixed; z-index: 30; top: 6px; right: 8px; min-width: 0; padding: 6px 12px; background: #0008; }
+  body:has(#game.on) #muteBtn { right: 98px; }
+  #muteBtn[aria-pressed="true"] { background: #b3261eee; }
+  body:has(#game.on):has(#pauseBtn[hidden]) #muteBtn { right: 52px; }
+  #pause { position: absolute; inset: 0; z-index: 5; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: #0b0b12d9; }
+  #pause.on { display: flex; }
+  #pause h2 { margin: 0 0 6px; font-size: 2.2rem; text-transform: uppercase; letter-spacing: .15em; color: var(--yellow); }
+  #pause small { color: #fff8; }
+  #nick, #inviteLink { text-transform: none; letter-spacing: 0; }
+  #lobby { overflow-y: auto; justify-content: safe center; }
+  #invite { display: grid; gap: 10px; justify-items: center; width: min(92vw, 360px); }
+  #invite[hidden] { display: none; }
+  #qr { width: 168px; height: 168px; border-radius: 8px; }
+  #inviteLink { width: 100%; font-size: .8rem; letter-spacing: 0; }
+  #lobbyList { list-style: none; margin: 0; padding: 0; text-align: center; }
+  #lobbyList li { overflow-wrap: anywhere; }
+  .overlay { position: absolute; inset: 0; z-index: 6; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: #0b0b12d9; text-align: center; padding: 16px; }
+  .overlay.on { display: flex; }
+  .overlay h2 { margin: 0 0 6px; font-size: 1.8rem; color: var(--yellow); overflow-wrap: anywhere; }
+  .hostopts { display: grid; gap: 6px; font-size: .8rem; }
+  .hostopts[hidden] { display: none; }
+  .hostopts label { display: flex; align-items: center; gap: 8px; }
+  .hostopts input { min-width: 0; width: auto; }
+  #roomList { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 46dvh; overflow-y: auto; }
+  #roomList li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 10px; background: #ffffff12; font-size: .75rem; line-height: 1.4; overflow-wrap: anywhere; }
+  #roomList li > span { min-width: 0; }
+  #roomList .chip { flex: none; }
+  #watch { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 4; padding: 3px 10px; border-radius: 99px; background: #0b0b12cc; border: 1px solid #fff4; font: 11px/1.4 monospace; pointer-events: none; white-space: nowrap; }
+  #watch.spec { color: var(--yellow); border-color: var(--yellow); }
+  #emoBtn { position: absolute; top: 6px; right: 98px; z-index: 4; min-width: 0; padding: 4px 8px; font-size: 1.1rem; background: #0008; }
+  #emoBtn.cool { opacity: .45; }
+  #emoWheel { position: absolute; top: 52px; right: 6px; z-index: 5; display: grid; grid-template-columns: repeat(4, 46px); gap: 4px; padding: 6px; border-radius: 12px; background: #0b0b12ee; border: 1px solid #fff3; }
+  #emoWheel[hidden] { display: none; }
+  #emoWheel button { min-width: 0; height: 44px; padding: 0; font-size: 1.3rem; background: #ffffff18; }
+  #emoWheel button small { font: 700 .55rem/1 monospace; opacity: .6; display: block; }
+  #emoFeed { position: absolute; bottom: 46px; left: 50%; transform: translateX(-50%); z-index: 4; font-size: 1.2rem; pointer-events: none; text-shadow: 0 1px 3px #000; }
+  body.spectating #touch { display: none !important; }
+  .h3-emo { display: none; position: absolute; left: 0; top: 0; padding: 3px 7px; font: 700 20px/1.2 system-ui, "Noto Color Emoji", sans-serif; color: #14141f; background: #fff; border-radius: 8px; box-shadow: 0 0 0 2px #000; pointer-events: none; }
+  #reconn { position: fixed; z-index: 9; font-size: 1.4rem; font-weight: 700; }
+  #ping { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font: 11px monospace; opacity: .6; pointer-events: none; z-index: 4; }
+  @media (pointer: coarse) { #touch { display: block; } }
+  #pad { position: absolute; left: max(20px, env(safe-area-inset-left)); bottom: 20px; width: 130px; height: 130px; border-radius: 50%; background: #fff2; touch-action: none; display: flex; align-items: center; justify-content: center; }
+  #knob { width: 54px; height: 54px; border-radius: 50%; background: #fff6; pointer-events: none; }
+  #bombBtn { position: absolute; right: max(20px, env(safe-area-inset-right)); bottom: 30px; width: 100px; height: 100px; min-width: 0; padding: 0; border-radius: 50%; background: #e8453ccc; font-size: 2.4rem; touch-action: none; }
+  #actBtn { position: absolute; right: calc(max(20px, env(safe-area-inset-right)) + 112px); bottom: 24px; width: 72px; height: 72px; min-width: 0; padding: 0; border-radius: 50%; border: 3px solid #fffb; background: conic-gradient(#3a8be8cc var(--f, 100%), #0009 0); font-size: 1.7rem; touch-action: none; }
+  #actBtn[hidden] { display: none; }
+  #actBtn.rdy { border-color: #ffd23c; }
+
+  #menu { overflow: hidden; gap: 0; }
+  #attract { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+  #menu::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, #0000 0%, #0b0b12cc 75%), linear-gradient(#0b0b1299, #0b0b12dd); }
+  .hero { position: relative; display: grid; gap: 16px; justify-items: center; padding: 16px; width: min(94vw, 460px); max-height: 100%; overflow-y: auto; scrollbar-width: none; }
+  .logo { text-align: center; line-height: .88; margin: 0; text-transform: uppercase; font-weight: 900; font-style: italic; }
+  .logo .k { display: block; font-size: clamp(2.4rem, min(14vw, 11vh), 5.4rem); letter-spacing: .02em; background: linear-gradient(#fff6b0 0%, #ffd23c 35%, #ff8a2a 70%, #e8453c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 0 #7a1d14) drop-shadow(0 8px 16px #e8453c88); }
+  .logo .a { display: block; font-size: clamp(1.3rem, 6vw, 2.2rem); letter-spacing: .5em; margin-right: -.5em; color: #fff; text-shadow: 0 3px 0 #3c7be8, 0 0 18px #3c7be8aa; }
+  .bomb { width: clamp(34px, min(11vw, 8vh), 70px); height: auto; margin-bottom: -6px; }
+  .menu-col { display: grid; gap: 10px; width: 100%; padding: 14px; border-radius: 18px; background: #0b0b12d9; border: 1px solid #ffffff1f; }
+  .btn-main { font-size: 1.15rem; padding: 14px 20px; background: linear-gradient(#ffd23c, #ff9a2a); color: #3a1500; text-transform: uppercase; letter-spacing: .06em; box-shadow: 0 6px 20px #ff9a2a55; }
+  .solo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .solo button { background: linear-gradient(#ffd23c, #ff9a2a); color: #3a1500; padding: 14px 6px; min-width: 0; line-height: 1.15; box-shadow: 0 6px 20px #ff9a2a44; }
+  .solo b { display: block; font-size: 1.5rem; }
+  .solo small { text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; opacity: .8; }
+  .label { font-size: .72rem; text-transform: uppercase; letter-spacing: .25em; color: #fff9; margin: 4px 0 -2px; text-align: center; }
+  .menu-col .row { width: 100%; }
+  .menu-col .row input { flex: 1 1 0; min-width: 0; }
+  .menu-col .row button { flex: 1.2 1 0; }
+  .seg { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); border-radius: 12px; overflow: hidden; border: 1px solid #fff3; background: #222233; }
+  .seg button { min-width: 0; padding: 9px 4px; border-radius: 0; border-bottom: 0; background: transparent; color: #fffa; font-size: .85rem; }
+  .seg button + button { border-left: 1px solid #fff2; }
+  .seg button[aria-checked="true"] { background: var(--blue); color: #fff; box-shadow: inset 0 -3px #0004; font-weight: 800; }
+  .seg button[aria-checked="true"]::before { content: "✓ "; }
+  .seg button[data-gfx="dlss"][aria-checked="true"] { background: linear-gradient(135deg, #b46cff, #3c5cff); }
+  .seg button[data-gfx="fps"][aria-checked="true"] { background: linear-gradient(135deg, #ff8a1a, #b8321c); }
+  .seg.wrap { gap: 1px; background: #fff2; }
+  .seg.wrap button { background: #222233; border-left: 0; }
+  .seg.wrap button[aria-checked="true"] { background: var(--blue); }
+  #settings { overflow-y: auto; justify-content: safe center; }
+  #settings .menu-col { flex: none; width: min(94vw, 460px); margin-block: 12px; }
+  #settings h2 { margin: 0; text-align: center; font-size: 1.4rem; text-transform: uppercase; letter-spacing: .15em; color: var(--yellow); }
+  .chip { justify-self: center; min-width: 0; padding: 7px 14px; font-size: .85rem; background: #ffffff18; border: 1px solid #fff3; }
+  .hint { color: #fff8; font-size: .75rem; text-align: center; }
+  .hint span { white-space: nowrap; }
+  .hint a { color: var(--yellow); white-space: nowrap; }
+  .hint { text-wrap: balance; }
+  .chips { justify-content: center; }
+  .chips .chip { flex: 1 1 0; justify-self: auto; }
+  #installBtn[hidden], #iosHint[hidden], #help[hidden], #toast[hidden] { display: none; }
+  #settings h3 { margin: 6px 0 -2px; text-align: center; font-size: .9rem; text-transform: uppercase; letter-spacing: .15em; color: var(--yellow); }
+  #a11yList .label, #feelList .label, #soundList .label { text-transform: none; letter-spacing: .02em; font-size: .8rem; }
+  #help { position: fixed; inset: 0; z-index: 20; display: flex; justify-content: safe center; align-items: center; overflow-y: auto; padding: 8px; background: #0b0b12e6; }
+  #help .menu-col { flex: none; width: min(94vw, 460px); gap: 8px; background: #14141f; }
+  #help h2 { margin: 0; text-align: center; font-size: 1.4rem; text-transform: uppercase; letter-spacing: .15em; color: var(--yellow); }
+  #help ol, #help ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: .9rem; }
+  #help li { display: flex; gap: 10px; align-items: center; }
+  .pic { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: #ffffff18; font-size: 1.2rem; }
+  .items { grid-template-columns: 1fr 1fr; gap: 6px 10px !important; font-size: .78rem !important; line-height: 1.2; }
+  .items canvas { flex: none; width: 28px; height: 28px; }
+  .keys { font-size: .82rem !important; gap: 4px !important; }
+  .keys b { color: var(--yellow); min-width: 5.5em; display: inline-block; }
+  .keys li { align-items: baseline; }
+  #toast { position: fixed; z-index: 30; left: 50%; bottom: max(12px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 10px; align-items: center; padding: 8px 8px 8px 16px; border-radius: 14px; background: #14141f; border: 1px solid var(--yellow); box-shadow: 0 6px 24px #000a; white-space: nowrap; font-size: .9rem; }
+  #toast button { min-width: 0; padding: 6px 12px; }
+  .h3-scores span[data-n]:not([data-n=""])::before { content: attr(data-n); display: grid; place-items: center; font-size: 11px; line-height: 1; -webkit-text-stroke: 2.5px #000; paint-order: stroke fill; color: #fff; }
+  @media (max-height: 760px) {
+    .hero { gap: 10px; }
+    .menu-col { gap: 7px; padding: 10px; }
+    .menu-col button { padding-block: 9px; }
+    .solo button { padding-block: 6px; }
+    .solo b { font-size: 1.25rem; }
+  }
+  @media (max-height: 560px) and (min-width: 560px) {
+    .label, .hint { display: none; }
+    .hero { width: min(96vw, 880px); grid-template-columns: 1fr 1fr; align-items: center; gap: 12px 28px; }
+    .hero .logo-wrap { grid-row: 1 / span 3; }
+    .hero #msg, .hero .hint { grid-column: 2; }
+    .bomb { width: 44px; }
+  }
+
+  @font-face { font-family: "Press Start 2P"; src: url(./press-start-2p.woff2) format("woff2"); font-display: swap; }
+  .h3-banner.retro { font: 20px/1.6 "Press Start 2P", monospace; }
+  .h3-call { display: none; position: absolute; left: 0; right: 0; top: 22%; text-align: center; font: italic 900 clamp(34px, 9vw, 76px)/1.05 system-ui, sans-serif; text-transform: uppercase; color: #ffd23c; -webkit-text-stroke: 3px #000; paint-order: stroke fill; text-shadow: 0 5px 0 #e8453c, 0 0 28px #ff9a2a99; }
+  .h3-call.retro { font: normal 400 clamp(20px, 5.5vw, 44px)/1.3 "Press Start 2P", monospace; text-shadow: 3px 3px #e8453c; }
+  .h3-call small { display: block; font: 600 clamp(11px, 2vw, 16px)/1.2 system-ui, sans-serif; -webkit-text-stroke: 0; color: #d6a8ff; text-shadow: 0 1px 3px #000; text-transform: none; letter-spacing: .08em; }
+  .h3-bub { display: none; position: absolute; left: 0; top: 0; padding: 6px 8px; white-space: pre; font: 10px/1.6 "Press Start 2P", monospace; color: #14141f; background: #fff; box-shadow: 0 0 0 2px #000; text-shadow: none; }
+  .h3-bub::after { content: ""; position: absolute; left: calc(50% - 4px); top: 100%; border: 4px solid transparent; border-top: 6px solid #fff; border-bottom: 0; }
+  .h3-bub.notail::after { display: none; }
+  .recap { font: 600 12px/1.5 system-ui, sans-serif; text-align: left; }
+  .recap h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: .15em; color: var(--yellow); text-align: center; }
+  .recap table { width: 100%; border-collapse: collapse; }
+  .recap th { font-size: 10px; font-weight: 600; color: #fff9; text-transform: uppercase; text-align: right; }
+  .recap th:first-child, .recap td:first-child { text-align: left; }
+  .recap td { text-align: right; padding: 1px 0 1px 6px; font-variant-numeric: tabular-nums; }
+  .recap td:first-child { max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .recap td:first-child::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; background: var(--c); }
+  .recap ul { list-style: none; margin: 6px 0 0; padding: 0; color: var(--yellow); }
+  .recap li b { text-transform: uppercase; }
+  .recap li span { color: #fffc; }
+  .recap.retro { font: 8px/1.9 "Press Start 2P", monospace; }
+  .recap.retro h3, .recap.retro th { font-family: inherit; }
+  .recap.retro th { font-size: 6px; }
+  #recap { display: none; position: absolute; top: max(52px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 4; width: min(92vw, 400px); padding: 10px 14px 8px; border-radius: 12px; background: #0b0b12ea; border: 1px solid #ffffff2a; cursor: pointer; }
+  #recap.on { display: block; }
+  #recap small { display: block; margin-top: 4px; text-align: center; color: #fff6; font-size: 10px; }
+  #rematchRecap { width: min(92vw, 400px); }
+  #rematchRecap:empty { display: none; }
+  #storyBtn { font: 12px/1.5 "Press Start 2P", monospace; padding-block: 16px; }
+  .screen#story { --c: #ffd23c; display: none; font: 10px/1.8 "Press Start 2P", monospace; color: #fff; overflow-y: auto; justify-content: safe center; gap: 12px; padding: 22px 14px; background: linear-gradient(#0d0b26, #1d1450); text-align: center; }
+  .screen#story.on { display: flex; }
+  #story::after { content: ""; position: fixed; inset: 0; pointer-events: none; background: repeating-linear-gradient(#0000 0 2px, #00000030 2px 4px); }
+  #story[data-v="vs"] { background: linear-gradient(105deg, color-mix(in srgb, var(--ca) 38%, #000) 0 50%, color-mix(in srgb, var(--cb) 38%, #000) 50%); }
+  #story[data-v="win"] { background: linear-gradient(#2e2200, #7a5200); }
+  #story[data-v="lose"] { background: linear-gradient(#240606, #560c0c); }
+  #story[data-v="end"] { background: linear-gradient(#08060f, #2a1250); }
+  #story button { min-width: 0; border: 0; border-radius: 0; font: inherit; text-transform: uppercase; letter-spacing: 0; filter: none; transition: none; }
+  #story button:active:not(:disabled) { transform: translateY(2px); }
+  #story h2 { margin: 0; font-weight: 400; }
+  .st-head { text-transform: uppercase; font-size: 12px; color: var(--yellow); text-shadow: 2px 2px #000; }
+  .px { background: #16133b; margin: 8px; padding: 14px; box-shadow: 0 -4px var(--b, #fff), 0 4px var(--b, #fff), -4px 0 var(--b, #fff), 4px 0 var(--b, #fff), 0 8px #000; }
+  .arc { margin: 8px; padding: 12px 18px; background: #e8453c; color: #fff; box-shadow: 0 -4px #fff, 0 4px #fff, -4px 0 #fff, 4px 0 #fff, 0 8px #000; cursor: pointer; }
+  .arc.alt { background: #2a2a5a; }
+  .arc:disabled { opacity: .45; }
+  .st-btns { display: flex; flex-wrap: wrap; justify-content: center; }
+  .st-wrap { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 20px; width: min(100%, 820px); }
+  .st-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: min(100%, 420px); }
+  .card { position: relative; padding: 0; background: #16133b; color: #fff; font-size: 8px; cursor: pointer; }
+  .card img, .vs img { display: block; width: 100%; height: auto; aspect-ratio: 1; image-rendering: pixelated; background: #000; }
+  .card span { display: block; padding: 6px 0; }
+  .card[aria-pressed="true"] { background: var(--c); color: #14141f; box-shadow: 0 -4px var(--c), 0 4px var(--c), -4px 0 var(--c), 4px 0 var(--c); }
+  .card.lock img { filter: brightness(0); }
+  .card i { position: absolute; top: 3px; right: 5px; font-style: normal; color: var(--yellow); text-shadow: 1px 1px #000; }
+  .st-info { flex: 1 1 260px; max-width: 380px; min-height: 190px; text-align: left; --b: var(--c); }
+  .st-info h2 { font-size: 14px; color: var(--c); margin-bottom: 4px; }
+  .st-info p { margin: 8px 0 0; }
+  .st-info small { color: #fffa; font-size: 8px; }
+  .dim { color: #fff9; font-size: 8px; }
+  .vs { display: flex; align-items: center; justify-content: center; gap: 8px; width: min(100%, 640px); }
+  .vs figure { margin: 0; flex: 0 1 220px; min-width: 0; }
+  .vs img { box-shadow: 0 -4px var(--c), 0 4px var(--c), -4px 0 var(--c), 4px 0 var(--c); }
+  .vs .flip img { transform: scaleX(-1); }
+  .vs figcaption { margin-top: 12px; font-size: 10px; }
+  .vs figcaption small { display: block; margin-top: 4px; font-size: 7px; color: #fffb; }
+  .big { text-transform: uppercase; font-size: clamp(22px, 8vw, 44px); color: var(--yellow); text-shadow: 3px 3px #e8453c, 6px 6px #000; }
+  .dlg { width: min(100%, 560px); text-align: left; }
+  .dlg p { margin: 0 0 12px; }
+  .dlg p:last-child { margin: 0; }
+  .who { display: block; margin-bottom: 4px; color: var(--c); }
+  .t.h { visibility: hidden; }
+  .one { width: min(60vw, 240px); }
+  .one img { display: block; width: 100%; height: auto; aspect-ratio: 1; image-rendering: pixelated; box-shadow: 0 -4px var(--c), 0 4px var(--c), -4px 0 var(--c), 4px 0 var(--c); }
+  .gold { color: var(--yellow); }
+  .red { color: #ff6b5e; }
+
+  /* One pixel font for the whole UI chrome (buttons, labels, titles); long paragraphs keep the system font for readability. */
+  :root { --pixel: "Press Start 2P", ui-monospace, "Courier New", monospace; }
+  button, input, .label, h2, h3, #msg, #code, .h3-scores, .h3-banner { font-family: var(--pixel); font-weight: 400; }
+  button, input { font-size: .7rem; line-height: 1.5; letter-spacing: .02em; }
+  .btn-main { font-size: .8rem; }
+  .seg button { font-size: .56rem; padding: 12px 3px; line-height: 1.5; }
+  .solo b { font-size: 1.2rem; } .solo small { font-size: .5rem; letter-spacing: .05em; }
+  .label { font-size: .55rem; }
+  h2, h3 { font-size: .85rem; line-height: 1.6; }
+  #pause h2 { font-size: 1.3rem; }
+  #code { font-size: 1.8rem; }
+  #msg { font-size: .6rem; line-height: 1.6; }
+  .chip { font-size: .6rem; }
+  .logo { font-family: var(--pixel); font-style: normal; font-weight: 400; }
+  .logo .k { font-size: clamp(1.8rem, min(11vw, 9vh), 3.2rem); letter-spacing: 0; }
+  .logo .a { font-size: clamp(.8rem, 3.6vw, 1.15rem); letter-spacing: .45em; margin-right: -.45em; margin-top: .5em; }
+
+  .dcard { display: grid; grid-template-columns: 96px 1fr; gap: 6px 12px; align-items: center; padding: 10px; border: 1px solid #fff3; border-radius: 12px; background: #1d1a38; font-size: .8rem; }
+  .dcard img { width: 96px; height: 96px; image-rendering: pixelated; box-shadow: 0 0 0 3px var(--c, #ffd23c); background: #000; }
+  .dcard h3 { margin: 0 0 4px; color: var(--yellow); }
+  .dcard p { margin: 0 0 4px; color: #fffc; font-size: .78rem; }
+  .dcard dl { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin: 4px 0 0; font-size: .7rem; font-family: var(--pixel); }
+  .dcard dt { color: #fff9; } .dcard dd { margin: 0; text-align: right; color: var(--yellow); }
+  #daily, #replays { overflow-y: auto; justify-content: safe center; }
+  #daily .menu-col, #replays .menu-col { flex: none; width: min(94vw, 460px); margin-block: 12px; }
+  #daily h2, #replays h2 { margin: 0; text-align: center; color: var(--yellow); text-transform: uppercase; letter-spacing: .15em; }
+  #repList { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  #repList li { display: grid; gap: 6px; padding: 8px 10px; border: 1px solid #fff3; border-radius: 12px; background: #1d1a38; }
+  #repList b { display: block; font-size: .72rem; line-height: 1.5; overflow-wrap: anywhere; }
+  #repList small { color: #fffa; font-size: .75rem; overflow-wrap: anywhere; }
+  #repList .row { gap: 6px; } #repList .chip { flex: 1 1 0; padding: 7px 4px; }
+  #rmShare { gap: 6px; flex-wrap: wrap; justify-content: center; } #rmShare button { flex: 1 1 auto; padding: 8px 10px; }
+  #rmShare[hidden], #rmDaily:empty, #rpKeep[hidden] { display: none; }
+  #rmDaily { white-space: pre-line; color: var(--yellow); font-size: .8rem; line-height: 1.8; }
+  #playbar { position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 4; width: min(96vw, 560px); display: grid; gap: 6px; padding: 8px 10px; border-radius: 12px; background: #0b0b12d0; }
+  #playbar[hidden] { display: none; }
+  #playbar .row { align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; } #playbar button { flex: 0 0 auto; min-width: 44px; padding: 8px 10px; }
+  #rpTime { font: .6rem var(--pixel); color: #fffc; text-align: center; }
+  #rpSeek { width: 100%; min-width: 0; padding: 0; accent-color: var(--yellow); text-transform: none; letter-spacing: 0; height: 22px; background: none; }
+  body.replaying #touch, body.replaying #pauseBtn { display: none !important; }
+  #note { position: fixed; z-index: 40; left: 50%; top: max(12px, env(safe-area-inset-top)); transform: translateX(-50%); max-width: 92vw; padding: 10px 16px; border-radius: 12px; background: #14141f; border: 1px solid var(--yellow); font: .6rem/1.7 var(--pixel); text-align: center; overflow-wrap: anywhere; }
+  #note[hidden] { display: none; }
+
+  /* Dialogue screens never scroll as a page: the portrait shrinks, the dialogue box scrolls on its own, the buttons stay visible. */
+  #story:not([data-v="sel"]) { overflow: hidden; justify-content: center; }
+  #story:not([data-v="sel"]) > * { flex: 0 0 auto; }
+  #story:not([data-v="sel"]) .one { width: auto; }
+  #story:not([data-v="sel"]) .one img { width: min(60vw, 240px, 30dvh); }
+  #story:not([data-v="sel"]) .vs figure { flex: 0 1 min(220px, 26dvh); }
+  #story:not([data-v="sel"]) > .dlg { flex: 0 1 auto; min-height: 7em; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--yellow) #16133b; }
+  #story:not([data-v="sel"]) > .dlg::-webkit-scrollbar { width: 8px; }
+  #story:not([data-v="sel"]) > .dlg::-webkit-scrollbar-thumb { background: var(--yellow); }
+  #story:not([data-v="sel"]) > .dlg::-webkit-scrollbar-track { background: #16133b; }
+  #story[data-v="log"] { overflow-y: auto; justify-content: safe center; }
+  #story[data-v="pick"], #story[data-v="res"] { background: linear-gradient(#0d1a26, #143a4a); }
+  #story[data-v="secret"] { background: linear-gradient(#0a0626, #3a1a6a); }
+  #story[data-v="claim"] { background: linear-gradient(#0d0b26, #14305a); }
+  #stOpts:empty { display: none; }
+  .card i.co { top: auto; bottom: 26px; right: 4px; font-size: 7px; color: #4ade80; }
+  .vs .sub { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; font-size: 7px; }
+  .vs .sub img.mini { width: 40px; box-shadow: none; }
+  .pixwrap svg { display: block; max-width: 100%; height: auto; }
+  #story:not([data-v="sel"]) .pixwrap svg { max-height: 26dvh; width: auto; }
+  .slots { list-style: none; width: min(100%, 520px); display: grid; gap: 10px; text-align: left; }
+  .slots b { color: var(--yellow); }
+  .pick { flex-direction: column; align-items: stretch; width: min(100%, 560px); }
+  .pick .arc { text-align: center; }
+  .lg { list-style: none; width: min(100%, 560px); display: grid; gap: 12px; text-align: left; }
+  .lg li { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; color: #fff9; }
+  .lg li.got { color: #fff; }
+  .lg small { grid-column: 1; font-size: 7px; color: #fff9; }
+  .lg .arc { grid-column: 2; grid-row: 1 / 3; margin: 0 4px; padding: 8px 10px; }
+  @media (min-width: 600px) { .pick { flex-direction: row; flex-wrap: wrap; justify-content: center; width: min(100%, 720px); } }
+  @media (max-height: 430px) {
+    .screen#story { gap: 6px; padding: 8px 14px; }
+    #story .big { font-size: 22px; text-shadow: 2px 2px #e8453c, 4px 4px #000; }
+    #story .arc { margin: 4px 8px; padding: 8px 14px; }
+    #story .px { margin: 4px; padding: 10px 14px; }
+    #story:not([data-v="sel"]) .one img { width: min(60vw, 240px, 20dvh); }
+    #story:not([data-v="sel"]) .vs figure { flex-basis: min(220px, 20dvh); }
+    #story:not([data-v="sel"]) .vs figcaption { margin-top: 6px; }
+    #story:not([data-v="sel"]) > .dlg { min-height: 4.6em; }
+    #story .pixwrap svg { max-height: 16dvh; }
+    #story .vs .sub { margin-top: 4px; }
+  }
+  .tv-focus { outline: 3px solid #ffd23c !important; outline-offset: 2px }
+  #menu .hero { max-width:calc(100vw - 340px); max-height:100vh; overflow:auto; scrollbar-width:thin }
+  @media (max-width:720px) { #menu .hero { max-width:100vw } }
+  #menu .hint { margin:4px 0 }
+  #nick,#installBtn,#iosHint { display:none !important }
+</style>
+<script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+(() => {
+  const strings = {
+    "& Sparky": "和小火花",
+    "&amp; Sparky": "和小火花",
+    "'Betrayal is such a strong word,' he says. 'I prefer early retirement planning.'": "他说\"背叛是一个很强的词\" \"我更喜欢提前退休计划\"",
+    "'Candles have no regrets,' he sighs, and mops your hopes.": "“蜡烛哪来的后悔事？”他叹口气，一拖把抹掉了你的希望。",
+    "'He has regrets, but no fuse,' he sighs. Wrong, and the mop is wet.": "“他会后悔，可他没引线。”他叹了口气。答错了，小心湿拖把。",
+    "'I told you the Baron was a bad influence.' Twenty years of 'I told you so' pay out at once.": "我告诉过你男爵影响不大 20年的\"我告诉你\"立刻支付",
+    "'Who ate my dessert?' he asks. Twenty years dead and he still remembers.": "\"谁吃了我的甜点？\" 他问道：\"20年的死，他仍然记得。",
+    "(last round only)": "（仅最后一回合）",
+    "(new best!)": "（新纪录！）",
+    "+ Sparky": "＋小火花",
+    "+0 ms": "+0 毫秒( 秒)",
+    "+1 bomb at once": "可同时放置的炸弹数量加一",
+    ", 2 players": "，双人",
+    ", then": "，然后选择",
+    "-0 ms": "-0毫秒) 双关语",
+    "1 IN": "1 人已加入",
+    "2 (co-op)": "2 人（合作）",
+    "2 vs 2": "2 对 2",
+    "3D graphics unavailable (WebGL or offline).": "3D 画面不可用，请检查 WebGL 和离线资源。",
+    ": they explode after 2.5 s in a cross. Trap your rivals, then get out of the way.": "，2.5 秒后会引发十字形爆炸。封住对手的去路后，记得及时躲开。",
+    "? How to play": "？玩法说明",
+    "A candle": "一根蜡烛",
+    "A family reunion": "一场家庭聚会",
+    "A fizzled knight challenges me? Delightful. I shall fizzle you further.": "飞翔的骑士挑战我？",
+    "A grandma catches it. Chaos erupts. The loot rains down.": "一位老奶奶接住了引线。场上乱作一团，战利品像雨点般落下。",
+    "A janitor blocks the door. 'I have a short fuse and a long list of regrets. What am I?'": "清洁工拦在门前：“一点就炸，后悔的事又一大堆。猜猜我是什么？”",
+    "A mysterious challenger waits in the crypt. Clear the story once with anyone.": "神秘挑战者正在地宫等候。使用任意角色通关一次剧情即可解锁。",
+    "A new challenge every day at 00:00 UTC, the same for everybody. Tries are free: only your best score counts. A streak is consecutive days with a finished try.": "每日挑战于协调世界时零点更新。所有玩家的挑战相同，可以反复尝试，只记录最高分。每天完成至少一次挑战即可累积连续天数。",
+    "A pair of pests. Do try to explode in an orderly queue.": "一对害虫，请按顺序排队",
+    "A stranger pays double. Mama hears of it. Mama always hears of it.": "一个陌生人出了双倍价钱。老妈听说了。这种事从来瞒不过她。",
+    "A trophy is awarded. It is slightly on fire. Nobody mentions it.": "奖杯是颁给的，它有点着火，没人会提起它",
+    "A vendor waves a fuse at you. 'Lucky! Only slightly cursed!'": "小贩朝你挥着一根引线：“幸运引线！只带一点点诅咒！”",
+    "ABCDEFGHJKLMNPQRSTUVWXYZ": "亚伯达基尔·杰克勒姆普克特尔什图夫·克西兹",
+    "ARENA": "地区",
+    "Abilities": "技能",
+    "Ability": "技能",
+    "Ability Brawl": "能力拖拉",
+    "Accessibility & feedback": "辅助功能与反馈",
+    "Add to Home Screen": "添加到主屏幕",
+    "Added 2 fingers to {p} for realism": "将两个手指添加到{p}现实主义",
+    "Aegis": "神盾",
+    "After 90 s the arena closes in (sudden death).": "90 秒后进入加时决胜，场地会逐渐缩小。",
+    "Allow spectators": "允许观战",
+    "An envelope": "一个信封",
+    "Ancient Patriarch": "家族老祖",
+    "Announcer banners and taunts": "战况播报与角色喊话",
+    "Another one bites the dust. Exquisite.": "又倒下一个。真是赏心悦目。",
+    "Arcade": "街机",
+    "Arena": "竞技场",
+    "Aristocrat, villain and brother who stole the Eternal Fuse 20 years ago. Fights in a monocle. Has never once said sorry.": "贵族、恶棍，也是二十年前偷走永恒引线的亲兄弟。打架戴单片眼镜，从来不肯道歉。",
+    "As your godparent, {o}, I must say: you will lose.": "{o}，作为你的教父，我得告诉你：你会输。",
+    "Ashes to ashes. Again?": "尘归尘……又来？",
+    "At least I fizzled in style.": "至少我这回败得有风度。",
+    "At my age, {o}, all I can do is dodge. Luckily that's plenty.": "{o}，我这把年纪只会躲了。好在这就足够了。",
+    "Aunt Dolores wants a cut. Cousin Dynamita wants a rematch. Tony wants a nap.": "堂姑Dolores想要切片 堂姑Dynamita想要重赛 Tony想睡个觉",
+    "Auntie loves you, {o}. Auntie also loves winning.": "{o}，阿姨疼你，但阿姨也喜欢赢。",
+    "Auntie {o}, please be gentle. Or don't. I'm winning anyway.": "{o}阿姨，请手下留情。其实随你，反正我会赢。",
+    "Auto": "自动",
+    "Autograph Hunter": "签名收集家",
+    "Autograph please!": "请给我签名！",
+    "BARON": "男爵",
+    "BEST SCORE": "最高分",
+    "BLACK": "黑",
+    "BLUE": "蓝",
+    "BOMB RAIN": "炸弹雨",
+    "BOMB SPAM": "连续放弹",
+    "BOOBY TRAPPED!": "踩中陷阱！",
+    "BOOM time!": "开炸啦！",
+    "BRB. Back to the grave.": "回坟里一趟，马上回来。",
+    "Back": "返回",
+    "Back to menu": "返回菜单",
+    "Back to the grave? Not before dessert.": "回坟里？甜点还没吃呢。",
+    "Back to your grave.": "滚回你的坟里去。",
+    "Baron": "男爵",
+    "Baron Boom, you come here. I did not raise a thief. I raised a tall, ungrateful baby.": "皋男爵，你过来，我没有养一个小偷，我养了一个高大，忘恩负义的婴儿",
+    "Baron confesses everything. Ignatius cries. Mama hits them both with the rolling pin.": "男爵坦白一切，伊格纳提乌斯哭着，妈妈用滚球针打他们俩。",
+    "Be kind in three choices.": "善心三业选择。",
+    "Belts": "传送带",
+    "Best": "最佳",
+    "Bigger bomb next!": "下次用更大的！",
+    "Black": "黑",
+    "Blink": "闪现",
+    "Bloom": "布鲁姆",
+    "Blue": "蓝",
+    "Bomb": "炸弹",
+    "Bomb Bazaar": "炸弹集市",
+    "Bomb pass": "炸弹穿行",
+    "Bomb rain, quakes and swaps.": "炸弹雨，地震和交换。",
+    "Bomber Shooter": "第一人称爆破",
+    "Bomber Shooter is a nod to the boomer shooter genre. Original art, not affiliated with id Software.": "第一人称爆破向经典射击游戏致敬，采用原创美术，与 id Software 无关。",
+    "Bomber Shooter unavailable.": "第一人称爆破模式不可用。",
+    "Bombs": "放置炸弹",
+    "Bombshell": "致命佳人",
+    "Bombshell Casino": "佳人赌场",
+    "Boring main road": "平淡无奇的大路",
+    "Boss said win. Boss also said be on time. I'll do one of them.": "老板叫我赢，还叫我准时到。我只能做到一件。",
+    "Boss'll kill me...": "老板要宰了我……",
+    "Both. Move along, little watch-wearer, or burn.": "都走开，小手表，或者烧掉",
+    "Bots": "电脑对手",
+    "Bricks everywhere, rivals hungry.": "到处是砖头，对手是饥饿的",
+    "Brother, brother. You always did hold a grudge. And a Fuse. Mostly the Fuse.": "兄弟，兄弟，你总是怀恨在心，还有福斯，主要是福斯",
+    "Business is business, {o}. Merger complete. By explosion.": "{o}，生意归生意。并购完成，只不过用了炸弹。",
+    "Buy the lucky fuse": "买下幸运引线",
+    "CLOSE CALL!": "好险！",
+    "CLUSTER": "集束炸弹",
+    "CODE": "房间码",
+    "COLD BLOODED!": "冰冻击倒！",
+    "CURSED": "受到诅咒",
+    "CURSED!": "受到诅咒！",
+    "Can we blame the lag? There is no lag. Still.": "我们能怪罪它吗？",
+    "Cancel": "取消",
+    "Cash! {foe} hears about it and trains all night, out of spite.": "现金到手！{foe}听说后咽不下这口气，连夜加练。",
+    "Champion!": "冠军！",
+    "Chaos": "混乱模式",
+    "Chaos Cup": "混乱杯",
+    "Chaos events": "混乱事件",
+    "Chill": "舒缓",
+    "Chromatic aberration (for realism)": "色调偏差( 用于现实主义)",
+    "Cinematic lens flare": "电影镜头照明弹",
+    "Class is in session, {o}. Today's lesson: exploding.": "{o}，上课了！今天教你如何爆破。",
+    "Classic": "经典",
+    "Close": "关闭",
+    "Cluster": "集束炸弹",
+    "Cluster, mine, ice, glove and punch.": "集束炸弹、地雷、冰弹、拳套和重拳。",
+    "Collector": "收集器",
+    "Colour-blind friendly colours": "色觉友好配色",
+    "Come here, {o}. Time to pinch those cheeks. Before the bomb.": "{o}，来，让我捏捏你的脸，再给你颗炸弹。",
+    "Connection lost.": "连接已断开。",
+    "Continue": "继续",
+    "Continue?": "继续挑战？",
+    "Controls": "操作",
+    "Copied!": "已复制！",
+    "Copy link": "复制链接",
+    "Copy this replay link": "复制回放链接",
+    "Correct! He hands you a map to the best loot spots.": "答对了！他递给你一张地图，标出了最容易捡到好东西的地点。",
+    "Could not create the room, try again.": "创建房间失败，请重试。",
+    "Could not reach the server.": "无法连接服务器。",
+    "Cousin Dynamita says 'You're a legend.' Kapow says 'Cool, can you sign this?'": "堂兄Dynamita说\"你是个传说\" 卡波说\"酷，你能签这个吗？\"",
+    "Crack": "碎砖",
+    "Create a room": "创建房间",
+    "Crunchy! {prev} will remember this. {foe} will remember the crumbs.": "咔嚓，真脆！{prev}记住了这笔账，{foe}记住了满地的碎屑。",
+    "Cyan": "青色",
+    "D-pad moves, A drops a bomb, X uses an ability, START pauses. Use the keypad: 8/2/4/6 move, 1 bomb, 7 ability, 5 START.": "手柄方向键移动，A 放炸弹，X 使用技能，START 暂停。数字小键盘 8/2/4/6 移动，1 放炸弹，7 用技能，5 对应 START。",
+    "D-pad or stick, any button drops a bomb, Start pauses. With abilities on, X is the ability button": "方向键或摇杆移动，动作键放炸弹，START 暂停。开启技能后，X 使用技能。",
+    "D-pad: move · A: bomb · X: ability · START: play / pause": "方向键移动 · A 放炸弹 · X 用技能 · START 开始或暂停",
+    "DARWIN AWARD": "自爆出局！",
+    "DLSS 6": "DLSS 6",
+    "DLSS 6 Control Panel": "DLSS 6控制面板",
+    "DLSS 6 ON": "DLSS 6 已开启",
+    "DLSS 6 control panel (G)": "DLSS 6 控制面板（G）",
+    "DLSS 6 control panel (parody)": "DLSS 6控制面板(parody)",
+    "DLSS 6 shader compilation (parody)": "DLSS 6 阴影编译( parody)",
+    "DLSS 6 ✨": "DLSS 6 ✨",
+    "DLSS 6: 3 of every 4 pixels were imagined": "DLSS 6: 每4像素中有3个是想象中的",
+    "DOLORES": "多洛雷斯",
+    "DOUBLE KILL!": "双杀！",
+    "DRAW!": "劳拉！",
+    "DYNAMITA": "迪娜米塔",
+    "Dad says be patient. The Baron says be smart. I say BOOM.": "老爸叫我有点耐心，男爵叫我机灵点。要我说嘛，嘭！",
+    "Dad says he is proud. Then he asks her to put it down. Then he asks again, louder.": "爸爸说他很骄傲 然后他叫她放下 然后又问了 大点声",
+    "Dad?! You've been dead for years! Mom still sets your plate!": "爸爸 你死了好几年了 妈妈还在盘子里",
+    "Daily": "每日挑战",
+    "Daily challenge": "每日挑战",
+    "Darling, duck.": "亲爱的，快低头。",
+    "Darling, try not to bleed on the Valdez rug.": "亲爱的，别把血溅到巴尔德斯地毯上。",
+    "Darling, you were never going to win.": "亲爱的，你一开始就没胜算。",
+    "Darwin Award": "达尔文奖",
+    "Dash": "冲刺",
+    "Dead, buried and furious about it. The patriarch of the Fuse dynasty, back from the Fuse's backlash with a flaming skull and a beard of smoke.": "人已经死了，土也埋了，他对此火冒三丈。永恒引线的反噬让这位家族老祖重返人间，头顶火焰，胡子是烟。",
+    "Delete": "删除",
+    "Delicious. Explosive. You now burp special bombs.": "好吃，而且够劲儿。你打个嗝都能喷出特殊炸弹了。",
+    "Denoised the vibes": "解除了气氛",
+    "Denoising the denoiser": "贬低了那个德鲁瓦",
+    "Desert": "沙漠",
+    "Detour: new arena": "改道前往新场地",
+    "Disaster, darling!": "亲爱的，糟透了！",
+    "Dismiss": "忽略",
+    "Do try not to scuff the carpet when you explode.": "劳驾，炸飞的时候别蹭脏地毯。",
+    "Dolores": "多洛雷斯",
+    "Dolores arrives with the divorce papers. Again. For old times' sake.": "多洛丝带着离婚文件来了，又来了，为了旧时代",
+    "Dolores lights a cigarette with the Eternal Fuse. The fire marshal has questions.": "多洛丝用永恒的风笛点燃香烟 消防队长有疑问",
+    "Dolores offers a merger. You counter with a bigger one.": "多洛丝提出合并 你和更大的合并",
+    "Dolores walks off with the prize money, the Eternal Fuse and the best photo of the night.": "多洛丝带着奖金，永恒的风笛和最美的夜晚照片离开。",
+    "Dolores. Of all the arenas in all the world, you walk into mine. With him.": "多洛雷斯，在世界上所有的竞技场里 你走进我的竞技场，跟他一起走",
+    "Dolores. The family always did have nice cheekbones. Fight me anyway.": "多洛丝，家里的颊骨都不错，反正要跟我打",
+    "Don't cry, {o}. Auntie buys ice cream after.": "{o}，别哭。打完了阿姨给你买冰淇淋。",
+    "Don't sulk, {o}. This hurts me more than it hurts you.": "{o}，别撅嘴。我可比你心疼多了。",
+    "Don't worry, I brought snacks and a fire extinguisher. Mostly snacks.": "别担心，我带了点心和灭火器，主要是点心",
+    "Done": "完成",
+    "Down for the count": "倒地的对手",
+    "Draughty Castle": "漏风的城堡",
+    "Draw": "绘制",
+    "Drop bombs": "放置炸弹",
+    "Duel at Dawn": "黎明决斗",
+    "Dynamita": "迪娜米塔",
+    "Dynamita holds the Eternal Fuse over her head. The crowd goes wild. So does the fuse.": "迪纳米塔把永恒的引信放在她头上 人群疯狂了 引信也疯狂了",
+    "Dynamita is already designing a bigger bomb. The fuse is lit. It is always lit.": "迪纳米塔已经在设计更大的炸弹了 保险丝被点燃了，总是被点燃的",
+    "Dynamita texts her congratulations. He reads it nine times and walks into a door.": "迪纳米塔发了她的祝贺信，他读了九遍，走进一扇门。",
+    "E or Left Shift (P1), Right Shift or 0 (P2). In first person it uses the direction you last walked": "玩家一按 E 或左 Shift，玩家二按右 Shift 或 0。第一人称模式下，技能沿最近一次移动的方向发动。",
+    "Easy": "简单",
+    "Eat it all": "全部吃掉",
+    "Eat something. You are too thin to explode.": "吃点东西吧，你都瘦得不经炸了。",
+    "Eat your vegetables, dear. Then eat my rolling pin.": "乖，先吃蔬菜，再吃我一擀面杖！",
+    "Eek! My helmet!": "哎呀！我的头盔！",
+    "Emotes (keys 1-8)": "表情（数字键 1 至 8）",
+    "Enabling it": "让它能行",
+    "Enhanced {p}'s cheekbones": "增强{p}颊骨",
+    "Enter the arena": "进入竞技场",
+    "Epic": "史诗",
+    "Epilogue": "尾声",
+    "Every envelope, snack and lucky fuse adds up. You own the arena.": "每个信封，零食和幸运的保险丝都加起来，竞技场都是你拥有的",
+    "Everybody has a trick.": "每个人都有诡计。",
+    "Everything is synthesised, no audio files. Auto picks the music from the theme and mode. The voice reads the announcer banners, so keep Announcer on. Press N in game to mute.": "音效和音乐均为实时合成。自动模式会按场景和玩法选择音乐。要听语音，请开启播报横幅。游戏中按 N 可静音。",
+    "Excuse me, can you hold still? It's for my collection!": "打扰一下，能站着别动吗？我要留作纪念！",
+    "Exquisite.": "妙极了。",
+    "FIZZLE": "菲兹尔",
+    "FRENZY": "狂热",
+    "Family Champion": "家庭冠军",
+    "Family reunion, {o}! Everyone's invited to get blown up.": "{o}，家族团圆啦！欢迎大家一起来挨炸。",
+    "Fan-made tribute to Bomberman · Not affiliated with Konami.": "本作由玩家制作，向《炸弹人》致敬，与科乐美无关联。",
+    "Father! I can explain! It was... a tax thing!": "爸爸，我可以解释，那是税费问题",
+    "Few": "少量",
+    "Fewer power-ups": "强化道具减少",
+    "Fight!": "开战！",
+    "Fighter abilities (second button)": "角色技能（第二动作键）",
+    "File": "文件",
+    "Fill with bots": "用电脑玩家补足人数",
+    "Final boss": "最终首领",
+    "Finish the story with anyone.": "和任何人一起完成这个故事。",
+    "Fire in the hole, kid!": "小子，要炸啦！",
+    "Fireworks Factory": "烟花厂",
+    "Fireworks alley": "烟花小巷",
+    "First person": "第一人称",
+    "First-person mode. Bomber Shooter is a nod to the boomer shooter genre. Original art, not affiliated with id Software.": "第一人称模式向经典射击游戏致敬。美术为原创，与 id Software 无关。",
+    "Fizzle": "菲兹尔",
+    "Fizzle sends a bouquet. It explodes. Everyone agrees it was romantic.": "菲兹送来花，爆炸了 大家都同意很浪漫",
+    "Fizzle? You still wear that bucket? We broke up two years ago!": "菲兹尔，你还戴着那个桶子吗？",
+    "Flawless": "毫无瑕疵",
+    "Floor tiles": "特殊地砖",
+    "Floor tiles and events (optional)": "特殊地砖和事件（可选）",
+    "Fork in the road": "岔路口",
+    "Frame Generation ×4 (×1 actually)": "框架生成 x4( 实际为 x1)",
+    "Frame generated from vibes": "由气温生成的框架",
+    "Friendly fire (teams)": "友军伤害（组队）",
+    "Frost": "冰冻",
+    "Frozen Hill": "冻山",
+    "GAME OVER": "游戏结束",
+    "GG": "游戏",
+    "GUNPOWDER": "火药爷爷",
+    "Game feel": "操作反馈",
+    "Game mode": "游戏模式",
+    "Game modes": "游戏模式",
+    "Gamepad": "手柄",
+    "Generating 5 frames from 1 vibe": "从1个氛围生成5帧",
+    "Generative fuse optimisation active": "基因引信优化活动",
+    "Give up": "放弃挑战",
+    "Glamorous, deadly, between marriages. Ignatius's ex, Dynamita's mother and the Baron's business partner. It is complicated.": "艳光四射，身手致命，目前单身。她是伊格内修斯的前妻、迪娜米塔的母亲，也是男爵的生意伙伴。一言难尽。",
+    "Glove": "拳套",
+    "Glove, Punch": "拳套与重拳",
+    "Gold": "金色",
+    "Got it": "知道了",
+    "Grab it": "抢走引线",
+    "Grab power-ups": "拾取道具",
+    "Granddaughter. Fire in the blood, I see. Now show me your best bomb.": "孙女，血流成河，给我看你的最好炸弹",
+    "Grandpa Gunpowder is now playable.": "已解锁火药爷爷。",
+    "Grandpa?! You have a flaming skull! That is so cool!": "爷爷，你头骨有火，太酷了",
+    "Graphics": "画面",
+    "Graphics: Bomber Shooter. ←/→ turn, ↑/↓ walk, , and . strafe, M minimap. In local games only the first player gets this view.": "画面设置选择「第一人称爆破」。方向键左右转身、上下前后移动，逗号和句号键横移，M 显示小地图。本地多人时仅玩家一使用此视角。",
+    "Graphics: DLSS 6. T toggles it, G or the RTX settings button opens the fake control panel. Parody, not affiliated with NVIDIA.": "在画面设置中选择 DLSS 6。T 切换开关，G 或「RTX 设置」可打开游戏里的模拟面板。此模式为戏仿，与 NVIDIA 无关。",
+    "Grass": "草地",
+    "Green": "绿色",
+    "Gunpowder": "火药爷爷",
+    "Gunpowder returns to his grave, satisfied. The tombstone says 'BRB'.": "火药回到坟墓，满足了 墓碑上写着\"BRB\"",
+    "Gunpowder sighs from the grave: 'So that's what dinner is for.'": "火药从墓叹曰：\"故此饭是用。",
+    "Gunpowder, you old goat! Twenty years and you don't even call!": "火药，你这老山羊，二十年了，你连电话都不打！",
+    "HOT POTATO": "烫手山芋",
+    "HYPER": "加速",
+    "Hallucinated {n} extra frames": "迷幻剂{n}额外帧",
+    "Hallucinating frames": "幻觉框架",
+    "Hard": "困难",
+    "Have at thee!": "看招！",
+    "Have at thee! Wait, which way is thee?": "看招！等等，该朝哪边出招？",
+    "He carries the Eternal Fuse home on his horse. The horse is not impressed.": "他骑着长生不老的马回家，马没有印象。",
+    "He gets autographs from the whole family. Even Grandpa. Especially Grandpa.": "他得到了全家的签名，甚至爷爷，尤其是爷爷",
+    "He gives you a sticker anyway. You feel warm. Suspiciously warm.": "他还是送了你一张贴纸。你觉得暖暖的……好像太暖了点。",
+    "He is on time for the ceremony at last. Nobody else is. Typical.": "他终于准时参加仪式了，其他人都不行，典型的",
+    "Help {prev} up": "扶起{prev}",
+    "Her godfather the Baron is sentenced to a lifetime of Sunday dinners at Mama's.": "她的教父男爵被判终生在妈妈家吃星期天晚饭。",
+    "High": "高",
+    "High five! Careful, it's hot.": "击掌，小心，很烫",
+    "Hill": "据点争夺",
+    "Hill Rush": "山地狂欢",
+    "Hope you brought a fire extinguisher. A big one.": "希望你带了灭火器，要大号的。",
+    "Host": "房主",
+    "Host a public room": "创建公开房间",
+    "Hot Potato": "烫手山芋",
+    "Hot Potato Party": "热土豆党",
+    "How many waves can you ride?": "多少浪能骑？",
+    "How to play": "玩法说明",
+    "I brought you into this world, {o}, and I can blow you out of it.": "{o}，我把你带到这世上，也能用炸弹把你轰出去！",
+    "I call dibs on the shiny power-ups. And the blame.": "我用电源和责任来称呼迪布斯",
+    "I don't want to hurt you, {o}. But I will.": "{o}，我并不想伤你。不过我还是要出手。",
+    "I finally graduated, {o}. The diploma is a bomb.": "{o}，我终于毕业了。这枚炸弹就是我的毕业证。",
+    "I fizzled. Again.": "我又哑火了。",
+    "I have been dead for years. I have a bone to pick. Several.": "我都死了这么多年了，还有笔旧账要算。不，得算好几笔。",
+    "I only do this because I love you, {o}. And the Fuse.": "{o}，我这么做是因为我爱你。还有那根引线。",
+    "I sign with fire, kid. Hold still.": "我用火签了，孩子，别动",
+    "I taught you everything, {o}. Not everything. I kept the good bombs.": "{o}，该教的我都教你了。也没全教，好炸弹我留着呢。",
+    "I taught you, child, so you'd be a worthy opponent for my retirement.": "我教你的，孩子，你将成为我退休的值得尊敬的对手",
+    "I want all those birthday gifts back, {o}.": "{o}，那些生日礼物我全都要收回来！",
+    "I'm Sparky! I carry the bombs and the opinions.": "我是史巴基，我带炸弹和观点",
+    "I'm already dead!": "我早就死了！",
+    "I'm here for the prize money. And maybe closure. Mostly the prize money.": "我是冲着奖金来的。也许还想做个了断。主要还是奖金。",
+    "I'm here to win and to get autographs. Mostly autographs.": "我是来夺冠和要签名的。主要是签名。",
+    "I'm late again. The boss is gonna kill me.": "我又迟到了。老板非宰了我不可。",
+    "I'm still angry about the toy truck, {o}.": "{o}，那辆玩具卡车的事我还没消气！",
+    "I... won? Really?": "我赢了？真的？",
+    "I... won? Wait, really? Did anyone see that?": "我……赢了？真的？有人看见了吗？",
+    "ICE": "冰冻",
+    "IGNATIUS": "伊格内修斯",
+    "ITEM RAIN": "道具雨",
+    "Ice": "冰面",
+    "Ice bomb": "冰冻炸弹",
+    "Ice, belts, spikes, portals. Good luck braking.": "冰块、皮带、钉子、传送门 祝你好运",
+    "Ignatius": "伊格内修斯",
+    "Ignatius and Baron are grounded. They are 58 and 60-something. They accept this.": "伊格纳提乌斯和男爵被禁足了 他们58岁和60岁左右 他们接受这个",
+    "Ignatius and Baron share the last dumpling. The Eternal Fuse lights a candle.": "伊格纳提乌斯和男爵分享最后的饺子，永恒的花瓶点燃了蜡烛。",
+    "Ignatius lights a victory cigar. Dynamita takes it away. 'You are 58, Dad.'": "伊格纳提乌斯点了支胜利的雪茄 迪纳米塔拿走了\"你58岁了，爸爸\"",
+    "Ignatius sends flowers. Dynamita sends a thank-you note. Mama sends a rolling pin.": "伊格纳提乌斯送花 迪纳米塔送谢信 妈妈送一个滚球针",
+    "Ignatius tries to speak. The Baron has Tony turn up the radio.": "伊格纳提乌斯想说话，男爵叫托尼把收音机打开了。",
+    "Ignatius. You still owe me for the divorce lawyer. And the sofa.": "伊格纳提乌斯 你还是欠我离婚律师的 还有沙发",
+    "Impossible! I wore my good monocle!": "不可能！我明明戴了最好的单片眼镜！",
+    "In my day we lost with dignity. Where are my glasses?": "我们那会儿输了也得体面。我的眼镜呢？",
+    "In-law or outlaw, {o}? I'm about to find out.": "{o}，你到底是姻亲还是恶棍？我马上就能弄清。",
+    "Included in the offline TV package.": "电视离线安装包已包含这些资源。",
+    "Insert coin · 1 credit": "投入一枚代币开始",
+    "Invite link": "邀请链接",
+    "It glows. The crowd leans in. {foe} twitches.": "永恒引线亮了起来。观众纷纷凑近，{foe}不由得抖了一下。",
+    "It is warm. Too warm. The arena starts misbehaving.": "有点烫。不，是非常烫。竞技场开始出状况了。",
+    "It sparks happily. The next arena is stuffed with bricks and goodies.": "引线欢快地冒起火花。下一场的竞技场里会堆满砖块和道具。",
+    "It's a helmet! And you said 'let's stay friends' by throwing a bomb at me.": "你却说\"让我们保持朋友关系\" 对我投炸弹",
+    "Items": "拾取道具",
+    "Join": "加入",
+    "Join my Kaboom Arena room": "加入我的爆破竞技场房间",
+    "KABOOM": "嘉布",
+    "KABOOM!": "轰！",
+    "KAPOW": "卡鲍",
+    "KING OF THE HILL": "据点争夺",
+    "Kaboom": "爆破",
+    "Kaboom Arena": "爆破竞技场",
+    "Kaboom Arena Tournament": "爆破竞技场锦标赛",
+    "Kaboom Arena replay": "爆破竞技场回放",
+    "Kaboom Arena – free Bomberman-style fan game, play online": "爆破竞技场",
+    "Kapow": "卡鲍",
+    "Kapow gets Tony's autograph, then asks for a second one, then a hat.": "卡波得到托尼的签名，然后要求第二个，然后是帽子。",
+    "Keep in my replays": "保存到我的回放",
+    "Keep the whole game offline": "保存完整离线游戏",
+    "Kept in your replays.": "已保存到我的回放。",
+    "Keyboard WASD/ZQSD + Space": "键盘 WASD/ZQSD + 空格",
+    "Keyboard arrows + Enter": "键盘箭头+输入",
+    "Kick": "踢弹",
+    "Kid Kapow wins the tournament and skates three victory laps around the arena.": "基德·卡波赢得了联赛冠军，并滑了三圈在竞技场上获胜。",
+    "Kid, I've exploded bigger things than you before breakfast.": "小子，我早饭前炸飞的东西都比你大。",
+    "Kills": "击倒对手",
+    "King of the Hill": "据点争夺",
+    "Kneel before your ancestor. Then explode.": "在老祖宗面前跪下。然后乖乖挨炸。",
+    "Knight in a bucket helmet. Fired by the Baron, dumped by Dynamita, fizzled by life. Dreams of revenge. Trips a lot.": "头戴铁桶的骑士。男爵炒了他，迪娜米塔甩了他，生活也没放过他。他一心想复仇，却老是绊倒。",
+    "Knight, Sort Of": "半吊子骑士",
+    "Knight, champion and, for one night, a man who did not fizzle.": "骑士，冠军，还有一夜，一个没有发抖的人。",
+    "LAST ONE STANDING": "最后的幸存者",
+    "Last one standing wins.": "最后存活的玩家获胜。",
+    "Latency Reduction": "减少延迟",
+    "Latency reduced by -0 ms": "延迟减少 -0毫秒",
+    "Lava": "熔岩",
+    "Let's go": "出发",
+    "Link": "链接",
+    "Local · 2–4 players": "本地 · 2 至 4 人",
+    "Locked fighter": "角色尚未解锁",
+    "Looking for public rooms…": "正在查找公开房间…",
+    "Lost": "丢失",
+    "Low": "低",
+    "Lucky shot! I demand a rematch. And snacks.": "走运而已！我要再打一次，还要零食。",
+    "MAMA": "老妈",
+    "MINE": "地雷",
+    "MINI": "迷你",
+    "Mama": "老妈",
+    "Mama Kaboom raises her rolling pin. The arena rises to its feet.": "母亲卡布姆把她的球杆抬起来 竞技场就站到它的脚上",
+    "Mama calls it the best tournament ever. Nothing exploded. She is suspicious.": "妈妈称之为有史以来最好的比赛，没有爆炸，她很可疑",
+    "Mama frames the scoreboard and hangs it in the kitchen, above the rolling pin.": "妈妈把记分牌画在厨房里 放在滚球针上方",
+    "Mama pinches his cheek: 'I always liked you better than Baron.' She says that to both of them.": "妈妈捏他的脸颊：\"我一直比男爵更喜欢你。\" 她对两人都这么说。",
+    "Mama pushes a lunch box into your hands. It hums slightly.": "老妈往你手里塞了个便当盒。盒子竟然在嗡嗡响。",
+    "Mama sends a strongly worded casserole. It arrives at 90 miles an hour.": "妈妈送来一个很强的纸质砂锅 每小时90英里",
+    "Mama's Kitchen": "老妈的厨房",
+    "Mama's last words to the crowd: 'Did everybody eat? Good. Now go home.'": "妈妈最后对群众说：\"大家都吃东西了吗？好，现在回家去吧！\"",
+    "Mama's lunch box": "老妈的便当",
+    "Many": "大量",
+    "Marriage is about compromise, {o}. I compromise: you lose.": "{o}，婚姻讲究妥协。我的让步就是让你输。",
+    "Master {o}, I learned from the best. Sadly, that was also the problem.": "{o}师父，我师从高手。糟就糟在这儿。",
+    "Match recap": "比赛战报",
+    "Mind the carpet.": "小心地毯。",
+    "Mine": "地雷",
+    "More power-ups": "强化道具增多",
+    "Mother, please. I am sixty-something. And is that the rolling pin?": "妈妈，拜托，我六十六岁了，那是滚球针吗？",
+    "Move": "移动",
+    "Music": "音乐",
+    "Mute (N)": "静音（N）",
+    "Mute sound": "静音",
+    "My darling. Ghosts have no signal. Now put down the rolling pin.": "亲爱的 鬼魂没有信号 现在放下滚球针",
+    "My eye! The other one! Ow!": "我的眼睛！我是说另一只！哎哟！",
+    "My good eye! Phew.": "差点伤了我的好眼睛！",
+    "My mascara!": "我的睫毛膏！",
+    "My mascara! This is a disaster!": "我的睫毛膏！简直是灾难！",
+    "My monocle!": "我的单片眼镜！",
+    "N mutes or unmutes (settings: effects, music style, voice)": "按 N 切换静音。在设置中可以调整音效、音乐风格和语音。",
+    "NO BOMBS": "无法放弹",
+    "Neural Faces™": "神经面孔TM",
+    "Neural frame ×6 generated": "神经帧 x6 生成",
+    "Never doubt a diva.": "别小瞧天后。",
+    "New challenger!": "新挑战者！",
+    "New run": "开始新一局",
+    "New version available": "有新版本",
+    "Next": "下一步",
+    "Next fight": "下一场",
+    "Next round": "下一回合",
+    "Night": "夜幕",
+    "No continues, no lost rounds.": "继续，没有输掉的子弹。",
+    "No fair! I'm telling Tony!": "不公平！我要告诉托尼！",
+    "No public room is open right now.": "当前没有可加入的公开房间。",
+    "No public room to join. Host one and others can find it with Quick play.": "没有可加入的公开房间。你可以创建房间，让其他玩家通过快速匹配找到它。",
+    "No replay yet: finish a match and it shows up here.": "暂无回放，完成一场比赛后即可查看。",
+    "Nobody is here. No crowd, no loot, no fuss.": "一路空空荡荡。没有观众，没有战利品，也没有麻烦。",
+    "Nobody leaves this family without dessert, and nobody keeps my husband's Fuse.": "谁也别想不吃甜点就离开这家门，更别想拿走我丈夫的引线。",
+    "Normal": "普通",
+    "Not bad for an old man. Not bad at all.": "老头子还挺有两下子嘛。真不错。",
+    "Not fair! Rematch!": "不公平！再来！",
+    "Not one continue. Not one round dropped. The scoreboard weeps with joy.": "一次都没掉，记分板上流泪",
+    "Not yet": "尚未解锁",
+    "Note": "说明",
+    "Nothing changes. Or does it?": "一切照旧。真的如此吗？",
+    "Nothing personal, cousin {o}. Old family tradition.": "{o}，咱们是亲戚，又没私仇。炸一炸只是家族传统。",
+    "Nothing personal, pal. Just business. And traffic.": "朋友，没有私人恩怨。都是为了生意，还有路况。",
+    "Nothing personal.": "别往心里去。",
+    "Nothing personal. Okay, a little personal.": "不是私人恩怨。好吧，也有那么一点。",
+    "Now eat something.": "现在吃点东西吧。",
+    "OFF": "关闭",
+    "ON": "开启",
+    "OUCH!": "欧奇！",
+    "Off": "关",
+    "Offline": "离线",
+    "Okay, that one was my fault. And yours. Mostly mine.": "好吧，那是我的错，也是你的，主要是我的",
+    "Old Man's Backyard": "老爷子的后院",
+    "Old man still got it.": "老头子宝刀未老。",
+    "On": "开",
+    "One easy bot. Be quick about it.": "一个简单的机器人，快点",
+    "One eye, zero patience. Former champion of Kaboom Arena. Father of Dynamita, brother of Baron, and still owed one Eternal Fuse.": "独眼，脾气急。他是竞技场的前冠军，也是迪娜米塔的父亲、男爵的兄弟。男爵还欠他一根永恒引线。",
+    "One hard rival, first to two.": "一个硬对手，第一对二。",
+    "One-Eyed Ex-Champ": "独眼前冠军",
+    "Online": "在线",
+    "Open a file": "打开文件",
+    "Overload": "过载",
+    "P / Esc / gamepad Start · N mutes": "P、Esc 或手柄 START 暂停 · N 静音",
+    "P or Esc": "P或ESC 数据",
+    "P1 pureTV": "P1 纯电视",
+    "P1: pureTV controller or keypad. P2: press Space for WASD, or join with a gamepad.": "玩家一使用 pureTV 手柄或数字小键盘。玩家二可按空格加入，再用 WASD 移动，也可以用手柄加入。",
+    "PRESS START": "开始",
+    "Packed Maze": "包装的迷宫",
+    "Pads": "传送点",
+    "Papa-in-law? I'm on the clock. Can this wait until after the divorce?": "岳父，我钟表上，离婚后再谈好吗？",
+    "Parody. Not affiliated with NVIDIA.": "帕罗迪，不隶属于NVIDIA.",
+    "Pass it on before it blows.": "吹前传之。",
+    "Path Tracing (one path)": "路径追踪( 一个路径)",
+    "Path traced 1 path (it was enough)": "路径追踪到 1 路径( 足够)",
+    "Pause": "暂停",
+    "Paused": "已暂停",
+    "Peacemaker": "和平缔造者",
+    "Phone vibration": "手机震动",
+    "Phone vibration is switched off above.": "电话振动在上方关闭",
+    "Pink": "粉色",
+    "Play": "开始游戏",
+    "Play again": "再玩一次",
+    "Play today's challenge": "开始今日挑战",
+    "Played. If you hear nothing, check the volume and the silent switch of your phone.": "已播放测试音。若听不到声音，请检查音量和手机静音开关。",
+    "Politely decline": "婉言谢绝",
+    "Position": "进度",
+    "Potato": "烫手山芋",
+    "Power-ups": "强化道具",
+    "Press Space to join the local lobby. Use WASD to move, Space to drop a bomb and E to use an ability.": "按空格加入本地大厅。WASD 移动，空格放炸弹，E 使用技能。",
+    "Press a bomb key again to start": "再次按下放炸弹键开始",
+    "Press any key or tap to skip": "按下任意键或窃听键跳过",
+    "Prompted {n} bricks into existence": "已提示{n}砖块存在",
+    "Public room (listed in Quick play)": "公开房间（快速匹配中可见）",
+    "Public rooms": "公开房间",
+    "Punch": "重拳",
+    "Pyromaniac": "皮罗曼尼亚克",
+    "QR code of the invite link": "邀请二维码",
+    "QUAKE": "地震",
+    "Quick play": "快速匹配",
+    "Quit": "退出",
+    "Quit to menu": "退出并返回菜单",
+    "READY": "准备",
+    "RED": "红",
+    "REVERSED": "方向反转",
+    "ROUNDS": "回合数",
+    "RTX enabled. DLSS 6. It's on!": "RTX启用，DLSS 6. 开机了！",
+    "RTX enabled. DLSS 6. It's on! Parody. Not affiliated with NVIDIA.": "RTX 已开启，DLSS 6 登场！这是游戏内的玩笑，与 NVIDIA 无关。",
+    "Random": "随机",
+    "Range": "爆炸范围",
+    "Ray Reconstruction": "雷重建计划",
+    "Re-imagined {n} bricks": "重新想象{n}砖头",
+    "Reconnecting…": "正在重连…",
+    "Red": "红",
+    "Reduce motion (shake, sparks, menu)": "减少动态效果（震动、火花、菜单）",
+    "Reduce motion turns off slow-mo, zoom, pop-in text and speech bubbles.": "开启减少动态效果后，将关闭慢动作、镜头缩放、弹出文字和对白气泡。",
+    "Reflections are 100% real*": "反映为100%真实*",
+    "Refresh": "刷新",
+    "Refuse, loudly": "大声拒绝",
+    "Reload": "重新加载",
+    "Remember who signs your paychecks, {o}.": "{o}，别忘了是谁给你发薪水。",
+    "Remote": "遥控引爆",
+    "Replay finished": "回放结束",
+    "Replays": "回放",
+    "Replays and daily challenge": "回放和每日挑战",
+    "Reset": "重置",
+    "Reset to defaults": "恢复默认",
+    "Restart": "重新开始",
+    "Restore defaults": "恢复默认值",
+    "Result": "成绩",
+    "Resume": "继续",
+    "Retry fight": "重新挑战",
+    "Rise": "爆弹再起",
+    "Rise and explode.": "起身，引爆！",
+    "Rolling Pin Queen": "擀面杖女王",
+    "Rolling pin, assemble!": "擀面杖，出动！",
+    "Room code": "房间码",
+    "Room full or game in progress.": "房间已满或比赛已开始。",
+    "Room not found or full.": "房间不存在或已满。",
+    "Room not found.": "找不到房间。",
+    "Round recap": "回合战报",
+    "Round recap with awards": "回合战报与奖项",
+    "Rounds to win": "获胜所需回合数",
+    "SCORE": "得分",
+    "SHIELD UP!": "护盾开启！",
+    "SLOW": "减速",
+    "SPARKY": "小火花",
+    "SUDDEN DEATH": "苏德死亡",
+    "SUDDEN DEATH SOON": "即将进入加时决胜",
+    "SUDDEN DEATH!": "进入突然死亡！",
+    "SURVIVAL": "生存挑战",
+    "SWAP": "换位",
+    "Saved as a .kaboom file.": "已保存为 .kaboom 文件。",
+    "Saves every file (3D, portraits) so the game works without a connection. Updates are downloaded in the background too.": "保存 3D 模型和头像等全部文件，断网也能游玩。更新会在后台下载。",
+    "Saving files...": "正在保存文件…",
+    "Saving your score…": "正在保存成绩…",
+    "Score card saved as a PNG.": "成绩卡已保存为 PNG 图片。",
+    "Second local player": "本地玩家二",
+    "Second player reporting! Please don't blow me up. Much.": "第二位报告 请不要把我炸飞，很多",
+    "Secret ending": "隐藏结局",
+    "Select fighter": "选择角色",
+    "Select your fighter": "选择角色",
+    "Sell it, no questions": "直接卖掉，什么都别问",
+    "Sent. If you feel nothing, check the phone: touch/vibration feedback on, battery saver off, silent and Do Not Disturb off.": "发送。 如果您感觉不到什么，请检查电话： 触摸/振动反馈，关闭电池保护器，关闭静默和不要干扰。",
+    "Settings": "设置",
+    "Share": "分享",
+    "Share card": "分享成绩卡",
+    "Share it": "一起分享",
+    "Share link": "分享链接",
+    "Share replay": "分享回放",
+    "Share score card": "分享成绩卡",
+    "Share with {foe}": "分给{foe}",
+    "She ends her partnership with the Baron. He asks about the shared yacht. She sinks it.": "她和男爵结束了合作关系 他问了一下共有的游艇 她沉没了",
+    "Shield": "护盾",
+    "Show other players' emotes (online)": "显示其他玩家的表情（在线）",
+    "Sibling rivalry, {o}. Let's take it outside. Into a bomb.": "{o}，兄弟姐妹之间的恩怨，就用炸弹到外面解决吧。",
+    "Sign here, please!": "请在这里签名！",
+    "Silence": "无音乐",
+    "Sir Fizzle takes off his bucket helmet. The crowd gasps. He has a really nice face.": "菲兹尔先生脱下头盔，人群喘气，他的脸真美",
+    "Skate Park": "滑板公园",
+    "Skull": "骷髅",
+    "Slippery king of the hill.": "在滑溜的场地上争夺据点。",
+    "Slippery shortcut": "结冰的近路",
+    "Slow-mo and hit-stop": "慢动作与命中停顿",
+    "Smoothed {p}'s expression": "平滑状态{p}表达式",
+    "Snow": "雪地",
+    "Softer opponent": "对手变弱",
+    "Solo vs bots": "单人对战电脑",
+    "Solo · Survival vs waves": "单人生存 · 抵御敌潮",
+    "Somewhere, a bomb files a complaint about being dodged. It is denied.": "某处，炸弹会投诉被躲避，但被拒绝了",
+    "Son. Death was quiet. Then the Fuse called. I never ignore a call.": "孩子，死亡是安静的，然后福斯打电话来 我从来不会无视电话",
+    "Sorry, Auntie {o}. Family is family, but fire is fire.": "{o}阿姨，抱歉啦。亲归亲，火归火。",
+    "Sorry, {o}, but you're grounded. In my arena.": "{o}，抱歉啊。在我的竞技场里，你被禁足了。",
+    "Sorry, {o}. Godchild beats godparent. That's the rule.": "{o}，抱歉，教子打赢教父，这是规矩。",
+    "Sorry, {o}. I'm clocking out. Permanently.": "{o}，抱歉，我要下班了。永久下班。",
+    "Sorry, {o}. Respect your elders. Also, move.": "{o}，抱歉，尊重长辈！还有，快躲开！",
+    "Sound": "声音",
+    "Sound effects": "音效",
+    "Sound is muted: press N or the speaker button.": "当前已静音，按 N 或点击扬声器按钮恢复声音。",
+    "Space = WASD player · Enter = arrows player": "空格加入 WASD 玩家 · 回车加入方向键玩家",
+    "Sparky": "小火花",
+    "Sparky was promoted to Player One. In his own mind. We let him.": "小火花自封为一号玩家。就随他吧。",
+    "Special bombs": "特别炸弹",
+    "Special bombs (cluster, mine, ice, glove, punch)": "特殊道具（集束炸弹、地雷、冰弹、拳套、重拳）",
+    "Special bombs and a night sky. Someone left the fireworks unlocked.": "夜空下尽是特殊炸弹。有人忘了锁烟花仓库。",
+    "Special bombs and abilities (optional, in Settings)": "特殊炸弹与技能（在设置中开启）",
+    "Spectating: waiting": "观战中：等待开始",
+    "Spectating: waiting for the host…": "观战中：等待房主…",
+    "Speed": "速度",
+    "Spike Survival": "斯派克生存组织",
+    "Spikes": "地刺",
+    "Spooky! But I stood up to the Baron, I can stand up to a skeleton. Sir.": "施沃基，但我对着男爵站立 我可以面对一个骨架",
+    "Sprint": "冲刺",
+    "Stage clear": "本关通过",
+    "Stand on the zone, score fast.": "立于区，得分快。",
+    "Start": "开始",
+    "Storm Survival": "风暴生存",
+    "Story log": "剧情记录",
+    "Streak": "连续天数",
+    "Street vendor": "街头小贩",
+    "Strong": "强",
+    "Sudden death": "加时决胜",
+    "Survival": "生存挑战",
+    "Sweep": "横扫",
+    "Swipe their snacks": "顺走对手的零食",
+    "Switcheroo": "换位",
+    "Synthwave": "合成器音乐",
+    "System": "跟随系统",
+    "TONY": "托尼",
+    "Take the envelope": "收下信封",
+    "Take the money in three choices.": "以三选取钱。",
+    "Tap or press a key to continue": "轻触屏幕或按任意键继续",
+    "Teams (4 players)": "组队（4 人）",
+    "Teams need 4 players (P1 + P3 vs P2 + P4). Online: your settings apply when you host. Survival is 1-4 humans against waves of enemies (no bots to pick, no rounds: the score is the waves survived). King of the Hill and Hot Potato are played against bots.": "组队需要四名玩家（1、3 号对阵 2、4 号）。在线房间使用房主的设置。生存模式由 1 至 4 名真人玩家抵御敌潮，以撑过的波数计分。争夺据点和烫手山芋模式可以对战电脑。",
+    "Tell Mama I tried.": "告诉老妈，我尽力了。",
+    "Telling Tony!": "我要告诉托尼！",
+    "Terminator": "终止者",
+    "Test sound": "测试音效",
+    "Test vibration": "测试震动",
+    "Thanks for playing · Insert coin": "感谢游玩 · 投币继续",
+    "Thanks! Can I get your autograph?": "谢谢！可以给我签个名吗？",
+    "The Baron begs for mercy. 'You fizzled me first,' says Fizzle, and nobody gets the joke.": "男爵求饶，\"你先打我\"说，\"菲兹尔\",没人会笑",
+    "The Baron buys the arena, renames it Von Boom Arena, and sends the bill to his brother.": "男爵购买竞技场，将其改名为冯·布隆竞技场，并将账单寄给他的弟弟。",
+    "The Baron fires him over the phone. Tony is thrilled: his first day off since 2009.": "男爵通过电话解雇了他，托尼激动地说：他自2009年休假的第一天。",
+    "The Baron is beaten. The Eternal Fuse is finally back in the family.": "男爵被打，永恒的福斯终于回到了家中。",
+    "The Baron is hired as head of security. He asks to be paid in monocles.": "男爵受聘为保安主管，要求以单人支付。",
+    "The Baron reviews the footage for cheating. He finds only talent and is furious.": "男爵审查镜头时认为他作弊 他只发现才华，很生气",
+    "The Baron's chauffeur and enforcer. Green tracksuit, eleven watches, still late for everything.": "男爵的司机兼打手。一身绿色运动服，戴着十一块表，却干什么都迟到。",
+    "The Betrayer": "背叛者",
+    "The End": "终",
+    "The Eternal Fuse": "永恒引线",
+    "The Eternal Fuse glows in the Baron's hands. The family is stunned. He is not.": "永乐法司在男爵手中发光，家人都惊呆了，他不是。",
+    "The Eternal Fuse goes home and into the cupboard, behind the good plates.": "永恒的风笛回家后进入了柜子里，在好的盘子后面。",
+    "The Eternal Fuse is back where it belongs: in a very old, very smoky beard.": "永恒的风笛回到了它属于的地方： 在一个非常老，非常烟熏的胡子里。",
+    "The Eternal Fuse is mine. This tournament is a mere formality.": "永恒引线是我的。锦标赛只是走个过场。",
+    "The Eternal Fuse is now a skateboard trophy. It is very hard to grind.": "永恒的风笛现在是一个滑板奖杯，很难磨碎。",
+    "The Family Crypt": "家族地宫",
+    "The Fuse dynasty will return.": "引线家族还会回来的。",
+    "The Hothead": "火爆丫头",
+    "The browser refused it. Tap the screen once, then try again.": "浏览器拒绝了它，一次按下屏幕，然后再试一次。",
+    "The classic, with teeth.": "经典的，有牙齿。",
+    "The crowd cheers. The agent weeps. Your pockets stay empty and your head stays high.": "观众欢呼，经纪人落泪。你的口袋依然空空，但头抬得高高的。",
+    "The host left the game.": "房主已离开。",
+    "The janitor's riddle": "清洁工的谜语",
+    "The old man smiles with his one good eye. Next year's tournament starts Monday.": "老人笑着一双好眼睛，明年的联赛星期一开始。",
+    "The patriarch of the Fuse dynasty rises, flaming skull held high. The family faints.": "富士王朝的宗主兴起，火爆的头骨高举，家族昏倒。",
+    "The whole family sits at one table. Nobody holds a bomb. Several hold a fork.": "一家人坐在一桌，没人拿着炸弹，几个拿着叉子。",
+    "Theme": "主题",
+    "This browser has no Web Audio.": "此浏览器不支持 Web Audio。",
+    "This browser has no vibration support (iPhone and iPad never do).": "这个浏览器没有振动支持(iPhone和iPad从来没有这样做).",
+    "This fight is going on your performance review, {o}.": "{o}，这场比赛会记进你的绩效考核。",
+    "This replay is damaged or is not a Kaboom Arena replay.": "回放已损坏或并非爆破竞技场回放。",
+    "This replay no longer matches the game (made with another version or browser): the end may differ.": "这段回放来自其他游戏版本或浏览器，最终结果可能不同。",
+    "This replay was made with an older version of the game and can't be played.": "回放来自旧版本，无法播放。",
+    "Three Hard Bots": "三块硬币",
+    "Three corridors and one sign: 'To the arena (probably)'.": "眼前三条走廊，只有一块牌子：“竞技场往这走（大概）。”",
+    "Tick-Tock": "滴答先生",
+    "Tick-Tock Parking Lot": "滴答停车场",
+    "Tickets cost one bomb each. Popcorn costs two. Fire insurance is a rumour.": "车票每张票要1枚炸弹，爆米花2枚，火险是谣言。",
+    "Tiny, fierce, 74. Fights with a rolling pin and a grudge. Always said the Baron was a bad influence. Nobody listened.": "七十四岁，个头虽小，火气很大。她手持擀面杖，新仇旧怨一起算。她早就说男爵会带坏大家，可惜没人听。",
+    "To install: tap": "安装方法：轻点",
+    "Today": "今天",
+    "Today the Baron pays! Right after I find where I parked my horse.": "今天就找男爵算账！等我先想起马停哪儿了。",
+    "Told ya. On time.": "说了吧，我准时。",
+    "Tony": "托尼",
+    "Tony and Kapow open a restaurant with her winnings. It is called Auntie's. It is very loud.": "托尼和卡波开一家餐厅 里面有她的奖品，叫阿姨的，很吵",
+    "Tony cries into his watches. Aunt Dolores buys him a helmet that fits.": "托尼哭着看他的表 多洛丝阿姨给他买了个合身的头盔",
+    "Tony wins the tournament. He wipes a tear off his watch.": "托尼赢得了比赛 他擦掉了手表上的一滴泪",
+    "Too close! Rude!": "差一点！真没礼貌！",
+    "Too long for a link: saved as a .kaboom file instead.": "回放过大，已保存为 .kaboom 文件。",
+    "Too old for this!": "我这把老骨头哟！",
+    "Too slow! I'm gonna need a bigger bomb.": "太慢了！我得换颗更大的炸弹。",
+    "Toss it to the crowd": "抛给观众",
+    "Touch": "触屏",
+    "Tougher opponent": "对手变强",
+    "Tracing the one path": "追寻一条路",
+    "Tries": "尝试次数",
+    "Try again": "再试一次",
+    "Twelve years old. Skateboards in a helmet three sizes too big. Wants everyone's autograph and fights anyway, politely.": "十二岁的滑板少年，头盔大了三码。他想找每个人签名，该打还是照打，而且很有礼貌。",
+    "Twenty years I waited. Tonight the Eternal Fuse comes home, or I go to bed early.": "我等了二十年。今晚要么把永恒引线带回家，要么我早点睡。",
+    "Twenty years ago Baron von Boom stole the Eternal Fuse, the artifact that powers every bomb. Tonight's tournament decides who gets it back. Also, grandpa is up and about.": "二十年前，冯·布姆男爵偷走了为所有炸弹提供能量的宝物——永恒引线。今晚的锦标赛将决定谁能夺回它。对了，爷爷也从坟里爬起来了。",
+    "Twenty years, Baron. Twenty years since you stole my Fuse and my sock drawer.": "20年了，男爵，你偷了我的福斯和袜子抽屉",
+    "Twenty-two and already on fire. Raised by Ignatius, trained by her godfather the Baron. Mad at both of them, for different reasons.": "二十二岁，一点就炸。伊格内修斯把她养大，教父男爵教她打架。两个人各有各的地方让她冒火。",
+    "Two autographs at once? Oh no, sorry, fighting. Fighting!": "一次两签？",
+    "Two descendants. I lit a double fuse just for you. Don't touch it.": "两个后代 我为你点了双保险丝 别碰它",
+    "Two heroes": "双人合作",
+    "Two heroes! Wait, which one's the hero? Is one of you my horse?": "两位英雄，等等，哪一位是英雄，你们是我的马吗？",
+    "Two of you, darling? I charge by the head.": "你们两个，亲爱的？",
+    "Two of you? Boss never said anything about doubles.": "你们两个？",
+    "Two of you? Fine, double the fuse!": "你们两个，把保险丝翻倍！",
+    "Two of you? I only brought one good eye. You'll have to share.": "你们两个，我只带了一只好眼睛，你得分享一下",
+    "Two? Sit down, both of you. There's enough rolling pin for everyone.": "两个坐下，你们两个，大家都有够多的了",
+    "Tycoon": "大亨",
+    "Uh, sir? You're my boss's dad? Is that smoke or a beard?": "你是我老板的爸爸吗 是烟还是胡子？",
+    "Uncle Baron": "男爵叔叔",
+    "Unmute (N)": "开启声音（N）",
+    "Unmute sound": "开启声音",
+    "Unseemly. Truly.": "真失态。啧。",
+    "Upscaled the upscaler (×2)": "提升升降机(x2)",
+    "Upscaled {p}'s confidence": "升级{p}自信的爱",
+    "Upscaling the upscaler": "提升升降机",
+    "Use touch": "使用触控",
+    "VICTORY!": "胜利！",
+    "VS": "对战",
+    "Vanish": "隐身",
+    "Vibration intensity": "震动强度",
+    "View": "查看",
+    "Voice announcer (reads the banners)": "语音播报（朗读战况横幅）",
+    "Volume": "音量",
+    "Von Boom Hedge Maze": "冯·布姆的树篱迷宫",
+    "WAVES": "波数",
+    "WHITE": "白",
+    "Waiting": "等待中",
+    "Waiting for the host…": "正在等待房主…",
+    "Wall Wrecker": "墙壁",
+    "Walls": "摧毁砖墙",
+    "Warming up the Neural Radiance Cache": "温暖神经辐射缓存",
+    "Watch": "观战",
+    "Watch again": "再看一遍",
+    "Watch best run": "观看最佳回放",
+    "Watch replay": "观看回放",
+    "Watch the suit!": "小心我的西装！",
+    "Wave Rider": "浪骑手",
+    "Waves, chaos and special bombs.": "波次挑战、混乱事件与特殊炸弹。",
+    "Waves, spikes and portals.": "浪，尖和门户。",
+    "We did it! Did we do it? We did it!": "我们成功了，我们成功了，我们成功了！",
+    "We should talk, {o}. After I win.": "{o}，咱们得谈谈。等我赢了再说。",
+    "Wheee! Snow, ice and a mild sense of regret.": "哇——！有雪，有冰，还有那么一点儿后悔。",
+    "Where are my glasses?": "我的眼镜呢？",
+    "Where did that come from?": "这是哪儿蹦出来的？",
+    "White": "白",
+    "Whoa! Can I have your autograph? Is the skull real?": "能给我签名吗 头骨是真的吗",
+    "Wiped out before wave 1": "第一次波涛前就被消灭了",
+    "Won": "元时",
+    "YOU LOSE": "你输了",
+    "You can't tell me what to do, {o}. Not with a bomb in my hand.": "{o}，我手上有炸弹，别想对我指手画脚。",
+    "You hold it together, with both hands. Everyone sighs, relieved.": "你们一起握住引线。所有人都松了口气。",
+    "You never had to win the argument. You just kept being nice, which is terrifying.": "你从来就不用赢得这场辩论 你一直这么好，太可怕了",
+    "You stole the Fuse from your own brother. Now I take it back. And your allowance.": "你从你哥哥那里偷的法斯，现在我收回，还有你的津贴",
+    "You taught me everything, Godfather! Starting with how to light a fuse. Watch this.": "你教过我一切，教父，从点燃导火线开始，看这个",
+    "You're fired, {o}. After the fight. Maybe.": "{o}，你被开除了。等打完再说。也许吧。",
+    "You're out – spectating": "你已出局，正在观战",
+    "Your face is on the poster, the cup and one very expensive fuse. Cha-ching goes boom.": "你的脸贴在海报上，杯子和一根非常昂贵的保险丝上，恰青会爆炸的。",
+    "Your last 10 finished matches are kept on this device. A replay is just inputs, so a link or a .kaboom file replays the exact match anywhere.": "本机保存最近 10 场比赛。回放记录操作输入，分享链接或 .kaboom 文件即可在其他设备重现整场比赛。",
+    "Your name": "你的名字",
+    "Your name (optional)": "你的名字（选填）",
+    "a lot": "经常",
+    "around the arena. Soft bricks can be blown up, grey walls cannot.": "在场内移动。砖墙可以炸开，灰色墙体无法破坏。",
+    "arrows push you, bombs and items": "玩家、炸弹和道具都会沿箭头移动",
+    "bat adjacent bombs 2 tiles away": "把相邻炸弹击飞两格",
+    "bomb key facing a bomb knocks it 2 tiles": "面对炸弹按放炸弹键，将其击飞两格",
+    "bomb key on a bomb throws it 3 tiles": "站在炸弹上按放炸弹键，将其抛出三格",
+    "bomb key: on a bomb it throws it 3 tiles, facing a bomb it knocks it 2 tiles. Both fly over blocks": "按放炸弹键：站在炸弹上可向前抛出三格，面对炸弹可击飞两格，两种操作都能越过障碍。",
+    "bomb rain, item rain, quake, swap and frenzy are announced 1.5 s ahead": "炸弹雨、道具雨、地震、换位和狂热事件会提前 1.5 秒预告",
+    "bot": "名电脑对手",
+    "bots": "名电脑对手",
+    "break the first brick ahead": "击碎前方第一块砖",
+    "chaos events": "混乱事件",
+    "click or press T to enable": "点击或按 T 启用",
+    "curse: a random handicap": "诅咒：随机获得不利效果",
+    "dark, then yellow warning, then red: deadly": "熄灭时安全，黄色表示预警，红色时碰触致命",
+    "died to own bomb": "被自己的炸弹炸倒",
+    "drop a free, bigger, quick bomb": "额外放下一枚威力更大、引爆更快的炸弹",
+    "enemy waves with red rings: last as long as you can": "抵挡一波波带红圈的敌人，尽可能撑下去",
+    "every finished match is saved on this device (last 10). Watch it again in any graphics mode, pause, seek, speed up. Share a link or a .kaboom file": "每个完成的匹配都会保存在这个设备上( 上10 )。 以任何图形模式再次监视它，暂停、 寻求、 速度。 共享链接或. kaboom 文件。",
+    "floor tiles": "地板牌",
+    "free slots will be bots": "空位将由电脑玩家补齐",
+    "freezes for 2 s instead of killing, but a normal blast still kills a frozen player": "冻结目标 2 秒。被冻结期间遭遇普通爆炸仍会出局。",
+    "hidden in the bricks:": "藏在砖墙里：",
+    "humans vs waves, no bots": "真人玩家共同抵御敌潮，无电脑队友",
+    "jump up to 3 tiles forward, over anything": "向前跃进最多三格，可越过障碍",
+    "left pad to move, 💣 to drop a bomb, ⚡ for the ability (only with abilities on)": "左侧虚拟摇杆移动，💣 放炸弹。开启技能后，点 ⚡ 发动。",
+    "longer blasts": "延长爆风的覆盖距离",
+    "most bombs": "放弹最多",
+    "most items": "拾取道具最多",
+    "most kills": "击倒最多",
+    "most walls": "破墙最多",
+    "nearly invisible for 4 s": "进入半隐身状态，持续 4 秒",
+    "nearly invisible to rivals, goes off 0.5 s after one steps next to it": "对手很难看见。有人走到相邻格时，0.5 秒后爆炸。",
+    "next bombs also drop a ring of mini-blasts": "接下来放置的炸弹还会引发一圈小型爆炸",
+    "next bombs are hidden traps for rivals": "接下来放置的炸弹会成为隐藏陷阱",
+    "next bombs freeze instead of kill": "接下来放置的炸弹会冻结对手",
+    "no storage": "存储不可用",
+    "not yet": "暂无",
+    "one challenge a day at 00:00 UTC, same seed for everyone. Tries are free, your best score and streak are kept here, and you can share a score card": "每日 UTC 0 点更新挑战。所有玩家遇到相同的关卡，可反复尝试。这里保存最高分和连续挑战天数，还可分享成绩卡。",
+    "press bomb again to detonate": "再次按放炸弹键引爆",
+    "press your bomb key or a pad button…": "按放炸弹键或任意手柄按钮……",
+    "pureTV controller / keypad": "pureTV 手柄／数字小键盘",
+    "run faster": "移动速度提高",
+    "second key, with a cooldown ring in the bottom bar. Each colour has its own; in story mode every fighter uses a signature move": "用第二动作键发动，底栏圆环显示冷却进度。不同颜色的玩家技能不同；剧情中每个角色都有自己的绝招。",
+    "shield for 1 s and thaw": "获得 1 秒护盾，并解除冰冻",
+    "special bombs": "特殊炸弹",
+    "sprint 3 tiles forward": "向前冲刺三格",
+    "stand alone in the 3x3 zone to score: 30 points wins": "独占 3×3 区域即可得分，先得 30 分者获胜",
+    "stand still on one to jump to its twin": "站定即可传送到对应的另一块地砖",
+    "survive blasts for a few seconds": "短时间内可抵挡爆风",
+    "the holder explodes when the fuse ends: touch someone to pass it": "倒计时结束时，持有者会爆炸。触碰其他玩家即可传给对方。",
+    "too much": "太多了，你别管我",
+    "trade places with a rival ahead": "与前方一名对手交换位置",
+    "walk into a bomb to push it": "走向炸弹即可将它踢开",
+    "walk through bombs": "可穿过炸弹",
+    "you keep sliding": "踏上后会持续滑行",
+    "your bombs go off in 0.4 s": "让自己已放置的炸弹在 0.4 秒后爆炸",
+    "{foe} cries a little and goes easy on you. Mama approves from afar.": "{foe}感动得掉了几滴泪，决定手下留情。老妈在远处点点头。",
+    "{foe}'s agent slides you an envelope. 'Take the day off, champ.'": "{foe}的经纪人递来一个信封：“冠军，今天休息一下吧。”",
+    "{o}, I hope the breakup was worth it. I certainly am.": "{o}，希望你觉得分手值得。至少我觉得挺值。",
+    "{o}, I never liked you, and now I have a bomb.": "{o}，我早就看你不顺眼了，现在我手里还有炸弹。",
+    "{o}, after all these years you still can't dodge.": "{o}，这么多年过去了，你还是不会躲。",
+    "{o}, our partnership is terminated with extreme prejudice.": "{o}，咱们的合作到此为止，用最猛烈的方式。",
+    "{prev} grins: 'I'll put in a good word with {foe}.' Nice.": "{prev}咧嘴一笑：“我会在{foe}面前替你美言几句。”够意思！",
+    "{prev} is flat on the floor, helmet spinning. The crowd wants a show.": "{prev}趴倒在地，头盔还在打转。观众正等着看戏。",
+    "· NEXT": "· 下一波",
+    "· also in co-op": "· 合作模式也可解锁",
+    "· public": "· 公开房间",
+    "▶ Replays": "▶ 比赛回放",
+    "★ Daily": "★ 每日挑战",
+    "★ Story mode": "★ 剧情模式",
+    "⚙ RTX settings": "⚙ RTX 设置",
+    "⚙ Settings": "⚙ 设置",
+    "⬇ Install app": "⬇ 安装应用",
+  };
+  const patterns = [
+    [/^Saved run: (.*?), fight (.*?)\/(.*?)(.*?)\. A new run replaces it\.$/, "已保存：$1，第 $2/$3 战$4。开始新挑战将覆盖本次进度。"],
+    [/^Cleared (.*?)\/(.*?) · in co-op (.*?)\/(.*?) · endings (.*?)\/(.*?)$/, "通关 $1/$2 · 合作通关 $3/$4 · 结局 $5/$6"],
+    [/^(.*?): (.*?) points on today's Kaboom Arena challenge\.$/, "$1在今天的爆破竞技场挑战中获得 $2 分。"],
+    [/^(.*?) player\(s\)(.*?)(.*?) – (.*?) · (.*?)$/, "$1 名玩家$2$3 — $4 · $5"],
+    [/^DLSS 6 improved your gameplay by (.*?)%$/, "DLSS 6 使游戏表现提升了 $1%"],
+    [/^(.*?) FPS native → (.*?) FPS generated$/, "原生 $1 帧/秒 → 生成 $2 帧/秒"],
+    [/^Survived (.*?) wave(.*?) · (.*?):(.*?)$/, "成功抵挡 $1 波 · $3:$4"],
+    [/^DLSS 6 imagined (.*?)% of this round$/, "本回合有 $1% 是 DLSS 6 想象出来的"],
+    [/^(.*?)% of these bricks were prompted$/, "$1% 的砖墙由提示词生成"],
+    [/^(.*?) for the host to start… · (.*?)$/, "$1，等待房主开始… · $2"],
+    [/^Continue · fight (\d+)\/(\d+)(.*)$/, "继续 · 第 $1/$2 战$3"],
+    [/^Solo · (.*?) vs (.*?) bot(.*?)$/, "单人 · $1 对阵 $2 名电脑玩家"],
+    [/^Replay link copied(.*?)\.$/, "回放链接已复制$1。"],
+    [/^You play (.*?)\. (.*?)\.$/, "你扮演$1。$2。"],
+    [/^Daily challenge · (.*?)$/, "每日挑战 · $1"],
+    [/^WAVE (.*?)(.*?) (.*?)s$/, "第 $1 波$2 · $3 秒"],
+    [/^Story · (.*?) vs (.*?)$/, "剧情 · $1 对阵 $2"],
+    [/^STREAK (.*?) DAY(.*?)$/, "连续挑战 $1 天"],
+    [/^(.*?) on Kaboom Arena$/, "$1 · 爆破竞技场"],
+    [/^(.*?) wins the match!$/, "$1赢得比赛！"],
+    [/^(.*?) (.*?) bot(.*?)$/, "$1 $2 名电脑对手"],
+    [/^ROUND (.*?) — FIGHT!$/, "第 $1 回合 · 开战！"],
+    [/^DLSS OFF · (.*?) FPS$/, "DLSS 已关闭 · $1 帧/秒"],
+    [/^(.*?) wins the round$/, "$1赢得本回合"],
+    [/^Friendly fire: (.*?)$/, "友军伤害：$1"],
+    [/^Fight (.*?)\/(.*?)$/, "第 $1/$2 战"],
+    [/^HILL MOVES (.*?)s$/, "据点将在 $1 秒后移动"],
+    [/^(.*?) floor tiles$/, "$1 块地砖"],
+    [/^(.*?) · AGE dead$/, "$1 · 已故"],
+    [/^(.*?) · AGE 60s$/, "$1 · 六十多岁"],
+    [/^(.*?) · AGE (.*?)$/, "$1 · $2 岁"],
+    [/^Next fight: (.*?)$/, "下一场变化：$1"],
+    [/^Stage: (.*?)(.*?)$/, "场地：$1$2"],
+    [/^· (.*?) watching$/, "· $1 人观战"],
+    [/^👁 (.*?) watching$/, "👁 $1 人观战"],
+    [/^(.*?)\/4 players$/, "$1/4 名玩家"],
+    [/^Spectating(.*?)$/, "观战中$1"],
+    [/^(.*?) day(.*?)$/, "$1 天"],
+    [/^\(best (.*?)\)$/, "（最佳 $1）"],
+    [/^FIRST TO (.*?)$/, "先得 $1 分获胜"],
+    [/^first to (.*?)$/, "先得 $1 分获胜"],
+    [/^Online · (.*?)$/, "在线 · $1"],
+    [/^★ Cleared(.*?)$/, "★ 已通关$1"],
+    [/^Players: (.*?)$/, "玩家：$1"],
+    [/^(.*?)'s ending$/, "$1的结局"],
+    [/^POTATO (.*?)s$/, "烫手山芋 · $1 秒"],
+    [/^Daily · (.*?)$/, "每日挑战 · $1"],
+    [/^Local · (.*?)$/, "本地 · $1"],
+    [/^Solo · (.*?)$/, "单人 · $1"],
+    [/^(.*?) arena$/, "$1竞技场"],
+    [/^Emote (.*?)$/, "表情 $1"],
+    [/^WAVE (.*?)!$/, "第 $1 波！"],
+    [/^Next: (.*?)$/, "下一位：$1"],
+    [/^Team (.*?)$/, "$1 队"],
+    [/^(.*?) pts$/, "$1 分"],
+    [/^Bot (.*?)$/, "电脑玩家 $1"],
+    [/^(.*?) ms$/, "$1 毫秒"],
+  ];
+  globalThis.PureTVChinese.install({
+    strings,
+    patterns: patterns.map(([pattern, template]) => [pattern, (match, ...values) =>
+      template.replace(/\$(\d+)/g, (_, i) => {
+        const value = values[Number(i) - 1];
+        return Object.prototype.hasOwnProperty.call(strings, value) ? strings[value] : value;
+      })]),
+  });
+})();
+
+</script>
+</head>
+<body>
+<div id="menu" class="screen on">
+  <canvas id="attract" aria-hidden="true"></canvas>
+  <div class="hero">
+    <div class="logo-wrap">
+      <svg class="bomb" viewBox="0 0 64 70" aria-hidden="true">
+        <circle cx="30" cy="42" r="22" fill="#14141f"/><circle cx="30" cy="42" r="22" fill="none" stroke="#3b3b55" stroke-width="2"/>
+        <circle cx="21" cy="33" r="5" fill="#fff" opacity=".35"/>
+        <path d="M42 22 Q50 12 55 10" stroke="#b5703a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <g class="spark"><circle cx="56" cy="9" r="6" fill="#ffd23c"/><circle cx="56" cy="9" r="3" fill="#e8453c"/></g>
+      </svg>
+      <h1 class="logo"><span class="k">Kaboom</span><span class="a">Arena</span></h1>
+    </div>
+    <div class="menu-col">
+      <button id="storyBtn" class="btn-main">★ Story mode</button>
+      <input id="nick" maxlength="12" placeholder="Your name (optional)" autocomplete="nickname" aria-label="Your name">
+      <div class="label" id="soloLabel">Solo vs bots</div>
+      <div class="solo">
+        <button data-solo="1"><b>1</b><small>bot</small></button>
+        <button data-solo="2"><b>2</b><small>bots</small></button>
+        <button data-solo="3"><b>3</b><small>bots</small></button>
+      </div>
+      <button id="local" class="alt">Local · 2–4 players</button>
+      <div class="row chips"><button id="dailyBtn" class="chip">★ Daily</button><button id="replaysBtn" class="chip">▶ Replays</button></div>
+      <div hidden><div class="label">Online</div>
+      <button id="quick" class="alt">Quick play</button>
+      <div class="row chips"><button id="create" class="chip">Create a room</button><button id="roomsBtn" class="chip">Public rooms</button></div>
+      <div class="row"><input id="joinCode" maxlength="4" placeholder="CODE" size="6" autocomplete="off" aria-label="Room code"><button id="join" class="alt">Join</button></div>
+      </div>
+      <div class="label">Graphics</div>
+      <div id="gfx" class="seg" style="--n:4" role="radiogroup" aria-label="Graphics">
+        <button role="radio" data-gfx="classic">Classic</button>
+        <button role="radio" data-gfx="3d">3D</button>
+        <button role="radio" data-gfx="dlss" title="RTX enabled. DLSS 6. It's on! Parody. Not affiliated with NVIDIA.">DLSS 6 ✨</button>
+        <button role="radio" data-gfx="fps" title="First-person mode. Bomber Shooter is a nod to the boomer shooter genre. Original art, not affiliated with id Software.">Bomber Shooter</button>
+      </div>
+      <div class="row chips"><button id="helpBtn" class="chip">? How to play</button><button id="settingsBtn" class="chip">⚙ Settings</button></div>
+      <button id="installBtn" class="chip" hidden>⬇ Install app</button>
+      <div id="iosHint" class="hint" hidden>To install: tap <b>Share</b>, then <b>Add to Home Screen</b></div>
+    </div>
+    <div id="msg"></div>
+    <div class="hint"><span>D-pad: move · A: bomb · X: ability · START: play / pause</span></div>
+    <div class="hint"><span>Fan-made tribute to Bomberman · Not affiliated with Konami.</span></div>
+  </div>
+</div>
+<div id="story" class="screen"></div>
+<div id="settings" class="screen">
+  <div class="menu-col">
+    <h2>Settings</h2>
+    <div id="setList" style="display:grid;gap:10px"></div>
+    <h3>Game feel</h3>
+    <div id="feelList" style="display:grid;gap:10px"></div>
+    <div class="hint">Reduce motion turns off slow-mo, zoom, pop-in text and speech bubbles.</div>
+    <h3>Sound</h3>
+    <div id="soundList" style="display:grid;gap:10px"></div>
+    <div class="row chips"><button id="sndTest" class="chip">Test sound</button><button id="sndMute" class="chip">Mute (N)</button></div>
+    <div class="hint" id="sndStatus" role="status">Everything is synthesised, no audio files. Auto picks the music from the theme and mode. The voice reads the announcer banners, so keep Announcer on. Press N in game to mute.</div>
+    <h3>Accessibility &amp; feedback</h3>
+    <div id="a11yList" style="display:grid;gap:10px"></div>
+    <h3>Offline</h3>
+    <div id="offList" style="display:grid;gap:10px"></div>
+    <div class="hint" id="offStatus" role="status">Saves every file (3D, portraits) so the game works without a connection. Updates are downloaded in the background too.</div>
+    <button id="vibTest" class="alt chip">Test vibration</button>
+    <div class="hint" id="vibStatus" role="status"></div>
+    <div class="hint">Teams need 4 players (P1 + P3 vs P2 + P4). Online: your settings apply when you host. Survival is 1-4 humans against waves of enemies (no bots to pick, no rounds: the score is the waves survived). King of the Hill and Hot Potato are played against bots.</div>
+    <div class="row"><button id="setReset" class="alt">Reset to defaults</button><button id="setBack">Done</button></div>
+  </div>
+</div>
+<div id="lobby" class="screen">
+  <div>Room code</div>
+  <div id="code"></div>
+  <div id="invite" hidden>
+    <canvas id="qr" aria-label="QR code of the invite link"></canvas>
+    <input id="inviteLink" readonly aria-label="Invite link">
+    <div class="row"><button id="copyLink" class="alt">Copy link</button><button id="shareLink" class="alt" hidden>Share</button></div>
+  </div>
+  <ul id="lobbyList"></ul>
+  <div id="lobbyInfo"></div>
+  <div id="hostOpts" class="hostopts" hidden>
+    <label><input type="checkbox" id="pubRoom"> Public room (listed in Quick play)</label>
+    <label><input type="checkbox" id="allowSpec" checked> Allow spectators</label>
+  </div>
+  <button id="start">Start</button>
+  <button id="lobbyBack" class="alt">Cancel</button>
+</div>
+<div id="localLobby" class="screen">
+  <div>P1: pureTV controller or keypad. P2: press Space for WASD, or join with a gamepad.</div>
+  <ul id="localList" style="list-style:none;padding:0;margin:0;font-size:1.2rem"></ul>
+  <label><input type="checkbox" id="localBots" checked style="min-width:0"> Fill with bots</label>
+  <button id="localStart">Start</button>
+  <button id="localBack" class="alt">Back</button>
+</div>
+<div id="rooms" class="screen">
+  <div class="menu-col">
+    <h2>Public rooms</h2>
+    <ul id="roomList"></ul>
+    <div class="hint" id="roomsNote"></div>
+    <div class="row"><button id="roomsRefresh" class="alt">Refresh</button><button id="roomsHost" class="alt">Host a public room</button></div>
+    <button id="roomsBack">Back</button>
+  </div>
+</div>
+<div id="daily" class="screen">
+  <div class="menu-col">
+    <h2>Daily challenge</h2>
+    <div id="dailyCard" class="dcard"></div>
+    <button id="dailyPlay" class="btn-main">Play</button>
+    <div class="row"><button id="dailyWatch" class="alt">Watch best run</button><button id="dailyLink" class="alt">Share replay</button></div>
+    <button id="dailyCardBtn" class="alt">Share score card</button>
+    <div class="hint">A new challenge every day at 00:00 UTC, the same for everybody. Tries are free: only your best score counts. A streak is consecutive days with a finished try.</div>
+    <button id="dailyBack" class="alt">Back</button>
+  </div>
+</div>
+<div id="replays" class="screen">
+  <div class="menu-col">
+    <h2>Replays</h2>
+    <ul id="repList"></ul>
+    <div class="hint" id="repHint">Your last 10 finished matches are kept on this device. A replay is just inputs, so a link or a .kaboom file replays the exact match anywhere.</div>
+    <div class="row"><button id="repOpen" class="alt">Open a file</button><button id="repBack">Back</button></div>
+    <input id="repFile" type="file" accept=".kaboom,.json,application/json" hidden>
+  </div>
+</div>
+<div id="game" class="screen">
+  <canvas id="c"></canvas>
+  <canvas id="c3" hidden></canvas>
+  <canvas id="cf" hidden></canvas>
+  <div id="ping"></div>
+  <div id="watch" role="status" hidden></div>
+  <div id="emoFeed" role="status"></div>
+  <button id="emoBtn" hidden aria-label="Emotes (keys 1-8)" aria-expanded="false">😀</button>
+  <div id="emoWheel" hidden></div>
+  <button id="pauseBtn" hidden aria-label="Pause">⏸</button>
+  <button id="quit" aria-label="Quit">✕</button>
+  <div id="rematch" class="overlay"><h2 id="rematchTitle"></h2><div id="rematchRecap" class="recap"></div><div id="rmDaily" class="hint"></div><button id="again" class="btn-main">Play again</button><div class="row" id="rmShare"><button id="rmWatch" class="alt">Watch replay</button><button id="rmLink" class="alt">Share replay</button><button id="rmCard" class="alt">Share card</button></div><div id="rematchWait">Waiting for the host…</div><button id="rematchMenu" class="alt">Back to menu</button></div>
+  <div id="recap" class="recap" role="status"></div>
+  <div id="playbar" hidden>
+    <div id="rpTime"></div>
+    <input id="rpSeek" type="range" min="0" max="1" value="0" aria-label="Position">
+    <div class="row">
+      <button id="rpPlay">Pause</button><button id="rpSpeed" aria-label="Speed">1x</button><button id="rpRestart">Restart</button><button id="rpNext">Next round</button>
+    </div>
+  </div>
+  <div id="rpEnd" class="overlay"><h2>Replay finished</h2><div id="rpNote" class="hint"></div><button id="rpAgain" class="btn-main">Watch again</button><button id="rpKeep" class="alt">Keep in my replays</button><button id="rpLink" class="alt">Share link</button><button id="rpBack" class="alt">Back</button></div>
+  <div id="pause"><h2>Paused</h2><button id="resume" class="btn-main">Resume</button><button id="pauseHelp" class="alt">How to play</button><button id="pauseQuit" class="alt">Quit to menu</button><small>P / Esc / gamepad Start · N mutes</small></div>
+  <div id="touch"><div id="pad"><div id="knob"></div></div><button id="bombBtn">💣</button><button id="actBtn" hidden aria-label="Ability">⚡</button></div>
+</div>
+<div id="reconn" class="overlay">Reconnecting…</div>
+<div id="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+  <div class="menu-col">
+    <h2 id="helpTitle">How to play</h2>
+    <ol class="steps">
+      <li><span class="pic">✥</span><span><b>Move</b> around the arena. Soft bricks can be blown up, grey walls cannot.</span></li>
+      <li><span class="pic">💣</span><span><b>Drop bombs</b>: they explode after 2.5 s in a cross. Trap your rivals, then get out of the way.</span></li>
+      <li><span class="pic">★</span><span><b>Grab power-ups</b> hidden in the bricks:</span></li>
+    </ol>
+    <ul id="helpItems" class="items"></ul>
+    <ol class="steps" start="4">
+      <li><span class="pic">☠</span><span><b>Last one standing wins.</b> After 90 s the arena closes in (sudden death).</span></li>
+    </ol>
+    <div class="label">Floor tiles and events (optional)</div>
+    <ul class="keys">
+      <li><b>Ice</b> you keep sliding</li>
+      <li><b>Belts</b> arrows push you, bombs and items</li>
+      <li><b>Pads</b> stand still on one to jump to its twin</li>
+      <li><b>Spikes</b> dark, then yellow warning, then red: deadly</li>
+      <li><b>Chaos</b> bomb rain, item rain, quake, swap and frenzy are announced 1.5 s ahead</li>
+    </ul>
+    <div class="label">Special bombs and abilities (optional, in Settings)</div>
+    <ul id="helpItemsX" class="items"></ul>
+    <ul class="keys">
+      <li><b>Glove, Punch</b> bomb key: on a bomb it throws it 3 tiles, facing a bomb it knocks it 2 tiles. Both fly over blocks</li>
+      <li><b>Ice bomb</b> freezes for 2 s instead of killing, but a normal blast still kills a frozen player</li>
+      <li><b>Mine</b> nearly invisible to rivals, goes off 0.5 s after one steps next to it</li>
+      <li><b>Abilities</b> second key, with a cooldown ring in the bottom bar. Each colour has its own; in story mode every fighter uses a signature move</li>
+    </ul>
+    <ul id="helpAbil" class="keys">
+    </ul>
+    <div class="label">Game modes</div>
+    <ul class="keys">
+      <li><b>Hill</b> stand alone in the 3x3 zone to score: 30 points wins</li>
+      <li><b>Potato</b> the holder explodes when the fuse ends: touch someone to pass it</li>
+      <li><b>Survival</b> enemy waves with red rings: last as long as you can</li>
+    </ul>
+    <div class="label">Replays and daily challenge</div>
+    <ul class="keys">
+      <li><b>Replays</b> every finished match is saved on this device (last 10). Watch it again in any graphics mode, pause, seek, speed up. Share a link or a .kaboom file</li>
+      <li><b>Daily</b> one challenge a day at 00:00 UTC, same seed for everyone. Tries are free, your best score and streak are kept here, and you can share a score card</li>
+    </ul>
+    <div class="label">Controls</div>
+    <ul class="keys">
+      <li><b>P1 pureTV</b> D-pad moves, A drops a bomb, X uses an ability, START pauses. Use the keypad: 8/2/4/6 move, 1 bomb, 7 ability, 5 START.</li>
+      <li><b>Second local player</b> Press Space to join the local lobby. Use WASD to move, Space to drop a bomb and E to use an ability.</li>
+      <li><b>Gamepad</b> D-pad or stick, any button drops a bomb, Start pauses. With abilities on, X is the ability button</li>
+      <li><b>Touch</b> left pad to move, 💣 to drop a bomb, ⚡ for the ability (only with abilities on)</li>
+      <li><b>Ability</b> E or Left Shift (P1), Right Shift or 0 (P2). In first person it uses the direction you last walked</li>
+      <li><b>Pause</b> P or Esc</li>
+      <li><b>Sound</b> N mutes or unmutes (settings: effects, music style, voice)</li>
+      <li><b>First person</b> Graphics: Bomber Shooter. ←/→ turn, ↑/↓ walk, , and . strafe, M minimap. In local games only the first player gets this view.</li>
+      <li><b>DLSS 6</b> Graphics: DLSS 6. T toggles it, G or the RTX settings button opens the fake control panel. Parody, not affiliated with NVIDIA.</li>
+      <li><b>Note</b> Bomber Shooter is a nod to the boomer shooter genre. Original art, not affiliated with id Software.</li>
+    </ul>
+    <button id="helpDone">Got it</button>
+  </div>
+</div>
+<div id="note" role="status" hidden></div>
+<div id="toast" role="status" hidden>New version available <button id="toastReload">Reload</button><button id="toastClose" class="alt" aria-label="Dismiss">✕</button></div>
+<script defer src="./arena.js"></script>
+<noscript><p style="position:fixed;inset:0;display:grid;place-items:center;color:#fff;background:#14141f;padding:24px;text-align:center">Kaboom Arena is a free browser game and needs JavaScript. Drop bombs, blast walls and outlast your rivals, solo or in a local match.</p></noscript>
+<button id="muteBtn" aria-label="Mute sound" aria-pressed="false">🔊</button>
+</body>
+</html>

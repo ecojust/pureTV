@@ -4,7 +4,7 @@
 
 下载：[0.8.1 发布页](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.8.1)。提供 Windows x64 安装版／便携版、macOS Apple Silicon ARM64／Intel x86_64 DMG（macOS 11+）和 Linux x64 DEB。文件大小与 SHA256 校验清单见发布页。管理器安装在电脑，电视开启并授权 ADB 后，可使用系统支持的管理功能。
 
-打开「游戏」，即可从安装包内的本地资源游玩 48 款游戏。电视已通过 ADB 连接并授权时，可在游戏卡片上点「部署到电视」。管理器用同一份本地游戏项目和正式签名数据组装 APK，再安装到所选电视，完成后提示将游戏添加到启动器主屏幕。「联网游戏」中保留六款由作者托管的作品，以及《Kart Rush》和《CF 运输船》。后两款从原发布地址获取电视安装包。另有 APK 保存入口，以及可搜索、切换版本的「电视游戏市场」。[使用说明](../docs/guide/README.md#在电脑上玩)
+开发版 0.8.2 的「游戏」从远程游戏库读取列表。可点「下载到本地」提前保存，也可直接游玩或部署。首次使用时，管理器下载并校验该游戏；之后可离线复用，升级客户端也会保留下载。电视已通过 ADB 连接并授权时，可在游戏卡片上点「部署到电视」。管理器用同一份本地游戏项目和正式签名数据组装 APK，再安装到所选电视，完成后提示将游戏添加到启动器主屏幕。「联网游戏」中保留六款由作者托管的作品，以及《Kart Rush》和《CF 运输船》。后两款从原发布地址获取电视安装包。另有 APK 保存入口，以及可搜索、切换版本的「电视游戏市场」。[使用说明](../docs/guide/README.md#在电脑上玩)
 
 0.5.9 将 APK 市场和客户端更新迁移到 [apps.b14f.com](https://apps.b14f.com/launcher/)，分别读取 `launcher/`、`media/`、`game/` 与 `client/` 目录，不再从 Gitee 下载这些文件。论坛仍使用 Gitee Issues。**0.5.7 及更早版本请从上方发布页手动安装 0.8.1**，旧客户端不会自动切换下载地址。
 
@@ -186,10 +186,11 @@ APK市场、论坛和操作记录不显示常驻 ADB 提示、设备操作忙碌
 
 ## 开发与验证
 
-构建原生客户端需要 Python 3.11 或更新版及 Pillow，用于生成随客户端发行的本地游戏封面和资源库。`joystick-games/` 应包含目录指定的签名 APK，包括 Backroad Rally 的 Git LFS 实体。源码构建会按清单校验每个文件；已安装的客户端直接使用内置库。
+游戏库位于仓库根目录的 `game-library/`。更新静态站点时，先用 `git lfs pull --include="game-library/**"` 取齐大文件，再运行 `python3 tools/pc-games/update-library-catalog.py`（Python 3.11+）生成清单。将 `projects/`、`web/` 同步到服务器后，最后发布 `catalog.json`，使清单引用的内容可立即下载。[游戏库](https://apps.b14f.com/game-library/)
+
+构建桌面客户端只需游戏清单。安装包和 Windows 便携版均独立于游戏资源发布。
 
 ```bash
-python -m pip install Pillow==11.3.0
 npm ci
 npm run build
 cargo test --locked --manifest-path core/Cargo.toml

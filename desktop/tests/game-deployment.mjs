@@ -32,7 +32,8 @@ async function observeDeployment(page, {holdBuild=false, incomplete=false}={}) {
 export async function checkGameDeployment(check, snapshot, withoutAdb) {
   await check('game deployment without an authorized TV explains the connection and keeps export available', async page=>{
     await openGames(page);
-    assert.equal(await page.locator('[data-deploy-game]').count(),56);
+    await deploy(page).waitFor();
+    assert.equal(await page.locator('[data-deploy-game]').count(),await page.locator('[data-play-game]').count());
     await deploy(page).click();
     assert.match(await dialog(page).innerText(),/请先连接电视并完成 ADB 授权/);
     assert.equal((await page.evaluate(()=>window.__gameApkRequests)).length,0);
@@ -52,8 +53,8 @@ export async function checkGameDeployment(check, snapshot, withoutAdb) {
     await page.waitForFunction(()=>!!window.__resumeGameBuild);
     await page.evaluate(()=>window.__gameBuildProgress());
     assert.deepEqual(await dialog(page).locator('[data-deploy-step]').evaluateAll(steps=>steps.map(s=>s.dataset.state)),['active','pending','pending']);
-    assert.equal(await dialog(page).locator('[data-apk-status]').innerText(),'正在打包 APK…');
-    assert.doesNotMatch(await dialog(page).innerText(),/下载/);
+    assert.equal(await dialog(page).locator('[data-apk-status]').innerText(),'正在下载游戏资源…');
+    assert.equal(await dialog(page).locator('progress').isVisible(),true);
     assert.match(await dialog(page).locator('[data-deployment-device]').innerText(),/当前用户 0/);
     await page.evaluate(()=>window.__resumeGameBuild());
     await page.waitForFunction(()=>window.__pendingOperations.some(op=>op.action==='install'));

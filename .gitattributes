@@ -17,3 +17,8 @@ desktop/docs/release-0.5.9-evidence/client-directory-after.html -text -whitespac
 # Joystick native reports are original byte evidence, including Windows CRLF.
 docs/racing-nine/** -text -whitespace
 joystick-games/**/docs/** -text -whitespace
+
+# Serve the original game payload bytes on every publishing platform.
+game-library/web/** -text -whitespace
+game-library/projects/** -text
+game-library/projects/backroad-rally/project.zip filter=lfs diff=lfs merge=lfs -text

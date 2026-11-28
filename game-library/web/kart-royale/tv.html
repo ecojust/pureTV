@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+  <head><script>const pureTVPCConfig={"alias": null, "gameKit": false};</script><script src="../web-host.js"></script><script src="../pc-bridge.js"></script>
+    <meta charset="utf-8" />
+    <!-- viewport-fit=cover so env(safe-area-inset-*) reports real values on
+         notched phones. maximum-scale/user-scalable are kept for the engines
+         that still honour them, but iOS Safari has ignored them since iOS 10 —
+         the `touch-action: none` below is what actually stops pinch-zoom, along
+         with the gesture handlers in src/core/Input.ts. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>Kart Royale</title>
+
+    <!-- Add to Home Screen, which on a phone is worth more than it sounds.
+         Safari's toolbar and tab strip occupy roughly the top 220px of a
+         landscape phone — about a quarter of the vertical space, in a game that
+         is already short of height and whose menus had to be rebuilt to fit
+         what was left. Launched from the home screen these tags drop the chrome
+         entirely and the game gets the whole panel.
+
+         `black-translucent` puts the status bar over the canvas rather than
+         above it, which is what we want given `viewport-fit=cover` and the
+         `env(safe-area-inset-*)` padding already in the HUD and menu CSS.
+
+         The deprecated apple-prefixed name is kept alongside the standard one:
+         iOS honours the former and nothing else reads it, while the standard
+         `mobile-web-app-capable` is what every other engine looks for. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Kart Royale" />
+    <meta name="theme-color" content="#05070d" />
+    <meta name="description" content="A kart racer with no art assets — every texture, mesh and sound generated in code." />
+    <!-- No `apple-touch-icon`, deliberately. An icon would be the first and only
+         art asset in the repository, and iOS falls back to a snapshot of the
+         page, which is a procedurally generated image of the game — exactly the
+         right icon for this project and one that costs nothing. -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 100%; height: 100%; overflow: hidden; background: #05070d;
+        /* the page is a game surface, not a document: no panning, no pinch,
+           no double-tap zoom, no pull-to-refresh, no long-press callout */
+        touch-action: none;
+        overscroll-behavior: none;
+        -webkit-user-select: none; user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        position: fixed; inset: 0;
+      }
+      body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+      #app { position: fixed; inset: 0; }
+      canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+      #ui { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+    </style>
+  <link rel="stylesheet" href="kart-royale.css"><script>
+// Offline Simplified Chinese for ports whose upstream UI draws its own text.
+(() => {
+  const ignored = 'script,style,noscript,template,textarea,[contenteditable="true"],[translate="no"]';
+  const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
+  let translate = text => text;
+  let installed = false;
+
+  function install({ strings, patterns = [] }) {
+    if (installed) return;
+    installed = true;
+
+    function lookup(text) {
+      if (Object.prototype.hasOwnProperty.call(strings, text)) return strings[text];
+      const normalized = text.replace(/\s+/g, ' ');
+      if (Object.prototype.hasOwnProperty.call(strings, normalized)) return strings[normalized];
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+    translate = value => {
+      if (typeof value !== 'string') return value;
+      const text = value.trim();
+      if (!text) return value;
+      let result = lookup(text);
+      if (result === text && text.includes('\n')) {
+        result = text.split('\n').map(line => translate(line)).join('\n');
+      }
+      return result === text ? value : value.replace(text, () => result);
+    };
+
+    // Canvas games often use measureText to wrap the same labels they draw.
+    const proto = globalThis.CanvasRenderingContext2D?.prototype;
+    if (proto) {
+      for (const method of ['fillText', 'strokeText', 'measureText']) {
+        const original = proto[method];
+        proto[method] = function (value, ...args) {
+          return original.call(this, translate(value), ...args);
+        };
+      }
+    }
+
+    // The observer also receives our writes. A translated label can still match
+    // a dynamic pattern (for example numbers and unit abbreviations).
+    const lastText = new WeakMap();
+    const lastAttributes = new WeakMap();
+
+    function textNode(node) {
+      if (lastText.get(node) === node.data) return;
+      const parent = node.parentElement;
+      if (!parent || parent.closest(ignored)) return;
+      const result = translate(node.data);
+      if (result === node.data) return;
+      // With no value attribute an option uses its label as the submitted value.
+      if (parent.tagName === 'OPTION' && !parent.hasAttribute('value')) parent.setAttribute('value', parent.value);
+      lastText.set(node, result);
+      node.data = result;
+    }
+
+    function attribute(el, name) {
+      const old = el.getAttribute(name);
+      const written = lastAttributes.get(el);
+      if (!old || written?.get(name) === old) return;
+      const next = translate(old);
+      if (old !== next) {
+        const values = written || new Map();
+        values.set(name, next);
+        if (!written) lastAttributes.set(el, values);
+        el.setAttribute(name, next);
+      }
+    }
+
+    function visit(node) {
+      if (node.nodeType === Node.TEXT_NODE) return textNode(node);
+      if (node.nodeType !== Node.ELEMENT_NODE || node.closest(ignored)) return;
+      for (const name of attributes) attribute(node, name);
+      const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode(child) {
+          return child.nodeType === Node.ELEMENT_NODE && child.matches(ignored)
+            ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      while (walker.nextNode()) {
+        const child = walker.currentNode;
+        if (child.nodeType === Node.TEXT_NODE) textNode(child);
+        else for (const name of attributes) attribute(child, name);
+      }
+    }
+
+    document.documentElement.lang = 'zh-CN';
+    visit(document.documentElement);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') textNode(record.target);
+        else if (record.type === 'attributes') {
+          if (!record.target.closest(ignored)) attribute(record.target, record.attributeName);
+        } else for (const node of record.addedNodes) visit(node);
+      }
+    }).observe(document.documentElement, {
+      subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes,
+    });
+  }
+  globalThis.PureTVChinese = { install, translate: text => translate(text) };
+})();
+
+globalThis.PureTVChinese.install({
+  strings: {
+    "TURBO": "涡轮",
+    "Turbo": "涡轮",
+    "KART": "卡丁车",
+    "kart": "卡丁车",
+    "Kart": "卡丁车",
+    "RUSH": "冲刺",
+    "rush": "冲刺",
+    "ROYALE": "争霸赛",
+    "Kart Royale": "卡丁车争霸赛",
+    "KART ROYALE": "卡丁车争霸赛",
+    "GRAND PRIX": "大奖赛",
+    "Throttle": "油门",
+    "GAS": "油门",
+    "gas": "油门",
+    "Steer": "转向",
+    "STEER": "转向",
+    "STEERING": "转向",
+    "steering": "转向",
+    "Steering": "转向",
+    "Look back": "向后看",
+    "Pause": "暂停",
+    "pause": "暂停",
+    "Start race": "开始比赛",
+    "Easy": "简单",
+    "NORMAL": "普通",
+    "normal": "普通",
+    "Normal": "普通",
+    "HARD": "困难",
+    "Hard": "困难",
+    "PRO": "专业",
+    "Speed": "速度",
+    "ACC": "加速",
+    "ACCEL": "加速",
+    "Accel": "加速",
+    "Handling": "操控",
+    "Weight": "重量",
+    "weight": "重量",
+    "Mini-Turbo": "迷你加速",
+    "MUSHROOM": "加速蘑菇",
+    "STAR": "无敌星",
+    "TIP": "提示",
+    "LOADING": "正在加载…",
+    "loading": "正在加载…",
+    "GO!": "出发！",
+    "GO": "出发！",
+    "go": "出发！",
+    "FINISH": "终点",
+    "finish": "终点",
+    "You": "你",
+    "YOU": "你",
+    "PLACE": "名次",
+    "LAP": "圈数",
+    "lap": "圈数",
+    "Lap": "圈数",
+    "TIME": "用时",
+    "Time": "用时",
+    "menu": "主菜单",
+    "resume": "继续",
+    "Resume": "继续",
+    "paused": "已暂停",
+    "Paused": "已暂停",
+    "START": "开始",
+    "start": "开始",
+    "Start": "开始",
+    "DRIFT": "漂移",
+    "drift": "漂移",
+    "BACK": "返回",
+    "back": "返回",
+    "best": "最佳",
+    "Best": "最佳",
+    "best lap": "最佳圈速",
+    "Name": "名字",
+    "Keyboard": "键盘",
+    "TRACK": "赛道",
+    "track": "赛道",
+    "driver": "车手",
+    "Driver": "车手",
+    "RACER": "车手",
+    "Racer": "车手",
+    "Body": "车身",
+    "body": "车身",
+    "Paint": "涂装",
+    "paint": "涂装",
+    "done": "完成",
+    "Done": "完成",
+    "CONTROLS": "操作",
+    "controls": "操作",
+    "Controls": "操作",
+    "settings": "设置",
+    "RIVALS": "对手",
+    "Classic": "经典",
+    "BRAKE": "刹车",
+    "brake": "刹车",
+    "REV": "倒车",
+    "Winner": "冠军",
+    "EFFECTS": "音效",
+    "RESET": "重置",
+    "LAPS": "圈数",
+    "POINTS": "积分",
+    "debug": "调试",
+    "Low": "低",
+    "low": "低",
+    "Mid": "中",
+    "Medium": "中",
+    "medium": "中",
+    "High": "高",
+    "high": "高",
+    "Full": "满",
+    "full": "满",
+    "On": "开",
+    "on": "开",
+    "Off": "关",
+    "Items": "道具",
+    "items": "道具",
+    "ITEMS": "道具",
+    "ITEM BOX": "道具箱",
+    "ITEM": "道具",
+    "item": "道具",
+    "Homing Float": "追踪浮标",
+    "Joystick": "摇杆",
+    "Buttons": "按钮",
+    "buttons": "按钮",
+    "JET": "喷射！",
+    "BOMB": "炸弹",
+    "BLUE": "蓝色冰球",
+    "GREEN": "绿色",
+    "RED": "红色",
+    "red": "红色",
+    "ROCKET": "火箭",
+    "NITRO": "氮气",
+    "SUPER": "超级",
+    "Boost": "加速",
+    "BOOST": "加速",
+    "boost": "加速",
+    "RACE": "比赛",
+    "race": "比赛",
+    "NOW": "现在",
+    "MINI": "初级",
+    "ULTRA": "超级",
+    "ultra": "超级",
+    "RESULTS": "比赛成绩",
+    "results": "比赛成绩",
+    "Back to title": "返回标题画面",
+    "Press Enter to Start": "按回车开始",
+    "Tap to Start": "轻触开始",
+    "TAP TO START": "轻触开始",
+    "CIRCUIT 01": "赛道 01",
+    "Sunset Bay Circuit": "日落湾赛道",
+    "SUNSET BAY": "日落湾赛道",
+    "SUNSET  BAY": "日落湾赛道",
+    "Marina Esses": "海滨连续弯",
+    "MARINA ESSES": "海滨连续弯",
+    "Cape Crown Circuit": "皇冠角赛道",
+    "CAPE CROWN": "皇冠角赛道",
+    "Previous circuit": "上一条赛道",
+    "Next circuit": "下一条赛道",
+    "Quit to title": "退出到标题画面",
+    "Race suspended": "比赛中断",
+    "Running order": "当前排名",
+    "Fixed stick": "固定摇杆",
+    "Floating stick": "浮动摇杆",
+    "Roll the phone. Both thumbs free for the buttons.": "转动手机转向，两个拇指可自由按键。",
+    "Always in the same place. Muscle memory, no drift.": "摇杆位置固定，方便盲操。",
+    "Appears wherever your thumb lands. Never look for it.": "摇杆跟随拇指落点，无需寻找。",
+    "Two big pads. Nothing to hold steady.": "两个大按钮，轻触即可转向。",
+    "Steer buttons": "方向按钮",
+    "Tilt to steer": "倾斜转向",
+    "Tilt range": "倾斜范围",
+    "Recentre": "重新校准",
+    "TILT": "倾斜",
+    "tilt": "倾斜",
+    "Auto": "自动",
+    "AUTO": "自动",
+    "auto": "自动",
+    "Manual": "手动",
+    "MAN": "手动",
+    "Easy drift": "辅助漂移",
+    "Solo": "单人",
+    "Hand": "惯用手",
+    "hand": "惯用手",
+    "Head": "视角",
+    "head": "视角",
+    "Left": "左",
+    "LEFT": "左",
+    "left": "左",
+    "Right": "右",
+    "RIGHT": "右",
+    "right": "右",
+    "Fire": "发射",
+    "Light": "轻",
+    "Strong": "强",
+    "Vibration": "振动",
+    "Steering help": "转向辅助",
+    "waiting for the sensor…": "正在等待传感器…",
+    "motion access was refused": "未获准使用动作传感器",
+    "Lap 1": "第 1 圈",
+    "Rotate your device": "请旋转设备",
+    "rotate your device": "请旋转设备",
+    "Kart Royale plays in landscape.": "请横屏游玩卡丁车争霸赛。",
+    "D-pad Focus   A Select   B Back   X / Y Previous / Next   START Back": "方向键选择 · A 确认 · B 返回 · X / Y 上一项 / 下一项 · START 返回",
+    "↑ / A Gas   ↓ Brake   ← → Steer   B Drift   X Item   Y Look back   START Pause": "↑ / A 油门 · ↓ 刹车 · ← → 转向 · B 漂移 · X 道具 · Y 回看 · START 暂停",
+    "Total": "总计",
+    "Best lap": "最佳圈速",
+    "Graphics could not start": "无法启动图形引擎",
+    "Graphics paused": "画面已暂停",
+    "Graphics stopped": "画面已停止",
+    "starting renderer": "正在启动渲染器",
+    "mounting the camera": "正在设置相机",
+    "starting up": "正在启动",
+    "mixing materials": "正在调配材质",
+    "compiling shaders": "正在编译着色器",
+    "dressing the bay": "正在布置海湾",
+    "laying the circuit": "正在铺设赛道",
+    "tuning the engines": "正在调校引擎",
+    "loading item boxes": "正在放置道具箱",
+    "lighting the effects": "正在设置光效",
+    "drawing the hud": "正在绘制仪表盘",
+    "raising the sun": "正在设置日光",
+    "rolling out the grid": "正在准备发车区",
+    "reading controls": "正在读取操控设置",
+    "balancing the frame": "正在调整画面",
+    "Reload the page to start again.": "请重新加载页面以重试。",
+    "The device reclaimed the renderer. Restoring…": "设备回收了图形资源。正在恢复…",
+    "Some shaders failed to compile on this GPU.": "部分着色器无法在此 GPU 上编译。",
+    "This browser cannot start WebGL 2": "此浏览器无法启动 WebGL 2",
+    "This GPU cannot render to a floating-point buffer.": "此 GPU 不支持浮点缓冲区渲染。",
+    "The scene is not being submitted to the GPU.": "当前场景未能提交至 GPU。",
+    "The game needs WebGL 2, and this browser or graphics driver is not providing it.": "游戏需要 WebGL 2，当前浏览器或显卡驱动不支持。",
+    "WebGL 2 is unavailable, so the renderer cannot be created.": "WebGL 2 不可用，无法创建渲染器。",
+    "Updating the graphics driver, or enabling hardware acceleration in the browser settings, usually fixes it.": "请更新显卡驱动或在浏览器中启用硬件加速。",
+    "REC": "录制",
+    "Saved to Downloads": "已保存至下载文件夹",
+    "Recording needs Chrome or Edge on desktop": "录制功能需要桌面版 Chrome 或 Edge",
+    "Took the lead": "取得领先",
+    "took the lead": "取得领先",
+    "Hit": "命中",
+    "hit": "命中",
+    "Slide": "滑行",
+    "LET GO": "松开",
+    "Half": "一半",
+    "half": "一半",
+    "Triple Turbo": "三连涡轮",
+    "Turbo Can": "涡轮罐",
+    "Harbour Mine": "港湾水雷",
+    "Glass Float": "玻璃浮标",
+    "Golden Hour": "黄金时刻",
+    "St": "名",
+    "st": "名",
+    "Nd": "名",
+    "nd": "名",
+    "rd": "名",
+    "Th": "名",
+    "th": "名",
+    "Grid": "发车阵列",
+    "GRID": "发车阵列",
+    "Landing": "落地区",
+    "Straight": "直道",
+    "Blast": "爆破",
+    "Bolt": "闪电",
+    "Chrome": "镀铬银",
+    "chrome": "镀铬银",
+    "Lime": "青柠",
+    "Sunset": "日落",
+    "SUNSET": "日落",
+    "Mini": "初级",
+    "steer": "转向",
+    "accelerate": "加速",
+    "Drive the control below this line · saved on this device": "在下方测试操控，设置会保存在此设备上",
+    "Drive the control below this line · vibration unavailable in this browser": "在下方测试操控，此浏览器不支持振动",
+    "Vela": "维拉",
+    "VELA": "维拉",
+    "Koa": "科亚",
+    "KOA": "科亚",
+    "Pip": "皮普",
+    "PIP": "皮普",
+    "Bramble": "荆棘",
+    "BRAMBLE": "荆棘",
+    "Onyx": "黑曜",
+    "ONYX": "黑曜",
+    "Marlow": "马洛",
+    "MARLOW": "马洛",
+    "Frost": "冰霜",
+    "FROST": "冰霜",
+    "Cinder": "余烬",
+    "CINDER": "余烬"
+  },
+  patterns: [
+
+    [/^Lap (\d+)(.*)$/i, "第 $1 圈$2"],
+    [/^(\d+)(?:st|nd|rd|th) place$/i, "第 $1 名"],
+    [/^Finished (\d+)(?:st|nd|rd|th)$/i, "完赛排名：第 $1 名"],
+  ],
+});
+
+</script>
+</head>
+  <body>
+    <div id="app"></div>
+    <div id="ui"></div>
+
+    <!-- Painted on the very first frame, before a single module has parsed, so
+         the tab is never an unexplained black rectangle. main.ts advances it as
+         each system initialises and removes it once the first real frame is up.
+         Building a WebGL scene of this size takes a few seconds — the sky is
+         raymarched into a PMREM probe, every texture is generated procedurally
+         and every shader is compiled up front — and silence during that reads
+         as a hang. -->
+    <div id="boot">
+      <div class="boot-in">
+        <div class="boot-mark">KART<span>ROYALE</span></div>
+        <div class="boot-bar"><i></i></div>
+        <div class="boot-step">starting up</div>
+      </div>
+    </div>
+    <style>
+      #boot {
+        position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+        background:
+          radial-gradient(120% 90% at 50% 8%, #2c3560 0%, #141a33 42%, #080b16 100%);
+        color: #f3f6fb; transition: opacity .55s ease; font-family: system-ui, -apple-system, sans-serif;
+      }
+      #boot.done { opacity: 0; pointer-events: none; }
+      .boot-in { display: flex; flex-direction: column; align-items: center; gap: 3.4vmin; }
+      .boot-mark {
+        font-size: 8.2vmin; font-weight: 900; letter-spacing: .1em; line-height: .96;
+        display: flex; flex-direction: column; align-items: center;
+        background: linear-gradient(180deg, #fff 12%, #ffd27a 58%, #f0a23c 100%);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 3px 10px rgba(0,0,0,.55));
+      }
+      .boot-mark span { font-size: .52em; letter-spacing: .38em; margin-left: .38em; }
+      .boot-bar {
+        width: 42vmin; max-width: 380px; height: 5px; border-radius: 999px;
+        background: rgba(255,255,255,.13); overflow: hidden;
+      }
+      .boot-bar i {
+        display: block; width: 0%; height: 100%; border-radius: 999px;
+        background: linear-gradient(90deg, #6ad2ff, #ffd27a);
+        transition: width .3s ease; box-shadow: 0 0 12px rgba(255,200,120,.7);
+      }
+      .boot-step {
+        font-size: 2.5vmin; letter-spacing: .22em; text-transform: uppercase;
+        color: rgba(233,240,250,.62); min-height: 1.2em;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot, .boot-bar i { transition: none; }
+      }
+    </style>
+    <script defer src="kart-royale.js"></script>
+  </body>
+</html>
